@@ -9,16 +9,16 @@
 
 :root {
     /* Core colors */
-    --bg-primary: #060a13;
-    --bg-secondary: #0c1220;
-    --bg-card: #111827;
-    --bg-card-hover: #1a2332;
-    --bg-elevated: #1e293b;
-    --bg-input: #0f172a;
-    --bg-overlay: rgba(0, 0, 0, 0.6);
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-card: #121212;
+    --bg-card-hover: #1a1a1a;
+    --bg-elevated: #222222;
+    --bg-input: #0f0f0f;
+    --bg-overlay: rgba(0, 0, 0, 0.8);
 
     /* Borders */
-    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-subtle: rgba(255, 255, 255, 0.05);
     --border-default: rgba(255, 255, 255, 0.1);
     --border-strong: rgba(255, 255, 255, 0.15);
 
@@ -43,11 +43,11 @@
     --info: #06b6d4;
     --info-bg: rgba(6, 182, 212, 0.1);
 
-    /* Text colors */
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --text-inverse: #0f172a;
+    /* Text colors (Steel Theme) */
+    --text-primary: #B0C4DE;
+    --text-secondary: #8395a7;
+    --text-muted: #576574;
+    --text-inverse: #000000;
 
     /* Typography */
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -753,11 +753,11 @@ select.form-input {
     margin-bottom: var(--space-base);
 }
 
-.stat-blue .stat-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent-primary); }
-.stat-green .stat-icon { background: var(--success-bg); color: var(--success); }
-.stat-yellow .stat-icon { background: var(--warning-bg); color: var(--warning); }
-.stat-red .stat-icon { background: var(--danger-bg); color: var(--danger); }
-.stat-purple .stat-icon { background: rgba(139, 92, 246, 0.1); color: var(--accent-secondary); }
+.stat-blue .stat-icon { background: rgba(59, 130, 246, 0.1); color: #ffffff; }
+.stat-green .stat-icon { background: var(--success-bg); color: #ffffff; }
+.stat-yellow .stat-icon { background: var(--warning-bg); color: #ffffff; }
+.stat-red .stat-icon { background: var(--danger-bg); color: #ffffff; }
+.stat-purple .stat-icon { background: rgba(139, 92, 246, 0.1); color: #ffffff; }
 
 .stat-value {
     font-size: var(--font-3xl);
