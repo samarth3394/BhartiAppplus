@@ -196,10 +196,8 @@ a:hover {
 .auth-logo h1 {
     font-size: var(--font-2xl);
     font-weight: 800;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.1);
     letter-spacing: -0.5px;
 }
 
@@ -418,10 +416,8 @@ select.form-input {
 .sidebar-logo .logo-text {
     font-size: var(--font-lg);
     font-weight: 800;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.2);
     white-space: nowrap;
 }
 
