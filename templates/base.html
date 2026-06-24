@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AppPulse AI — All-in-one intelligent app maintenance and monitoring platform for Indian developers.">
+    <title>{% block title %}AppPulse AI{% endblock %}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="logo-icon">⚡</div>
+                    <div>
+                        <div class="logo-text">AppPulse AI</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App Switcher -->
+            <div class="app-switcher">
+                <div class="app-switcher-label">Current App</div>
+                <select id="app-switcher-select" onchange="switchApp(this.value)">
+                    <option value="">Loading apps...</option>
+                </select>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Overview</div>
+                <a href="/dashboard" class="nav-item {% block nav_dashboard %}{% endblock %}" id="nav-dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/uptime" class="nav-item {% block nav_uptime %}{% endblock %}" id="nav-uptime">
+                    <i data-lucide="activity"></i>
+                    <span>Uptime Monitor</span>
+                </a>
+
+                <div class="nav-section-label">Manage</div>
+                <a href="/bugs" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs">
+                    <i data-lucide="bug"></i>
+                    <span>Bug Tracker</span>
+                    <span class="nav-badge hidden" id="bugs-badge">0</span>
+                </a>
+                <a href="/maintenance" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance">
+                    <i data-lucide="clipboard-check"></i>
+                    <span>Maintenance</span>
+                    <span class="nav-badge hidden" id="maintenance-badge">0</span>
+                </a>
+
+                <div class="nav-section-label">Team</div>
+                <a href="/teams" class="nav-item {% block nav_teams %}{% endblock %}" id="nav-teams">
+                    <i data-lucide="users"></i>
+                    <span>Team</span>
+                </a>
+                <a href="/apps" class="nav-item {% block nav_apps %}{% endblock %}" id="nav-apps">
+                    <i data-lucide="layers"></i>
+                    <span>My Apps</span>
+                </a>
+            </nav>
+
+            <!-- User Info -->
+            <div class="sidebar-footer">
+                <div class="user-info" onclick="logout()">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">User</div>
+                        <div class="user-email" id="user-email">user@email.com</div>
+                    </div>
+                    <i data-lucide="log-out" style="width:16px;height:16px;color:var(--text-muted);margin-left:auto;"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="btn btn-ghost btn-icon" onclick="toggleSidebar()" id="sidebar-toggle" style="display:none;">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div>
+                        <h2>{% block page_title %}Dashboard{% endblock %}</h2>
+                        <div class="page-subtitle">{% block page_subtitle %}{% endblock %}</div>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    {% block topbar_actions %}{% endblock %}
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Core JS -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Load user info and app list
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserInfo();
+            loadAppSwitcher();
+        });
+    </script>
+</body>
+</html>

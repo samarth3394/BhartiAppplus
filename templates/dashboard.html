@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — AppPulse AI{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}App health overview at a glance{% endblock %}
+
+{% block content %}
+<!-- No App State -->
+<div id="no-app-state" class="hidden">
+    <div class="empty-state">
+        <div class="empty-state-icon">🚀</div>
+        <h3>Welcome to AppPulse AI!</h3>
+        <p>Create your first app to start monitoring its health, tracking bugs, and managing maintenance tasks.</p>
+        <button class="btn btn-primary btn-lg" onclick="window.location.href='/apps'">
+            <i data-lucide="plus"></i> Add Your First App
+        </button>
+    </div>
+</div>
+
+<!-- Dashboard Content -->
+<div id="dashboard-content" class="hidden">
+    <!-- Stats Grid -->
+    <div class="stats-grid" id="stats-grid">
+        <!-- Health Score Card -->
+        <div class="stat-card stat-blue" style="grid-row: span 2;">
+            <div class="card-header">
+                <h3>Health Score</h3>
+            </div>
+            <div class="health-ring-container">
+                <div class="health-ring">
+                    <svg viewBox="0 0 160 160">
+                        <circle class="ring-bg" cx="80" cy="80" r="68"></circle>
+                        <circle class="ring-progress" id="health-ring-progress" cx="80" cy="80" r="68"
+                            stroke-dasharray="427.26" stroke-dashoffset="427.26"></circle>
+                    </svg>
+                    <div class="ring-value">
+                        <div class="score" id="health-score-value">--</div>
+                        <div class="score-label">Health</div>
+                    </div>
+                </div>
+                <div class="health-breakdown">
+                    <div class="health-item">
+                        <div class="health-value text-success" id="uptime-score">--</div>
+                        <div class="health-label">Uptime</div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-value" style="color:var(--accent-primary)" id="bug-score">--</div>
+                        <div class="health-label">Bugs</div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-value" style="color:var(--accent-secondary)" id="maint-score">--</div>
+                        <div class="health-label">Tasks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bugs Overview -->
+        <div class="stat-card stat-red">
+            <div class="stat-icon">🐛</div>
+            <div class="stat-value" id="active-bugs">0</div>
+            <div class="stat-label">Active Bugs</div>
+            <div class="stat-trend" id="resolved-trend">
+                <span id="resolved-bugs">0</span> resolved
+            </div>
+        </div>
+
+        <!-- Uptime -->
+        <div class="stat-card stat-green">
+            <div class="stat-icon">📡</div>
+            <div class="stat-value" id="uptime-24h">--%</div>
+            <div class="stat-label">Uptime (24h)</div>
+            <div class="flex gap-md mt-sm" style="font-size:var(--font-xs);color:var(--text-muted);">
+                <span>7d: <strong id="uptime-7d">--%</strong></span>
+                <span>30d: <strong id="uptime-30d">--%</strong></span>
+            </div>
+        </div>
+
+        <!-- Pending Tasks -->
+        <div class="stat-card stat-yellow">
+            <div class="stat-icon">📋</div>
+            <div class="stat-value" id="pending-tasks">0</div>
+            <div class="stat-label">Pending Tasks</div>
+            <div class="stat-trend down hidden" id="overdue-trend">
+                <span id="overdue-count">0</span> overdue
+            </div>
+        </div>
+
+        <!-- Server Status -->
+        <div class="stat-card stat-purple">
+            <div class="stat-icon">🌐</div>
+            <div class="flex items-center gap-md">
+                <span class="status-dot" id="server-status-dot"></span>
+                <span class="stat-value" id="server-status" style="font-size:var(--font-xl);">Checking...</span>
+            </div>
+            <div class="stat-label mt-sm" id="ssl-info">SSL: Checking...</div>
+        </div>
+    </div>
+
+    <!-- Two Column: Bug Breakdown + Activity Feed -->
+    <div class="two-col">
+        <!-- Bug Severity Breakdown -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Bug Severity Breakdown</h3>
+                <a href="/bugs" class="btn btn-ghost btn-sm">View All →</a>
+            </div>
+            <div class="chart-container" style="height:200px;">
+                <canvas id="bug-severity-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Activity</h3>
+            </div>
+            <div class="activity-feed" id="activity-feed">
+                <div class="empty-state" style="padding:var(--space-xl);">
+                    <p class="text-muted">No recent activity</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading -->
+<div class="page-loader" id="dashboard-loader">
+    <div class="spinner"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

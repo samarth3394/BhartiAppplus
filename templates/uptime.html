@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Uptime Monitor — AppPulse AI{% endblock %}
+{% block nav_uptime %}active{% endblock %}
+{% block page_title %}Uptime Monitor{% endblock %}
+{% block page_subtitle %}Real-time server status and response times{% endblock %}
+
+{% block topbar_actions %}
+<button class="btn btn-secondary btn-sm" onclick="openMonitorSettings()">
+    <i data-lucide="settings"></i> Settings
+</button>
+{% endblock %}
+
+{% block content %}
+<!-- Status Banner -->
+<div class="stat-card" id="status-banner" style="margin-bottom:var(--space-2xl);text-align:center;">
+    <div class="flex items-center justify-between" style="justify-content:center;gap:var(--space-lg);">
+        <span class="status-dot" id="uptime-status-dot"></span>
+        <span style="font-size:var(--font-2xl);font-weight:800;" id="uptime-status-text">Checking status...</span>
+    </div>
+    <div class="text-muted mt-sm" id="uptime-last-check">Last checked: --</div>
+    <div class="text-muted mt-sm" id="uptime-response-time">Response time: --</div>
+</div>
+
+<!-- Stats Row -->
+<div class="stats-grid">
+    <div class="stat-card stat-green">
+        <div class="stat-icon">📊</div>
+        <div class="stat-value" id="stat-uptime-24h">--%</div>
+        <div class="stat-label">Uptime (24h)</div>
+        <div class="text-muted text-sm mt-sm"><span id="stat-checks-24h">0</span> checks</div>
+    </div>
+    <div class="stat-card stat-blue">
+        <div class="stat-value" id="stat-uptime-7d">--%</div>
+        <div class="stat-label">Uptime (7 days)</div>
+        <div class="text-muted text-sm mt-sm">Avg: <span id="stat-resp-7d">--</span>ms</div>
+    </div>
+    <div class="stat-card stat-purple">
+        <div class="stat-value" id="stat-uptime-30d">--%</div>
+        <div class="stat-label">Uptime (30 days)</div>
+        <div class="text-muted text-sm mt-sm">Avg: <span id="stat-resp-30d">--</span>ms</div>
+    </div>
+    <div class="stat-card stat-yellow">
+        <div class="stat-icon">🔒</div>
+        <div class="stat-value" id="stat-ssl-days" style="font-size:var(--font-2xl);">--</div>
+        <div class="stat-label">SSL Days Left</div>
+    </div>
+</div>
+
+<!-- Response Time Chart -->
+<div class="card mb-xl">
+    <div class="card-header">
+        <h3>Response Time</h3>
+        <div class="period-tabs">
+            <button class="period-tab active" data-period="24h" onclick="switchPeriod('24h')">24 Hours</button>
+            <button class="period-tab" data-period="7d" onclick="switchPeriod('7d')">7 Days</button>
+            <button class="period-tab" data-period="30d" onclick="switchPeriod('30d')">30 Days</button>
+        </div>
+    </div>
+    <div class="chart-container">
+        <canvas id="response-time-chart"></canvas>
+    </div>
+</div>
+
+<!-- Incidents -->
+<div class="card">
+    <div class="card-header">
+        <h3>Recent Incidents</h3>
+    </div>
+    <div id="incidents-list">
+        <div class="empty-state" style="padding:var(--space-xl);">
+            <p class="text-muted">No incidents recorded</p>
+        </div>
+    </div>
+</div>
+
+<!-- Monitor Settings Modal -->
+<div class="modal-overlay" id="monitor-settings-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Monitoring Settings</h3>
+            <button class="modal-close" onclick="closeModal('monitor-settings-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="monitor-url">App URL</label>
+                <input type="url" id="monitor-url" class="form-input" placeholder="https://yourdomain.com">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="monitoring-enabled" checked> Enable monitoring (checks every 5 minutes)
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('monitor-settings-modal')">Cancel</button>
+            <button class="btn btn-primary" onclick="saveMonitorSettings()">Save Settings</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/uptime.js') }}"></script>
+{% endblock %}

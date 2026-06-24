@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}My Apps — AppPulse AI{% endblock %}
+{% block nav_apps %}active{% endblock %}
+{% block page_title %}My Apps{% endblock %}
+{% block page_subtitle %}Manage all your applications from one place{% endblock %}
+
+{% block topbar_actions %}
+<button class="btn btn-primary btn-sm" onclick="openCreateAppModal()">
+    <i data-lucide="plus"></i> New App
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="app-grid" id="apps-grid">
+    <div class="page-loader"><div class="spinner"></div></div>
+</div>
+
+<div class="empty-state hidden" id="no-apps-state">
+    <div class="empty-state-icon">📱</div>
+    <h3>No apps yet</h3>
+    <p>Add your first application to start monitoring, tracking bugs, and managing maintenance.</p>
+    <button class="btn btn-primary btn-lg" onclick="openCreateAppModal()">
+        <i data-lucide="plus"></i> Add First App
+    </button>
+</div>
+
+<!-- Create/Edit App Modal -->
+<div class="modal-overlay" id="app-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="app-modal-title">New Application</h3>
+            <button class="modal-close" onclick="closeModal('app-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="app-edit-id">
+            <div class="form-group">
+                <label for="app-name">App Name *</label>
+                <input type="text" id="app-name" class="form-input" placeholder="My Awesome App" required>
+            </div>
+            <div class="form-group">
+                <label for="app-url">App URL</label>
+                <input type="url" id="app-url" class="form-input" placeholder="https://myapp.com">
+                <div class="text-muted text-sm mt-sm">Enter URL to enable uptime monitoring</div>
+            </div>
+            <div class="form-group">
+                <label for="app-description">Description</label>
+                <textarea id="app-description" class="form-input" placeholder="Brief description of this application..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('app-modal')">Cancel</button>
+            <button class="btn btn-primary" id="app-submit-btn" onclick="submitApp()">Create App</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="delete-app-modal">
+    <div class="modal" style="max-width:420px;">
+        <div class="modal-header">
+            <h3>Delete Application</h3>
+            <button class="modal-close" onclick="closeModal('delete-app-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="color:var(--danger);font-weight:600;">⚠️ This action cannot be undone!</p>
+            <p class="text-muted mt-md">Deleting this app will remove all associated data including bugs, maintenance tasks, uptime history, and team members.</p>
+            <p class="mt-md fw-600" id="delete-app-name"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('delete-app-modal')">Cancel</button>
+            <button class="btn btn-danger" id="confirm-delete-btn" onclick="confirmDeleteApp()">Delete Forever</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/apps.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance — AppPulse AI{% endblock %}
+{% block nav_maintenance %}active{% endblock %}
+{% block page_title %}Maintenance Checklist{% endblock %}
+{% block page_subtitle %}Daily, weekly, and monthly maintenance tasks{% endblock %}
+
+{% block topbar_actions %}
+<button class="btn btn-primary btn-sm" onclick="openCreateTaskModal()">
+    <i data-lucide="plus"></i> New Task
+</button>
+{% endblock %}
+
+{% block content %}
+<div id="tasks-container">
+    <!-- Overdue Tasks -->
+    <div class="task-group" id="overdue-group">
+        <div class="task-group-header">
+            <div class="task-group-title overdue">⚠️ Overdue</div>
+            <span class="task-group-count" id="overdue-count">0</span>
+        </div>
+        <div id="overdue-tasks"></div>
+    </div>
+
+    <!-- Today's Tasks -->
+    <div class="task-group" id="today-group">
+        <div class="task-group-header">
+            <div class="task-group-title today">📅 Due Today</div>
+            <span class="task-group-count" id="today-count">0</span>
+        </div>
+        <div id="today-tasks"></div>
+    </div>
+
+    <!-- Upcoming Tasks -->
+    <div class="task-group" id="upcoming-group">
+        <div class="task-group-header">
+            <div class="task-group-title upcoming">🗓️ Upcoming</div>
+            <span class="task-group-count" id="upcoming-count">0</span>
+        </div>
+        <div id="upcoming-tasks"></div>
+    </div>
+</div>
+
+<div class="empty-state hidden" id="no-tasks-state">
+    <div class="empty-state-icon">📋</div>
+    <h3>No maintenance tasks yet</h3>
+    <p>Create recurring tasks to keep your app in top shape — database backups, dependency updates, SSL checks, and more.</p>
+    <button class="btn btn-primary" onclick="openCreateTaskModal()">
+        <i data-lucide="plus"></i> Create First Task
+    </button>
+</div>
+
+<!-- Create/Edit Task Modal -->
+<div class="modal-overlay" id="task-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="task-modal-title">New Maintenance Task</h3>
+            <button class="modal-close" onclick="closeModal('task-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="task-edit-id">
+            <div class="form-group">
+                <label for="task-title">Task Title *</label>
+                <input type="text" id="task-title" class="form-input" placeholder="e.g., Database backup" required>
+            </div>
+            <div class="form-group">
+                <label for="task-description">Description</label>
+                <textarea id="task-description" class="form-input" placeholder="Detailed instructions..."></textarea>
+            </div>
+            <div class="two-col" style="gap:var(--space-base);">
+                <div class="form-group">
+                    <label for="task-frequency">Frequency</label>
+                    <select id="task-frequency" class="form-input">
+                        <option value="daily">Daily</option>
+                        <option value="weekly" selected>Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="task-due-date">Due Date</label>
+                    <input type="date" id="task-due-date" class="form-input">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('task-modal')">Cancel</button>
+            <button class="btn btn-primary" id="task-submit-btn" onclick="submitTask()">Create Task</button>
+        </div>
+    </div>
+</div>
+
+<!-- Task Completion Modal -->
+<div class="modal-overlay" id="complete-modal">
+    <div class="modal" style="max-width:420px;">
+        <div class="modal-header">
+            <h3>Complete Task</h3>
+            <button class="modal-close" onclick="closeModal('complete-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <p class="text-muted mb-lg" id="complete-task-name">--</p>
+            <div class="form-group">
+                <label for="complete-notes">Notes (optional)</label>
+                <textarea id="complete-notes" class="form-input" placeholder="Any notes about this completion..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('complete-modal')">Cancel</button>
+            <button class="btn btn-success" onclick="confirmComplete()">✓ Mark Complete</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/maintenance.js') }}"></script>
+{% endblock %}
