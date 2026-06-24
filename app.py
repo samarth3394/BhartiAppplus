@@ -1,5 +1,5 @@
 """
-AppPulse AI — Main Application Entry Point
+Nexvora — Main Application Entry Point
 All-in-one intelligent app maintenance and monitoring platform.
 """
 

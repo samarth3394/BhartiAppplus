@@ -23,7 +23,7 @@ def send_downtime_alert(mail, app, check):
                     <p><strong>Error:</strong> {check.error_message}</p>
                     <p><strong>Time:</strong> {check.checked_at}</p>
                     <br>
-                    <p style="color: #94a3b8;">This is an automated alert from AppPulse AI.</p>
+                    <p style="color: #94a3b8;">This is an automated alert from Nexvora.</p>
                 </div>
             </div>
             """
@@ -52,7 +52,7 @@ def send_recovery_alert(mail, app, incident):
                     <p><strong>URL:</strong> {app.url}</p>
                     <p><strong>Downtime Duration:</strong> {duration_mins} minutes</p>
                     <br>
-                    <p style="color: #94a3b8;">This is an automated alert from AppPulse AI.</p>
+                    <p style="color: #94a3b8;">This is an automated alert from Nexvora.</p>
                 </div>
             </div>
             """
@@ -81,7 +81,7 @@ def send_ssl_expiry_alert(mail, app, days_remaining):
                     <p><strong>Days Until Expiry:</strong> {days_remaining} days</p>
                     <p>Please renew your SSL certificate as soon as possible.</p>
                     <br>
-                    <p style="color: #94a3b8;">This is an automated alert from AppPulse AI.</p>
+                    <p style="color: #94a3b8;">This is an automated alert from Nexvora.</p>
                 </div>
             </div>
             """
@@ -97,7 +97,7 @@ def send_invite_email(mail, invite_email, app_name, inviter_name, invite_link):
     """Send team invite email."""
     try:
         msg = Message(
-            subject=f'🎉 You\'ve been invited to {app_name} on AppPulse AI',
+            subject=f'🎉 You\'ve been invited to {app_name} on Nexvora',
             recipients=[invite_email],
             html=f"""
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

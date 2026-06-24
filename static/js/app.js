@@ -1,5 +1,5 @@
 /**
- * AppPulse AI — Core JavaScript
+ * Nexvora — Core JavaScript
  * API helpers, notifications, navigation, modal management
  */
 
