@@ -59,6 +59,7 @@ from routes.maintenance import maintenance_bp
 from routes.teams import teams_bp
 from routes.apps import apps_bp
 from routes.api_ingest import api_ingest_bp
+from routes.server import server_bp
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(dashboard_bp)
@@ -68,6 +69,7 @@ app.register_blueprint(maintenance_bp)
 app.register_blueprint(teams_bp)
 app.register_blueprint(apps_bp)
 app.register_blueprint(api_ingest_bp)
+app.register_blueprint(server_bp)
 
 
 # ─── Root Route ────────────────────────────────────────────────────────────

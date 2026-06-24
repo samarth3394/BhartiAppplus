@@ -105,6 +105,7 @@ class App(Base):
     bugs = relationship('Bug', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
     maintenance_tasks = relationship('MaintenanceTask', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
     activity_logs = relationship('ActivityLog', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
+    server_metrics = relationship('ServerMetric', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
@@ -401,6 +402,31 @@ class ActivityLog(Base):
             'user': self.user.to_dict() if self.user else None,
         }
 
+
+# ─── Server Metrics ───────────────────────────────────────────────────────
+
+class ServerMetric(Base):
+    __tablename__ = 'server_metrics'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False)
+    cpu_percent = Column(Float, default=0.0)
+    ram_percent = Column(Float, default=0.0)
+    disk_percent = Column(Float, default=0.0)
+    timestamp = Column(DateTime, default=utc_now, index=True)
+
+    # Relationships
+    app = relationship('App', back_populates='server_metrics')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'cpu_percent': self.cpu_percent,
+            'ram_percent': self.ram_percent,
+            'disk_percent': self.disk_percent,
+            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+        }
 
 # ─── Database Setup ───────────────────────────────────────────────────────
 

@@ -59,7 +59,11 @@
                     <span>Bug Tracker</span>
                     <span class="nav-badge hidden" id="bugs-badge">0</span>
                 </a>
-                <a href="/maintenance" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance">
+                <a href="{{ url_for('server.server_page') }}" class="nav-item {% block nav_server %}{% endblock %}">
+                    <i data-lucide="server"></i>
+                    <span>Infrastructure</span>
+                </a>
+                <a href="{{ url_for('maintenance.maintenance_page') }}" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance">
                     <i data-lucide="clipboard-check"></i>
                     <span>Maintenance</span>
                     <span class="nav-badge hidden" id="maintenance-badge">0</span>

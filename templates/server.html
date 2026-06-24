@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Infrastructure Monitoring — Nexvora{% endblock %}
+{% block nav_server %}active{% endblock %}
+{% block page_title %}Infrastructure Monitoring{% endblock %}
+{% block page_subtitle %}Real-time server agent metrics{% endblock %}
+
+{% block topbar_actions %}
+<div style="display:flex;gap:var(--space-md);align-items:center;">
+    <select class="form-input" id="metric-period" onchange="loadMetrics()" style="min-width:120px;padding:6px 12px;height:auto;">
+        <option value="1h">Last 1 Hour</option>
+        <option value="24h">Last 24 Hours</option>
+        <option value="7d">Last 7 Days</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" onclick="openAgentModal()">
+        <i data-lucide="download"></i> Server Agent
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(255, 255, 255, 0.1);"><i data-lucide="cpu"></i></div>
+        <div class="stat-info">
+            <h3 id="current-cpu">--%</h3>
+            <p>Current CPU Usage</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(255, 255, 255, 0.1);"><i data-lucide="memory-stick"></i></div>
+        <div class="stat-info">
+            <h3 id="current-ram">--%</h3>
+            <p>Current RAM Usage</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(255, 255, 255, 0.1);"><i data-lucide="hard-drive"></i></div>
+        <div class="stat-info">
+            <h3 id="current-disk">--%</h3>
+            <p>Current Disk Usage</p>
+        </div>
+    </div>
+</div>
+
+<div class="chart-container mt-xl">
+    <h3 style="margin-bottom:var(--space-lg);font-weight:600;">CPU & RAM Usage</h3>
+    <div style="position: relative; height: 350px;">
+        <canvas id="usageChart"></canvas>
+    </div>
+</div>
+
+<div class="empty-state hidden" id="no-metrics-state" style="margin-top:var(--space-2xl);">
+    <div class="empty-state-icon">🖥️</div>
+    <h3>No server metrics yet</h3>
+    <p>Install the Nexvora Server Agent on your VPS or cloud instance to start monitoring your infrastructure.</p>
+    <button class="btn btn-primary btn-lg mt-md" onclick="openAgentModal()">
+        <i data-lucide="download"></i> Setup Server Agent
+    </button>
+</div>
+
+<!-- Server Agent Modal -->
+<div class="modal-overlay" id="agent-modal">
+    <div class="modal" style="max-width:650px;">
+        <div class="modal-header">
+            <h3>Nexvora Server Agent Setup</h3>
+            <button class="modal-close" onclick="closeModal('agent-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <p class="text-muted mb-md">Run this command on your server (Ubuntu/Debian/CentOS) to start streaming metrics.</p>
+            
+            <div class="form-group">
+                <label>1. Install Dependencies</label>
+                <div style="background:#111;color:#f1f1f1;padding:var(--space-sm);border-radius:var(--radius-sm);font-family:monospace;font-size:var(--font-sm);">
+                    pip3 install psutil requests
+                </div>
+            </div>
+            
+            <div class="form-group mt-md">
+                <label>2. Download the Agent</label>
+                <div style="background:#111;color:#f1f1f1;padding:var(--space-sm);border-radius:var(--radius-sm);font-family:monospace;font-size:var(--font-sm);">
+                    wget <span id="agent-host-url"></span>/agent/nexvora_agent.py
+                </div>
+            </div>
+
+            <div class="form-group mt-md">
+                <label>3. Run the Agent</label>
+                <div style="background:#111;color:#f1f1f1;padding:var(--space-sm);border-radius:var(--radius-sm);font-family:monospace;font-size:var(--font-sm);word-break:break-all;">
+                    nohup python3 nexvora_agent.py --key "<span id="agent-client-key"></span>" --endpoint "<span id="agent-endpoint-url"></span>" &
+                </div>
+                <div class="text-muted text-sm mt-xs">This will run the agent in the background.</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('agent-modal')">Close</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/server.js') }}"></script>
+{% endblock %}
