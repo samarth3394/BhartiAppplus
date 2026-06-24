@@ -70,6 +70,7 @@ def create_app():
             owner_id=current_user.id,
         )
         s.add(new_app)
+        s.flush()  # Populate new_app.id
 
         log = ActivityLog(
             app_id=new_app.id,

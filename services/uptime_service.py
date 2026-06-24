@@ -26,10 +26,10 @@ def check_app_uptime(session, app):
     check = UptimeCheck(app_id=app.id)
 
     try:
-        response = requests.head(url, timeout=10, allow_redirects=True)
+        response = requests.get(url, timeout=10, allow_redirects=True)
         check.status_code = response.status_code
         check.response_time_ms = response.elapsed.total_seconds() * 1000
-        check.is_up = response.status_code < 500
+        check.is_up = response.status_code < 400
         check.error_message = '' if check.is_up else f'HTTP {response.status_code}'
     except requests.exceptions.Timeout:
         check.is_up = False

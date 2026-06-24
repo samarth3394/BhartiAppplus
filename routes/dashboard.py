@@ -106,8 +106,11 @@ def dashboard_stats():
         ssl_expiry = None
         ssl_days_remaining = None
         if latest_check and latest_check.ssl_expiry_date:
-            ssl_expiry = latest_check.ssl_expiry_date.isoformat()
-            ssl_days_remaining = (latest_check.ssl_expiry_date - now).days
+            dt = latest_check.ssl_expiry_date
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            ssl_expiry = dt.isoformat()
+            ssl_days_remaining = (dt - now).days
 
         return jsonify({
             'has_app': True,
