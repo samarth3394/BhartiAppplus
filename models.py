@@ -86,6 +86,7 @@ class App(Base):
     name = Column(String(255), nullable=False)
     url = Column(String(500), default='')
     description = Column(Text, default='')
+    client_key = Column(String(100), unique=True, default=generate_uuid)
     owner_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     created_at = Column(DateTime, default=utc_now)
     is_active = Column(Boolean, default=True)
@@ -111,6 +112,7 @@ class App(Base):
             'name': self.name,
             'url': self.url,
             'description': self.description,
+            'client_key': self.client_key,
             'owner_id': self.owner_id,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'is_active': self.is_active,
@@ -216,7 +218,9 @@ class Bug(Base):
     description = Column(Text, default='')
     severity = Column(Enum(SeverityEnum), default=SeverityEnum.medium)
     status = Column(Enum(BugStatusEnum), default=BugStatusEnum.open)
-    reported_by = Column(String(36), ForeignKey('users.id'), nullable=False)
+    reported_by = Column(String(36), ForeignKey('users.id'), nullable=True)
+    is_automated = Column(Boolean, default=False)
+    metadata_json = Column(JSON, nullable=True)
     assigned_to = Column(String(36), ForeignKey('users.id'), nullable=True)
     created_at = Column(DateTime, default=utc_now)
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
@@ -238,6 +242,8 @@ class Bug(Base):
             'severity': self.severity.value if self.severity else None,
             'status': self.status.value if self.status else None,
             'reported_by': self.reported_by,
+            'is_automated': self.is_automated,
+            'metadata_json': self.metadata_json,
             'assigned_to': self.assigned_to,
             'reporter': self.reporter.to_dict() if self.reporter else None,
             'assignee': self.assignee.to_dict() if self.assignee else None,

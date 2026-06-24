@@ -258,10 +258,26 @@ async function showBugDetail(bugId) {
         <div class="flex gap-md mb-lg">
             <span class="badge badge-${bug.severity}">${bug.severity}</span>
             <span class="badge badge-${bug.status}">${bug.status.replace('_', ' ')}</span>
+            ${bug.is_automated ? '<span class="badge badge-critical" style="background:var(--danger);color:white;">Automated</span>' : ''}
         </div>
         <p style="color:var(--text-secondary);line-height:1.7;">${escapeHtml(bug.description || 'No description provided.')}</p>
+        
+        ${bug.is_automated && bug.metadata_json ? `
+            <div style="margin-top:var(--space-xl);background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:var(--space-md);">
+                <h4 style="margin-top:0;margin-bottom:var(--space-sm);font-size:var(--font-sm);color:var(--text-secondary);">Automated Metadata</h4>
+                <div style="font-size:var(--font-xs);font-family:monospace;color:var(--text-secondary);word-break:break-all;margin-bottom:var(--space-sm);">
+                    <strong>URL:</strong> ${escapeHtml(bug.metadata_json.url || '')}<br>
+                    <strong>User-Agent:</strong> ${escapeHtml(bug.metadata_json.userAgent || '')}<br>
+                    <strong>Time:</strong> ${escapeHtml(bug.metadata_json.timestamp || '')}
+                </div>
+                <div style="font-size:var(--font-xs);font-family:monospace;white-space:pre-wrap;background:#111;color:#f1f1f1;padding:var(--space-sm);border-radius:var(--radius-sm);overflow-x:auto;">
+                    ${escapeHtml(bug.metadata_json.stack || 'No stack trace')}
+                </div>
+            </div>
+        ` : ''}
+
         <div style="margin-top:var(--space-xl);display:grid;grid-template-columns:1fr 1fr;gap:var(--space-base);font-size:var(--font-sm);">
-            <div><span class="text-muted">Reported by:</span> ${bug.reporter ? bug.reporter.full_name : '--'}</div>
+            <div><span class="text-muted">Reported by:</span> ${bug.reporter ? bug.reporter.full_name : (bug.is_automated ? 'System (Auto)' : '--')}</div>
             <div><span class="text-muted">Assigned to:</span> ${bug.assignee ? bug.assignee.full_name : 'Unassigned'}</div>
             <div><span class="text-muted">Created:</span> ${formatDateTime(bug.created_at)}</div>
             <div><span class="text-muted">Updated:</span> ${formatDateTime(bug.updated_at)}</div>

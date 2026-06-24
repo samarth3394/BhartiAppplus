@@ -38,6 +38,9 @@ async function loadApps() {
                 <div style="display:flex;gap:var(--space-sm);margin-top:auto;">
                     ${app.is_owner ? `
                         <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();openEditAppModal('${app.id}')">Edit</button>
+                        <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();openSDKModal('${app.id}')">
+                            <i data-lucide="code" style="width:14px;height:14px;"></i> SDK
+                        </button>
                         <button class="btn btn-ghost btn-sm text-danger" onclick="event.stopPropagation();openDeleteModal('${app.id}', '${escapeAttr(app.name)}')">Delete</button>
                     ` : `
                         <span class="badge badge-${app.role || 'viewer'}">${app.role || 'member'}</span>
@@ -137,6 +140,24 @@ async function confirmDeleteApp() {
     } catch (err) {
         showToast(err.message, 'error');
     }
+}
+
+// ─── SDK Setup ────────────────────────────────────────────────────────────
+
+function openSDKModal(appId) {
+    const app = allApps.find(a => a.id === appId);
+    if (!app || !app.client_key) {
+        showToast('Client Key not generated yet', 'error');
+        return;
+    }
+    
+    document.getElementById('sdk-client-key').value = app.client_key;
+    
+    const host = window.location.protocol + '//' + window.location.host;
+    const snippet = `<script src="${host}/static/js/nexvora.js"><\/script>\n<script>\n  window.Nexvora.init({\n    clientKey: '${app.client_key}',\n    endpoint: '${host}/api/ingest/error'\n  });\n<\/script>`;
+    
+    document.getElementById('sdk-snippet').value = snippet;
+    openModal('sdk-modal');
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────

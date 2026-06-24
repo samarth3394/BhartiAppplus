@@ -73,6 +73,32 @@
         </div>
     </div>
 </div>
+
+<!-- SDK Setup Modal -->
+<div class="modal-overlay" id="sdk-modal">
+    <div class="modal" style="max-width:600px;">
+        <div class="modal-header">
+            <h3>Automated Error Tracking SDK</h3>
+            <button class="modal-close" onclick="closeModal('sdk-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <p class="text-muted mb-md">Copy and paste this snippet into the <code>&lt;head&gt;</code> of your HTML file to automatically track Javascript errors.</p>
+            <div class="form-group">
+                <label>Your Client Key</label>
+                <div style="display:flex; gap: 8px;">
+                    <input type="text" id="sdk-client-key" class="form-input" readonly style="font-family: monospace; font-size: 14px;">
+                </div>
+            </div>
+            <div class="form-group mt-md">
+                <label>Installation Snippet</label>
+                <textarea id="sdk-snippet" class="form-input" readonly style="font-family: monospace; font-size: 12px; height: 180px;"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('sdk-modal')">Close</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
