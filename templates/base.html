@@ -107,13 +107,10 @@
             <!-- Topbar -->
             <header class="topbar">
                 <div class="topbar-left">
-                    <button class="btn btn-ghost btn-icon" onclick="toggleSidebar()" id="sidebar-toggle" style="display:none;">
+                    <button id="mobile-menu-btn" class="btn btn-icon" style="display: none; margin-right: var(--space-md);" onclick="toggleSidebar()">
                         <i data-lucide="menu"></i>
                     </button>
-                    <div>
-                        <h2>{% block page_title %}Dashboard{% endblock %}</h2>
-                        <div class="page-subtitle">{% block page_subtitle %}{% endblock %}</div>
-                    </div>
+                    <h2>{% block header_title %}Dashboard{% endblock %}</h2>
                 </div>
                 <div class="topbar-right">
                     {% block topbar_actions %}{% endblock %}

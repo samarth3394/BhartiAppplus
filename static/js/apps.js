@@ -108,13 +108,23 @@ async function submitApp() {
         if (editId) {
             await api(`/api/apps/${editId}`, { method: 'PUT', body });
             showToast('App updated!', 'success');
+            closeModal('app-modal');
+            loadApps();
+            loadAppSwitcher();
         } else {
             await api('/api/apps', { method: 'POST', body });
             showToast('App created!', 'success');
+            
+            // If this was the first app, go straight to dashboard
+            if (allApps.length === 0) {
+                window.location.href = '/dashboard';
+                return;
+            } else {
+                closeModal('app-modal');
+                loadApps();
+                loadAppSwitcher();
+            }
         }
-        closeModal('app-modal');
-        loadApps();
-        loadAppSwitcher();
     } catch (err) {
         showToast(err.message, 'error');
     }
