@@ -166,6 +166,19 @@ function toggleSidebar() {
     }
 }
 
+// Close sidebar on click outside (for mobile)
+document.addEventListener('click', (e) => {
+    const sidebar = document.getElementById('sidebar');
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (sidebar && sidebar.classList.contains('open') && menuBtn) {
+        // If click is outside both the sidebar and the hamburger menu button
+        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+            sidebar.classList.remove('open');
+        }
+    }
+});
+
 // ─── Logout ─────────────────────────────────────────────────────────────
 
 async function logout() {
