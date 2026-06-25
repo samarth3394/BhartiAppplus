@@ -60,10 +60,15 @@
 
             <!-- Hero Card (Initially Visible) -->
             <div class="hero-card" id="hero-card">
-                <h1 class="hero-headline">Built for the future.<br>Available today.</h1>
-                <div class="hero-buttons">
-                    <button class="btn-hero btn-hero-primary" onclick="showLoginForm()">Get started</button>
-                    <button class="btn-hero btn-hero-secondary">Contact sales</button>
+                <div class="hero-content">
+                    <h1 class="hero-headline">Built for the future.<br>Available today.</h1>
+                    <div class="hero-buttons">
+                        <button class="btn-hero btn-hero-primary" onclick="showLoginForm()">Get started</button>
+                        <button class="btn-hero btn-hero-secondary">Contact sales</button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="{{ url_for('static', filename='images/hero_dashboard.png') }}" alt="Nexvora Dashboard Preview">
                 </div>
             </div>
 
