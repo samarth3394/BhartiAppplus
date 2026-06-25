@@ -561,23 +561,7 @@ select.form-input {
     z-index: 1000;
 }
 
-.nav-item::before {
-    content: '';
-    position: absolute;
-    left: calc(100% + 9px);
-    top: 50%;
-    transform: translateY(-50%) translateX(-10px);
-    border-width: 6px;
-    border-style: solid;
-    border-color: transparent rgba(28, 28, 30, 0.85) transparent transparent;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    z-index: 1000;
-}
-
-.nav-item:hover::after,
-.nav-item:hover::before {
+.nav-item:hover::after {
     opacity: 1;
     transform: translateY(-50%) translateX(0);
 }
