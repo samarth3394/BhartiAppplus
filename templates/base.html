@@ -49,37 +49,37 @@
             <!-- Navigation -->
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Overview</div>
-                <a href="/dashboard" class="nav-item {% block nav_dashboard %}{% endblock %}" id="nav-dashboard" title="Dashboard">
+                <a href="/dashboard" class="nav-item {% block nav_dashboard %}{% endblock %}" id="nav-dashboard" data-tooltip="Dashboard">
                     <i data-lucide="layout-dashboard"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="/uptime" class="nav-item {% block nav_uptime %}{% endblock %}" id="nav-uptime" title="Uptime Monitor">
+                <a href="/uptime" class="nav-item {% block nav_uptime %}{% endblock %}" id="nav-uptime" data-tooltip="Uptime Monitor">
                     <i data-lucide="activity"></i>
                     <span>Uptime Monitor</span>
                 </a>
 
                 <div class="nav-section-label">Manage</div>
-                <a href="{{ url_for('bugs.bugs_page') }}" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs" title="Bug Tracker">
+                <a href="{{ url_for('bugs.bugs_page') }}" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs" data-tooltip="Bug Tracker">
                     <i data-lucide="bug"></i>
                     <span>Bug Tracker</span>
                     <span class="nav-badge hidden" id="bugs-badge">0</span>
                 </a>
-                <a href="{{ url_for('roadmap.roadmap_page') }}" class="nav-item {% block nav_roadmap %}{% endblock %}" title="Roadmap">
+                <a href="{{ url_for('roadmap.roadmap_page') }}" class="nav-item {% block nav_roadmap %}{% endblock %}" data-tooltip="Roadmap">
                     <i data-lucide="map"></i>
                     <span>Roadmap</span>
                 </a>
-                <a href="{{ url_for('server.server_page') }}" class="nav-item {% block nav_server %}{% endblock %}" title="Infrastructure">
+                <a href="{{ url_for('server.server_page') }}" class="nav-item {% block nav_server %}{% endblock %}" data-tooltip="Infrastructure">
                     <i data-lucide="server"></i>
                     <span>Infrastructure</span>
                 </a>
-                <a href="{{ url_for('maintenance.maintenance_page') }}" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance" title="Maintenance">
+                <a href="{{ url_for('maintenance.maintenance_page') }}" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance" data-tooltip="Maintenance">
                     <i data-lucide="clipboard-check"></i>
                     <span>Maintenance</span>
                     <span class="nav-badge hidden" id="maintenance-badge">0</span>
                 </a>
 
                 <div class="nav-section-label">Team</div>
-                <a href="/teams" class="nav-item {% block nav_teams %}{% endblock %}" id="nav-teams" title="Team">
+                <a href="/teams" class="nav-item {% block nav_teams %}{% endblock %}" id="nav-teams" data-tooltip="Team">
                     <i data-lucide="users"></i>
                     <span>Team</span>
                 </a>
