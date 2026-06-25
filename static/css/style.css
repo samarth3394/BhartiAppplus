@@ -567,7 +567,8 @@ select.form-input {
     border-radius: 0 2px 2px 0;
 }
 
-.nav-item i {
+.nav-item i,
+.nav-item svg {
     width: 20px;
     height: 20px;
     display: flex;
