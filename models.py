@@ -106,6 +106,7 @@ class App(Base):
     maintenance_tasks = relationship('MaintenanceTask', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
     activity_logs = relationship('ActivityLog', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
     server_metrics = relationship('ServerMetric', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
+    roadmap_features = relationship('RoadmapFeature', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
@@ -454,6 +455,39 @@ class ServerMetric(Base):
             'ram_percent': self.ram_percent,
             'disk_percent': self.disk_percent,
             'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+        }
+
+# ─── Roadmap Features ─────────────────────────────────────────────────────
+
+class RoadmapFeature(Base):
+    __tablename__ = 'roadmap_features'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, default='')
+    status = Column(String(50), default='planned') # planned, in_progress, completed
+    priority = Column(String(50), default='medium') # low, medium, high, urgent
+    start_date = Column(DateTime, nullable=True)
+    due_date = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+
+    # Relationships
+    app = relationship('App', back_populates='roadmap_features')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'title': self.title,
+            'description': self.description,
+            'status': self.status,
+            'priority': self.priority,
+            'start_date': self.start_date.isoformat() if self.start_date else None,
+            'due_date': self.due_date.isoformat() if self.due_date else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
         }
 
 # ─── Database Setup ───────────────────────────────────────────────────────

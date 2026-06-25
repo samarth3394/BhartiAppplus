@@ -54,10 +54,14 @@
                 </a>
 
                 <div class="nav-section-label">Manage</div>
-                <a href="/bugs" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs">
+                <a href="{{ url_for('bugs.bugs_page') }}" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs">
                     <i data-lucide="bug"></i>
                     <span>Bug Tracker</span>
                     <span class="nav-badge hidden" id="bugs-badge">0</span>
+                </a>
+                <a href="{{ url_for('roadmap.roadmap_page') }}" class="nav-item {% block nav_roadmap %}{% endblock %}">
+                    <i data-lucide="map"></i>
+                    <span>Roadmap</span>
                 </a>
                 <a href="{{ url_for('server.server_page') }}" class="nav-item {% block nav_server %}{% endblock %}">
                     <i data-lucide="server"></i>

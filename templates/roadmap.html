@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Roadmap — Nexvora{% endblock %}
+{% block nav_roadmap %}active{% endblock %}
+{% block page_title %}Roadmap{% endblock %}
+{% block page_subtitle %}Plan and track major project features{% endblock %}
+
+{% block topbar_actions %}
+<div class="flex gap-sm">
+    <button class="btn btn-secondary btn-sm" onclick="loadFeatures()">
+        <i data-lucide="refresh-cw"></i> Refresh
+    </button>
+    <button class="btn btn-primary btn-sm" onclick="openCreateFeatureModal()">
+        <i data-lucide="plus"></i> New Feature
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Linear-inspired Board View -->
+<div id="roadmap-board" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-xl); margin-top: var(--space-lg);">
+    
+    <!-- Planned Column -->
+    <div class="roadmap-col">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-md);">
+            <h4 style="font-size:var(--font-sm); font-weight:600; color:var(--text-secondary); display:flex; align-items:center; gap:var(--space-xs);">
+                <i data-lucide="circle-dashed" style="width:14px; height:14px;"></i> Planned
+            </h4>
+            <span class="badge" id="count-planned" style="background:var(--bg-secondary);">0</span>
+        </div>
+        <div id="col-planned" style="display:flex; flex-direction:column; gap:var(--space-md);">
+            <!-- Features injected here -->
+        </div>
+    </div>
+
+    <!-- In Progress Column -->
+    <div class="roadmap-col">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-md);">
+            <h4 style="font-size:var(--font-sm); font-weight:600; color:var(--warning); display:flex; align-items:center; gap:var(--space-xs);">
+                <i data-lucide="clock" style="width:14px; height:14px;"></i> In Progress
+            </h4>
+            <span class="badge" id="count-in_progress" style="background:var(--bg-secondary);">0</span>
+        </div>
+        <div id="col-in_progress" style="display:flex; flex-direction:column; gap:var(--space-md);">
+        </div>
+    </div>
+
+    <!-- Completed Column -->
+    <div class="roadmap-col">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-md);">
+            <h4 style="font-size:var(--font-sm); font-weight:600; color:var(--success); display:flex; align-items:center; gap:var(--space-xs);">
+                <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i> Completed
+            </h4>
+            <span class="badge" id="count-completed" style="background:var(--bg-secondary);">0</span>
+        </div>
+        <div id="col-completed" style="display:flex; flex-direction:column; gap:var(--space-md);">
+        </div>
+    </div>
+
+</div>
+
+<!-- Feature Modal -->
+<div class="modal-overlay" id="feature-modal">
+    <div class="modal" style="max-width:600px;">
+        <div class="modal-header">
+            <h3 id="feature-modal-title">New Feature</h3>
+            <button class="modal-close" onclick="closeModal('feature-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="feature-id">
+            <div class="form-group">
+                <label>Feature Title</label>
+                <input type="text" id="feature-title" class="form-input" placeholder="e.g. Implement User Authentication" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="feature-description" class="form-input" rows="4" placeholder="What is the goal of this feature?"></textarea>
+            </div>
+            
+            <div class="two-col" style="gap:var(--space-base);">
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="feature-status" class="form-input">
+                        <option value="planned">Planned</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Priority</label>
+                    <select id="feature-priority" class="form-input">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="two-col" style="gap:var(--space-base);">
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="feature-start" class="form-input" style="color-scheme: dark;">
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="feature-due" class="form-input" style="color-scheme: dark;">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <button class="btn btn-ghost btn-sm text-danger hidden" id="feature-delete-btn" onclick="deleteFeature()">Delete Feature</button>
+            </div>
+            <div style="display:flex; gap:var(--space-sm);">
+                <button class="btn btn-secondary" onclick="closeModal('feature-modal')">Cancel</button>
+                <button class="btn btn-primary" id="feature-submit-btn" onclick="submitFeature()">Save Feature</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/roadmap.js') }}"></script>
+{% endblock %}
