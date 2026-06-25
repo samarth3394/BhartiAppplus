@@ -2111,3 +2111,17 @@ select.form-input {
         font-size: var(--font-lg);
     }
 }
+
+/* ─── Chart Container ──────────────────────────────────────────────────────── */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    margin-top: var(--space-md);
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 250px;
+    }
+}
