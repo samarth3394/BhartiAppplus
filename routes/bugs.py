@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify, request, render_template, current_app
 from flask_login import login_required, current_user
 from datetime import datetime, timezone
 from models import (
-    Bug, BugAttachment, BugHistory, BugStatusEnum, SeverityEnum,
+    Bug, BugAttachment, BugHistory, BugComment, BugStatusEnum, SeverityEnum,
     ActivityLog, AppMember, RoleEnum
 )
 
@@ -103,6 +103,7 @@ def create_bug():
             status=BugStatusEnum.open,
             reported_by=current_user.id,
             assigned_to=data.get('assigned_to'),
+            tags_json=data.get('tags', []),
         )
         s.add(bug)
 
@@ -192,6 +193,11 @@ def update_bug(bug_id):
             if data['assigned_to'] != bug.assigned_to:
                 changes.append(('assigned_to', bug.assigned_to or 'unassigned', data['assigned_to'] or 'unassigned'))
                 bug.assigned_to = data['assigned_to'] or None
+
+        if 'tags' in data:
+            if data['tags'] != bug.tags_json:
+                changes.append(('tags', str(bug.tags_json), str(data['tags'])))
+                bug.tags_json = data['tags']
 
         bug.updated_at = datetime.now(timezone.utc)
 
@@ -348,6 +354,58 @@ def bug_history(bug_id):
     finally:
         s.close()
 
+
+@bugs_bp.route('/api/bugs/<bug_id>/comments', methods=['GET', 'POST'])
+@login_required
+def bug_comments(bug_id):
+    from app import db_session
+    from flask import session as flask_session
+    s = db_session()
+    try:
+        app_id = flask_session.get('current_app_id')
+        if not app_id:
+            return jsonify({'error': 'No app selected'}), 400
+
+        bug = s.query(Bug).filter_by(id=bug_id, app_id=app_id).first()
+        if not bug:
+            return jsonify({'error': 'Bug not found'}), 404
+
+        if request.method == 'GET':
+            comments = s.query(BugComment).filter_by(bug_id=bug_id).order_by(
+                BugComment.created_at.asc()
+            ).all()
+            return jsonify({'comments': [c.to_dict() for c in comments]})
+
+        elif request.method == 'POST':
+            data = request.get_json()
+            content = data.get('content', '').strip()
+            if not content:
+                return jsonify({'error': 'Comment content is required'}), 400
+
+            comment = BugComment(
+                bug_id=bug.id,
+                user_id=current_user.id,
+                content=content
+            )
+            s.add(comment)
+
+            log = ActivityLog(
+                app_id=app_id,
+                user_id=current_user.id,
+                action=f'Commented on bug: {bug.title[:50]}',
+                entity_type='bug_comment',
+                entity_id=comment.id,
+            )
+            s.add(log)
+
+            s.commit()
+            return jsonify({'message': 'Comment added', 'comment': comment.to_dict()}), 201
+
+    except Exception as e:
+        s.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        s.close()
 
 def _check_permission(session, app_id, min_role=RoleEnum.developer):
     """Check if current user has the minimum required role for the app."""

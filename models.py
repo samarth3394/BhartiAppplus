@@ -222,6 +222,7 @@ class Bug(Base):
     reported_by = Column(String(36), ForeignKey('users.id'), nullable=True)
     is_automated = Column(Boolean, default=False)
     metadata_json = Column(JSON, nullable=True)
+    tags_json = Column(JSON, default=list)
     assigned_to = Column(String(36), ForeignKey('users.id'), nullable=True)
     created_at = Column(DateTime, default=utc_now)
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
@@ -233,6 +234,7 @@ class Bug(Base):
     assignee = relationship('User', foreign_keys=[assigned_to])
     attachments = relationship('BugAttachment', back_populates='bug', lazy='dynamic', cascade='all, delete-orphan')
     history = relationship('BugHistory', back_populates='bug', lazy='dynamic', cascade='all, delete-orphan')
+    comments = relationship('BugComment', back_populates='bug', lazy='dynamic', cascade='all, delete-orphan', order_by='BugComment.created_at.asc()')
 
     def to_dict(self):
         return {
@@ -252,8 +254,34 @@ class Bug(Base):
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
             'resolved_at': self.resolved_at.isoformat() if self.resolved_at else None,
             'attachment_count': self.attachments.count() if self.attachments else 0,
+            'tags': self.tags_json or [],
+            'comment_count': self.comments.count() if self.comments else 0,
         }
 
+class BugComment(Base):
+    __tablename__ = 'bug_comments'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    bug_id = Column(String(36), ForeignKey('bugs.id'), nullable=False)
+    user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+
+    # Relationships
+    bug = relationship('Bug', back_populates='comments')
+    user = relationship('User', foreign_keys=[user_id])
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'bug_id': self.bug_id,
+            'user_id': self.user_id,
+            'content': self.content,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'user': self.user.to_dict() if self.user else None,
+        }
 
 class BugAttachment(Base):
     __tablename__ = 'bug_attachments'

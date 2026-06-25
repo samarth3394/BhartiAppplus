@@ -120,7 +120,7 @@
             <h3 id="bug-modal-title">Report Bug</h3>
             <button class="modal-close" onclick="closeModal('bug-modal')">×</button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
             <input type="hidden" id="bug-edit-id">
             <div class="form-group">
                 <label for="bug-title">Title *</label>
@@ -129,6 +129,10 @@
             <div class="form-group">
                 <label for="bug-description">Description</label>
                 <textarea id="bug-description" class="form-input" placeholder="Detailed steps to reproduce..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="bug-tags">Tags (comma-separated)</label>
+                <input type="text" id="bug-tags" class="form-input" placeholder="e.g. frontend, database, urgent">
             </div>
             <div class="two-col" style="gap:var(--space-base);">
                 <div class="form-group">

@@ -55,12 +55,17 @@ function renderPipeline() {
             <div class="bug-card" draggable="true" ondragstart="dragBug(event, '${bug.id}')"
                  onclick="showBugDetail('${bug.id}')">
                 <div class="bug-card-title">${escapeHtml(bug.title)}</div>
-                <div class="bug-card-meta">
+                <div class="bug-card-meta" style="margin-bottom:var(--space-xs);">
                     <span class="badge badge-${bug.severity}">${bug.severity}</span>
                     ${bug.assignee ?
                         `<div class="bug-card-assignee" title="${bug.assignee.full_name}">${getInitials(bug.assignee.full_name)}</div>` :
                         ''}
                 </div>
+                ${bug.tags && bug.tags.length > 0 ? `
+                    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:var(--space-xs);">
+                        ${bug.tags.map(t => `<span style="font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,0.1);color:#a1a1a6;">${escapeHtml(t)}</span>`).join('')}
+                    </div>
+                ` : ''}
             </div>
         `).join('');
     });
@@ -152,6 +157,7 @@ function openCreateBugModal() {
     document.getElementById('bug-edit-id').value = '';
     document.getElementById('bug-title').value = '';
     document.getElementById('bug-description').value = '';
+    document.getElementById('bug-tags').value = '';
     document.getElementById('bug-severity').value = 'medium';
     document.getElementById('bug-assignee').value = '';
     document.getElementById('bug-modal-title').textContent = 'Report Bug';
@@ -167,6 +173,7 @@ function openEditBugModal(bugId) {
     document.getElementById('bug-edit-id').value = bug.id;
     document.getElementById('bug-title').value = bug.title;
     document.getElementById('bug-description').value = bug.description || '';
+    document.getElementById('bug-tags').value = (bug.tags || []).join(', ');
     document.getElementById('bug-severity').value = bug.severity;
     document.getElementById('bug-assignee').value = bug.assigned_to || '';
     document.getElementById('bug-status').value = bug.status;
@@ -184,9 +191,13 @@ async function submitBug() {
         return;
     }
 
+    const tagsRaw = document.getElementById('bug-tags').value;
+    const tags = tagsRaw.split(',').map(t => t.trim()).filter(t => t);
+
     const body = {
         title,
         description: document.getElementById('bug-description').value,
+        tags: tags,
         severity: document.getElementById('bug-severity').value,
         assigned_to: document.getElementById('bug-assignee').value || null,
     };
@@ -254,12 +265,39 @@ async function showBugDetail(bugId) {
         }
     } catch (e) {}
 
+    // Load comments
+    let commentsHtml = '';
+    try {
+        const commentsData = await api(`/api/bugs/${bugId}/comments`);
+        if (commentsData.comments && commentsData.comments.length > 0) {
+            commentsHtml = `
+                <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                    ${commentsData.comments.map(c => `
+                        <div style="background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:var(--space-md);">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-xs);font-size:var(--font-sm);">
+                                <strong>${c.user ? escapeHtml(c.user.full_name) : 'Unknown'}</strong>
+                                <span class="text-muted">${timeAgo(c.created_at)}</span>
+                            </div>
+                            <div style="color:var(--text-primary);line-height:1.5;">${escapeHtml(c.content)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+    } catch (e) {}
+
+    const tagsHtml = bug.tags && bug.tags.length > 0 ? 
+        `<div style="display:flex;gap:var(--space-xs);margin-bottom:var(--space-md);">
+            ${bug.tags.map(t => `<span class="badge" style="background:rgba(255,255,255,0.1);">${escapeHtml(t)}</span>`).join('')}
+        </div>` : '';
+
     document.getElementById('bug-detail-body').innerHTML = `
         <div class="flex gap-md mb-lg">
             <span class="badge badge-${bug.severity}">${bug.severity}</span>
             <span class="badge badge-${bug.status}">${bug.status.replace('_', ' ')}</span>
             ${bug.is_automated ? '<span class="badge badge-critical" style="background:var(--danger);color:white;">Automated</span>' : ''}
         </div>
+        ${tagsHtml}
         <p style="color:var(--text-secondary);line-height:1.7;">${escapeHtml(bug.description || 'No description provided.')}</p>
         
         ${bug.is_automated && bug.metadata_json ? `
@@ -284,6 +322,15 @@ async function showBugDetail(bugId) {
             <div><span class="text-muted">Attachments:</span> ${bug.attachment_count || 0}</div>
             ${bug.resolved_at ? `<div><span class="text-muted">Resolved:</span> ${formatDateTime(bug.resolved_at)}</div>` : ''}
         </div>
+
+        <h4 style="margin-top:var(--space-xl);margin-bottom:var(--space-base);">Comments & Discussion</h4>
+        ${commentsHtml || '<div class="text-muted mb-md">No comments yet.</div>'}
+        
+        <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-md);">
+            <input type="text" id="new-comment-${bug.id}" class="form-input" placeholder="Type a comment...">
+            <button class="btn btn-secondary" onclick="postComment('${bug.id}')">Post</button>
+        </div>
+
         ${historyHtml}
         <div style="margin-top:var(--space-xl);display:flex;gap:var(--space-sm);">
             <button class="btn btn-secondary btn-sm" onclick="closeModal('bug-detail-modal');openEditBugModal('${bug.id}')">Edit</button>
@@ -291,6 +338,24 @@ async function showBugDetail(bugId) {
     `;
 
     openModal('bug-detail-modal');
+}
+
+async function postComment(bugId) {
+    const input = document.getElementById(`new-comment-${bugId}`);
+    const content = input.value.trim();
+    if (!content) return;
+
+    try {
+        await api(`/api/bugs/${bugId}/comments`, {
+            method: 'POST',
+            body: { content }
+        });
+        input.value = '';
+        showToast('Comment posted', 'success');
+        showBugDetail(bugId); // Refresh modal
+    } catch (err) {
+        showToast(err.message, 'error');
+    }
 }
 
 // ─── Team Members for Assignee Dropdown ─────────────────────────────────
