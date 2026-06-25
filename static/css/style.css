@@ -199,7 +199,7 @@ a:hover {
 .auth-info > p {
     font-size: 1.25rem;
     line-height: 1.6;
-    color: #b0c4de; /* Light Steel Blue */
+    color: #ffffff; /* User requested pure white */
     font-weight: 400;
 }
 
@@ -230,14 +230,14 @@ a:hover {
 }
 
 .auth-feature-content h3 {
-    color: #e2e8f0;
+    color: #ffffff; /* User requested pure white */
     font-size: 1.1rem;
     margin-bottom: 4px;
     font-weight: 600;
 }
 
 .auth-feature-content p {
-    color: #8fa3b8; /* Darker Steel Blue */
+    color: #ffffff; /* User requested pure white */
     font-size: 0.95rem;
     line-height: 1.5;
 }
@@ -246,13 +246,45 @@ a:hover {
     .auth-wrapper {
         flex-direction: column;
     }
-    .auth-info {
-        text-align: center;
+    
+    .auth-card {
+        order: 1; /* Login box first on mobile */
         margin-bottom: var(--space-2xl);
     }
+    
+    .auth-info {
+        order: 2; /* Info below login box on mobile */
+        text-align: left;
+        width: 100%;
+    }
+    
+    /* Horizontal scroll for features on mobile */
     .auth-features-list {
         display: flex;
-        text-align: left;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 16px;
+        gap: 16px;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .auth-features-list::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for cleaner look */
+    }
+    
+    .auth-feature {
+        flex-direction: column;
+        min-width: 85vw; /* Almost full width cards for horizontal scroll */
+        scroll-snap-align: center;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .auth-feature-icon {
+        margin-bottom: 8px;
     }
 }
 
