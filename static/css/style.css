@@ -173,8 +173,6 @@ a:hover {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    align-items: center;
-    justify-content: center;
 }
 
 .auth-info {
@@ -193,7 +191,8 @@ a:hover {
 .auth-info > p {
     order: 2;
     text-align: center;
-    margin-bottom: var(--space-2xl);
+    margin: 0 auto var(--space-2xl) auto;
+    max-width: 800px;
     font-size: 1.25rem;
     line-height: 1.6;
     color: #ffffff;
@@ -204,6 +203,7 @@ a:hover {
     order: 3;
     width: 100%;
     max-width: 360px;
+    margin: 0 auto var(--space-2xl) auto;
     background: rgba(15, 15, 15, 0.4); /* Glassmorphism */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -213,7 +213,6 @@ a:hover {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
-    margin-bottom: var(--space-2xl);
     z-index: 1; /* Above particles */
 }
 
