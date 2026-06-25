@@ -169,48 +169,85 @@ a:hover {
 
 .auth-wrapper {
     display: flex;
+    flex-direction: column;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    gap: var(--space-3xl);
     align-items: center;
     justify-content: center;
 }
 
 .auth-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xl);
-    max-width: 600px;
+    display: contents;
 }
 
 .auth-info h1 {
+    order: 1;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #ffffff;
     font-size: 3.5rem;
     font-weight: 800;
-    line-height: 1.1;
-    color: #ffffff;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .auth-info > p {
+    order: 2;
+    text-align: center;
+    margin-bottom: var(--space-2xl);
     font-size: 1.25rem;
     line-height: 1.6;
-    color: #ffffff; /* User requested pure white */
+    color: #ffffff;
     font-weight: 400;
 }
 
+.auth-card {
+    order: 3;
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-xl);
+    padding: var(--space-3xl);
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: var(--space-2xl);
+}
+
 .auth-features-list {
+    order: 4;
     display: flex;
-    flex-direction: column;
-    gap: var(--space-lg);
-    margin-top: var(--space-md);
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 16px;
+    gap: 20px;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+.auth-features-list::-webkit-scrollbar {
+    height: 8px;
+}
+.auth-features-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+.auth-features-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
 }
 
 .auth-feature {
     display: flex;
-    align-items: flex-start;
-    gap: var(--space-md);
+    flex-direction: column;
+    min-width: 280px;
+    flex: 1;
+    scroll-snap-align: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .auth-feature-icon {
@@ -219,81 +256,34 @@ a:hover {
     justify-content: center;
     width: 48px;
     height: 48px;
-    background: rgba(255, 255, 255, 0.05); /* Pure grayscale */
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
-    color: #ffffff; /* White icon instead of blue */
+    color: #ffffff;
     flex-shrink: 0;
+    margin-bottom: 16px;
 }
 
 .auth-feature-content h3 {
-    color: #ffffff; /* User requested pure white */
+    color: #ffffff;
     font-size: 1.1rem;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     font-weight: 600;
 }
 
 .auth-feature-content p {
-    color: #ffffff; /* User requested pure white */
+    color: #ffffff;
     font-size: 0.95rem;
     line-height: 1.5;
 }
 
 @media (max-width: 900px) {
-    .auth-wrapper {
-        flex-direction: column;
-    }
-    
-    .auth-info {
-        display: contents; /* Makes children direct items of auth-wrapper */
-    }
-    
-    .auth-info h1 {
-        order: 1;
-        text-align: center;
-        margin-bottom: 8px;
-    }
-    
-    .auth-info > p {
-        order: 2;
-        text-align: center;
-        margin-bottom: var(--space-xl);
-    }
-    
-    .auth-card {
-        order: 3; /* Login box in the middle */
-        margin-bottom: var(--space-xl);
-    }
-    
-    /* Horizontal scroll for features on mobile */
-    .auth-features-list {
-        order: 4; /* Features at the bottom */
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 16px;
-        gap: 16px;
-        -webkit-overflow-scrolling: touch;
-        width: 100%;
+    .auth-feature {
+        min-width: 85vw; /* Almost full width cards for mobile horizontal scroll */
     }
     
     .auth-features-list::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for cleaner look */
-    }
-    
-    .auth-feature {
-        flex-direction: column;
-        min-width: 85vw; /* Almost full width cards for horizontal scroll */
-        scroll-snap-align: center;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .auth-feature-icon {
-        margin-bottom: 8px;
+        display: none; /* Hide scrollbar for cleaner look on mobile */
     }
 }
 
