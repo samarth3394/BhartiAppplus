@@ -183,8 +183,8 @@ a:hover {
 
 .auth-wrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
     gap: 60px;
     width: 100%;
@@ -204,9 +204,15 @@ a:hover {
 .auth-right {
     flex: 1;
     max-width: 500px;
-    display: flex;
+    display: none; /* Hide on laptop */
     flex-direction: column;
     z-index: 10;
+}
+
+@media (max-width: 900px) {
+    .auth-right {
+        display: flex;
+    }
 }
 
 .auth-info {
