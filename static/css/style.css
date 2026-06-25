@@ -9,9 +9,9 @@
 
 :root {
     /* Core colors */
-    --bg-primary: #000000;
-    --bg-secondary: rgba(0, 0, 0, 0.7);
-    --bg-card: #1c1c1e;
+    --bg-primary: #050505;
+    --bg-secondary: rgba(5, 5, 5, 0.4);
+    --bg-card: rgba(18, 18, 20, 0.2);
     --bg-card-hover: #2c2c2e;
     --bg-elevated: #2c2c2e;
     --bg-input: #1c1c1e;
@@ -381,9 +381,9 @@ select.form-input {
     position: fixed;
     left: 0;
     top: 0;
-    background: rgba(17, 17, 17, 0.7);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background: rgba(10, 10, 12, 0.3);
+    backdrop-filter: saturate(180%) blur(40px);
+    -webkit-backdrop-filter: saturate(180%) blur(40px);
     border-right: 1px solid rgba(255, 255, 255, 0.04);
     display: flex;
     flex-direction: column;
@@ -674,7 +674,7 @@ select.form-input {
 
 .topbar {
     height: var(--topbar-height);
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(5, 5, 5, 0.3);
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     display: flex;
     align-items: center;
@@ -683,8 +683,8 @@ select.form-input {
     position: sticky;
     top: 0;
     z-index: 50;
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(40px);
+    -webkit-backdrop-filter: saturate(180%) blur(40px);
 }
 
 .topbar-left {
@@ -727,10 +727,10 @@ select.form-input {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .card {
-    background: rgba(28, 28, 30, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(20, 20, 22, 0.3);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-lg);
     padding: var(--space-xl);
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -781,10 +781,11 @@ select.form-input {
 }
 
 .stat-card {
-    background: rgba(28, 28, 30, 0.4);
-    backdrop-filter: blur(32px);
-    -webkit-backdrop-filter: blur(32px);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: rgba(20, 20, 22, 0.25);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 32px;
     padding: var(--space-xl);
     position: relative;
@@ -1987,6 +1988,69 @@ select.form-input {
 /* Button smooth hover */
 .btn {
     transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+/* ─── Aurora Background ─────────────────────────────────────────────────── */
+
+.aurora-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: #050505;
+}
+
+.aurora-bg::before,
+.aurora-bg::after,
+.aurora-blob {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.5;
+    animation: aurora-move 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.aurora-bg::before {
+    top: -20%;
+    left: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: rgba(59, 130, 246, 0.35); /* Electric Blue */
+}
+
+.aurora-bg::after {
+    bottom: -20%;
+    right: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: rgba(139, 92, 246, 0.35); /* Vivid Purple */
+    animation-duration: 25s;
+    animation-delay: -5s;
+}
+
+.aurora-blob {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    width: 40vw;
+    height: 40vw;
+    background: rgba(16, 185, 129, 0.25); /* Emerald */
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.5;
+    animation: aurora-move 30s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    animation-delay: -10s;
+}
+
+@keyframes aurora-move {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    33% { transform: translate(15vw, -15vh) scale(1.1) rotate(45deg); }
+    66% { transform: translate(-10vw, 15vh) scale(0.9) rotate(-45deg); }
+    100% { transform: translate(-5vw, -5vh) scale(1.2) rotate(20deg); }
 }
 
 .btn:active {
