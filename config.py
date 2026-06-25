@@ -8,7 +8,11 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'nexvora-ai-secret-key-change-in-production')
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'nexvora.db')}"
+    db_url = os.getenv('DATABASE_URL')
+    if db_url and db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+        
+    SQLALCHEMY_DATABASE_URI = db_url or f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'nexvora.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # File uploads
