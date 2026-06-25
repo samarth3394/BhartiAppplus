@@ -161,10 +161,14 @@ a:hover {
 .auth-container {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: var(--space-2xl);
-    background: #000000; /* Pure dark black background */
+    padding: var(--space-2xl) 16px;
+    background: #000000;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .auth-wrapper {
@@ -173,6 +177,7 @@ a:hover {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    min-width: 0; /* Fixes flexbox child preventing parent from shrinking */
 }
 
 .auth-info {
@@ -193,6 +198,7 @@ a:hover {
     text-align: center;
     margin: 0 auto var(--space-2xl) auto;
     max-width: 800px;
+    width: 100%;
     font-size: 1.25rem;
     line-height: 1.6;
     color: #ffffff;
@@ -225,7 +231,9 @@ a:hover {
     padding-bottom: 16px;
     gap: 20px;
     width: 100%;
+    max-width: 100vw;
     -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
 }
 
 .auth-features-list::-webkit-scrollbar {
