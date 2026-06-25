@@ -203,15 +203,18 @@ a:hover {
 .auth-card {
     order: 3;
     width: 100%;
-    max-width: 360px; /* Reduced from 420px */
-    background: var(--bg-card);
-    border: 1px solid var(--border-default);
+    max-width: 360px;
+    background: rgba(15, 15, 15, 0.4); /* Glassmorphism */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-xl);
-    padding: var(--space-2xl); /* Reduced padding */
-    box-shadow: var(--shadow-xl);
+    padding: var(--space-2xl);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
     margin-bottom: var(--space-2xl);
+    z-index: 1; /* Above particles */
 }
 
 .auth-features-list {
@@ -280,11 +283,85 @@ a:hover {
 @media (max-width: 900px) {
     .auth-feature {
         min-width: 85vw; /* Almost full width cards for mobile horizontal scroll */
+        background: rgba(15, 15, 15, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
     
     .auth-features-list::-webkit-scrollbar {
         display: none; /* Hide scrollbar for cleaner look on mobile */
     }
+}
+
+/* ─── Premium Auth Elements ─────────────────────────────────────────────── */
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: var(--space-xl) 0;
+    color: var(--text-muted);
+    font-size: var(--font-xs);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auth-divider::before {
+    margin-right: .5em;
+}
+
+.auth-divider::after {
+    margin-left: .5em;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    width: 100%;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-bottom: var(--space-md);
+}
+
+.social-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.social-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.typing-cursor {
+    display: inline-block;
+    width: 2px;
+    background-color: #ffffff;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    vertical-align: middle;
+    height: 1.2em;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 .auth-card {
