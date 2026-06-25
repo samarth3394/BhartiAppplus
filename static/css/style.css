@@ -311,7 +311,7 @@ a:hover {
 
 .auth-logo {
     text-align: center;
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-md);
 }
 
 .auth-logo h1 {
@@ -329,9 +329,9 @@ a:hover {
 }
 
 .auth-card h2 {
-    font-size: var(--font-xl);
+    font-size: var(--font-lg);
     font-weight: 700;
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
     text-align: center;
 }
 
