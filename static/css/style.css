@@ -203,11 +203,11 @@ a:hover {
 .auth-card {
     order: 3;
     width: 100%;
-    max-width: 420px;
+    max-width: 360px; /* Reduced from 420px */
     background: var(--bg-card);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-xl);
-    padding: var(--space-3xl);
+    padding: var(--space-2xl); /* Reduced padding */
     box-shadow: var(--shadow-xl);
     position: relative;
     overflow: hidden;
