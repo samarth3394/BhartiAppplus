@@ -2031,11 +2031,25 @@ select.form-input {
     }
 
     /* Show everything normally in sidebar */
-    .sidebar-header, .app-switcher, .nav-section-label {
+    .sidebar-header {
         display: flex !important;
+        padding: var(--space-xl) var(--space-lg);
     }
+    .sidebar-logo .logo-text, .sidebar-logo .logo-badge {
+        display: block !important;
+    }
+    
+    .nav-section-label {
+        display: block !important;
+        padding: var(--space-md) var(--space-lg) var(--space-xs);
+    }
+    
     .app-switcher {
         display: block !important;
+        height: auto;
+        padding: var(--space-md);
+        margin: 0 var(--space-md) var(--space-md) var(--space-md);
+        border-bottom: 1px solid var(--border-default);
     }
 
     .sidebar-nav {
