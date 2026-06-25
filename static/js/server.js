@@ -69,6 +69,14 @@ function renderChart(metrics) {
         usageChart.destroy();
     }
 
+    let gradientBlue = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientBlue.addColorStop(0, 'rgba(41, 151, 255, 0.4)');
+    gradientBlue.addColorStop(1, 'rgba(41, 151, 255, 0.0)');
+
+    let gradientGreen = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientGreen.addColorStop(0, 'rgba(50, 215, 75, 0.4)');
+    gradientGreen.addColorStop(1, 'rgba(50, 215, 75, 0.0)');
+
     usageChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -78,23 +86,25 @@ function renderChart(metrics) {
                     label: 'CPU Usage (%)',
                     data: cpuData,
                     borderColor: '#2997ff', // Apple Blue
-                    backgroundColor: 'rgba(41, 151, 255, 0.1)',
-                    borderWidth: 2,
+                    backgroundColor: gradientBlue,
+                    borderWidth: 3,
                     tension: 0.4,
                     fill: true,
                     pointRadius: 0,
-                    pointHitRadius: 10
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#2997ff'
                 },
                 {
                     label: 'RAM Usage (%)',
                     data: ramData,
                     borderColor: '#32d74b', // Apple Green
-                    backgroundColor: 'rgba(50, 215, 75, 0.1)',
-                    borderWidth: 2,
+                    backgroundColor: gradientGreen,
+                    borderWidth: 3,
                     tension: 0.4,
                     fill: true,
                     pointRadius: 0,
-                    pointHitRadius: 10
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#32d74b'
                 }
             ]
         },
@@ -122,13 +132,17 @@ function renderChart(metrics) {
                 y: {
                     beginAtZero: true,
                     max: 100,
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: '#a1a1a6' }
+                    grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false },
+                    ticks: { color: '#a1a1a6', padding: 10 }
                 },
                 x: {
-                    grid: { display: false },
-                    ticks: { color: '#a1a1a6', maxTicksLimit: 10 }
+                    grid: { display: false, drawBorder: false },
+                    ticks: { color: '#a1a1a6', maxTicksLimit: 8, padding: 10 }
                 }
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
             }
         }
     });

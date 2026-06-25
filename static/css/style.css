@@ -652,11 +652,17 @@ select.form-input {
     gap: var(--space-base);
 }
 
+@keyframes fadeInSmooth {
+    from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
 .page-content {
     flex: 1;
     padding: var(--space-2xl);
     max-width: 1400px;
     width: 100%;
+    animation: fadeInSmooth 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -664,15 +670,20 @@ select.form-input {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    background: rgba(28, 28, 30, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-lg);
     padding: var(--space-xl);
-    transition: all var(--transition-base);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
 }
 
 .card:hover {
-    border-color: var(--border-default);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.03);
+    transform: translateY(-2px);
 }
 
 .card-header {
@@ -712,19 +723,22 @@ select.form-input {
 }
 
 .stat-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    background: rgba(28, 28, 30, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-lg);
     padding: var(--space-xl);
     position: relative;
     overflow: hidden;
-    transition: all var(--transition-base);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .stat-card:hover {
-    border-color: var(--border-default);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .stat-card::after {
