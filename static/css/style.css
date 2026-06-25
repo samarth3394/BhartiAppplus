@@ -247,19 +247,30 @@ a:hover {
         flex-direction: column;
     }
     
-    .auth-card {
-        order: 1; /* Login box first on mobile */
-        margin-bottom: var(--space-2xl);
+    .auth-info {
+        display: contents; /* Makes children direct items of auth-wrapper */
     }
     
-    .auth-info {
-        order: 2; /* Info below login box on mobile */
-        text-align: left;
-        width: 100%;
+    .auth-info h1 {
+        order: 1;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+    
+    .auth-info > p {
+        order: 2;
+        text-align: center;
+        margin-bottom: var(--space-xl);
+    }
+    
+    .auth-card {
+        order: 3; /* Login box in the middle */
+        margin-bottom: var(--space-xl);
     }
     
     /* Horizontal scroll for features on mobile */
     .auth-features-list {
+        order: 4; /* Features at the bottom */
         display: flex;
         flex-direction: row;
         overflow-x: auto;
@@ -267,6 +278,7 @@ a:hover {
         padding-bottom: 16px;
         gap: 16px;
         -webkit-overflow-scrolling: touch;
+        width: 100%;
     }
     
     .auth-features-list::-webkit-scrollbar {
