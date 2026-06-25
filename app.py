@@ -3,6 +3,9 @@ Nexvora — Main Application Entry Point
 All-in-one intelligent app maintenance and monitoring platform.
 """
 
+import eventlet
+eventlet.monkey_patch()
+
 import os
 from flask import Flask, redirect, url_for
 from flask_login import LoginManager, current_user
