@@ -232,6 +232,85 @@ a:hover {
     z-index: 1; /* Above particles */
 }
 
+/* ─── Hero Section (Alternative to Login Card) ─────────────────────────── */
+
+.hero-card {
+    order: 3;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto var(--space-2xl) auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center for mobile, left for desktop? Image is centered. Let's align left like the screenshot! */
+    text-align: left;
+    padding: var(--space-2xl) 0;
+    z-index: 1;
+}
+
+.hero-headline {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #ffffff;
+    margin-bottom: var(--space-2xl);
+    letter-spacing: -0.03em;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: var(--space-md);
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.btn-hero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 100px; /* Pill shape */
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-hero-primary {
+    background-color: #e5e5e5;
+    color: #000000;
+    border: none;
+}
+
+.btn-hero-primary:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.btn-hero-secondary {
+    background-color: #111111;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-hero-secondary:hover {
+    background-color: #1a1a1a;
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .hero-headline {
+        font-size: 3rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    .btn-hero {
+        width: 100%;
+    }
+}
+
 .auth-features-list {
     order: 4;
     display: flex;
