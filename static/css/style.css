@@ -9,9 +9,9 @@
 
 :root {
     /* Core colors */
-    --bg-primary: #050505;
-    --bg-secondary: rgba(5, 5, 5, 0.4);
-    --bg-card: rgba(18, 18, 20, 0.2);
+    --bg-primary: #000000;
+    --bg-secondary: #050505;
+    --bg-card: #0a0a0a;
     --bg-card-hover: #2c2c2e;
     --bg-elevated: #2c2c2e;
     --bg-input: #1c1c1e;
@@ -113,11 +113,14 @@ html {
 }
 
 body {
-    font-family: var(--font-family);
-    background: var(--bg-primary);
+    background-color: var(--bg-primary);
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-position: -1px -1px;
     color: var(--text-primary);
-    line-height: 1.6;
-    min-height: 100vh;
+    line-height: 1.5;
     overflow-x: hidden;
 }
 
@@ -381,9 +384,9 @@ select.form-input {
     position: fixed;
     left: 0;
     top: 0;
-    background: rgba(10, 10, 12, 0.3);
-    backdrop-filter: saturate(180%) blur(40px);
-    -webkit-backdrop-filter: saturate(180%) blur(40px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid rgba(255, 255, 255, 0.04);
     display: flex;
     flex-direction: column;
@@ -673,18 +676,7 @@ select.form-input {
 }
 
 .topbar {
-    height: var(--topbar-height);
-    background: rgba(5, 5, 5, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--space-2xl);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    backdrop-filter: saturate(180%) blur(40px);
-    -webkit-backdrop-filter: saturate(180%) blur(40px);
+    background: rgba(0, 0, 0, 0.7);
 }
 
 .topbar-left {
@@ -727,10 +719,9 @@ select.form-input {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .card {
-    background: rgba(20, 20, 22, 0.3);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 24px rgba(0, 0, 0, 0.5);
     border-radius: var(--radius-lg);
     padding: var(--space-xl);
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -739,7 +730,7 @@ select.form-input {
 
 .card:hover {
     border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 255, 0.03);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 12px 32px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
 }
 
@@ -781,26 +772,27 @@ select.form-input {
 }
 
 .stat-card {
-    background: rgba(20, 20, 22, 0.25);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, #111111, #080808);
+    border: 1px solid rgba(255, 255, 255, 0.03);
     border-radius: 32px;
     padding: var(--space-xl);
     position: relative;
     overflow: hidden;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 
+                inset 0 0 20px rgba(255, 255, 255, 0.02),
+                0 10px 30px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 .stat-card:hover {
-    border-color: rgba(255, 255, 255, 0.08);
-    transform: scale(1.02);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 16px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 
+                0 20px 40px rgba(0, 0, 0, 0.8), 
+                0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .stat-card::after {
@@ -1990,68 +1982,7 @@ select.form-input {
     transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-/* ─── Aurora Background ─────────────────────────────────────────────────── */
 
-.aurora-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    overflow: hidden;
-    background: #050505;
-}
-
-.aurora-bg::before,
-.aurora-bg::after,
-.aurora-blob {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.5;
-    animation: aurora-move 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.aurora-bg::before {
-    top: -20%;
-    left: -10%;
-    width: 60vw;
-    height: 60vw;
-    background: rgba(59, 130, 246, 0.35); /* Electric Blue */
-}
-
-.aurora-bg::after {
-    bottom: -20%;
-    right: -10%;
-    width: 50vw;
-    height: 50vw;
-    background: rgba(139, 92, 246, 0.35); /* Vivid Purple */
-    animation-duration: 25s;
-    animation-delay: -5s;
-}
-
-.aurora-blob {
-    position: absolute;
-    top: 40%;
-    left: 40%;
-    width: 40vw;
-    height: 40vw;
-    background: rgba(16, 185, 129, 0.25); /* Emerald */
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.5;
-    animation: aurora-move 30s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-    animation-delay: -10s;
-}
-
-@keyframes aurora-move {
-    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    33% { transform: translate(15vw, -15vh) scale(1.1) rotate(45deg); }
-    66% { transform: translate(-10vw, 15vh) scale(0.9) rotate(-45deg); }
-    100% { transform: translate(-5vw, -5vh) scale(1.2) rotate(20deg); }
-}
 
 .btn:active {
     transform: scale(0.96) !important;
