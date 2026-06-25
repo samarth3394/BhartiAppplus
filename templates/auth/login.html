@@ -13,6 +13,7 @@
 <body>
     <div class="auth-container" id="particles-js">
         <div class="auth-wrapper" style="position: relative; z-index: 10;">
+            <div class="auth-left">
             <!-- App Details Section -->
             <div class="auth-info">
                 <p>The All-in-One Intelligent App Platform built for <span id="typing-words">Modern Developers</span><span class="typing-cursor"></span></p>
@@ -111,6 +112,35 @@
                 Don't have an account? <a href="/register">Create one</a>
             </p>
         </div>
+            </div>
+
+            <div class="auth-right">
+                <div class="showcase-card">
+                    <div class="showcase-header">
+                        <div class="mac-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="showcase-title">Getting Started</div>
+                    </div>
+                    <div class="showcase-body">
+                        <h4>1. Install the SDK</h4>
+                        <div class="code-block">
+                            <pre><code>npm install nexvora-sdk</code></pre>
+                        </div>
+                        <h4>2. Initialize in your app</h4>
+                        <div class="code-block">
+                            <pre><code>import { Nexvora } from 'nexvora-sdk';
+
+Nexvora.init({
+  projectId: 'YOUR_PROJECT_ID',
+  enableBugTracking: true
+});</code></pre>
+                        </div>
+                        <h4>3. Plan your Roadmap</h4>
+                        <p class="showcase-text">Use our intuitive drag-and-drop interface to manage features, track progress, and align your team effortlessly. Integrate your Git workflow natively to track commits directly on task cards.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

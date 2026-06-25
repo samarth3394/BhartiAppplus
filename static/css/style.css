@@ -183,11 +183,30 @@ a:hover {
 
 .auth-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    min-width: 0; /* Fixes flexbox child preventing parent from shrinking */
+    min-width: 0;
+}
+
+.auth-left {
+    flex: 1;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.auth-right {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
 }
 
 .auth-info {
@@ -216,9 +235,8 @@ a:hover {
 }
 
 .auth-card {
-    order: 3;
     width: 100%;
-    max-width: 360px;
+    max-width: 380px;
     margin: 0 0 var(--space-2xl) 0;
     background: rgba(15, 15, 15, 0.4); /* Glassmorphism */
     backdrop-filter: blur(20px);
@@ -235,15 +253,14 @@ a:hover {
 /* ─── Hero Section (Alternative to Login Card) ─────────────────────────── */
 
 .hero-card {
-    order: 3;
     width: 100%;
-    max-width: 800px;
+    max-width: 100%;
     margin: 0 0 var(--space-2xl) 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
-    padding: var(--space-2xl) 0;
+    padding: var(--space-md) 0;
     z-index: 1;
 }
 
@@ -312,6 +329,14 @@ a:hover {
 }
 
 @media (max-width: 900px) {
+    .auth-wrapper {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+    }
+    .auth-left, .auth-right {
+        max-width: 100%;
+    }
     .auth-info > p {
         text-align: center;
         margin-left: auto;
@@ -333,6 +358,87 @@ a:hover {
     .auth-feature {
         min-width: 85vw; /* Almost full width cards for mobile horizontal scroll */
     }
+}
+
+/* Showcase Card (Right Column) */
+.showcase-card {
+    background: rgba(15, 15, 15, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+.showcase-header {
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.mac-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.mac-dots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: block;
+}
+
+.mac-dots span:nth-child(1) { background-color: #ff5f56; }
+.mac-dots span:nth-child(2) { background-color: #ffbd2e; }
+.mac-dots span:nth-child(3) { background-color: #27c93f; }
+
+.showcase-title {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-family: monospace;
+}
+
+.showcase-body {
+    padding: var(--space-xl);
+}
+
+.showcase-body h4 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.showcase-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.code-block {
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+}
+
+.code-block pre {
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    color: #e5e5e5;
+    line-height: 1.5;
 }
 
 .auth-features-list {
