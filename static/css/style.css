@@ -164,10 +164,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     padding: var(--space-2xl);
-    background:
-        radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-        var(--bg-primary);
+    background: #000000; /* Pure dark black background */
 }
 
 .auth-wrapper {
@@ -222,10 +219,10 @@ a:hover {
     justify-content: center;
     width: 48px;
     height: 48px;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: rgba(255, 255, 255, 0.05); /* Pure grayscale */
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
-    color: var(--accent-primary);
+    color: #ffffff; /* White icon instead of blue */
     flex-shrink: 0;
 }
 
@@ -319,7 +316,7 @@ a:hover {
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--accent-gradient);
+    background: linear-gradient(90deg, #333333, #ffffff, #333333); /* Grayscale gradient */
 }
 
 .auth-logo {
@@ -346,6 +343,23 @@ a:hover {
     font-weight: 700;
     margin-bottom: var(--space-xl);
     text-align: center;
+}
+
+.auth-card .btn-primary {
+    background: #ffffff;
+    color: #000000;
+    font-weight: 700;
+}
+
+.auth-card .btn-primary:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+}
+
+.auth-card .form-input:focus {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
 /* ─── Form Elements ────────────────────────────────────────────────────── */
