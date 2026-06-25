@@ -159,6 +159,7 @@ a:hover {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .auth-container {
+    position: relative; /* Crucial for absolute particles canvas */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -169,6 +170,15 @@ a:hover {
     overflow-x: hidden;
     width: 100%;
     box-sizing: border-box;
+}
+
+.particles-js-canvas-el {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 0; /* Behind the content */
 }
 
 .auth-wrapper {
