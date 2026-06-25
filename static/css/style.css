@@ -342,8 +342,14 @@ a:hover {
 }
 
 @media (max-width: 600px) {
+    .hero-card {
+        flex-direction: column;
+    }
+    .hero-image {
+        display: none;
+    }
     .hero-headline {
-        font-size: 1.8rem;
+        font-size: 3rem;
     }
     .hero-buttons {
         flex-direction: column;
