@@ -451,9 +451,47 @@ select.form-input {
 
 /* App Switcher in sidebar */
 .app-switcher {
-    padding: var(--space-base) var(--space-lg);
-    border-bottom: 1px solid var(--border-subtle);
+    padding: 0;
+    height: 0;
+    border-bottom: none;
     flex-shrink: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.sidebar:hover .app-switcher {
+    padding: var(--space-base) var(--space-lg);
+    height: auto;
+    border-bottom: 1px solid var(--border-subtle);
+    opacity: 1;
+    overflow: visible;
+}
+
+.app-switcher-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-sm);
+}
+
+.create-app-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent-gradient);
+    color: white;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+}
+.create-app-btn i, .create-app-btn svg {
+    width: 14px;
+    height: 14px;
+}
+.create-app-btn:hover {
+    transform: scale(1.1);
 }
 
 .app-switcher select {
@@ -484,7 +522,6 @@ select.form-input {
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 600;
-    margin-bottom: var(--space-sm);
 }
 
 /* Nav items */
@@ -500,22 +537,19 @@ select.form-input {
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
-    padding: var(--space-base) var(--space-md) var(--space-sm);
+    padding: 0;
+    height: 0;
+    margin: 0;
     opacity: 0;
-    transition: opacity 0.2s;
+    overflow: hidden;
+    transition: all 0.2s;
 }
 
-.sidebar:hover .nav-section-label,
-.sidebar:hover .app-switcher-label,
-.sidebar:hover .app-switcher select {
+.sidebar:hover .nav-section-label {
+    padding: var(--space-base) var(--space-md) var(--space-sm);
+    height: auto;
     opacity: 1;
     pointer-events: auto;
-}
-
-.app-switcher-label, .app-switcher select {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
 }
 
 .nav-item {

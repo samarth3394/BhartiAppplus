@@ -35,7 +35,12 @@
 
             <!-- App Switcher -->
             <div class="app-switcher">
-                <div class="app-switcher-label">Current App</div>
+                <div class="app-switcher-header">
+                    <div class="app-switcher-label">Current App</div>
+                    <a href="/apps" class="create-app-btn" title="Create App">
+                        <i data-lucide="plus"></i>
+                    </a>
+                </div>
                 <select id="app-switcher-select" onchange="switchApp(this.value)">
                     <option value="">Loading apps...</option>
                 </select>
