@@ -251,7 +251,8 @@ a:hover {
         margin-bottom: var(--space-2xl);
     }
     .auth-features-list {
-        display: none; /* Hide detailed features on small screens to save space */
+        display: flex;
+        text-align: left;
     }
 }
 
