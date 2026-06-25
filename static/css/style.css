@@ -183,8 +183,8 @@ a:hover {
 
 .auth-wrapper {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 60px;
     width: 100%;
