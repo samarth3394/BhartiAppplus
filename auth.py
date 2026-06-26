@@ -109,3 +109,9 @@ def logout():
 @login_required
 def me():
     return jsonify({'user': current_user.to_dict()}), 200
+
+
+@auth_bp.route('/setup')
+@login_required
+def setup_page():
+    return render_template('auth/setup.html')

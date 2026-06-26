@@ -160,7 +160,7 @@ Nexvora.init({
                 const data = await res.json();
 
                 if (res.ok) {
-                    window.location.href = '/dashboard';
+                    window.location.href = '/setup';
                 } else {
                     errorDiv.textContent = data.error || 'Registration failed';
                     errorDiv.classList.remove('hidden');

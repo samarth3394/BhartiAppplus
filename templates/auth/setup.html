@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Your Workspace — Nexvora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .setup-wrapper {
+            max-width: 900px;
+            margin: 40px auto 100px auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+        .setup-headline {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .setup-headline h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .setup-headline p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        .setup-section {
+            background: rgba(15, 15, 15, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+        .setup-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+        }
+        .setup-section h2 i {
+            color: #3b82f6; /* Blue tint for icons */
+        }
+        .step-block {
+            margin-bottom: 24px;
+        }
+        .step-block h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e5e5e5;
+            margin-bottom: 12px;
+        }
+        .step-block p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .setup-code {
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: #e5e5e5;
+            overflow-x: auto;
+        }
+        .next-action {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .btn-next {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 100px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            gap: 12px;
+        }
+        .btn-next:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container" id="particles-js">
+        
+        <nav class="top-navbar" style="position: relative;">
+            <div class="nav-left">
+                <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="Logo" class="nav-logo">
+                <span class="nav-brand">Nexvora</span>
+            </div>
+            <div class="nav-right">
+                <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
+            </div>
+        </nav>
+
+        <div class="setup-wrapper animate-fade-up">
+            <div class="setup-headline">
+                <h1>Welcome to Nexvora!</h1>
+                <p>Let's get your workspace and integrations set up in just two steps.</p>
+            </div>
+
+            <!-- Step 1: SDK Installation -->
+            <div class="setup-section animate-fade-up delay-100">
+                <h2><i data-lucide="code"></i> Step 1: Install Bug Tracking SDK</h2>
+                
+                <div class="step-block">
+                    <h3>1. Install via NPM</h3>
+                    <p>Run the following command in your project terminal to install the Nexvora SDK.</p>
+                    <div class="setup-code">
+                        npm install nexvora-sdk
+                    </div>
+                </div>
+
+                <div class="step-block">
+                    <h3>2. Initialize the SDK</h3>
+                    <p>Import and initialize Nexvora at the top of your main application file (e.g., <code>index.js</code> or <code>App.jsx</code>).</p>
+                    <div class="setup-code">
+import { Nexvora } from 'nexvora-sdk';
+
+Nexvora.init({
+  projectId: 'YOUR_PROJECT_ID',
+  enableBugTracking: true,
+  captureUnhandledRejections: true
+});
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Infrastructure Setup -->
+            <div class="setup-section animate-fade-up delay-200">
+                <h2><i data-lucide="server"></i> Step 2: Setup Uptime Monitoring</h2>
+                
+                <div class="step-block">
+                    <h3>Monitor Your APIs and Websites</h3>
+                    <p>Nexvora will automatically ping your endpoints to ensure they are live. You can set this up directly from your Dashboard once you continue.</p>
+                    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 20px; font-size: 0.95rem;">
+                        <li>Go to the <strong>Uptime</strong> section in your Dashboard.</li>
+                        <li>Click on <strong>+ Add Monitor</strong>.</li>
+                        <li>Enter your API or Website URL (e.g., <code>https://api.yourdomain.com</code>).</li>
+                        <li>Set the ping interval (e.g., every 5 minutes).</li>
+                        <li>We will notify you immediately via email if your server goes down.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Action -->
+            <div class="next-action animate-fade-up delay-300">
+                <a href="{{ url_for('dashboard.dashboard_page') }}" class="btn-next">
+                    Continue to Dashboard <i data-lucide="arrow-right"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        lucide.createIcons();
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 60, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.2, random: false },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.1, width: 1 },
+                move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "grab" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    grab: { distance: 140, line_linked: { opacity: 0.5 } },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+</html>
