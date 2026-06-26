@@ -119,6 +119,7 @@ body {
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 30px 30px;
     background-position: -1px -1px;
+    background-attachment: fixed;
     color: var(--text-primary);
     line-height: 1.5;
     overflow-x: hidden;
@@ -275,12 +276,13 @@ a:hover {
 }
 
 .particles-js-canvas-el {
-    position: absolute !important;
+    position: fixed !important;
     top: 0;
     left: 0;
-    width: 100% !important;
-    height: 100% !important;
+    width: 100vw !important;
+    height: 100vh !important;
     z-index: 0; /* Behind the content */
+    pointer-events: none;
 }
 
 .auth-wrapper {
