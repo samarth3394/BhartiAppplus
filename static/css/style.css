@@ -768,23 +768,17 @@ a:hover {
 .auth-card {
     width: 100%;
     max-width: 420px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-default);
+    background: transparent;
+    border: none;
     border-radius: var(--radius-xl);
-    padding: var(--space-3xl);
-    box-shadow: var(--shadow-xl);
+    padding: var(--space-3xl) 0;
+    box-shadow: none;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .auth-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #333333, #ffffff, #333333); /* Grayscale gradient */
+    display: none;
 }
 
 .auth-logo {
