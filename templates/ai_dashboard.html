@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}AI CTO Dashboard — Nexvora{% endblock %}
+{% block nav_ai_dashboard %}active{% endblock %}
+{% block page_title %}AI CTO Dashboard{% endblock %}
+{% block page_subtitle %}Executive overview powered by Gemini AI{% endblock %}
+
+{% block content %}
+<div class="card" style="background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(59,130,246,0.1) 100%); border: 1px solid rgba(59,130,246,0.3);">
+    <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: var(--space-base);">
+        <h3 style="display:flex; align-items:center; gap:var(--space-xs); color:var(--text-primary);">
+            <i class="ri-brain-line" style="color:var(--primary); font-size:1.5rem;"></i> System Intelligence Report
+        </h3>
+        <button class="btn btn-primary" id="refresh-ai-btn" onclick="fetchAiSummary()">
+            <i class="ri-refresh-line"></i> Generate Report
+        </button>
+    </div>
+    <div class="card-body" id="ai-content-container" style="min-height: 300px; padding: var(--space-lg) 0;">
+        <div id="ai-loading" class="hidden" style="text-align:center; padding: 3rem;">
+            <div class="spinner" style="width:40px; height:40px; margin:0 auto var(--space-md) auto; border-top-color:var(--primary);"></div>
+            <p style="color:var(--text-secondary);">Analyzing entire application health...</p>
+        </div>
+        
+        <div id="ai-error" class="hidden" style="color:var(--danger); padding:var(--space-base); background:rgba(239,68,68,0.1); border-radius:var(--radius-md); margin-bottom:var(--space-md);">
+        </div>
+
+        <div id="ai-result" class="hidden" style="line-height: 1.8; font-size: 1.05rem; color:var(--text-primary);">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function fetchAiSummary() {
+    const loading = document.getElementById('ai-loading');
+    const result = document.getElementById('ai-result');
+    const error = document.getElementById('ai-error');
+    const btn = document.getElementById('refresh-ai-btn');
+    
+    loading.classList.remove('hidden');
+    result.classList.add('hidden');
+    error.classList.add('hidden');
+    btn.disabled = true;
+    
+    try {
+        const response = await api('/api/ai-dashboard/summary');
+        
+        // Parse markdown manually
+        let formattedText = escapeHtml(response.summary)
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/### (.*?)\n/g, '<h4 style="margin-top:var(--space-lg);margin-bottom:var(--space-sm);color:var(--primary);">$1</h4>')
+            .replace(/## (.*?)\n/g, '<h3 style="margin-top:var(--space-xl);margin-bottom:var(--space-base); border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:var(--space-xs);">$1</h3>')
+            .replace(/# (.*?)\n/g, '<h2 style="margin-top:var(--space-xl);margin-bottom:var(--space-base);">$1</h2>')
+            .replace(/\n/g, '<br>')
+            .replace(/- (.*?)<br>/g, '<li style="margin-bottom:var(--space-xs);">$1</li>')
+            .replace(/(<li.*?>.*?<\/li>)/g, '<ul style="margin-left:var(--space-lg); padding-left:0;">$1</ul>')
+            .replace(/<\/ul><ul.*?>/g, ''); // merge adjacent lists
+            
+        result.innerHTML = formattedText;
+        result.classList.remove('hidden');
+    } catch (err) {
+        error.textContent = err.message;
+        error.classList.remove('hidden');
+    } finally {
+        loading.classList.add('hidden');
+        btn.disabled = false;
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Auto-fetch on load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchAiSummary();
+});
+</script>
+{% endblock %}

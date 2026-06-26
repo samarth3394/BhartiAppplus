@@ -332,8 +332,20 @@ async function showBugDetail(bugId) {
         </div>
 
         ${historyHtml}
+        
+        <!-- AI Analysis Section -->
+        <div id="ai-analysis-${bug.id}" style="margin-top:var(--space-xl);display:none;background:rgba(59,130,246,0.1);border:1px solid var(--primary);border-radius:var(--radius-md);padding:var(--space-md);">
+            <h4 style="margin-top:0;color:var(--primary);display:flex;align-items:center;gap:var(--space-xs);">
+                <i class="ri-robot-line"></i> AI Root Cause Analysis
+            </h4>
+            <div id="ai-analysis-content-${bug.id}" style="line-height:1.6;font-size:var(--font-sm);">
+                Analyzing... <div class="spinner"></div>
+            </div>
+        </div>
+
         <div style="margin-top:var(--space-xl);display:flex;gap:var(--space-sm);">
             <button class="btn btn-secondary btn-sm" onclick="closeModal('bug-detail-modal');openEditBugModal('${bug.id}')">Edit</button>
+            <button class="btn btn-primary btn-sm" onclick="analyzeBugAi('${bug.id}')"><i class="ri-magic-line"></i> AI Root Cause Analysis</button>
         </div>
     `;
 
@@ -355,6 +367,30 @@ async function postComment(bugId) {
         showBugDetail(bugId); // Refresh modal
     } catch (err) {
         showToast(err.message, 'error');
+    }
+}
+
+async function analyzeBugAi(bugId) {
+    const analysisContainer = document.getElementById(`ai-analysis-${bugId}`);
+    const analysisContent = document.getElementById(`ai-analysis-content-${bugId}`);
+    
+    if (!analysisContainer || !analysisContent) return;
+    
+    analysisContainer.style.display = 'block';
+    analysisContent.innerHTML = 'Analyzing... <div class="spinner"></div>';
+    
+    try {
+        const response = await api(`/api/bugs/${bugId}/analyze`, { method: 'POST' });
+        
+        // Basic markdown-like parsing for the AI response
+        let formattedText = escapeHtml(response.analysis)
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+            
+        analysisContent.innerHTML = formattedText;
+    } catch (err) {
+        analysisContent.innerHTML = `<span style="color:var(--danger);">${escapeHtml(err.message)}</span>`;
     }
 }
 

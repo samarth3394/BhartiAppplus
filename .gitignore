@@ -35,6 +35,7 @@ venv.bak/
 *.sqlite3
 instance/
 apppulse.db
+app.db
 
 # Uploads
 static/uploads/

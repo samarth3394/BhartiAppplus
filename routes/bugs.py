@@ -407,6 +407,35 @@ def bug_comments(bug_id):
     finally:
         s.close()
 
+@bugs_bp.route('/api/bugs/<bug_id>/analyze', methods=['POST'])
+@login_required
+def analyze_bug_ai(bug_id):
+    from app import db_session
+    from flask import session as flask_session
+    from services.ai_service import analyze_root_cause
+    
+    s = db_session()
+    try:
+        app_id = flask_session.get('current_app_id')
+        if not app_id:
+            return jsonify({'error': 'No app selected'}), 400
+
+        bug = s.query(Bug).filter_by(id=bug_id, app_id=app_id).first()
+        if not bug:
+            return jsonify({'error': 'Bug not found'}), 404
+
+        # Optionally gather recent logs related to this bug or app
+        logs = ""  # We can fetch recent server logs here if needed
+        
+        analysis_result = analyze_root_cause(bug.title, bug.description, logs)
+        
+        return jsonify({'analysis': analysis_result}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        s.close()
+
+
 def _check_permission(session, app_id, min_role=RoleEnum.developer):
     """Check if current user has the minimum required role for the app."""
     from models import App

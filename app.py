@@ -64,6 +64,7 @@ from routes.apps import apps_bp
 from routes.api_ingest import api_ingest_bp
 from routes.server import server_bp
 from routes.roadmap import roadmap_bp
+from routes.ai_dashboard import ai_dashboard_bp
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(dashboard_bp)
@@ -75,6 +76,7 @@ app.register_blueprint(apps_bp)
 app.register_blueprint(api_ingest_bp)
 app.register_blueprint(server_bp)
 app.register_blueprint(roadmap_bp)
+app.register_blueprint(ai_dashboard_bp)
 
 
 # ─── Root Route ────────────────────────────────────────────────────────────
