@@ -2885,4 +2885,28 @@ select.form-input {
         height: 100%;
         flex: 1;
     }
+    
+    /* Center the rest of the layout on laptops */
+    .auth-left {
+        align-items: center;
+    }
+    .auth-info h1 {
+        text-align: center;
+    }
+    .auth-features-list {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .hero-card {
+        align-items: center;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto var(--space-2xl) auto;
+    }
+    .hero-buttons {
+        justify-content: center;
+    }
+    .trusted-section {
+        align-items: center;
+    }
 }
