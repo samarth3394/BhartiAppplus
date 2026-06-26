@@ -23,12 +23,12 @@
     --border-strong: rgba(255, 255, 255, 0.1);
 
     /* Accent colors */
-    --accent-primary: #3b82f6;
-    --accent-primary-hover: #2563eb;
-    --accent-primary-glow: rgba(59, 130, 246, 0.3);
-    --accent-secondary: #8b5cf6;
-    --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    --accent-gradient-hover: linear-gradient(135deg, #2563eb, #7c3aed);
+    --accent-primary: #ffffff;
+    --accent-primary-hover: #e5e5e5;
+    --accent-primary-glow: rgba(255, 255, 255, 0.2);
+    --accent-secondary: #a1a1aa;
+    --accent-gradient: linear-gradient(135deg, #ffffff, #a1a1aa);
+    --accent-gradient-hover: linear-gradient(135deg, #e5e5e5, #71717a);
 
     /* Semantic colors */
     --success: #10b981;
@@ -1176,7 +1176,7 @@ select.form-input {
 }
 
 .nav-item.active {
-    background: rgba(59, 130, 246, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--accent-primary);
     font-weight: 600;
 }
@@ -1592,17 +1592,17 @@ select.form-input {
 .badge-high { background: rgba(249, 115, 22, 0.15); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.3); }
 .badge-critical { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
 
-.badge-open { background: rgba(59, 130, 246, 0.15); color: var(--accent-primary); border: 1px solid rgba(59, 130, 246, 0.3); }
+.badge-open { background: rgba(255, 255, 255, 0.15); color: var(--accent-primary); border: 1px solid rgba(255, 255, 255, 0.3); }
 .badge-in_progress { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
 .badge-testing { background: rgba(139, 92, 246, 0.15); color: var(--accent-secondary); border: 1px solid rgba(139, 92, 246, 0.3); }
 .badge-resolved { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
 
-.badge-daily { background: rgba(59, 130, 246, 0.15); color: var(--accent-primary); }
+.badge-daily { background: rgba(255, 255, 255, 0.15); color: var(--accent-primary); }
 .badge-weekly { background: rgba(139, 92, 246, 0.15); color: var(--accent-secondary); }
 .badge-monthly { background: rgba(16, 185, 129, 0.15); color: var(--success); }
 
 .badge-admin { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-.badge-developer { background: rgba(59, 130, 246, 0.15); color: var(--accent-primary); }
+.badge-developer { background: rgba(255, 255, 255, 0.15); color: var(--accent-primary); }
 .badge-viewer { background: rgba(148, 163, 184, 0.15); color: var(--text-secondary); }
 
 /* ─── Activity Feed ────────────────────────────────────────────────────── */
@@ -1709,7 +1709,7 @@ select.form-input {
 }
 
 .pipeline-items.drag-over {
-    background: rgba(59, 130, 246, 0.05);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-md);
 }
 
@@ -2689,10 +2689,21 @@ select.form-input {
     
     /* Topbar */
     .topbar {
-        padding: 0 var(--space-lg);
-        background: transparent;
-        backdrop-filter: none;
-        border-bottom: none;
+        padding: 12px var(--space-lg);
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-default);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    
+    /* Health Breakdown */
+    .health-breakdown {
+        gap: var(--space-md);
+        flex-wrap: wrap;
+        justify-content: center;
     }
     
     /* Bento Grid Fixes */
