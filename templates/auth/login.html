@@ -244,11 +244,13 @@
         
         function showLoginForm() {
             document.getElementById('hero-card').style.display = 'none';
+            document.querySelector('.auth-features-list').style.display = 'none';
             document.getElementById('auth-card').style.display = 'block';
         }
 
         function showHeroCard() {
             document.getElementById('auth-card').style.display = 'none';
+            document.querySelector('.auth-features-list').style.display = 'grid';
             document.getElementById('hero-card').style.display = 'flex';
         }
 
