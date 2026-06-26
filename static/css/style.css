@@ -260,34 +260,14 @@ a:hover {
 
 .hero-card {
     width: 100%;
+    max-width: 100%;
     margin: 0 0 var(--space-2xl) 0;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
+    flex-direction: column;
+    align-items: flex-start;
     text-align: left;
     padding: var(--space-md) 0;
     z-index: 1;
-}
-
-.hero-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.hero-image {
-    flex: 1.5;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.hero-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: var(--radius-lg);
-    /* Subtle glow for the dark theme */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.05);
 }
 
 .hero-headline {
@@ -342,12 +322,6 @@ a:hover {
 }
 
 @media (max-width: 600px) {
-    .hero-card {
-        flex-direction: column;
-    }
-    .hero-image {
-        display: none;
-    }
     .hero-headline {
         font-size: 3rem;
     }
