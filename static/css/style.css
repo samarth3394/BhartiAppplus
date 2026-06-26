@@ -2825,3 +2825,63 @@ select.form-input {
     0% { transform: translateX(0); }
     100% { transform: translateX(calc(-100% - 80px)); }
 }
+
+/* ─── Login Horizontal Layout ─────────────────────────────────────────────── */
+.login-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.login-left {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.login-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+}
+.login-divider-custom {
+    display: flex;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    gap: 12px;
+}
+.login-divider-custom .divider-line {
+    flex: 1;
+    height: 1px;
+    background-color: rgba(255,255,255,0.1);
+}
+
+@media (min-width: 901px) {
+    .auth-card {
+        max-width: 700px !important;
+    }
+    .login-layout {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 30px;
+    }
+    .login-left {
+        flex: 1;
+    }
+    .login-right {
+        flex: 1;
+        gap: 16px;
+    }
+    .login-divider-custom {
+        flex-direction: column;
+        width: auto;
+    }
+    .login-divider-custom .divider-line {
+        width: 1px;
+        height: 100%;
+        flex: 1;
+    }
+}
