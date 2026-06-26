@@ -12,6 +12,26 @@
 </head>
 <body>
     <div class="auth-container" id="particles-js">
+        <!-- Top Navbar -->
+        <nav class="top-navbar">
+            <div class="nav-left">
+                <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="Logo" class="nav-logo">
+                <span class="nav-brand">Nexvora</span>
+            </div>
+            <div class="nav-center">
+                <a href="#">Product</a>
+                <a href="#">Resources</a>
+                <a href="#">Customers</a>
+                <a href="#">Pricing</a>
+                <a href="#">Now</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="nav-right">
+                <span class="nav-divider"></span>
+                <a href="#" onclick="showLoginForm()" class="nav-login">Log in</a>
+                <a href="/register" class="nav-signup">Sign up</a>
+            </div>
+        </nav>
         <div class="auth-wrapper" style="position: relative; z-index: 10;">
             <div class="auth-left">
             <!-- App Details Section -->

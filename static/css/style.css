@@ -154,6 +154,107 @@ a:hover {
     background: var(--text-muted);
 }
 
+/* ─── Top Navbar ────────────────────────────────────────────────────────── */
+
+.top-navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.nav-brand {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.nav-center {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    margin-right: -40px; /* offset slightly to center properly visually */
+}
+
+.nav-center a {
+    color: #a1a1aa;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-center a:hover {
+    color: #ffffff;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 4px;
+}
+
+.nav-login {
+    color: #a1a1aa;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-login:hover {
+    color: #ffffff;
+}
+
+.nav-signup {
+    background: #ffffff;
+    color: #000000;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.nav-signup:hover {
+    transform: scale(1.02);
+    color: #000000;
+    opacity: 0.9;
+}
+
+@media (max-width: 900px) {
+    .nav-center {
+        display: none;
+    }
+    .top-navbar {
+        padding: 16px 20px;
+    }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    AUTH PAGES
    ═══════════════════════════════════════════════════════════════════════════ */
