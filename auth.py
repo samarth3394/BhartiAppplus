@@ -115,3 +115,10 @@ def me():
 @login_required
 def setup_page():
     return render_template('auth/setup.html')
+
+
+@auth_bp.route('/logout', methods=['GET'])
+@login_required
+def logout_page():
+    logout_user()
+    return redirect(url_for('auth.login_page'))
