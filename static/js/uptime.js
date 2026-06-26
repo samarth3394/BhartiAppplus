@@ -100,8 +100,8 @@ function renderResponseTimeChart(checks, period) {
             datasets: [{
                 label: 'Response Time (ms)',
                 data: responseTimes,
-                borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderColor: '#ffffff',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 fill: true,
                 tension: 0.4,
                 borderWidth: 2,

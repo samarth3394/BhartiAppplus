@@ -2740,6 +2740,21 @@ select.form-input {
 @media (max-width: 768px) {
     .chart-container {
         height: 250px;
+        min-height: 250px;
+        width: 100%;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+    
+    .period-tabs {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        justify-content: flex-start;
     }
 }
 
