@@ -168,6 +168,20 @@ Nexvora.init({
                 </div>
             </div>
 
+            <!-- Step 3: Infrastructure / Server Monitoring Setup -->
+            <div class="setup-section animate-fade-up delay-200">
+                <h2><i data-lucide="hard-drive"></i> Step 3: Server Infrastructure Setup (Optional)</h2>
+                
+                <div class="step-block">
+                    <h3>Track CPU, RAM, and Disk Usage</h3>
+                    <p>To monitor your actual server's health (e.g., AWS EC2, VPS), run the following command on your server terminal. It will set up a lightweight background script that sends metrics to Nexvora.</p>
+                    <div class="setup-code">
+curl -sSL https://nexvora.com/install.sh | bash -s -- --key=YOUR_NEXVORA_KEY
+                    </div>
+                    <p style="margin-top: 12px;">This script runs a simple cron job every minute. You can view the live charts in the <strong>Infrastructure</strong> tab on your dashboard.</p>
+                </div>
+            </div>
+
             <!-- Action -->
             <div class="next-action animate-fade-up delay-300">
                 <a href="{{ url_for('dashboard.dashboard_page') }}" class="btn-next">
