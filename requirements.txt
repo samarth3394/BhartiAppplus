@@ -1,12 +1,10 @@
 Flask==3.1.1
 Flask-Login==0.6.3
-Flask-SocketIO==5.5.1
 Flask-Mail==0.10.0
 SQLAlchemy==2.0.41
 bcrypt==4.3.0
 APScheduler==3.11.0
 requests==2.32.3
 python-dotenv==1.1.0
-eventlet==0.39.1
 gunicorn==21.2.0
 python-dateutil==2.8.2
