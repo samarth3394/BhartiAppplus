@@ -192,7 +192,8 @@ a:hover {
     display: flex;
     gap: 32px;
     align-items: center;
-    margin-right: -40px; /* offset slightly to center properly visually */
+    margin-left: auto; /* Pushes links to the right */
+    margin-right: 32px; /* Spacing before the log in section */
 }
 
 .nav-center a {
@@ -290,7 +291,7 @@ a:hover {
     gap: 60px;
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 80px auto 0 auto; /* Added top margin to push content down from navbar */
     min-width: 0;
 }
 
