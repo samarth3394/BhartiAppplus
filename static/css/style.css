@@ -348,6 +348,13 @@ a:hover {
     font-weight: 400;
 }
 
+@media (min-width: 901px) {
+    .auth-info > p {
+        text-align: center;
+        margin: 0 auto var(--space-2xl) auto;
+    }
+}
+
 .auth-card {
     width: 100%;
     max-width: 380px;
