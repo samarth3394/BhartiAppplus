@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadAppDetails() {
     try {
-        const data = await api('/api/dashboard/apps');
+        const data = await api('/api/apps');
         const currentAppId = data.current_app_id;
         const currentApp = data.apps.find(a => a.id === currentAppId);
         if (currentApp) {

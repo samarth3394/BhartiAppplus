@@ -55,7 +55,7 @@ async function loadApps() {
 
 async function switchToApp(appId) {
     try {
-        await api(`/api/dashboard/switch/${appId}`, { method: 'POST' });
+        await api(`/api/apps/switch/${appId}`, { method: 'POST' });
         showToast('Switched app!', 'success');
         loadApps();
         loadAppSwitcher();

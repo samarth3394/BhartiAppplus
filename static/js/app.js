@@ -123,7 +123,7 @@ async function loadUserInfo() {
 
 async function loadAppSwitcher() {
     try {
-        const data = await api('/api/dashboard/apps');
+        const data = await api('/api/apps');
         const select = document.getElementById('app-switcher-select');
         if (!select) return;
 
@@ -150,7 +150,7 @@ async function loadAppSwitcher() {
 async function switchApp(appId) {
     if (!appId) return;
     try {
-        await api(`/api/dashboard/switch/${appId}`, { method: 'POST' });
+        await api(`/api/apps/switch/${appId}`, { method: 'POST' });
         window.location.reload();
     } catch (err) {
         showToast(err.message, 'error');

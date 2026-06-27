@@ -112,12 +112,15 @@ async def dashboard_stats(request: Request, user: User = Depends(get_current_use
             'by_severity': severity_counts,
         },
         'uptime': {
-            'current_status': latest_check.status.value if latest_check else 'unknown',
+            'is_up': latest_check.is_up if latest_check else True,
             'response_time_ms': latest_check.response_time_ms if latest_check else None,
             'last_checked': latest_check.checked_at.isoformat() if latest_check else None,
-            'pct_24h': uptime_24h,
-            'pct_7d': uptime_7d,
-            'pct_30d': uptime_30d,
+            'percentage_24h': uptime_24h,
+            'percentage_7d': uptime_7d,
+            'percentage_30d': uptime_30d,
+        },
+        'ssl': {
+            'days_remaining': max(0, (latest_check.ssl_expiry_date.replace(tzinfo=timezone.utc) - now).days) if latest_check and latest_check.ssl_expiry_date else None
         },
         'maintenance': {
             'total_tasks': total_tasks,
