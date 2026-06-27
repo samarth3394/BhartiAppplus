@@ -104,7 +104,7 @@ async def dashboard_stats(request: Request, user: User = Depends(get_current_use
             'name': app.name,
             'url': app.url,
         },
-        'health': health,
+        'health_score': health,
         'bugs': {
             'total': total_bugs,
             'active': active_bugs,
