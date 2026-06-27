@@ -1,174 +1,150 @@
-"""Multi-App Management routes — app CRUD and settings."""
+from fastapi import APIRouter, Request, Depends, HTTPException, status, Response
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from typing import Optional, Dict, Any
+from models import App, AppMember, ActivityLog, User, RoleEnum
+from dependencies import get_db, get_current_user
 
-from flask import Blueprint, jsonify, request, render_template, session as flask_session
-from flask_login import login_required, current_user
-from models import App, AppMember, ActivityLog
+router = APIRouter(tags=["apps"])
+templates = Jinja2Templates(directory="templates")
 
-apps_bp = Blueprint('apps', __name__)
+class AppCreateRequest(BaseModel):
+    name: str
+    url: Optional[str] = ""
+    description: Optional[str] = ""
 
+class AppUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    url: Optional[str] = None
+    description: Optional[str] = None
+    is_active: Optional[bool] = None
+    settings: Optional[Dict[str, Any]] = None
 
-@apps_bp.route('/apps')
-@login_required
-def apps_page():
-    return render_template('apps.html')
+@router.get("/apps", response_class=HTMLResponse)
+async def apps_page(request: Request, user: User = Depends(get_current_user)):
+    return templates.TemplateResponse(request=request, name="apps.html")
 
+@router.get("/api/apps")
+async def list_apps(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    owned = db.query(App).filter(App.owner_id == user.id).all()
+    member_apps = db.query(App).join(AppMember).filter(AppMember.user_id == user.id).all()
 
-@apps_bp.route('/api/apps', methods=['GET'])
-@login_required
-def list_apps():
-    from app import db_session
-    s = db_session()
-    try:
-        # Get owned apps
-        owned = s.query(App).filter_by(owner_id=current_user.id).all()
+    all_apps = {}
+    for a in owned:
+        all_apps[a.id] = {**a.to_dict(), 'is_owner': True, 'role': 'admin'}
+    for a in member_apps:
+        if a.id not in all_apps:
+            member = db.query(AppMember).filter(AppMember.app_id == a.id, AppMember.user_id == user.id).first()
+            all_apps[a.id] = {
+                **a.to_dict(),
+                'is_owner': False,
+                'role': member.role.value if member else 'viewer',
+            }
 
-        # Get apps where user is a member
-        member_apps = s.query(App).join(AppMember).filter(
-            AppMember.user_id == current_user.id,
-        ).all()
+    current_app_id = request.cookies.get('current_app_id')
+    return {
+        'apps': list(all_apps.values()),
+        'current_app_id': current_app_id,
+    }
 
-        all_apps = {}
-        for a in owned:
-            all_apps[a.id] = {**a.to_dict(), 'is_owner': True}
-        for a in member_apps:
-            if a.id not in all_apps:
-                member = s.query(AppMember).filter_by(
-                    app_id=a.id, user_id=current_user.id
-                ).first()
-                all_apps[a.id] = {
-                    **a.to_dict(),
-                    'is_owner': False,
-                    'role': member.role.value if member else 'viewer',
-                }
+@router.post("/api/apps", status_code=status.HTTP_201_CREATED)
+async def create_app(data: AppCreateRequest, response: Response, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    name = data.name.strip()
+    if not name:
+        raise HTTPException(status_code=400, detail="App name is required")
 
-        return jsonify({
-            'apps': list(all_apps.values()),
-            'current_app_id': flask_session.get('current_app_id'),
-        })
-    finally:
-        s.close()
+    new_app = App(
+        name=name,
+        url=data.url.strip() if data.url else "",
+        description=data.description.strip() if data.description else "",
+        owner_id=user.id,
+    )
+    db.add(new_app)
+    db.flush()  # Populate new_app.id
 
+    log = ActivityLog(
+        app_id=new_app.id,
+        user_id=user.id,
+        action=f'Created app: {name}',
+        entity_type='app',
+        entity_id=new_app.id,
+    )
+    db.add(log)
+    db.commit()
 
-@apps_bp.route('/api/apps', methods=['POST'])
-@login_required
-def create_app():
-    from app import db_session
-    s = db_session()
-    try:
-        data = request.get_json()
-        name = data.get('name', '').strip()
-        if not name:
-            return jsonify({'error': 'App name is required'}), 400
+    # Auto-switch to new app
+    response.set_cookie(key="current_app_id", value=str(new_app.id), httponly=True)
 
-        url = data.get('url', '').strip()
-        description = data.get('description', '').strip()
+    return {'message': 'App created', 'app': new_app.to_dict()}
 
-        new_app = App(
-            name=name,
-            url=url,
-            description=description,
-            owner_id=current_user.id,
-        )
-        s.add(new_app)
-        s.flush()  # Populate new_app.id
+@router.put("/api/apps/{app_id}")
+async def update_app(app_id: str, data: AppUpdateRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_obj = db.query(App).filter(App.id == app_id).first()
+    if not app_obj:
+        raise HTTPException(status_code=404, detail="App not found")
 
-        log = ActivityLog(
-            app_id=new_app.id,
-            user_id=current_user.id,
-            action=f'Created app: {name}',
-            entity_type='app',
-            entity_id=new_app.id,
-        )
-        s.add(log)
+    is_owner = (app_obj.owner_id == user.id)
+    if not is_owner:
+        member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == user.id).first()
+        if not member or member.role != RoleEnum.admin:
+            raise HTTPException(status_code=403, detail="Only the owner or an admin can update app settings")
 
-        s.commit()
+    if data.name is not None:
+        app_obj.name = data.name.strip()
+    if data.url is not None:
+        app_obj.url = data.url.strip()
+    if data.description is not None:
+        app_obj.description = data.description.strip()
+    if data.is_active is not None:
+        app_obj.is_active = data.is_active
+    if data.settings is not None:
+        app_obj.settings = data.settings
+        from sqlalchemy.orm.attributes import flag_modified
+        flag_modified(app_obj, 'settings')
 
-        # Auto-switch to new app
-        flask_session['current_app_id'] = new_app.id
+    log = ActivityLog(
+        app_id=app_id,
+        user_id=user.id,
+        action=f'Updated app settings: {app_obj.name}',
+        entity_type='app',
+        entity_id=app_id,
+    )
+    db.add(log)
+    db.commit()
 
-        return jsonify({'message': 'App created', 'app': new_app.to_dict()}), 201
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
+    return {'message': 'App updated', 'app': app_obj.to_dict()}
 
+@router.delete("/api/apps/{app_id}")
+async def delete_app(app_id: str, request: Request, response: Response, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_obj = db.query(App).filter(App.id == app_id).first()
+    if not app_obj:
+        raise HTTPException(status_code=404, detail="App not found")
 
-@apps_bp.route('/api/apps/<app_id>', methods=['PUT'])
-@login_required
-def update_app(app_id):
-    from app import db_session
-    s = db_session()
-    try:
-        app_obj = s.query(App).filter_by(id=app_id).first()
-        if not app_obj:
-            return jsonify({'error': 'App not found'}), 404
+    if app_obj.owner_id != user.id:
+        raise HTTPException(status_code=403, detail="Only the owner can delete an app")
 
-        # Allow owner OR Admin to edit app settings
-        is_owner = (app_obj.owner_id == current_user.id)
-        if not is_owner:
-            from models import AppMember, RoleEnum
-            member = s.query(AppMember).filter_by(app_id=app_id, user_id=current_user.id).first()
-            if not member or member.role != RoleEnum.admin:
-                return jsonify({'error': 'Only the owner or an admin can update app settings'}), 403
+    app_name = app_obj.name
+    db.delete(app_obj)
+    db.commit()
 
-        data = request.get_json()
+    if request.cookies.get('current_app_id') == app_id:
+        response.delete_cookie("current_app_id")
 
-        if 'name' in data:
-            app_obj.name = data['name'].strip()
-        if 'url' in data:
-            app_obj.url = data['url'].strip()
-        if 'description' in data:
-            app_obj.description = data['description'].strip()
-        if 'is_active' in data:
-            app_obj.is_active = data['is_active']
-        if 'settings' in data:
-            app_obj.settings = data['settings']
-            from sqlalchemy.orm.attributes import flag_modified
-            flag_modified(app_obj, 'settings')
+    return {'message': f'App "{app_name}" deleted'}
 
-        log = ActivityLog(
-            app_id=app_id,
-            user_id=current_user.id,
-            action=f'Updated app settings: {app_obj.name}',
-            entity_type='app',
-            entity_id=app_id,
-        )
-        s.add(log)
+@router.post("/api/apps/switch/{app_id}")
+async def switch_app(app_id: str, response: Response, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_obj = db.query(App).filter(App.id == app_id).first()
+    if not app_obj:
+        raise HTTPException(status_code=404, detail="App not found")
 
-        s.commit()
-        return jsonify({'message': 'App updated', 'app': app_obj.to_dict()})
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
+    # verify membership
+    if app_obj.owner_id != user.id:
+        member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == user.id).first()
+        if not member:
+            raise HTTPException(status_code=403, detail="You do not have access to this app")
 
-
-@apps_bp.route('/api/apps/<app_id>', methods=['DELETE'])
-@login_required
-def delete_app(app_id):
-    from app import db_session
-    s = db_session()
-    try:
-        app_obj = s.query(App).filter_by(id=app_id).first()
-        if not app_obj:
-            return jsonify({'error': 'App not found'}), 404
-
-        if app_obj.owner_id != current_user.id:
-            return jsonify({'error': 'Only the owner can delete an app'}), 403
-
-        app_name = app_obj.name
-        s.delete(app_obj)
-        s.commit()
-
-        # Clear current app if it was the deleted one
-        if flask_session.get('current_app_id') == app_id:
-            flask_session.pop('current_app_id', None)
-
-        return jsonify({'message': f'App "{app_name}" deleted'})
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
+    response.set_cookie(key="current_app_id", value=app_id, httponly=True)
+    return {"message": f"Switched to app {app_obj.name}"}

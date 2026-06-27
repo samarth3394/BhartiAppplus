@@ -7,7 +7,7 @@
     <title>Register — Nexvora</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}?v=2">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -22,7 +22,7 @@
             <!-- Register Card -->
             <div class="auth-card">
             <div class="auth-logo">
-                <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="Nexvora Logo" style="width: 48px; height: 48px; margin: 0 auto; display: block; object-fit: contain;">
+                <img src="{{ url_for('static', path='images/logo.webp') }}" alt="Nexvora Logo" style="width: 48px; height: 48px; margin: 0 auto; display: block; object-fit: contain;">
             </div>
 
             <h2>Create Account</h2>
@@ -62,7 +62,7 @@
             </form>
 
             <p style="text-align:center;margin-top:var(--space-xl);font-size:var(--font-sm);color:var(--text-secondary);">
-                Already have an account? <a href="/login">Sign in</a>
+                Already have an account? <a href="/auth/login">Sign in</a>
             </p>
         </div>
             </div>

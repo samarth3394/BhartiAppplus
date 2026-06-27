@@ -1,319 +1,266 @@
-"""Maintenance Checklist routes — task CRUD, completion, auto-recurrence."""
-
-from flask import Blueprint, jsonify, request, render_template
-from flask_login import login_required, current_user
+from fastapi import APIRouter, Request, Depends, HTTPException, status
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
+from pydantic import BaseModel
+from typing import Optional
+
 from models import (
     MaintenanceTask, TaskCompletion, FrequencyEnum, ActivityLog,
-    AppMember, RoleEnum
+    AppMember, RoleEnum, App, User
 )
+from dependencies import get_db, get_current_user
 
-maintenance_bp = Blueprint('maintenance', __name__)
+router = APIRouter(tags=["maintenance"])
+templates = Jinja2Templates(directory="templates")
 
-def _check_permission(session, app_id, min_role=RoleEnum.developer):
-    """Check if current user has the minimum required role for the app."""
-    member = session.query(AppMember).filter_by(
-        app_id=app_id, user_id=current_user.id
-    ).first()
+class TaskCreateRequest(BaseModel):
+    title: str
+    description: Optional[str] = ""
+    frequency: Optional[str] = "weekly"
+    due_date: Optional[str] = None
 
+class TaskUpdateRequest(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    frequency: Optional[str] = None
+    due_date: Optional[str] = None
+    is_active: Optional[bool] = None
+
+class TaskCompleteRequest(BaseModel):
+    notes: Optional[str] = ""
+
+def _check_permission(db: Session, app_id: str, current_user_id: str, min_role: RoleEnum = RoleEnum.developer):
+    app = db.query(App).filter(App.id == app_id).first()
+    if not app:
+        raise HTTPException(status_code=404, detail='App not found')
+        
+    if app.owner_id == current_user_id:
+        return None # Owner has full access, return dummy member or None
+
+    member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == current_user_id).first()
     if not member:
-        raise PermissionError('You are not a member of this app.')
+        raise HTTPException(status_code=403, detail='You are not a member of this app.')
 
     role_hierarchy = {RoleEnum.admin: 3, RoleEnum.developer: 2, RoleEnum.viewer: 1}
     if role_hierarchy.get(member.role, 0) < role_hierarchy.get(min_role, 0):
-        raise PermissionError(f'Insufficient permissions. Required: {min_role.value}')
+        raise HTTPException(status_code=403, detail=f'Insufficient permissions. Required: {min_role.value}')
     
     return member
 
-@maintenance_bp.route('/maintenance')
-@login_required
-def maintenance_page():
-    return render_template('maintenance.html')
+@router.get("/maintenance", response_class=HTMLResponse)
+async def maintenance_page(request: Request, user: User = Depends(get_current_user)):
+    return templates.TemplateResponse(request=request, name="maintenance.html")
 
+@router.get("/api/maintenance")
+async def list_tasks(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+        
+    app = db.query(App).filter(App.id == app_id).first()
+    if not app:
+        raise HTTPException(status_code=404, detail='App not found')
 
-@maintenance_bp.route('/api/maintenance', methods=['GET'])
-@login_required
-def list_tasks():
-    from app import db_session
-    from flask import session as flask_session
-    s = db_session()
-    try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
-            
-        # Get member role so frontend knows what buttons to show
-        member = s.query(AppMember).filter_by(app_id=app_id, user_id=current_user.id).first()
-        role = member.role.value if member else 'viewer'
+    role = 'viewer'
+    if app.owner_id == user.id:
+        role = 'admin'
+    else:
+        member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == user.id).first()
+        if member:
+            role = member.role.value
 
-        tasks = s.query(MaintenanceTask).filter_by(
-            app_id=app_id, is_active=True
-        ).order_by(MaintenanceTask.due_date.asc()).all()
+    tasks = db.query(MaintenanceTask).filter(
+        MaintenanceTask.app_id == app_id, MaintenanceTask.is_active == True
+    ).order_by(MaintenanceTask.due_date.asc()).all()
 
-        now = datetime.now(timezone.utc)
-        categorized = {
-            'overdue': [],
-            'today': [],
-            'upcoming': [],
-        }
+    now = datetime.now(timezone.utc)
+    categorized = {
+        'overdue': [],
+        'today': [],
+        'upcoming': [],
+    }
 
-        for task in tasks:
-            task_dict = task.to_dict()
-            if task.due_date:
-                due = task.due_date.replace(tzinfo=timezone.utc) if task.due_date.tzinfo is None else task.due_date
-                if due.date() < now.date():
-                    categorized['overdue'].append(task_dict)
-                elif due.date() == now.date():
-                    categorized['today'].append(task_dict)
-                else:
-                    categorized['upcoming'].append(task_dict)
+    for task in tasks:
+        task_dict = task.to_dict()
+        if task.due_date:
+            due = task.due_date.replace(tzinfo=timezone.utc) if task.due_date.tzinfo is None else task.due_date
+            if due.date() < now.date():
+                categorized['overdue'].append(task_dict)
+            elif due.date() == now.date():
+                categorized['today'].append(task_dict)
             else:
                 categorized['upcoming'].append(task_dict)
-
-        return jsonify({
-            'tasks': categorized,
-            'total': len(tasks),
-            'role': role
-        })
-    finally:
-        s.close()
-
-
-@maintenance_bp.route('/api/maintenance', methods=['POST'])
-@login_required
-def create_task():
-    from app import db_session
-    from flask import session as flask_session
-    s = db_session()
-    try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
-
-        # RBAC Check: Need Developer role to create task
-        try:
-            _check_permission(s, app_id, min_role=RoleEnum.developer)
-        except PermissionError as e:
-            return jsonify({'error': str(e)}), 403
-
-        data = request.get_json()
-        title = data.get('title', '').strip()
-        if not title:
-            return jsonify({'error': 'Title is required'}), 400
-
-        frequency_str = data.get('frequency', 'weekly')
-        try:
-            frequency = FrequencyEnum(frequency_str)
-        except ValueError:
-            frequency = FrequencyEnum.weekly
-
-        due_date_str = data.get('due_date')
-        if due_date_str:
-            try:
-                due_date = datetime.fromisoformat(due_date_str).replace(tzinfo=timezone.utc)
-            except ValueError:
-                due_date = datetime.now(timezone.utc) + timedelta(days=1)
         else:
-            # Default due dates based on frequency
-            if frequency == FrequencyEnum.daily:
-                due_date = datetime.now(timezone.utc) + timedelta(days=1)
-            elif frequency == FrequencyEnum.weekly:
-                due_date = datetime.now(timezone.utc) + timedelta(weeks=1)
-            else:
-                due_date = datetime.now(timezone.utc) + timedelta(days=30)
+            categorized['upcoming'].append(task_dict)
 
-        task = MaintenanceTask(
-            app_id=app_id,
-            title=title,
-            description=data.get('description', ''),
-            frequency=frequency,
-            due_date=due_date,
-            created_by=current_user.id,
-        )
-        s.add(task)
+    return {
+        'tasks': categorized,
+        'total': len(tasks),
+        'role': role
+    }
 
-        log = ActivityLog(
-            app_id=app_id,
-            user_id=current_user.id,
-            action=f'Created maintenance task: {title}',
-            entity_type='task',
-            entity_id=task.id,
-            metadata_json={'frequency': frequency.value},
-        )
-        s.add(log)
+@router.post("/api/maintenance", status_code=status.HTTP_201_CREATED)
+async def create_task(data: TaskCreateRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
 
-        s.commit()
-        return jsonify({'message': 'Task created', 'task': task.to_dict()}), 201
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
+    _check_permission(db, app_id, user.id, min_role=RoleEnum.developer)
 
+    title = data.title.strip()
+    if not title:
+        raise HTTPException(status_code=400, detail="Title is required")
 
-@maintenance_bp.route('/api/maintenance/<task_id>', methods=['PUT'])
-@login_required
-def update_task(task_id):
-    from app import db_session
-    from flask import session as flask_session
-    s = db_session()
     try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
+        frequency = FrequencyEnum(data.frequency)
+    except ValueError:
+        frequency = FrequencyEnum.weekly
 
-        # RBAC Check
+    if data.due_date:
         try:
-            _check_permission(s, app_id, min_role=RoleEnum.developer)
-        except PermissionError as e:
-            return jsonify({'error': str(e)}), 403
+            due_date = datetime.fromisoformat(data.due_date).replace(tzinfo=timezone.utc)
+        except ValueError:
+            due_date = datetime.now(timezone.utc) + timedelta(days=1)
+    else:
+        if frequency == FrequencyEnum.daily:
+            due_date = datetime.now(timezone.utc) + timedelta(days=1)
+        elif frequency == FrequencyEnum.weekly:
+            due_date = datetime.now(timezone.utc) + timedelta(weeks=1)
+        else:
+            due_date = datetime.now(timezone.utc) + timedelta(days=30)
 
-        task = s.query(MaintenanceTask).filter_by(id=task_id, app_id=app_id).first()
-        if not task:
-            return jsonify({'error': 'Task not found'}), 404
+    task = MaintenanceTask(
+        app_id=app_id,
+        title=title,
+        description=data.description,
+        frequency=frequency,
+        due_date=due_date,
+        created_by=user.id,
+    )
+    db.add(task)
+    db.flush()
 
-        data = request.get_json()
-
-        if 'title' in data:
-            task.title = data['title']
-        if 'description' in data:
-            task.description = data['description']
-        if 'frequency' in data:
-            try:
-                task.frequency = FrequencyEnum(data['frequency'])
-            except ValueError:
-                pass
-        if 'due_date' in data:
-            try:
-                task.due_date = datetime.fromisoformat(data['due_date']).replace(tzinfo=timezone.utc)
-            except ValueError:
-                pass
-        if 'is_active' in data:
-            task.is_active = data['is_active']
-
-        s.commit()
-        return jsonify({'message': 'Task updated', 'task': task.to_dict()})
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
+    log = ActivityLog(
+        app_id=app_id,
+        user_id=user.id,
+        action=f'Created maintenance task: {title}',
+        entity_type='task',
+        entity_id=task.id,
+        metadata_json={'frequency': frequency.value},
+    )
+    db.add(log)
+    db.commit()
+    
+    return {'message': 'Task created', 'task': task.to_dict()}
 
 
-@maintenance_bp.route('/api/maintenance/<task_id>/complete', methods=['POST'])
-@login_required
-def complete_task(task_id):
-    from app import db_session
-    from flask import session as flask_session
-    s = db_session()
-    try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
+@router.put("/api/maintenance/{task_id}")
+async def update_task(task_id: str, data: TaskUpdateRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
 
-        # RBAC Check
+    _check_permission(db, app_id, user.id, min_role=RoleEnum.developer)
+
+    task = db.query(MaintenanceTask).filter(MaintenanceTask.id == task_id, MaintenanceTask.app_id == app_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    if data.title is not None:
+        task.title = data.title
+    if data.description is not None:
+        task.description = data.description
+    if data.frequency is not None:
         try:
-            _check_permission(s, app_id, min_role=RoleEnum.developer)
-        except PermissionError as e:
-            return jsonify({'error': str(e)}), 403
-
-        task = s.query(MaintenanceTask).filter_by(id=task_id, app_id=app_id).first()
-        if not task:
-            return jsonify({'error': 'Task not found'}), 404
-
-        data = request.get_json() or {}
-
-        # Record completion
-        completion = TaskCompletion(
-            task_id=task.id,
-            completed_by=current_user.id,
-            notes=data.get('notes', ''),
-        )
-        s.add(completion)
-
-        # Auto-recurrence — calculate next due date
-        now = datetime.now(timezone.utc)
-        if task.frequency == FrequencyEnum.daily:
-            task.due_date = now + timedelta(days=1)
-        elif task.frequency == FrequencyEnum.weekly:
-            task.due_date = now + timedelta(weeks=1)
-        elif task.frequency == FrequencyEnum.monthly:
-            task.due_date = now + timedelta(days=30)
-
-        log = ActivityLog(
-            app_id=app_id,
-            user_id=current_user.id,
-            action=f'Completed maintenance task: {task.title}',
-            entity_type='task',
-            entity_id=task.id,
-        )
-        s.add(log)
-
-        s.commit()
-        return jsonify({
-            'message': 'Task completed',
-            'task': task.to_dict(),
-            'completion': completion.to_dict(),
-        })
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
-
-
-@maintenance_bp.route('/api/maintenance/<task_id>/history', methods=['GET'])
-@login_required
-def task_history(task_id):
-    from app import db_session
-    s = db_session()
-    try:
-        completions = s.query(TaskCompletion).filter_by(task_id=task_id).order_by(
-            TaskCompletion.completed_at.desc()
-        ).all()
-
-        return jsonify({
-            'completions': [c.to_dict() for c in completions]
-        })
-    finally:
-        s.close()
-
-
-@maintenance_bp.route('/api/maintenance/<task_id>', methods=['DELETE'])
-@login_required
-def delete_task(task_id):
-    from app import db_session
-    from flask import session as flask_session
-    s = db_session()
-    try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
-
-        # RBAC Check: Need Admin role to delete task
+            task.frequency = FrequencyEnum(data.frequency)
+        except ValueError:
+            pass
+    if data.due_date is not None:
         try:
-            _check_permission(s, app_id, min_role=RoleEnum.admin)
-        except PermissionError as e:
-            return jsonify({'error': str(e)}), 403
+            task.due_date = datetime.fromisoformat(data.due_date).replace(tzinfo=timezone.utc)
+        except ValueError:
+            pass
+    if data.is_active is not None:
+        task.is_active = data.is_active
 
-        task = s.query(MaintenanceTask).filter_by(id=task_id, app_id=app_id).first()
-        if not task:
-            return jsonify({'error': 'Task not found'}), 404
+    db.commit()
+    return {'message': 'Task updated', 'task': task.to_dict()}
 
-        log = ActivityLog(
-            app_id=app_id,
-            user_id=current_user.id,
-            action=f'Deleted maintenance task: {task.title}',
-            entity_type='task',
-            entity_id=task.id,
-        )
-        s.add(log)
 
-        s.delete(task)
-        s.commit()
-        return jsonify({'message': 'Task deleted'})
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
+@router.post("/api/maintenance/{task_id}/complete")
+async def complete_task(task_id: str, data: TaskCompleteRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+
+    _check_permission(db, app_id, user.id, min_role=RoleEnum.developer)
+
+    task = db.query(MaintenanceTask).filter(MaintenanceTask.id == task_id, MaintenanceTask.app_id == app_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    completion = TaskCompletion(
+        task_id=task.id,
+        completed_by=user.id,
+        notes=data.notes,
+    )
+    db.add(completion)
+
+    now = datetime.now(timezone.utc)
+    if task.frequency == FrequencyEnum.daily:
+        task.due_date = now + timedelta(days=1)
+    elif task.frequency == FrequencyEnum.weekly:
+        task.due_date = now + timedelta(weeks=1)
+    elif task.frequency == FrequencyEnum.monthly:
+        task.due_date = now + timedelta(days=30)
+
+    log = ActivityLog(
+        app_id=app_id,
+        user_id=user.id,
+        action=f'Completed maintenance task: {task.title}',
+        entity_type='task',
+        entity_id=task.id,
+    )
+    db.add(log)
+    db.commit()
+    
+    return {
+        'message': 'Task completed',
+        'task': task.to_dict(),
+        'completion': completion.to_dict(),
+    }
+
+
+@router.get("/api/maintenance/{task_id}/history")
+async def task_history(task_id: str, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    completions = db.query(TaskCompletion).filter(TaskCompletion.task_id == task_id).order_by(
+        TaskCompletion.completed_at.desc()
+    ).all()
+    return {'completions': [c.to_dict() for c in completions]}
+
+
+@router.delete("/api/maintenance/{task_id}")
+async def delete_task(task_id: str, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+
+    _check_permission(db, app_id, user.id, min_role=RoleEnum.admin)
+
+    task = db.query(MaintenanceTask).filter(MaintenanceTask.id == task_id, MaintenanceTask.app_id == app_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    log = ActivityLog(
+        app_id=app_id,
+        user_id=user.id,
+        action=f'Deleted maintenance task: {task.title}',
+        entity_type='task',
+        entity_id=task.id,
+    )
+    db.add(log)
+    db.delete(task)
+    db.commit()
+    return {'message': 'Task deleted'}

@@ -1,113 +1,95 @@
-from flask import Blueprint, jsonify, request
-from models import App, Bug, BugStatusEnum, SeverityEnum
+from fastapi import APIRouter, Request, Depends, HTTPException, status, Header
+from sqlalchemy.orm import Session
 from datetime import datetime, timezone
-import json
+from pydantic import BaseModel
+from typing import Optional
 
-api_ingest_bp = Blueprint('api_ingest', __name__)
+from models import App, Bug, BugStatusEnum, SeverityEnum, ServerMetric
+from dependencies import get_db
 
-@api_ingest_bp.route('/api/ingest/error', methods=['POST', 'OPTIONS'])
-def ingest_error():
-    # Handle CORS preflight for external websites
-    if request.method == 'OPTIONS':
-        return '', 204
+router = APIRouter(tags=["api_ingest"])
 
-    from app import db_session
-    s = db_session()
-    try:
-        # Get client key from headers
-        client_key = request.headers.get('X-Nexvora-Key')
-        if not client_key:
-            return jsonify({'error': 'Missing X-Nexvora-Key header'}), 401
+class ErrorIngestRequest(BaseModel):
+    message: Optional[str] = 'Unknown Error'
+    url: Optional[str] = ''
+    line: Optional[str] = ''
+    column: Optional[str] = ''
+    stack: Optional[str] = ''
+    userAgent: Optional[str] = ''
+    timestamp: Optional[str] = None
 
-        # Find the app
-        app = s.query(App).filter_by(client_key=client_key).first()
-        if not app:
-            return jsonify({'error': 'Invalid client key'}), 401
+class MetricsIngestRequest(BaseModel):
+    cpu_percent: Optional[float] = 0.0
+    ram_percent: Optional[float] = 0.0
+    disk_percent: Optional[float] = 0.0
 
-        data = request.get_json()
-        if not data:
-            return jsonify({'error': 'Invalid JSON payload'}), 400
+@router.post("/api/ingest/error", status_code=status.HTTP_201_CREATED)
+async def ingest_error(data: ErrorIngestRequest, request: Request, x_nexvora_key: str = Header(None, alias="X-Nexvora-Key"), db: Session = Depends(get_db)):
+    if not x_nexvora_key:
+        raise HTTPException(status_code=401, detail="Missing X-Nexvora-Key header")
 
-        # Extract error details
-        message = data.get('message', 'Unknown Error')
-        url = data.get('url', '')
-        line = data.get('line', '')
-        col = data.get('column', '')
-        stack = data.get('stack', '')
-        user_agent = data.get('userAgent', '')
-        timestamp = data.get('timestamp', datetime.now(timezone.utc).isoformat())
+    app = db.query(App).filter(App.client_key == x_nexvora_key).first()
+    if not app:
+        raise HTTPException(status_code=401, detail="Invalid client key")
 
-        title = f"[Auto] {message[:100]}"
-        description = f"Automated error report from {url}\n\n**Error:** {message}\n**Line:** {line}:{col}"
+    message = data.message
+    url = data.url
+    line = data.line
+    col = data.column
+    stack = data.stack
+    user_agent = data.userAgent
+    timestamp = data.timestamp or datetime.now(timezone.utc).isoformat()
 
-        metadata = {
-            'stack': stack,
-            'userAgent': user_agent,
-            'url': url,
-            'timestamp': timestamp
-        }
+    title = f"[Auto] {message[:100]}"
+    description = f"Automated error report from {url}\n\n**Error:** {message}\n**Line:** {line}:{col}"
 
-        # Create bug
-        bug = Bug(
-            app_id=app.id,
-            title=title,
-            description=description,
-            severity=SeverityEnum.high,
-            status=BugStatusEnum.open,
-            is_automated=True,
-            metadata_json=metadata,
-            reported_by=None  # Automated bugs have no reporter
-        )
-        s.add(bug)
-        s.commit()
+    metadata = {
+        'stack': stack,
+        'userAgent': user_agent,
+        'url': url,
+        'timestamp': timestamp
+    }
 
-        return jsonify({'message': 'Error ingested successfully', 'bug_id': bug.id}), 201
+    bug = Bug(
+        app_id=app.id,
+        title=title,
+        description=description,
+        severity=SeverityEnum.high,
+        status=BugStatusEnum.open,
+        is_automated=True,
+        metadata_json=metadata,
+        reported_by=None
+    )
+    db.add(bug)
+    db.commit()
 
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
+    return {'message': 'Error ingested successfully', 'bug_id': bug.id}
+
+@router.options("/api/ingest/error", status_code=status.HTTP_204_NO_CONTENT)
+async def ingest_error_options():
+    return None
 
 
-@api_ingest_bp.route('/api/ingest/metrics', methods=['POST', 'OPTIONS'])
-def ingest_metrics():
-    if request.method == 'OPTIONS':
-        return '', 204
+@router.post("/api/ingest/metrics", status_code=status.HTTP_201_CREATED)
+async def ingest_metrics(data: MetricsIngestRequest, request: Request, x_nexvora_key: str = Header(None, alias="X-Nexvora-Key"), db: Session = Depends(get_db)):
+    if not x_nexvora_key:
+        raise HTTPException(status_code=401, detail="Missing X-Nexvora-Key header")
 
-    from app import db_session
-    from models import ServerMetric
-    s = db_session()
-    try:
-        client_key = request.headers.get('X-Nexvora-Key')
-        if not client_key:
-            return jsonify({'error': 'Missing X-Nexvora-Key header'}), 401
+    app = db.query(App).filter(App.client_key == x_nexvora_key).first()
+    if not app:
+        raise HTTPException(status_code=401, detail="Invalid client key")
 
-        app = s.query(App).filter_by(client_key=client_key).first()
-        if not app:
-            return jsonify({'error': 'Invalid client key'}), 401
+    metric = ServerMetric(
+        app_id=app.id,
+        cpu_percent=data.cpu_percent,
+        ram_percent=data.ram_percent,
+        disk_percent=data.disk_percent
+    )
+    db.add(metric)
+    db.commit()
 
-        data = request.get_json()
-        if not data:
-            return jsonify({'error': 'Invalid JSON payload'}), 400
+    return {'message': 'Metrics recorded', 'id': metric.id}
 
-        cpu = data.get('cpu_percent', 0.0)
-        ram = data.get('ram_percent', 0.0)
-        disk = data.get('disk_percent', 0.0)
-
-        metric = ServerMetric(
-            app_id=app.id,
-            cpu_percent=cpu,
-            ram_percent=ram,
-            disk_percent=disk
-        )
-        s.add(metric)
-        s.commit()
-
-        return jsonify({'message': 'Metrics recorded', 'id': metric.id}), 201
-
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
+@router.options("/api/ingest/metrics", status_code=status.HTTP_204_NO_CONTENT)
+async def ingest_metrics_options():
+    return None

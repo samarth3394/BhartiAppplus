@@ -1,200 +1,178 @@
-from flask import Blueprint, jsonify, render_template, request, session as flask_session
-from flask_login import login_required, current_user
-from models import RoadmapFeature, AppMember, RoleEnum, ActivityLog
+from fastapi import APIRouter, Request, Depends, HTTPException, status
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 from datetime import datetime, timezone
+from pydantic import BaseModel
+from typing import Optional
 import dateutil.parser
 
-roadmap_bp = Blueprint('roadmap', __name__)
+from models import RoadmapFeature, AppMember, RoleEnum, ActivityLog, App, User
+from dependencies import get_db, get_current_user
 
-@roadmap_bp.route('/roadmap')
-@login_required
-def roadmap_page():
-    return render_template('roadmap.html')
+router = APIRouter(tags=["roadmap"])
+templates = Jinja2Templates(directory="templates")
 
-@roadmap_bp.route('/api/roadmap', methods=['GET'])
-@login_required
-def list_features():
-    from app import db_session
-    s = db_session()
-    try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
 
-        features = s.query(RoadmapFeature).filter_by(app_id=app_id).order_by(
-            RoadmapFeature.created_at.desc()
-        ).all()
+class FeatureCreateRequest(BaseModel):
+    title: str
+    description: Optional[str] = ""
+    status: Optional[str] = "planned"
+    priority: Optional[str] = "medium"
+    start_date: Optional[str] = None
+    due_date: Optional[str] = None
 
-        return jsonify({'features': [f.to_dict() for f in features]})
-    finally:
-        s.close()
+class FeatureUpdateRequest(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    status: Optional[str] = None
+    priority: Optional[str] = None
+    start_date: Optional[str] = None
+    due_date: Optional[str] = None
 
-@roadmap_bp.route('/api/roadmap', methods=['POST'])
-@login_required
-def create_feature():
-    from app import db_session
-    s = db_session()
-    try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
 
-        _check_permission(s, app_id, min_role=RoleEnum.developer)
-
-        data = request.get_json()
-        title = data.get('title', '').strip()
-        if not title:
-            return jsonify({'error': 'Title is required'}), 400
-
-        def parse_dt(dt_str):
-            if not dt_str: return None
-            try:
-                return dateutil.parser.isoparse(dt_str).replace(tzinfo=timezone.utc)
-            except:
-                return None
-
-        feature = RoadmapFeature(
-            app_id=app_id,
-            title=title,
-            description=data.get('description', ''),
-            status=data.get('status', 'planned'),
-            priority=data.get('priority', 'medium'),
-            start_date=parse_dt(data.get('start_date')),
-            due_date=parse_dt(data.get('due_date')),
-        )
-        s.add(feature)
-
-        log = ActivityLog(
-            app_id=app_id,
-            user_id=current_user.id,
-            action=f'Created roadmap feature: {title}',
-            entity_type='roadmap',
-            entity_id=feature.id,
-        )
-        s.add(log)
-
-        s.commit()
-        return jsonify({'message': 'Feature created', 'feature': feature.to_dict()}), 201
-    except PermissionError as e:
-        return jsonify({'error': str(e)}), 403
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
-
-@roadmap_bp.route('/api/roadmap/<feature_id>', methods=['PUT'])
-@login_required
-def update_feature(feature_id):
-    from app import db_session
-    s = db_session()
-    try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
-
-        _check_permission(s, app_id, min_role=RoleEnum.developer)
-
-        feature = s.query(RoadmapFeature).filter_by(id=feature_id, app_id=app_id).first()
-        if not feature:
-            return jsonify({'error': 'Feature not found'}), 404
-
-        data = request.get_json()
-        
-        if 'title' in data:
-            feature.title = data['title']
-        if 'description' in data:
-            feature.description = data['description']
-        if 'status' in data:
-            feature.status = data['status']
-        if 'priority' in data:
-            feature.priority = data['priority']
-            
-        def parse_dt(dt_str):
-            if not dt_str: return None
-            try:
-                return dateutil.parser.isoparse(dt_str).replace(tzinfo=timezone.utc)
-            except:
-                return None
-
-        if 'start_date' in data:
-            feature.start_date = parse_dt(data['start_date'])
-        if 'due_date' in data:
-            feature.due_date = parse_dt(data['due_date'])
-
-        feature.updated_at = datetime.now(timezone.utc)
-
-        log = ActivityLog(
-            app_id=app_id,
-            user_id=current_user.id,
-            action=f'Updated roadmap feature: {feature.title}',
-            entity_type='roadmap',
-            entity_id=feature.id,
-        )
-        s.add(log)
-
-        s.commit()
-        return jsonify({'message': 'Feature updated', 'feature': feature.to_dict()})
-    except PermissionError as e:
-        return jsonify({'error': str(e)}), 403
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
-
-@roadmap_bp.route('/api/roadmap/<feature_id>', methods=['DELETE'])
-@login_required
-def delete_feature(feature_id):
-    from app import db_session
-    s = db_session()
-    try:
-        app_id = flask_session.get('current_app_id')
-        if not app_id:
-            return jsonify({'error': 'No app selected'}), 400
-
-        _check_permission(s, app_id, min_role=RoleEnum.admin)
-
-        feature = s.query(RoadmapFeature).filter_by(id=feature_id, app_id=app_id).first()
-        if not feature:
-            return jsonify({'error': 'Feature not found'}), 404
-
-        log = ActivityLog(
-            app_id=app_id,
-            user_id=current_user.id,
-            action=f'Deleted roadmap feature: {feature.title}',
-            entity_type='roadmap',
-            entity_id=feature.id,
-        )
-        s.add(log)
-
-        s.delete(feature)
-        s.commit()
-        return jsonify({'message': 'Feature deleted'})
-    except PermissionError as e:
-        return jsonify({'error': str(e)}), 403
-    except Exception as e:
-        s.rollback()
-        return jsonify({'error': str(e)}), 500
-    finally:
-        s.close()
-
-def _check_permission(session, app_id, min_role=RoleEnum.developer):
-    from models import App
-    app = session.query(App).filter_by(id=app_id).first()
+def _check_permission(db: Session, app_id: str, current_user_id: str, min_role: RoleEnum = RoleEnum.developer):
+    app = db.query(App).filter(App.id == app_id).first()
     if not app:
-        raise PermissionError('App not found')
+        raise HTTPException(status_code=404, detail="App not found")
 
-    if app.owner_id == current_user.id:
+    if app.owner_id == current_user_id:
         return
 
-    member = session.query(AppMember).filter_by(
-        app_id=app_id, user_id=current_user.id
-    ).first()
-
+    member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == current_user_id).first()
     if not member:
-        raise PermissionError('You are not a member of this app')
+        raise HTTPException(status_code=403, detail="You are not a member of this app")
 
     role_hierarchy = {RoleEnum.admin: 3, RoleEnum.developer: 2, RoleEnum.viewer: 1}
     if role_hierarchy.get(member.role, 0) < role_hierarchy.get(min_role, 0):
-        raise PermissionError(f'Insufficient permissions. Required: {min_role.value}')
+        raise HTTPException(status_code=403, detail=f"Insufficient permissions. Required: {min_role.value}")
+
+
+def parse_dt(dt_str):
+    if not dt_str: 
+        return None
+    try:
+        return dateutil.parser.isoparse(dt_str).replace(tzinfo=timezone.utc)
+    except:
+        return None
+
+
+@router.get("/roadmap", response_class=HTMLResponse)
+async def roadmap_page(request: Request, user: User = Depends(get_current_user)):
+    return templates.TemplateResponse(request=request, name="roadmap.html")
+
+
+@router.get("/api/roadmap")
+async def list_features(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+
+    features = db.query(RoadmapFeature).filter(RoadmapFeature.app_id == app_id).order_by(
+        RoadmapFeature.created_at.desc()
+    ).all()
+
+    return {'features': [f.to_dict() for f in features]}
+
+
+@router.post("/api/roadmap", status_code=status.HTTP_201_CREATED)
+async def create_feature(data: FeatureCreateRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+
+    _check_permission(db, app_id, user.id, min_role=RoleEnum.developer)
+
+    title = data.title.strip()
+    if not title:
+        raise HTTPException(status_code=400, detail="Title is required")
+
+    feature = RoadmapFeature(
+        app_id=app_id,
+        title=title,
+        description=data.description,
+        status=data.status,
+        priority=data.priority,
+        start_date=parse_dt(data.start_date),
+        due_date=parse_dt(data.due_date),
+    )
+    db.add(feature)
+    db.flush()
+
+    log = ActivityLog(
+        app_id=app_id,
+        user_id=user.id,
+        action=f'Created roadmap feature: {title}',
+        entity_type='roadmap',
+        entity_id=feature.id,
+    )
+    db.add(log)
+    db.commit()
+
+    return {'message': 'Feature created', 'feature': feature.to_dict()}
+
+
+@router.put("/api/roadmap/{feature_id}")
+async def update_feature(feature_id: str, data: FeatureUpdateRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+
+    _check_permission(db, app_id, user.id, min_role=RoleEnum.developer)
+
+    feature = db.query(RoadmapFeature).filter(RoadmapFeature.id == feature_id, RoadmapFeature.app_id == app_id).first()
+    if not feature:
+        raise HTTPException(status_code=404, detail="Feature not found")
+
+    if data.title is not None:
+        feature.title = data.title
+    if data.description is not None:
+        feature.description = data.description
+    if data.status is not None:
+        feature.status = data.status
+    if data.priority is not None:
+        feature.priority = data.priority
+    if data.start_date is not None:
+        feature.start_date = parse_dt(data.start_date)
+    if data.due_date is not None:
+        feature.due_date = parse_dt(data.due_date)
+
+    feature.updated_at = datetime.now(timezone.utc)
+
+    log = ActivityLog(
+        app_id=app_id,
+        user_id=user.id,
+        action=f'Updated roadmap feature: {feature.title}',
+        entity_type='roadmap',
+        entity_id=feature.id,
+    )
+    db.add(log)
+    db.commit()
+
+    return {'message': 'Feature updated', 'feature': feature.to_dict()}
+
+
+@router.delete("/api/roadmap/{feature_id}")
+async def delete_feature(feature_id: str, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+
+    _check_permission(db, app_id, user.id, min_role=RoleEnum.admin)
+
+    feature = db.query(RoadmapFeature).filter(RoadmapFeature.id == feature_id, RoadmapFeature.app_id == app_id).first()
+    if not feature:
+        raise HTTPException(status_code=404, detail="Feature not found")
+
+    log = ActivityLog(
+        app_id=app_id,
+        user_id=user.id,
+        action=f'Deleted roadmap feature: {feature.title}',
+        entity_type='roadmap',
+        entity_id=feature.id,
+    )
+    db.add(log)
+    db.delete(feature)
+    db.commit()
+
+    return {'message': 'Feature deleted'}

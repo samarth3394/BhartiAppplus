@@ -7,7 +7,7 @@
     <title>Login — Nexvora</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}?v=2">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -15,7 +15,7 @@
         <!-- Top Navbar -->
         <nav class="top-navbar">
             <div class="nav-left">
-                <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="Logo" class="nav-logo">
+                <img src="{{ url_for('static', path='images/logo.webp') }}" alt="Logo" class="nav-logo">
                 <span class="nav-brand">Nexvora</span>
             </div>
             <div class="nav-center">
@@ -29,7 +29,7 @@
             <div class="nav-right">
                 <span class="nav-divider"></span>
                 <a href="#" onclick="showLoginForm()" class="nav-login">Log in</a>
-                <a href="/register" class="nav-signup">Sign up</a>
+                <a href="/auth/register" class="nav-signup">Sign up</a>
             </div>
         </nav>
         <div class="auth-wrapper" style="position: relative; z-index: 10;">
@@ -121,7 +121,7 @@
             </button>
             
             <div class="auth-logo">
-                <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="Nexvora Logo" style="width: 48px; height: 48px; margin: 0 auto; display: block; object-fit: contain;">
+                <img src="{{ url_for('static', path='images/logo.webp') }}" alt="Nexvora Logo" style="width: 48px; height: 48px; margin: 0 auto; display: block; object-fit: contain;">
             </div>
 
             <h2>Welcome Back</h2>
@@ -166,7 +166,7 @@
             </form>
 
             <p style="text-align:center;margin-top:var(--space-xl);font-size:var(--font-sm);color:var(--text-secondary);">
-                Don't have an account? <a href="/register">Create one</a>
+                Don't have an account? <a href="/auth/register">Create one</a>
             </p>
         </div>
             </div>

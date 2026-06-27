@@ -20,7 +20,7 @@ def analyze_root_cause(bug_title, bug_description, logs=None):
     if not GENAI_API_KEY or not genai:
         return "AI Analysis is disabled. Please configure GEMINI_API_KEY in .env and ensure google-generativeai is installed."
         
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-flash-latest')
     
     prompt = f"""
 You are an expert DevOps AI Copilot. Please analyze the following bug report and provide:
@@ -111,7 +111,7 @@ Estimated Revenue Loss: ${revenue_impact:.2f}
 {task_summary or 'No pending tasks.'}
 """
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-flash-latest')
         response = model.generate_content(prompt)
         
         # Include raw stats in output for the UI to use if needed
@@ -172,7 +172,7 @@ Rules for your response:
 """
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-flash-latest')
         response = model.generate_content(prompt)
         raw_text = response.text.strip()
 

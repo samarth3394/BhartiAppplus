@@ -5,7 +5,6 @@ from sqlalchemy import (
     DateTime, ForeignKey, Enum, JSON
 )
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
-from flask_login import UserMixin
 import enum
 
 Base = declarative_base()
@@ -51,7 +50,7 @@ def utc_now():
 
 # ─── Users ────────────────────────────────────────────────────────────────
 
-class User(Base, UserMixin):
+class User(Base):
     __tablename__ = 'users'
 
     id = Column(String(36), primary_key=True, default=generate_uuid)

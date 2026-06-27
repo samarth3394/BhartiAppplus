@@ -6,7 +6,7 @@
     <title>Setup Your Workspace — Nexvora</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}?v=3">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .setup-wrapper {
@@ -136,7 +136,7 @@
         
         <nav class="top-navbar" style="position: relative;">
             <div class="nav-left">
-                <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="Logo" class="nav-logo">
+                <img src="{{ url_for('static', path='images/logo.webp') }}" alt="Logo" class="nav-logo">
                 <span class="nav-brand">Nexvora</span>
             </div>
             <div class="nav-right">
@@ -210,7 +210,7 @@ curl -sSL https://nexvora.com/install.sh | bash -s -- --key=YOUR_NEXVORA_KEY
 
             <!-- Action -->
             <div class="next-action animate-fade-up delay-300">
-                <a href="{{ url_for('dashboard.dashboard_page') }}" class="btn-next">
+                <a href="{{ url_for('dashboard_page') }}" class="btn-next">
                     Continue to Dashboard <i data-lucide="arrow-right"></i>
                 </a>
             </div>

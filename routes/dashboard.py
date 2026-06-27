@@ -1,220 +1,153 @@
-"""Dashboard routes — main dashboard stats and activity feed."""
+from fastapi import APIRouter, Request, Depends, HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+from datetime import datetime, timezone
+from typing import Optional
 
-from flask import Blueprint, jsonify, render_template, session
-from flask_login import login_required, current_user
-from datetime import datetime, timedelta, timezone
 from models import (
     App, AppMember, Bug, BugStatusEnum, SeverityEnum,
-    MaintenanceTask, UptimeCheck, ActivityLog, UptimeIncident, RoleEnum
+    MaintenanceTask, UptimeCheck, ActivityLog, UptimeIncident, User
 )
 from services.health_score import calculate_health_score, get_uptime_percentage
+from dependencies import get_db, get_current_user, get_current_user_optional
 
-dashboard_bp = Blueprint('dashboard', __name__)
+router = APIRouter(tags=["dashboard"])
+templates = Jinja2Templates(directory="templates")
 
-
-def _get_current_app(session_db):
+def _get_current_app(db: Session, user: User, current_app_id: Optional[str] = None):
     """Get the currently selected app for the user."""
-    app_id = session.get('current_app_id')
-    if app_id:
-        app = session_db.query(App).filter_by(id=app_id).first()
+    if current_app_id:
+        app = db.query(App).filter(App.id == current_app_id).first()
         if app:
             return app
 
     # Fall back to first owned app
-    app = session_db.query(App).filter_by(owner_id=current_user.id).first()
+    app = db.query(App).filter(App.owner_id == user.id).first()
     if not app:
         # Check memberships
-        member = session_db.query(AppMember).filter_by(user_id=current_user.id).first()
+        member = db.query(AppMember).filter(AppMember.user_id == user.id).first()
         if member:
             app = member.app
     return app
 
+@router.get("/dashboard", response_class=HTMLResponse)
+async def dashboard_page(request: Request, user: User = Depends(get_current_user)):
+    return templates.TemplateResponse(request=request, name="dashboard.html")
 
-@dashboard_bp.route('/dashboard')
-@login_required
-def dashboard_page():
-    return render_template('dashboard.html')
+@router.get("/api/dashboard/stats")
+async def dashboard_stats(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    current_app_id = request.cookies.get('current_app_id')
+    app = _get_current_app(db, user, current_app_id)
+    
+    if not app:
+        return {
+            'has_app': False,
+            'message': 'No app found. Create your first app to get started.'
+        }
 
+    # Health score
+    health = calculate_health_score(db, app.id)
 
-@dashboard_bp.route('/api/dashboard/stats')
-@login_required
-def dashboard_stats():
-    from app import db_session
-    s = db_session()
-    try:
-        app = _get_current_app(s)
-        if not app:
-            return jsonify({
-                'has_app': False,
-                'message': 'No app found. Create your first app to get started.'
-            }), 200
+    # Bug counts
+    total_bugs = db.query(Bug).filter(Bug.app_id == app.id).count()
+    active_bugs = db.query(Bug).filter(
+        Bug.app_id == app.id,
+        Bug.status.in_([BugStatusEnum.open, BugStatusEnum.in_progress, BugStatusEnum.testing])
+    ).count()
+    resolved_bugs = db.query(Bug).filter(
+        Bug.app_id == app.id,
+        Bug.status == BugStatusEnum.resolved
+    ).count()
 
-        session['current_app_id'] = app.id
-
-        # Health score
-        health = calculate_health_score(s, app.id)
-
-        # Bug counts
-        total_bugs = s.query(Bug).filter_by(app_id=app.id).count()
-        active_bugs = s.query(Bug).filter(
+    # Bug severity breakdown
+    severity_counts = {}
+    for sev in SeverityEnum:
+        count = db.query(Bug).filter(
             Bug.app_id == app.id,
-            Bug.status.in_([BugStatusEnum.open, BugStatusEnum.in_progress, BugStatusEnum.testing])
+            Bug.severity == sev,
+            Bug.status != BugStatusEnum.resolved
         ).count()
-        resolved_bugs = s.query(Bug).filter(
-            Bug.app_id == app.id,
-            Bug.status == BugStatusEnum.resolved
-        ).count()
+        severity_counts[sev.value] = count
 
-        # Bug severity breakdown
-        severity_counts = {}
-        for sev in SeverityEnum:
-            count = s.query(Bug).filter(
-                Bug.app_id == app.id,
-                Bug.severity == sev,
-                Bug.status != BugStatusEnum.resolved
-            ).count()
-            severity_counts[sev.value] = count
+    # Uptime percentages
+    uptime_24h = get_uptime_percentage(db, app.id, hours=24)
+    uptime_7d = get_uptime_percentage(db, app.id, hours=168)
+    uptime_30d = get_uptime_percentage(db, app.id, hours=720)
 
-        # Uptime percentages
-        uptime_24h = get_uptime_percentage(s, app.id, hours=24)
-        uptime_7d = get_uptime_percentage(s, app.id, hours=168)
-        uptime_30d = get_uptime_percentage(s, app.id, hours=720)
+    # Current status
+    latest_check = db.query(UptimeCheck).filter(UptimeCheck.app_id == app.id).order_by(
+        UptimeCheck.checked_at.desc()
+    ).first()
 
-        # Current status
-        latest_check = s.query(UptimeCheck).filter_by(app_id=app.id).order_by(
-            UptimeCheck.checked_at.desc()
-        ).first()
+    # Pending maintenance tasks
+    now = datetime.now(timezone.utc)
+    total_tasks = db.query(MaintenanceTask).filter(
+        MaintenanceTask.app_id == app.id, MaintenanceTask.is_active == True
+    ).count()
+    overdue_tasks = db.query(MaintenanceTask).filter(
+        MaintenanceTask.app_id == app.id,
+        MaintenanceTask.is_active == True,
+        MaintenanceTask.due_date < now
+    ).count()
 
-        # Pending maintenance tasks
-        now = datetime.now(timezone.utc)
-        total_tasks = s.query(MaintenanceTask).filter_by(
-            app_id=app.id, is_active=True
-        ).count()
-        overdue_tasks = s.query(MaintenanceTask).filter(
-            MaintenanceTask.app_id == app.id,
-            MaintenanceTask.is_active == True,
-            MaintenanceTask.due_date < now
-        ).count()
+    # Active incidents
+    active_incidents = db.query(UptimeIncident).filter(
+        UptimeIncident.app_id == app.id,
+        UptimeIncident.resolved_at == None
+    ).count()
 
-        # Active incidents
-        active_incidents = s.query(UptimeIncident).filter(
-            UptimeIncident.app_id == app.id,
-            UptimeIncident.resolved_at.is_(None)
-        ).count()
+    return {
+        'has_app': True,
+        'app': {
+            'id': app.id,
+            'name': app.name,
+            'url': app.url,
+        },
+        'health': health,
+        'bugs': {
+            'total': total_bugs,
+            'active': active_bugs,
+            'resolved': resolved_bugs,
+            'by_severity': severity_counts,
+        },
+        'uptime': {
+            'current_status': latest_check.status.value if latest_check else 'unknown',
+            'response_time_ms': latest_check.response_time_ms if latest_check else None,
+            'last_checked': latest_check.checked_at.isoformat() if latest_check else None,
+            'pct_24h': uptime_24h,
+            'pct_7d': uptime_7d,
+            'pct_30d': uptime_30d,
+        },
+        'maintenance': {
+            'total_tasks': total_tasks,
+            'overdue_tasks': overdue_tasks,
+        },
+        'incidents': {
+            'active': active_incidents,
+        }
+    }
 
-        # SSL info
-        ssl_expiry = None
-        ssl_days_remaining = None
-        if latest_check and latest_check.ssl_expiry_date:
-            dt = latest_check.ssl_expiry_date
-            if dt.tzinfo is None:
-                dt = dt.replace(tzinfo=timezone.utc)
-            ssl_expiry = dt.isoformat()
-            ssl_days_remaining = (dt - now).days
+@router.get("/api/dashboard/activity")
+async def activity_feed(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    current_app_id = request.cookies.get('current_app_id')
+    app = _get_current_app(db, user, current_app_id)
+    if not app:
+        return {'activities': []}
 
-        return jsonify({
-            'has_app': True,
-            'app': app.to_dict(),
-            'health_score': health,
-            'bugs': {
-                'total': total_bugs,
-                'active': active_bugs,
-                'resolved': resolved_bugs,
-                'severity': severity_counts,
-            },
-            'uptime': {
-                'percentage_24h': uptime_24h,
-                'percentage_7d': uptime_7d,
-                'percentage_30d': uptime_30d,
-                'is_up': latest_check.is_up if latest_check else True,
-                'last_check': latest_check.to_dict() if latest_check else None,
-                'active_incidents': active_incidents,
-            },
-            'maintenance': {
-                'total_tasks': total_tasks,
-                'overdue_tasks': overdue_tasks,
-            },
-            'ssl': {
-                'expiry_date': ssl_expiry,
-                'days_remaining': ssl_days_remaining,
-            }
-        })
-    finally:
-        s.close()
+    limit = int(request.query_params.get('limit', 20))
 
+    activities = db.query(ActivityLog).filter(
+        ActivityLog.app_id == app.id
+    ).order_by(ActivityLog.created_at.desc()).limit(limit).all()
 
-@dashboard_bp.route('/api/dashboard/activity')
-@login_required
-def dashboard_activity():
-    from app import db_session
-    s = db_session()
-    try:
-        app = _get_current_app(s)
-        if not app:
-            return jsonify({'activities': []}), 200
+    # Attach user info
+    result = []
+    for log in activities:
+        log_dict = log.to_dict()
+        if log.user:
+            log_dict['user_name'] = log.user.full_name
+            log_dict['user_email'] = log.user.email
+        result.append(log_dict)
 
-        activities = s.query(ActivityLog).filter_by(
-            app_id=app.id
-        ).order_by(ActivityLog.created_at.desc()).limit(50).all()
-
-        return jsonify({
-            'activities': [a.to_dict() for a in activities]
-        })
-    finally:
-        s.close()
-
-
-@dashboard_bp.route('/api/dashboard/apps')
-@login_required
-def user_apps_list():
-    """Get list of all apps for the app switcher."""
-    from app import db_session
-    s = db_session()
-    try:
-        # Get owned apps
-        owned = s.query(App).filter_by(owner_id=current_user.id).all()
-
-        # Get apps where user is a member
-        member_apps = s.query(App).join(AppMember).filter(
-            AppMember.user_id == current_user.id,
-            AppMember.accepted_at.isnot(None)
-        ).all()
-
-        all_apps = {a.id: a for a in owned}
-        for a in member_apps:
-            if a.id not in all_apps:
-                all_apps[a.id] = a
-
-        current_app_id = session.get('current_app_id')
-
-        return jsonify({
-            'apps': [a.to_dict() for a in all_apps.values()],
-            'current_app_id': current_app_id,
-        })
-    finally:
-        s.close()
-
-
-@dashboard_bp.route('/api/dashboard/switch/<app_id>', methods=['POST'])
-@login_required
-def switch_app(app_id):
-    from app import db_session
-    s = db_session()
-    try:
-        # Verify user has access
-        app = s.query(App).filter_by(id=app_id).first()
-        if not app:
-            return jsonify({'error': 'App not found'}), 404
-
-        is_owner = app.owner_id == current_user.id
-        is_member = s.query(AppMember).filter_by(
-            app_id=app_id, user_id=current_user.id
-        ).first()
-
-        if not is_owner and not is_member:
-            return jsonify({'error': 'Access denied'}), 403
-
-        session['current_app_id'] = app_id
-        return jsonify({'message': 'Switched app', 'app': app.to_dict()})
-    finally:
-        s.close()
+    return {'activities': result}

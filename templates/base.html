@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
 </head>
 <body>
     <div class="app-layout">
@@ -26,7 +26,7 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <img src="{{ url_for('static', filename='images/logo.webp') }}" class="logo-icon" style="object-fit: contain; background: transparent;">
+                    <img src="{{ url_for('static', path='images/logo.webp') }}" class="logo-icon" style="object-fit: contain; background: transparent;">
                     <div>
                         <div class="logo-text">Nexvora</div>
                     </div>
@@ -63,20 +63,20 @@
                 </a>
 
                 <div class="nav-section-label">Manage</div>
-                <a href="{{ url_for('bugs.bugs_page') }}" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs" data-tooltip="Bug Tracker">
+                <a href="{{ url_for('bugs_page') }}" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs" data-tooltip="Bug Tracker">
                     <i data-lucide="bug"></i>
                     <span>Bug Tracker</span>
                     <span class="nav-badge hidden" id="bugs-badge">0</span>
                 </a>
-                <a href="{{ url_for('roadmap.roadmap_page') }}" class="nav-item {% block nav_roadmap %}{% endblock %}" data-tooltip="Roadmap">
+                <a href="{{ url_for('roadmap_page') }}" class="nav-item {% block nav_roadmap %}{% endblock %}" data-tooltip="Roadmap">
                     <i data-lucide="map"></i>
                     <span>Roadmap</span>
                 </a>
-                <a href="{{ url_for('server.server_page') }}" class="nav-item {% block nav_server %}{% endblock %}" data-tooltip="Infrastructure">
+                <a href="{{ url_for('server_page') }}" class="nav-item {% block nav_server %}{% endblock %}" data-tooltip="Infrastructure">
                     <i data-lucide="server"></i>
                     <span>Infrastructure</span>
                 </a>
-                <a href="{{ url_for('maintenance.maintenance_page') }}" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance" data-tooltip="Maintenance">
+                <a href="{{ url_for('maintenance_page') }}" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance" data-tooltip="Maintenance">
                     <i data-lucide="clipboard-check"></i>
                     <span>Maintenance</span>
                     <span class="nav-badge hidden" id="maintenance-badge">0</span>
@@ -132,7 +132,7 @@
     <div class="toast-container" id="toast-container"></div>
 
     <!-- Core JS -->
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', path='js/app.js') }}"></script>
 
     {% block scripts %}{% endblock %}
 
