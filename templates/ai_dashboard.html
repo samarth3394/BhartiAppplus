@@ -6,6 +6,91 @@
 {% block page_subtitle %}Executive overview powered by Gemini AI{% endblock %}
 
 {% block content %}
+
+<!-- Failure Prediction Section -->
+<div class="card" style="margin-bottom: var(--space-xl); border: 1px solid rgba(255,255,255,0.08); overflow:hidden;">
+    <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: var(--space-base);">
+        <h3 style="display:flex; align-items:center; gap:var(--space-xs); color:var(--text-primary);">
+            <i class="ri-pulse-line" style="color:#f59e0b; font-size:1.5rem;"></i> Failure Prediction Engine
+        </h3>
+        <button class="btn btn-primary" id="run-prediction-btn" onclick="runPrediction()">
+            <i class="ri-play-line"></i> Run Analysis
+        </button>
+    </div>
+    <div class="card-body" style="padding: var(--space-lg) 0;">
+
+        <!-- Prediction Loading -->
+        <div id="pred-loading" class="hidden" style="text-align:center; padding: 2rem;">
+            <div class="spinner" style="width:36px; height:36px; margin:0 auto var(--space-md) auto; border-top-color:#f59e0b;"></div>
+            <p style="color:var(--text-secondary);">Running 7-day trend analysis with Pandas...</p>
+        </div>
+
+        <!-- No Prediction Yet -->
+        <div id="pred-empty" style="text-align:center; padding:2rem; color:var(--text-muted);">
+            <i class="ri-bar-chart-grouped-line" style="font-size:3rem; opacity:0.3;"></i>
+            <p style="margin-top:var(--space-sm);">No predictions yet. Click <strong>"Run Analysis"</strong> to start.</p>
+        </div>
+
+        <!-- Prediction Result -->
+        <div id="pred-result" class="hidden">
+            <!-- Confidence Gauge -->
+            <div style="display:flex; align-items:center; gap:var(--space-xl); flex-wrap:wrap; margin-bottom:var(--space-xl);">
+                <div style="text-align:center; flex:0 0 180px;">
+                    <div id="confidence-ring" style="position:relative; width:160px; height:160px; margin:0 auto;">
+                        <svg viewBox="0 0 160 160" style="transform:rotate(-90deg);">
+                            <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12"></circle>
+                            <circle id="conf-progress" cx="80" cy="80" r="68" fill="none" stroke="#f59e0b" stroke-width="12"
+                                stroke-dasharray="427.26" stroke-dashoffset="427.26" stroke-linecap="round"
+                                style="transition: stroke-dashoffset 1.5s ease, stroke 0.5s ease;"></circle>
+                        </svg>
+                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
+                            <div id="conf-value" style="font-size:2.2rem; font-weight:800; color:var(--text-primary);">0%</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Crash Risk</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trend Cards -->
+                <div style="flex:1; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:var(--space-md);">
+                    <div class="trend-card" id="trend-rt">
+                        <div class="trend-icon"><i class="ri-speed-line"></i></div>
+                        <div class="trend-label">Response Time</div>
+                        <div class="trend-value" id="trend-rt-val">—</div>
+                        <div class="trend-dir" id="trend-rt-dir">—</div>
+                    </div>
+                    <div class="trend-card" id="trend-err">
+                        <div class="trend-icon"><i class="ri-error-warning-line"></i></div>
+                        <div class="trend-label">Error Rate</div>
+                        <div class="trend-value" id="trend-err-val">—</div>
+                        <div class="trend-dir" id="trend-err-dir">—</div>
+                    </div>
+                    <div class="trend-card" id="trend-mem">
+                        <div class="trend-icon"><i class="ri-database-2-line"></i></div>
+                        <div class="trend-label">Memory</div>
+                        <div class="trend-value" id="trend-mem-val">—</div>
+                        <div class="trend-dir" id="trend-mem-dir">—</div>
+                    </div>
+                    <div class="trend-card" id="trend-cpu">
+                        <div class="trend-icon"><i class="ri-cpu-line"></i></div>
+                        <div class="trend-label">CPU</div>
+                        <div class="trend-value" id="trend-cpu-val">—</div>
+                        <div class="trend-dir" id="trend-cpu-dir">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Suggested -->
+            <div id="pred-action" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius-md); padding:var(--space-lg); line-height:1.8; white-space:pre-line; font-size:0.95rem;">
+            </div>
+
+            <!-- Timestamp -->
+            <div id="pred-timestamp" style="margin-top:var(--space-md); text-align:right; color:var(--text-muted); font-size:0.8rem;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Summary Section -->
 <div class="card" style="background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(59,130,246,0.1) 100%); border: 1px solid rgba(59,130,246,0.3);">
     <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: var(--space-base);">
         <h3 style="display:flex; align-items:center; gap:var(--space-xs); color:var(--text-primary);">
@@ -28,10 +113,151 @@
         </div>
     </div>
 </div>
+
+<style>
+.trend-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.trend-card:hover {
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+}
+.trend-icon {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-xs);
+    opacity: 0.6;
+}
+.trend-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-xs);
+}
+.trend-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.trend-dir {
+    font-size: 0.8rem;
+    margin-top: var(--space-xs);
+    font-weight: 600;
+}
+.trend-dir.climbing { color: #ef4444; }
+.trend-dir.stable { color: #22c55e; }
+.trend-dir.improving { color: #3b82f6; }
+.trend-dir.warning { color: #f59e0b; }
+.trend-dir.critical { color: #ef4444; }
+.trend-dir.healthy { color: #22c55e; }
+</style>
 {% endblock %}
 
 {% block scripts %}
 <script>
+
+// ─── Prediction Engine ──────────────────────────────────────────
+async function runPrediction() {
+    const loading = document.getElementById('pred-loading');
+    const empty = document.getElementById('pred-empty');
+    const result = document.getElementById('pred-result');
+    const btn = document.getElementById('run-prediction-btn');
+
+    loading.classList.remove('hidden');
+    empty.classList.add('hidden');
+    result.classList.add('hidden');
+    btn.disabled = true;
+
+    try {
+        const response = await api('/api/predictions/run', { method: 'POST' });
+        displayPrediction(response.prediction);
+    } catch (err) {
+        empty.classList.remove('hidden');
+        empty.innerHTML = `<p style="color:var(--danger);">${escapeHtml(err.message)}</p>`;
+    } finally {
+        loading.classList.add('hidden');
+        btn.disabled = false;
+    }
+}
+
+async function loadLatestPrediction() {
+    try {
+        const response = await api('/api/predictions/latest');
+        if (response.prediction) {
+            displayPrediction(response.prediction);
+        }
+    } catch(e) { /* ignore */ }
+}
+
+function displayPrediction(pred) {
+    const empty = document.getElementById('pred-empty');
+    const result = document.getElementById('pred-result');
+
+    empty.classList.add('hidden');
+    result.classList.remove('hidden');
+
+    // Confidence gauge
+    const conf = pred.confidence_percentage;
+    const progress = document.getElementById('conf-progress');
+    const offset = 427.26 - (427.26 * conf / 100);
+    progress.style.strokeDashoffset = offset;
+
+    // Color based on confidence
+    let color = '#22c55e'; // green
+    if (conf >= 70) color = '#ef4444'; // red
+    else if (conf >= 40) color = '#f59e0b'; // amber
+    progress.style.stroke = color;
+
+    document.getElementById('conf-value').textContent = conf + '%';
+    document.getElementById('conf-value').style.color = color;
+
+    // Trends
+    const trends = pred.trend_summary || {};
+    
+    // Response Time
+    const rt = trends.response_time || {};
+    document.getElementById('trend-rt-val').textContent = (rt.avg_ms || 0) + 'ms';
+    const rtDir = document.getElementById('trend-rt-dir');
+    rtDir.textContent = rt.direction || 'stable';
+    rtDir.className = 'trend-dir ' + (rt.direction || 'stable');
+
+    // Error Rate
+    const err = trends.error_rate || {};
+    document.getElementById('trend-err-val').textContent = (err.percentage || 0) + '%';
+    const errDir = document.getElementById('trend-err-dir');
+    errDir.textContent = err.direction || 'healthy';
+    errDir.className = 'trend-dir ' + (err.direction || 'healthy');
+
+    // Memory
+    const mem = trends.memory || {};
+    document.getElementById('trend-mem-val').textContent = (mem.avg_percent || 0) + '%';
+    const memDir = document.getElementById('trend-mem-dir');
+    memDir.textContent = mem.direction || 'stable';
+    memDir.className = 'trend-dir ' + (mem.direction || 'stable');
+
+    // CPU
+    const cpu = trends.cpu || {};
+    document.getElementById('trend-cpu-val').textContent = (cpu.avg_percent || 0) + '%';
+    const cpuDir = document.getElementById('trend-cpu-dir');
+    cpuDir.textContent = cpu.direction || 'stable';
+    cpuDir.className = 'trend-dir ' + (cpu.direction || 'stable');
+
+    // Action
+    document.getElementById('pred-action').textContent = pred.action_suggested || 'No action needed.';
+
+    // Timestamp
+    if (pred.created_at) {
+        const d = new Date(pred.created_at);
+        document.getElementById('pred-timestamp').textContent = 'Last analysis: ' + d.toLocaleString();
+    }
+}
+
+// ─── AI Summary ─────────────────────────────────────────────────
 async function fetchAiSummary() {
     const loading = document.getElementById('ai-loading');
     const result = document.getElementById('ai-result');
@@ -46,7 +272,6 @@ async function fetchAiSummary() {
     try {
         const response = await api('/api/ai-dashboard/summary');
         
-        // Parse markdown manually
         let formattedText = escapeHtml(response.summary)
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
@@ -56,7 +281,7 @@ async function fetchAiSummary() {
             .replace(/\n/g, '<br>')
             .replace(/- (.*?)<br>/g, '<li style="margin-bottom:var(--space-xs);">$1</li>')
             .replace(/(<li.*?>.*?<\/li>)/g, '<ul style="margin-left:var(--space-lg); padding-left:0;">$1</ul>')
-            .replace(/<\/ul><ul.*?>/g, ''); // merge adjacent lists
+            .replace(/<\/ul><ul.*?>/g, '');
             
         result.innerHTML = formattedText;
         result.classList.remove('hidden');
@@ -75,8 +300,9 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Auto-fetch on load
+// Auto-load on page load
 document.addEventListener('DOMContentLoaded', () => {
+    loadLatestPrediction();
     fetchAiSummary();
 });
 </script>

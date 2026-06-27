@@ -490,6 +490,64 @@ class RoadmapFeature(Base):
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
         }
 
+# ─── Server Metrics ───────────────────────────────────────────────────────
+
+class ServerMetric(Base):
+    __tablename__ = 'server_metrics'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False)
+    cpu_percent = Column(Float, default=0.0)
+    memory_percent = Column(Float, default=0.0)
+    disk_percent = Column(Float, default=0.0)
+    network_in_mb = Column(Float, default=0.0)
+    network_out_mb = Column(Float, default=0.0)
+    recorded_at = Column(DateTime, default=utc_now, index=True)
+
+    # Relationships
+    app = relationship('App', back_populates='server_metrics')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'cpu_percent': self.cpu_percent,
+            'memory_percent': self.memory_percent,
+            'disk_percent': self.disk_percent,
+            'network_in_mb': self.network_in_mb,
+            'network_out_mb': self.network_out_mb,
+            'recorded_at': self.recorded_at.isoformat() if self.recorded_at else None,
+        }
+
+
+# ─── Failure Predictions ──────────────────────────────────────────────────
+
+class FailurePrediction(Base):
+    __tablename__ = 'failure_predictions'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False)
+    confidence_percentage = Column(Float, nullable=False, default=0.0)
+    trend_summary = Column(JSON, default=dict)
+    action_suggested = Column(Text, default='')
+    is_alert_sent = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=utc_now)
+
+    # Relationships
+    app = relationship('App')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'confidence_percentage': self.confidence_percentage,
+            'trend_summary': self.trend_summary,
+            'action_suggested': self.action_suggested,
+            'is_alert_sent': self.is_alert_sent,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+        }
+
+
 # ─── Database Setup ───────────────────────────────────────────────────────
 
 def init_db(db_uri):
