@@ -1114,7 +1114,8 @@ select.form-input {
 .sidebar-nav {
     flex: 1;
     padding: var(--space-base) var(--space-md);
-    overflow: visible;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .nav-section-label {
@@ -1146,34 +1147,7 @@ select.form-input {
     color: var(--text-primary);
 }
 
-/* Custom Glassmorphic Tooltip */
-.nav-item::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    left: calc(100% + 15px);
-    top: 50%;
-    transform: translateY(-50%) translateX(-10px);
-    background: rgba(28, 28, 30, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: var(--radius-md);
-    font-size: var(--font-sm);
-    font-weight: 600;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-.nav-item:hover::after {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
-}
+/* Tooltips handled by JS to avoid overflow clipping */
 
 .nav-item.active {
     background: rgba(255, 255, 255, 0.1);

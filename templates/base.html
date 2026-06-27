@@ -145,5 +145,33 @@
             loadAppSwitcher();
         });
     </script>
+    <!-- Global Custom Tooltip -->
+    <div id="custom-tooltip" style="display: none; position: fixed; background: rgba(28, 28, 30, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; padding: 8px 14px; border-radius: var(--radius-md); font-size: var(--font-sm); font-weight: 600; white-space: nowrap; pointer-events: none; z-index: 99999; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); opacity: 0; transition: opacity 0.2s;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tooltip = document.getElementById('custom-tooltip');
+            document.querySelectorAll('[data-tooltip]').forEach(item => {
+                item.addEventListener('mouseenter', e => {
+                    const text = item.getAttribute('data-tooltip');
+                    if(text) {
+                        tooltip.textContent = text;
+                        tooltip.style.display = 'block';
+                        const rect = item.getBoundingClientRect();
+                        tooltip.style.top = (rect.top + rect.height/2) + 'px';
+                        tooltip.style.left = (rect.right + 15) + 'px';
+                        tooltip.style.transform = 'translateY(-50%)';
+                        setTimeout(() => tooltip.style.opacity = '1', 10);
+                    }
+                });
+                item.addEventListener('mouseleave', () => {
+                    tooltip.style.opacity = '0';
+                    setTimeout(() => {
+                        if (tooltip.style.opacity === '0') tooltip.style.display = 'none';
+                    }, 200);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
