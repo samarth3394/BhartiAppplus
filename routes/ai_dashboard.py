@@ -29,6 +29,50 @@ def get_ai_summary():
     finally:
         s.close()
 
+@ai_dashboard_bp.route('/api/ai-dashboard/settings', methods=['GET', 'POST'])
+@login_required
+def ai_dashboard_settings():
+    from app import db_session
+    from models import App
+    from flask import request
+    s = db_session()
+    try:
+        app_id = session.get('current_app_id')
+        if not app_id:
+            return jsonify({'error': 'No app selected'}), 400
+            
+        app = s.query(App).filter_by(id=app_id).first()
+        if not app:
+            return jsonify({'error': 'App not found'}), 404
+
+        settings = app.settings or {}
+        
+        if request.method == 'GET':
+            return jsonify({
+                'hourly_revenue': settings.get('hourly_revenue', 0)
+            }), 200
+            
+        if request.method == 'POST':
+            data = request.get_json()
+            try:
+                revenue = float(data.get('hourly_revenue', 0))
+            except ValueError:
+                revenue = 0.0
+                
+            settings['hourly_revenue'] = revenue
+            app.settings = settings
+            from sqlalchemy.orm.attributes import flag_modified
+            flag_modified(app, 'settings')
+            
+            s.commit()
+            return jsonify({'message': 'Settings saved successfully', 'hourly_revenue': revenue}), 200
+            
+    except Exception as e:
+        s.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        s.close()
+
 
 @ai_dashboard_bp.route('/api/predictions/run', methods=['POST'])
 @login_required

@@ -41,31 +41,65 @@ Bug Description: {bug_description}
         return f"AI Analysis failed: {str(e)}"
 
 def generate_cto_summary(session, app_id):
-    """Generate a high-level CTO dashboard summary using Gemini AI."""
+    """Generate a high-level CTO dashboard summary using Gemini AI with Business Impact."""
     if not GENAI_API_KEY or not genai:
         return {"status": "error", "message": "Gemini API Key is not configured."}
         
-    from models import Bug, UptimeCheck, MaintenanceTask
+    from models import App, Bug, UptimeCheck, MaintenanceTask, UptimeIncident
     from datetime import datetime, timedelta, timezone
     
     # Gather Data
+    app = session.query(App).filter_by(id=app_id).first()
+    if not app:
+        return {"status": "error", "message": "App not found."}
+        
+    settings = app.settings or {}
+    hourly_revenue = float(settings.get('hourly_revenue', 0.0))
+    
+    now = datetime.now(timezone.utc)
+    seven_days_ago = now - timedelta(days=7)
+    
     recent_bugs = session.query(Bug).filter_by(app_id=app_id).order_by(Bug.created_at.desc()).limit(10).all()
     recent_uptime = session.query(UptimeCheck).filter_by(app_id=app_id).order_by(UptimeCheck.checked_at.desc()).limit(10).all()
     tasks = session.query(MaintenanceTask).filter_by(app_id=app_id, is_active=True).all()
     
+    # Calculate Weekly Downtime
+    incidents = session.query(UptimeIncident).filter(
+        UptimeIncident.app_id == app_id,
+        UptimeIncident.started_at >= seven_days_ago
+    ).all()
+    
+    total_downtime_seconds = sum([i.duration_seconds for i in incidents if i.duration_seconds])
+    # Also add active incident duration if still down
+    active_incident = session.query(UptimeIncident).filter(
+        UptimeIncident.app_id == app_id,
+        UptimeIncident.resolved_at.is_(None)
+    ).first()
+    if active_incident:
+        active_dur = (now - active_incident.started_at).total_seconds()
+        total_downtime_seconds += int(active_dur)
+        
+    downtime_minutes = total_downtime_seconds / 60.0
+    revenue_impact = (downtime_minutes / 60.0) * hourly_revenue
+    
     bug_summary = "\\n".join([f"- {b.severity.value.upper()}: {b.title} ({b.status.value})" for b in recent_bugs])
-    uptime_summary = "\\n".join([f"- {u.status}: {u.response_time_ms}ms at {u.checked_at}" for u in recent_uptime])
+    uptime_summary = "\\n".join([f"- HTTP {u.status_code}: {u.response_time_ms}ms at {u.checked_at}" for u in recent_uptime])
     task_summary = "\\n".join([f"- {t.title} (Priority: {t.priority.value}, Status: {t.status.value})" for t in tasks])
     
     prompt = f"""
-You are an AI CTO analyzing an application's health.
+You are an AI CTO analyzing an application's health and business performance.
 Based on the following recent data, provide a structured executive summary. Include:
-1. Overall System Health Assessment (Good, Warning, Critical)
-2. Key Risks / Immediate Actions Needed (based on bugs/tasks)
-3. Infrastructure & Performance Insights (based on uptime checks)
+1. Overall System Health Assessment (Score out of 100)
+2. Business & Revenue Impact (Analyze the revenue lost due to downtime)
+3. Key Risks / Immediate Actions Needed (based on bugs/tasks)
 4. Strategic Advice for the engineering team.
 
 Please use markdown formatting. Keep it professional, concise, and actionable.
+
+=== BUSINESS METRICS (LAST 7 DAYS) ===
+Estimated Hourly Revenue: ${hourly_revenue:.2f}
+Total Downtime: {downtime_minutes:.1f} minutes
+Estimated Revenue Loss: ${revenue_impact:.2f}
 
 === RECENT BUGS ===
 {bug_summary or 'No recent bugs.'}
@@ -79,7 +113,17 @@ Please use markdown formatting. Keep it professional, concise, and actionable.
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
-        return {"status": "success", "data": response.text}
+        
+        # Include raw stats in output for the UI to use if needed
+        data = {{
+            'report': response.text,
+            'metrics': {{
+                'downtime_minutes': round(downtime_minutes, 1),
+                'revenue_loss': round(revenue_impact, 2),
+                'hourly_revenue': round(hourly_revenue, 2)
+            }}
+        }}
+        return {"status": "success", "data": data}
     except Exception as e:
         return {"status": "error", "message": f"AI Generation failed: {str(e)}"}
 

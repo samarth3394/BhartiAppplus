@@ -96,9 +96,16 @@
         <h3 style="display:flex; align-items:center; gap:var(--space-xs); color:var(--text-primary);">
             <i class="ri-brain-line" style="color:var(--primary); font-size:1.5rem;"></i> System Intelligence Report
         </h3>
-        <button class="btn btn-primary" id="refresh-ai-btn" onclick="fetchAiSummary()">
-            <i class="ri-refresh-line"></i> Generate Report
-        </button>
+        <div style="display:flex; gap:var(--space-sm); align-items:center;">
+            <div style="display:flex; align-items:center; background:rgba(0,0,0,0.2); border-radius:var(--radius-sm); border:1px solid rgba(255,255,255,0.1); padding:2px 8px;">
+                <label for="hourly-revenue-input" style="font-size:0.8rem; color:var(--text-secondary); margin-right:8px;">Hourly Revenue ($):</label>
+                <input type="number" id="hourly-revenue-input" value="0" style="width:70px; background:transparent; border:none; color:var(--text-primary); font-family:monospace; outline:none; text-align:right;">
+                <button onclick="saveRevenueSetting()" style="background:transparent; border:none; color:var(--primary); cursor:pointer; margin-left:8px;" title="Save Settings"><i class="ri-save-line"></i></button>
+            </div>
+            <button class="btn btn-primary" id="refresh-ai-btn" onclick="fetchAiSummary()">
+                <i class="ri-refresh-line"></i> Generate Report
+            </button>
+        </div>
     </div>
     <div class="card-body" id="ai-content-container" style="min-height: 300px; padding: var(--space-lg) 0;">
         <div id="ai-loading" class="hidden" style="text-align:center; padding: 3rem;">
@@ -107,6 +114,17 @@
         </div>
         
         <div id="ai-error" class="hidden" style="color:var(--danger); padding:var(--space-base); background:rgba(239,68,68,0.1); border-radius:var(--radius-md); margin-bottom:var(--space-md);">
+        </div>
+
+        <div id="ai-metrics" class="hidden" style="display:flex; gap:var(--space-md); margin-bottom:var(--space-xl);">
+            <div style="flex:1; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius-md); padding:var(--space-md); text-align:center;">
+                <div style="font-size:0.8rem; color:var(--danger); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Weekly Downtime</div>
+                <div style="font-size:1.5rem; font-weight:700; color:var(--text-primary);" id="metric-downtime">0m</div>
+            </div>
+            <div style="flex:1; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:var(--radius-md); padding:var(--space-md); text-align:center;">
+                <div style="font-size:0.8rem; color:var(--warning); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Est. Revenue Loss</div>
+                <div style="font-size:1.5rem; font-weight:700; color:var(--text-primary);" id="metric-revenue-loss">$0.00</div>
+            </div>
         </div>
 
         <div id="ai-result" class="hidden" style="line-height: 1.8; font-size: 1.05rem; color:var(--text-primary);">
@@ -272,7 +290,11 @@ async function fetchAiSummary() {
     try {
         const response = await api('/api/ai-dashboard/summary');
         
-        let formattedText = escapeHtml(response.summary)
+        // Because the API now returns { report: "...", metrics: {...} } instead of just a string
+        const reportText = response.summary.report || response.summary;
+        const metrics = response.summary.metrics;
+
+        let formattedText = escapeHtml(reportText)
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
             .replace(/### (.*?)\n/g, '<h4 style="margin-top:var(--space-lg);margin-bottom:var(--space-sm);color:var(--primary);">$1</h4>')
@@ -285,6 +307,14 @@ async function fetchAiSummary() {
             
         result.innerHTML = formattedText;
         result.classList.remove('hidden');
+
+        // Show metrics
+        if (metrics) {
+            document.getElementById('ai-metrics').classList.remove('hidden');
+            document.getElementById('metric-downtime').textContent = metrics.downtime_minutes + 'm';
+            document.getElementById('metric-revenue-loss').textContent = '$' + metrics.revenue_loss.toLocaleString();
+            document.getElementById('hourly-revenue-input').value = metrics.hourly_revenue;
+        }
     } catch (err) {
         error.textContent = err.message;
         error.classList.remove('hidden');
@@ -298,6 +328,20 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+async function saveRevenueSetting() {
+    const revenue = document.getElementById('hourly-revenue-input').value;
+    try {
+        await api('/api/ai-dashboard/settings', {
+            method: 'POST',
+            body: { hourly_revenue: revenue }
+        });
+        showToast('Revenue setting saved. Generating new report...', 'success');
+        fetchAiSummary(); // regenerate report with new setting
+    } catch (err) {
+        showToast('Failed to save settings: ' + err.message, 'error');
+    }
 }
 
 // Auto-load on page load
