@@ -173,10 +173,30 @@ async function loadIncidents() {
             return;
         }
 
-        container.innerHTML = data.incidents.map(incident => `
+        container.innerHTML = data.incidents.map(incident => {
+            let aiSection = '';
+            if (incident.ai_analysis) {
+                const ai = incident.ai_analysis;
+                const confColor = ai.confidence > 80 ? 'var(--success)' : (ai.confidence > 50 ? 'var(--warning)' : 'var(--danger)');
+                aiSection = `
+                    <div style="margin-top:var(--space-md); padding:var(--space-md); background:rgba(59,130,246,0.05); border-left: 3px solid var(--primary); border-radius:4px;">
+                        <div style="display:flex; align-items:center; gap:var(--space-xs); margin-bottom:var(--space-xs);">
+                            <i class="ri-brain-line" style="color:var(--primary);"></i>
+                            <strong style="color:var(--text-primary); font-size:0.9rem;">AI Root Cause Analysis</strong>
+                        </div>
+                        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:var(--space-sm);">${ai.root_cause}</p>
+                        <div style="display:flex; gap:var(--space-md); font-size:0.8rem;">
+                            <span style="color:var(--text-muted);">Confidence: <strong style="color:${confColor};">${ai.confidence}%</strong></span>
+                            <span style="color:var(--text-muted);">Revenue Impact: <strong>${ai.revenue_impact.toUpperCase()}</strong></span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
             <div class="incident-item">
                 <div class="incident-status ${incident.resolved_at ? 'resolved' : 'active'}"></div>
-                <div class="incident-info">
+                <div class="incident-info" style="width:100%;">
                     <div class="incident-duration">
                         ${incident.resolved_at ? 'Resolved' : '🔴 Active'} —
                         Duration: ${formatDuration(incident.duration_seconds)}
@@ -185,10 +205,13 @@ async function loadIncidents() {
                         Started: ${formatDateTime(incident.started_at)}
                         ${incident.resolved_at ? ' • Resolved: ' + formatDateTime(incident.resolved_at) : ''}
                     </div>
+                    ${aiSection}
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     } catch (err) {
+        console.error(err);
         // Silent fail
     }
 }

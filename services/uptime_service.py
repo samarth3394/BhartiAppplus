@@ -104,6 +104,7 @@ def _handle_incident(session, app, check):
                 alert_sent=False
             )
             session.add(incident)
+            session.flush()  # Get incident.id before AI analysis
 
             # Log activity
             log = ActivityLog(
@@ -113,6 +114,12 @@ def _handle_incident(session, app, check):
                 entity_id=incident.id,
             )
             session.add(log)
+
+            # ── AUTO-TRIGGER AI ROOT CAUSE ANALYSIS ──
+            try:
+                _trigger_ai_analysis(session, app, incident, check)
+            except Exception as e:
+                print(f"[AI Analysis] Failed for incident {incident.id}: {e}")
 
     elif check.is_up and prev_check and not prev_check.is_up:
         # App came back up — resolve incident
@@ -154,3 +161,38 @@ def run_all_uptime_checks(Session):
         print(f"Uptime check error: {e}")
     finally:
         session.close()
+
+
+def _trigger_ai_analysis(session, app, incident, failed_check):
+    """
+    Send logs and metrics to Gemini API on downtime.
+    Parse response and save to ai_incidents table.
+    """
+    from services.ai_service import analyze_incident_root_cause
+    from models import AiIncident
+
+    # Gather recent checks for context
+    recent_checks = session.query(UptimeCheck).filter(
+        UptimeCheck.app_id == app.id
+    ).order_by(UptimeCheck.checked_at.desc()).limit(15).all()
+
+    # Call Gemini AI
+    result = analyze_incident_root_cause(
+        app_name=app.name,
+        app_url=app.url or '',
+        error_message=failed_check.error_message or 'Unknown error',
+        duration_seconds=0,  # Just started
+        recent_checks=list(reversed(recent_checks)),
+    )
+
+    # Save to ai_incidents table
+    ai_incident = AiIncident(
+        app_id=app.id,
+        incident_id=incident.id,
+        root_cause=result.get('root_cause', ''),
+        confidence=result.get('confidence', 0.0),
+        revenue_impact=result.get('revenue_impact', 'unknown'),
+        raw_ai_response=result.get('raw', ''),
+    )
+    session.add(ai_incident)
+    print(f"[AI Analysis] Root cause saved for incident {incident.id}: {result.get('root_cause', '')[:100]}")

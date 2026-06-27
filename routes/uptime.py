@@ -107,6 +107,7 @@ def uptime_history():
 def uptime_incidents():
     from app import db_session
     from flask import session as flask_session
+    from models import AiIncident
     s = db_session()
     try:
         app_id = flask_session.get('current_app_id')
@@ -117,8 +118,19 @@ def uptime_incidents():
             app_id=app_id
         ).order_by(UptimeIncident.started_at.desc()).limit(50).all()
 
+        # Attach AI analysis to each incident
+        result = []
+        for inc in incidents:
+            data = inc.to_dict()
+            ai = s.query(AiIncident).filter_by(incident_id=inc.id).first()
+            if ai:
+                data['ai_analysis'] = ai.to_dict()
+            else:
+                data['ai_analysis'] = None
+            result.append(data)
+
         return jsonify({
-            'incidents': [i.to_dict() for i in incidents]
+            'incidents': result
         })
     finally:
         s.close()

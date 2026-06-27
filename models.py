@@ -208,6 +208,36 @@ class UptimeIncident(Base):
             'alert_sent': self.alert_sent,
         }
 
+# ─── AI Incidents (Root Cause Analysis) ───────────────────────────────────
+
+class AiIncident(Base):
+    __tablename__ = 'ai_incidents'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False)
+    incident_id = Column(String(36), ForeignKey('uptime_incidents.id'), nullable=False)
+    root_cause = Column(Text, default='')
+    confidence = Column(Float, default=0.0)
+    revenue_impact = Column(String(50), default='unknown')  # low, medium, high, critical
+    raw_ai_response = Column(Text, default='')
+    created_at = Column(DateTime, default=utc_now)
+
+    # Relationships
+    app = relationship('App')
+    incident = relationship('UptimeIncident')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'incident_id': self.incident_id,
+            'root_cause': self.root_cause,
+            'confidence': self.confidence,
+            'revenue_impact': self.revenue_impact,
+            'raw_ai_response': self.raw_ai_response,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+        }
+
 
 # ─── Bugs ─────────────────────────────────────────────────────────────────
 
