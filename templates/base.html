@@ -33,18 +33,7 @@
                 </div>
             </div>
 
-            <!-- App Switcher -->
-            <div class="app-switcher">
-                <div class="app-switcher-header">
-                    <div class="app-switcher-label">Current App</div>
-                    <a href="/apps" class="create-app-btn" title="Create App">
-                        <i data-lucide="plus"></i>
-                    </a>
-                </div>
-                <select id="app-switcher-select" onchange="switchApp(this.value)">
-                    <option value="">Loading apps...</option>
-                </select>
-            </div>
+
 
             <!-- Navigation -->
             <nav class="sidebar-nav">
@@ -116,7 +105,17 @@
                     </button>
                     <h2>{% block header_title %}Dashboard{% endblock %}</h2>
                 </div>
-                <div class="topbar-right">
+                <div class="topbar-right" style="display: flex; align-items: center; gap: 16px;">
+                    <!-- App Switcher Topbar -->
+                    <div class="topbar-app-switcher" style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-default);">
+                        <i data-lucide="layers" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+                        <select id="app-switcher-select" onchange="switchApp(this.value)" style="background: transparent; border: none; color: var(--text-primary); font-family: var(--font-family); font-size: var(--font-sm); outline: none; cursor: pointer; padding-right: 8px; max-width: 150px;">
+                            <option value="">Loading apps...</option>
+                        </select>
+                        <a href="/apps" class="btn btn-icon" style="width: 24px; height: 24px; min-width: 24px; padding: 0; background: var(--accent-gradient); color: white; border-radius: var(--radius-sm);" title="Manage Apps">
+                            <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                        </a>
+                    </div>
                     {% block topbar_actions %}{% endblock %}
                 </div>
             </header>

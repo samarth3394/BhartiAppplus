@@ -109,7 +109,7 @@ async def dashboard_stats(request: Request, user: User = Depends(get_current_use
             'total': total_bugs,
             'active': active_bugs,
             'resolved': resolved_bugs,
-            'by_severity': severity_counts,
+            'severity': severity_counts,
         },
         'uptime': {
             'is_up': latest_check.is_up if latest_check else True,

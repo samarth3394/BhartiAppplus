@@ -42,8 +42,8 @@ async def setup_page(request: Request, user: User = Depends(get_current_user)):
 @router.get("/logout")
 async def logout_page(response: Response):
     res = RedirectResponse(url="/auth/login", status_code=303)
-    res.delete_cookie("access_token")
-    res.delete_cookie("current_app_id")
+    res.delete_cookie("access_token", path="/")
+    res.delete_cookie("current_app_id", path="/")
     return res
 
 
@@ -68,7 +68,7 @@ async def register(data: RegisterRequest, response: Response, db: Session = Depe
 
     # Auto login
     access_token = create_access_token(data={"sub": str(user.id)})
-    response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60*24*7)
+    response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60*24*7, path="/")
     
     return {"message": "Registration successful", "user": user.to_dict()}
 
@@ -82,14 +82,14 @@ async def login(data: LoginRequest, response: Response, db: Session = Depends(ge
     db.commit()
 
     access_token = create_access_token(data={"sub": str(user.id)})
-    response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60*24*7)
+    response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60*24*7, path="/")
     
     return {"message": "Login successful", "user": user.to_dict()}
 
 @router.post("/api/auth/logout")
 async def logout(response: Response, user: User = Depends(get_current_user)):
-    response.delete_cookie("access_token")
-    response.delete_cookie("current_app_id")
+    response.delete_cookie("access_token", path="/")
+    response.delete_cookie("current_app_id", path="/")
     return {"message": "Logged out successfully"}
 
 @router.get("/api/auth/me")
