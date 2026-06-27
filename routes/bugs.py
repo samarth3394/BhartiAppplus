@@ -295,18 +295,26 @@ def upload_attachment(bug_id):
         if file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
 
-        # Save file
+        # Save file to Supabase Storage
+        from services.storage_service import upload_file
         filename = f"{uuid.uuid4().hex}_{file.filename}"
-        upload_dir = current_app.config.get('UPLOAD_FOLDER', 'static/uploads')
-        os.makedirs(upload_dir, exist_ok=True)
-        file_path = os.path.join(upload_dir, filename)
-        file.save(file_path)
+        
+        try:
+            # Upload file directly to Supabase bucket
+            public_url = upload_file(file, filename)
+        except Exception as e:
+            return jsonify({'error': f"Storage upload failed: {str(e)}"}), 500
 
+        # File size (approximate for stream or fallback to 0 if unknown)
+        file.seek(0, os.SEEK_END)
+        file_size = file.tell()
+        file.seek(0)
+        
         attachment = BugAttachment(
             bug_id=bug.id,
             filename=file.filename,
-            file_path=filename,
-            file_size=os.path.getsize(file_path),
+            file_path=public_url, # Now stores the full public URL from Supabase
+            file_size=file_size,
             uploaded_by=current_user.id,
         )
         s.add(attachment)

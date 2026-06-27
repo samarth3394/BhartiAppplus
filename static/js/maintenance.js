@@ -19,16 +19,26 @@ async function loadTasks() {
         document.getElementById('tasks-container').classList.remove('hidden');
         document.getElementById('no-tasks-state').classList.add('hidden');
 
-        renderTaskGroup('overdue', data.tasks.overdue);
-        renderTaskGroup('today', data.tasks.today);
-        renderTaskGroup('upcoming', data.tasks.upcoming);
+        // Hide Create button if Viewer
+        const createBtn = document.getElementById('new-task-btn');
+        if (createBtn) {
+            if (data.role === 'viewer') {
+                createBtn.style.display = 'none';
+            } else {
+                createBtn.style.display = 'inline-block';
+            }
+        }
+
+        renderTaskGroup('overdue', data.tasks.overdue, data.role);
+        renderTaskGroup('today', data.tasks.today, data.role);
+        renderTaskGroup('upcoming', data.tasks.upcoming, data.role);
 
     } catch (err) {
         showToast('Failed to load tasks', 'error');
     }
 }
 
-function renderTaskGroup(group, tasks) {
+function renderTaskGroup(group, tasks, role) {
     const container = document.getElementById(`${group}-tasks`);
     const countEl = document.getElementById(`${group}-count`);
     const groupEl = document.getElementById(`${group}-group`);
@@ -42,11 +52,16 @@ function renderTaskGroup(group, tasks) {
 
     groupEl.style.display = 'block';
 
+    const canEdit = (role === 'admin' || role === 'developer');
+    const canDelete = (role === 'admin');
+
     container.innerHTML = tasks.map(task => `
         <div class="task-item ${group === 'overdue' ? 'overdue' : ''} animate-in">
+            ${canEdit ? `
             <button class="task-check" onclick="openCompleteModal('${task.id}', '${escapeAttr(task.title)}')" title="Mark complete">
                 ✓
             </button>
+            ` : '<div style="width:24px; height:24px;"></div>'}
             <div class="task-info">
                 <div class="task-title">${escapeHtml(task.title)}</div>
                 <div class="task-meta">
@@ -56,8 +71,8 @@ function renderTaskGroup(group, tasks) {
                 </div>
             </div>
             <div class="task-actions">
-                <button class="btn btn-ghost btn-sm" onclick="openEditTaskModal('${task.id}')" title="Edit">✏️</button>
-                <button class="btn btn-ghost btn-sm text-danger" onclick="deleteTask('${task.id}')" title="Delete">🗑️</button>
+                ${canEdit ? `<button class="btn btn-ghost btn-sm" onclick="openEditTaskModal('${task.id}')" title="Edit">✏️</button>` : ''}
+                ${canDelete ? `<button class="btn btn-ghost btn-sm text-danger" onclick="deleteTask('${task.id}')" title="Delete">🗑️</button>` : ''}
             </div>
         </div>
     `).join('');

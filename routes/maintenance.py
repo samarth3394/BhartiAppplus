@@ -10,6 +10,20 @@ from models import (
 
 maintenance_bp = Blueprint('maintenance', __name__)
 
+def _check_permission(session, app_id, min_role=RoleEnum.developer):
+    """Check if current user has the minimum required role for the app."""
+    member = session.query(AppMember).filter_by(
+        app_id=app_id, user_id=current_user.id
+    ).first()
+
+    if not member:
+        raise PermissionError('You are not a member of this app.')
+
+    role_hierarchy = {RoleEnum.admin: 3, RoleEnum.developer: 2, RoleEnum.viewer: 1}
+    if role_hierarchy.get(member.role, 0) < role_hierarchy.get(min_role, 0):
+        raise PermissionError(f'Insufficient permissions. Required: {min_role.value}')
+    
+    return member
 
 @maintenance_bp.route('/maintenance')
 @login_required
@@ -27,6 +41,10 @@ def list_tasks():
         app_id = flask_session.get('current_app_id')
         if not app_id:
             return jsonify({'error': 'No app selected'}), 400
+            
+        # Get member role so frontend knows what buttons to show
+        member = s.query(AppMember).filter_by(app_id=app_id, user_id=current_user.id).first()
+        role = member.role.value if member else 'viewer'
 
         tasks = s.query(MaintenanceTask).filter_by(
             app_id=app_id, is_active=True
@@ -55,6 +73,7 @@ def list_tasks():
         return jsonify({
             'tasks': categorized,
             'total': len(tasks),
+            'role': role
         })
     finally:
         s.close()
@@ -70,6 +89,12 @@ def create_task():
         app_id = flask_session.get('current_app_id')
         if not app_id:
             return jsonify({'error': 'No app selected'}), 400
+
+        # RBAC Check: Need Developer role to create task
+        try:
+            _check_permission(s, app_id, min_role=RoleEnum.developer)
+        except PermissionError as e:
+            return jsonify({'error': str(e)}), 403
 
         data = request.get_json()
         title = data.get('title', '').strip()
@@ -137,6 +162,12 @@ def update_task(task_id):
         if not app_id:
             return jsonify({'error': 'No app selected'}), 400
 
+        # RBAC Check
+        try:
+            _check_permission(s, app_id, min_role=RoleEnum.developer)
+        except PermissionError as e:
+            return jsonify({'error': str(e)}), 403
+
         task = s.query(MaintenanceTask).filter_by(id=task_id, app_id=app_id).first()
         if not task:
             return jsonify({'error': 'Task not found'}), 404
@@ -179,6 +210,12 @@ def complete_task(task_id):
         app_id = flask_session.get('current_app_id')
         if not app_id:
             return jsonify({'error': 'No app selected'}), 400
+
+        # RBAC Check
+        try:
+            _check_permission(s, app_id, min_role=RoleEnum.developer)
+        except PermissionError as e:
+            return jsonify({'error': str(e)}), 403
 
         task = s.query(MaintenanceTask).filter_by(id=task_id, app_id=app_id).first()
         if not task:
@@ -252,6 +289,12 @@ def delete_task(task_id):
         app_id = flask_session.get('current_app_id')
         if not app_id:
             return jsonify({'error': 'No app selected'}), 400
+
+        # RBAC Check: Need Admin role to delete task
+        try:
+            _check_permission(s, app_id, min_role=RoleEnum.admin)
+        except PermissionError as e:
+            return jsonify({'error': str(e)}), 403
 
         task = s.query(MaintenanceTask).filter_by(id=task_id, app_id=app_id).first()
         if not task:

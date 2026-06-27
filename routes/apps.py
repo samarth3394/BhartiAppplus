@@ -104,8 +104,13 @@ def update_app(app_id):
         if not app_obj:
             return jsonify({'error': 'App not found'}), 404
 
-        if app_obj.owner_id != current_user.id:
-            return jsonify({'error': 'Only the owner can update app settings'}), 403
+        # Allow owner OR Admin to edit app settings
+        is_owner = (app_obj.owner_id == current_user.id)
+        if not is_owner:
+            from models import AppMember, RoleEnum
+            member = s.query(AppMember).filter_by(app_id=app_id, user_id=current_user.id).first()
+            if not member or member.role != RoleEnum.admin:
+                return jsonify({'error': 'Only the owner or an admin can update app settings'}), 403
 
         data = request.get_json()
 
