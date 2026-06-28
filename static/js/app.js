@@ -23,13 +23,13 @@ async function api(url, options = {}) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || `HTTP ${response.status}`);
+            throw new Error(data.detail || data.error || `HTTP ${response.status}`);
         }
 
         return data;
     } catch (error) {
         if (error.message.includes('401') || error.message.includes('Unauthorized')) {
-            window.location.href = '/login';
+            window.location.href = '/auth/login';
             return;
         }
         throw error;

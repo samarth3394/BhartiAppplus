@@ -1771,7 +1771,7 @@ select.form-input {
 
 .period-tab.active {
     background: var(--accent-primary);
-    color: white;
+    color: var(--bg-primary);
     border-color: var(--accent-primary);
 }
 

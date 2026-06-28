@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from config import Config
 from dependencies import get_current_user_optional, get_db
@@ -47,6 +47,13 @@ app.include_router(roadmap_router)
 app.include_router(ai_dashboard_router)
 app.include_router(api_ingest_router)
 app.include_router(server_router)
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    # If the user is unauthenticated (401) and trying to access an HTML page (not an API), redirect to login
+    if exc.status_code == 401 and not request.url.path.startswith("/api/"):
+        return RedirectResponse(url="/auth/login", status_code=303)
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
 @app.on_event("startup")
 async def startup_event():

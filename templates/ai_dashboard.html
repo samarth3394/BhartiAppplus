@@ -108,6 +108,11 @@
         </div>
     </div>
     <div class="card-body" id="ai-content-container" style="min-height: 300px; padding: var(--space-lg) 0;">
+        <div id="ai-placeholder" style="text-align:center; padding: 3rem; color:var(--text-secondary);">
+            <i class="ri-robot-2-line" style="font-size:3rem; color:var(--primary); opacity:0.5; margin-bottom:1rem; display:block;"></i>
+            <p>Click "Generate Report" to analyze the application's health and get actionable insights.</p>
+        </div>
+
         <div id="ai-loading" class="hidden" style="text-align:center; padding: 3rem;">
             <div class="spinner" style="width:40px; height:40px; margin:0 auto var(--space-md) auto; border-top-color:var(--primary);"></div>
             <p style="color:var(--text-secondary);">Analyzing entire application health...</p>
@@ -282,6 +287,7 @@ async function fetchAiSummary() {
     const error = document.getElementById('ai-error');
     const btn = document.getElementById('refresh-ai-btn');
     
+    document.getElementById('ai-placeholder').classList.add('hidden');
     loading.classList.remove('hidden');
     result.classList.add('hidden');
     error.classList.add('hidden');
@@ -346,8 +352,8 @@ async function saveRevenueSetting() {
 
 // Auto-load on page load
 document.addEventListener('DOMContentLoaded', () => {
-    loadLatestPrediction();
-    fetchAiSummary();
+    loadLatestPrediction();    // Do not fetch automatically on page load to save quota
+    // fetchAiSummary();
 });
 </script>
 {% endblock %}

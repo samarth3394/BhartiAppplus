@@ -14,6 +14,18 @@ GENAI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GENAI_API_KEY and genai:
     genai.configure(api_key=GENAI_API_KEY)
 
+import time
+
+def _call_gemini_with_retry(model, prompt, max_retries=3):
+    for attempt in range(max_retries):
+        try:
+            return model.generate_content(prompt)
+        except Exception as e:
+            if '429' in str(e) and attempt < max_retries - 1:
+                time.sleep(8)
+            else:
+                raise e
+
 
 def analyze_root_cause(bug_title, bug_description, logs=None):
     """Analyze a bug and provide Root Cause Analysis and Auto-Fix Recommendations."""
@@ -35,7 +47,7 @@ Bug Description: {bug_description}
         prompt += f"\nRelevant Logs:\n{logs}\n"
         
     try:
-        response = model.generate_content(prompt)
+        response = _call_gemini_with_retry(model, prompt)
         return response.text
     except Exception as e:
         return f"AI Analysis failed: {str(e)}"
@@ -112,17 +124,17 @@ Estimated Revenue Loss: ${revenue_impact:.2f}
 """
     try:
         model = genai.GenerativeModel('gemini-flash-latest')
-        response = model.generate_content(prompt)
+        response = _call_gemini_with_retry(model, prompt)
         
         # Include raw stats in output for the UI to use if needed
-        data = {{
+        data = {
             'report': response.text,
-            'metrics': {{
+            'metrics': {
                 'downtime_minutes': round(downtime_minutes, 1),
                 'revenue_loss': round(revenue_impact, 2),
                 'hourly_revenue': round(hourly_revenue, 2)
-            }}
-        }}
+            }
+        }
         return {"status": "success", "data": data}
     except Exception as e:
         return {"status": "error", "message": f"AI Generation failed: {str(e)}"}
@@ -173,7 +185,7 @@ Rules for your response:
 
     try:
         model = genai.GenerativeModel('gemini-flash-latest')
-        response = model.generate_content(prompt)
+        response = _call_gemini_with_retry(model, prompt)
         raw_text = response.text.strip()
 
         # Parse JSON from response
