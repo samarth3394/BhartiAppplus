@@ -142,7 +142,9 @@ function renderBugSeverityChart(severity) {
                         font: { family: 'Inter', size: 12 },
                         padding: 16,
                         usePointStyle: true,
-                        pointStyleWidth: 10,
+                        pointStyle: 'circle',
+                        boxWidth: 8,
+                        boxHeight: 8
                     }
                 }
             }
