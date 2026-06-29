@@ -109,6 +109,9 @@
                             <option value="">Loading apps...</option>
                         </select>
                     </div>
+                    <a href="/settings" class="topbar-profile" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--bg-secondary); color: var(--text-primary); text-decoration: none; border: 1px solid var(--border-default); transition: all 0.2s;" title="Profile Settings" onmouseover="this.style.background='var(--border-default)'" onmouseout="this.style.background='var(--bg-secondary)'">
+                        <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+                    </a>
                     {% block topbar_actions %}{% endblock %}
                 </div>
             </header>
