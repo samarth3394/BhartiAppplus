@@ -60,6 +60,11 @@ class User(Base):
     avatar_url = Column(String(500), default='')
     created_at = Column(DateTime, default=utc_now)
     last_login = Column(DateTime, default=utc_now)
+    preferences = Column(JSON, default=lambda: {
+        'theme': 'dark',
+        'sidebar_collapsed': False,
+        'language': 'en',
+    })
 
     # Relationships
     owned_apps = relationship('App', back_populates='owner', lazy='dynamic')
@@ -73,6 +78,7 @@ class User(Base):
             'avatar_url': self.avatar_url,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'last_login': self.last_login.isoformat() if self.last_login else None,
+            'preferences': self.preferences or {},
         }
 
 

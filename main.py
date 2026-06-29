@@ -19,6 +19,7 @@ from routes.roadmap import router as roadmap_router
 from routes.ai_dashboard import router as ai_dashboard_router
 from routes.api_ingest import router as api_ingest_router
 from routes.server import router as server_router
+from routes.settings import router as settings_router
 
 app = FastAPI(title="Nexvora", description="All-in-one intelligent app maintenance and monitoring platform.")
 
@@ -47,6 +48,7 @@ app.include_router(roadmap_router)
 app.include_router(ai_dashboard_router)
 app.include_router(api_ingest_router)
 app.include_router(server_router)
+app.include_router(settings_router)
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):

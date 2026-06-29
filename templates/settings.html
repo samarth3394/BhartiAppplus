@@ -1,0 +1,616 @@
+{% extends "base.html" %}
+
+{% block title %}Settings — Nexvora{% endblock %}
+{% block nav_settings %}active{% endblock %}
+{% block header_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="settings-layout">
+    <!-- Settings Sidebar Tabs -->
+    <div class="settings-sidebar">
+        <button class="settings-tab active" data-tab="profile" onclick="switchSettingsTab('profile', this)">
+            <i data-lucide="user"></i>
+            <span>Profile</span>
+        </button>
+        <button class="settings-tab" data-tab="app" onclick="switchSettingsTab('app', this)">
+            <i data-lucide="app-window"></i>
+            <span>App Settings</span>
+        </button>
+        <button class="settings-tab" data-tab="notifications" onclick="switchSettingsTab('notifications', this)">
+            <i data-lucide="bell"></i>
+            <span>Notifications</span>
+        </button>
+        <button class="settings-tab" data-tab="appearance" onclick="switchSettingsTab('appearance', this)">
+            <i data-lucide="palette"></i>
+            <span>Appearance</span>
+        </button>
+        <button class="settings-tab" data-tab="team" onclick="switchSettingsTab('team', this)">
+            <i data-lucide="users"></i>
+            <span>Team Defaults</span>
+        </button>
+        <button class="settings-tab" data-tab="security" onclick="switchSettingsTab('security', this)">
+            <i data-lucide="shield"></i>
+            <span>Security</span>
+        </button>
+        <button class="settings-tab" data-tab="danger" onclick="switchSettingsTab('danger', this)">
+            <i data-lucide="alert-triangle"></i>
+            <span>Danger Zone</span>
+        </button>
+    </div>
+
+    <!-- Settings Content Area -->
+    <div class="settings-content">
+
+        <!-- ═══ PROFILE TAB ═══ -->
+        <div class="settings-panel active" id="panel-profile">
+            <div class="settings-panel-header">
+                <h3>Profile Settings</h3>
+                <p class="settings-panel-desc">Manage your personal information</p>
+            </div>
+            <form id="profile-form" onsubmit="saveProfile(event)">
+                <div class="settings-form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="setting-fullname" class="settings-input" placeholder="Your full name">
+                </div>
+                <div class="settings-form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="setting-email" class="settings-input" placeholder="your@email.com">
+                </div>
+                <div class="settings-form-group">
+                    <label>Avatar URL</label>
+                    <input type="text" id="setting-avatar" class="settings-input" placeholder="https://..." readonly>
+                    <span class="settings-hint">Avatar upload coming soon</span>
+                </div>
+                <button type="submit" class="btn btn-primary settings-save-btn">Save Profile</button>
+            </form>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-panel-header">
+                <h3>Change Password</h3>
+                <p class="settings-panel-desc">Update your login password</p>
+            </div>
+            <form id="password-form" onsubmit="changePassword(event)">
+                <div class="settings-form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="setting-current-pw" class="settings-input" placeholder="••••••••" required>
+                </div>
+                <div class="settings-form-group">
+                    <label>New Password</label>
+                    <input type="password" id="setting-new-pw" class="settings-input" placeholder="Min. 6 characters" required>
+                </div>
+                <div class="settings-form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="setting-confirm-pw" class="settings-input" placeholder="Re-enter new password" required>
+                </div>
+                <button type="submit" class="btn btn-primary settings-save-btn">Change Password</button>
+            </form>
+        </div>
+
+        <!-- ═══ APP SETTINGS TAB ═══ -->
+        <div class="settings-panel" id="panel-app">
+            <div class="settings-panel-header">
+                <h3>App Settings</h3>
+                <p class="settings-panel-desc">Configure monitoring and app details for the selected app</p>
+            </div>
+            <form id="app-settings-form" onsubmit="saveAppSettings(event)">
+                <div class="settings-form-group">
+                    <label>App URL</label>
+                    <input type="url" id="setting-app-url" class="settings-input" placeholder="https://yourapp.com">
+                </div>
+                <div class="settings-form-group">
+                    <label>Description</label>
+                    <textarea id="setting-app-desc" class="settings-input settings-textarea" placeholder="Brief description of your app"></textarea>
+                </div>
+                <div class="settings-form-group">
+                    <div class="settings-toggle-row">
+                        <div>
+                            <label>Uptime Monitoring</label>
+                            <span class="settings-hint">Automatically ping your app at regular intervals</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-monitoring-enabled">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-form-group">
+                    <label>Check Interval</label>
+                    <select id="setting-check-interval" class="settings-input settings-select">
+                        <option value="1">Every 1 minute</option>
+                        <option value="5" selected>Every 5 minutes</option>
+                        <option value="10">Every 10 minutes</option>
+                        <option value="15">Every 15 minutes</option>
+                        <option value="30">Every 30 minutes</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary settings-save-btn">Save App Settings</button>
+            </form>
+        </div>
+
+        <!-- ═══ NOTIFICATIONS TAB ═══ -->
+        <div class="settings-panel" id="panel-notifications">
+            <div class="settings-panel-header">
+                <h3>Notifications & Alerts</h3>
+                <p class="settings-panel-desc">Configure how you receive alerts for the selected app</p>
+            </div>
+            <form id="notification-form" onsubmit="saveNotificationSettings(event)">
+                <div class="settings-form-group">
+                    <div class="settings-toggle-row">
+                        <div>
+                            <label>Email Alerts</label>
+                            <span class="settings-hint">Receive failure prediction alerts via email</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-alert-email">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-form-group">
+                    <label>Alert Email Address</label>
+                    <input type="email" id="setting-alert-email-address" class="settings-input" placeholder="alerts@yourcompany.com">
+                </div>
+
+                <div class="settings-divider"></div>
+
+                <div class="settings-form-group">
+                    <div class="settings-toggle-row">
+                        <div>
+                            <label>WhatsApp Alerts</label>
+                            <span class="settings-hint">Receive alerts on WhatsApp (coming soon)</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-alert-whatsapp">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-form-group">
+                    <label>WhatsApp Number</label>
+                    <input type="tel" id="setting-alert-whatsapp-number" class="settings-input" placeholder="+91 9876543210">
+                </div>
+
+                <div class="settings-divider"></div>
+
+                <div class="settings-form-group">
+                    <label>Alert Threshold</label>
+                    <span class="settings-hint">Trigger alert when failure prediction exceeds this confidence %</span>
+                    <div class="settings-slider-row">
+                        <input type="range" id="setting-alert-threshold" min="50" max="95" step="5" value="70" class="settings-range" oninput="document.getElementById('threshold-val').textContent = this.value + '%'">
+                        <span id="threshold-val" class="settings-range-label">70%</span>
+                    </div>
+                </div>
+
+                <div class="settings-divider"></div>
+
+                <div class="settings-form-group">
+                    <div class="settings-toggle-row">
+                        <div>
+                            <label>Weekly AI CTO Report</label>
+                            <span class="settings-hint">Receive an AI-generated weekly summary every Monday</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-weekly-cto" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary settings-save-btn">Save Notification Settings</button>
+            </form>
+        </div>
+
+        <!-- ═══ APPEARANCE TAB ═══ -->
+        <div class="settings-panel" id="panel-appearance">
+            <div class="settings-panel-header">
+                <h3>Appearance</h3>
+                <p class="settings-panel-desc">Customize how Nexvora looks for you</p>
+            </div>
+            <form id="appearance-form" onsubmit="saveAppearance(event)">
+                <div class="settings-form-group">
+                    <label>Theme</label>
+                    <div class="settings-radio-group">
+                        <label class="settings-radio-card">
+                            <input type="radio" name="theme" value="dark" checked>
+                            <div class="radio-card-content">
+                                <i data-lucide="moon"></i>
+                                <span>Dark</span>
+                            </div>
+                        </label>
+                        <label class="settings-radio-card">
+                            <input type="radio" name="theme" value="light">
+                            <div class="radio-card-content">
+                                <i data-lucide="sun"></i>
+                                <span>Light</span>
+                            </div>
+                        </label>
+                        <label class="settings-radio-card">
+                            <input type="radio" name="theme" value="system">
+                            <div class="radio-card-content">
+                                <i data-lucide="monitor"></i>
+                                <span>System</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-form-group">
+                    <div class="settings-toggle-row">
+                        <div>
+                            <label>Sidebar Collapsed by Default</label>
+                            <span class="settings-hint">Start with a compact sidebar on login</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="setting-sidebar-collapsed">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-form-group">
+                    <label>Language</label>
+                    <select id="setting-language" class="settings-input settings-select">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="mr">मराठी (Marathi)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary settings-save-btn">Save Appearance</button>
+            </form>
+        </div>
+
+        <!-- ═══ TEAM DEFAULTS TAB ═══ -->
+        <div class="settings-panel" id="panel-team">
+            <div class="settings-panel-header">
+                <h3>Team Defaults</h3>
+                <p class="settings-panel-desc">Configure default settings for team invitations</p>
+            </div>
+            <form id="team-form" onsubmit="saveTeamDefaults(event)">
+                <div class="settings-form-group">
+                    <label>Default Role for New Members</label>
+                    <select id="setting-default-role" class="settings-input settings-select">
+                        <option value="viewer">Viewer</option>
+                        <option value="developer" selected>Developer</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="settings-form-group">
+                    <label>Invite Link Expiry</label>
+                    <select id="setting-invite-expiry" class="settings-input settings-select">
+                        <option value="1">1 Day</option>
+                        <option value="3">3 Days</option>
+                        <option value="7" selected>7 Days</option>
+                        <option value="14">14 Days</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary settings-save-btn">Save Team Defaults</button>
+            </form>
+        </div>
+
+        <!-- ═══ SECURITY TAB ═══ -->
+        <div class="settings-panel" id="panel-security">
+            <div class="settings-panel-header">
+                <h3>Security</h3>
+                <p class="settings-panel-desc">Manage API keys and sessions</p>
+            </div>
+
+            <div class="settings-form-group">
+                <label>API Client Key</label>
+                <span class="settings-hint">Use this key to send data to Nexvora from your application</span>
+                <div class="settings-key-row">
+                    <input type="text" id="setting-client-key" class="settings-input" readonly style="font-family: monospace; letter-spacing: 1px;">
+                    <button type="button" class="btn btn-ghost" onclick="copyClientKey()" title="Copy">
+                        <i data-lucide="copy"></i>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="regenerateKey()" style="margin-top: 12px;">
+                    <i data-lucide="refresh-cw"></i> Regenerate Key
+                </button>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-form-group">
+                <label>Sessions</label>
+                <span class="settings-hint">Sign out from all devices. You will need to log in again.</span>
+                <button type="button" class="btn btn-secondary" onclick="logoutAllDevices()" style="margin-top: 12px;">
+                    <i data-lucide="log-out"></i> Logout All Devices
+                </button>
+            </div>
+        </div>
+
+        <!-- ═══ DANGER ZONE TAB ═══ -->
+        <div class="settings-panel" id="panel-danger">
+            <div class="settings-panel-header">
+                <h3>Danger Zone</h3>
+                <p class="settings-panel-desc">Irreversible and destructive actions</p>
+            </div>
+
+            <div class="danger-zone-card">
+                <div class="danger-item">
+                    <div>
+                        <strong>Export App Data</strong>
+                        <p>Download all data for the current app as a JSON file.</p>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="exportData()">
+                        <i data-lucide="download"></i> Export
+                    </button>
+                </div>
+
+                <div class="danger-item">
+                    <div>
+                        <strong>Delete Current App</strong>
+                        <p>Permanently delete this app and all associated data. This cannot be undone.</p>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="confirmDeleteApp()">
+                        <i data-lucide="trash-2"></i> Delete App
+                    </button>
+                </div>
+
+                <div class="danger-item">
+                    <div>
+                        <strong>Delete Account</strong>
+                        <p>Permanently delete your account, all apps, and all data. This cannot be undone.</p>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="confirmDeleteAccount()">
+                        <i data-lucide="user-x"></i> Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="settings-modal-overlay" id="settings-modal" style="display:none;">
+    <div class="settings-modal">
+        <h3 id="modal-title">Are you sure?</h3>
+        <p id="modal-message">This action cannot be undone.</p>
+        <div class="settings-modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-danger" id="modal-confirm-btn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // ─── Tab Switching ───────────────────────────────────────
+    function switchSettingsTab(tab, btn) {
+        document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + tab).classList.add('active');
+        lucide.createIcons();
+    }
+
+    // ─── Load Data on Page Load ──────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadProfileData();
+        await loadAppSettingsData();
+        lucide.createIcons();
+    });
+
+    async function loadProfileData() {
+        try {
+            const res = await fetch('/api/settings/profile');
+            if (!res.ok) return;
+            const data = await res.json();
+            document.getElementById('setting-fullname').value = data.full_name || '';
+            document.getElementById('setting-email').value = data.email || '';
+            document.getElementById('setting-avatar').value = data.avatar_url || '';
+
+            // Appearance
+            const prefs = data.preferences || {};
+            const theme = prefs.theme || 'dark';
+            const themeRadio = document.querySelector(`input[name="theme"][value="${theme}"]`);
+            if (themeRadio) themeRadio.checked = true;
+            document.getElementById('setting-sidebar-collapsed').checked = prefs.sidebar_collapsed || false;
+            document.getElementById('setting-language').value = prefs.language || 'en';
+        } catch (e) { console.error('Failed to load profile:', e); }
+    }
+
+    async function loadAppSettingsData() {
+        try {
+            const res = await fetch('/api/settings/app');
+            if (!res.ok) return;
+            const data = await res.json();
+            const s = data.settings || {};
+
+            document.getElementById('setting-app-url').value = data.url || '';
+            document.getElementById('setting-app-desc').value = data.description || '';
+            document.getElementById('setting-monitoring-enabled').checked = s.monitoring_enabled !== false;
+            document.getElementById('setting-check-interval').value = s.check_interval || 5;
+            document.getElementById('setting-client-key').value = data.client_key || '';
+
+            // Notifications
+            document.getElementById('setting-alert-email').checked = s.alert_email || false;
+            document.getElementById('setting-alert-email-address').value = s.alert_email_address || '';
+            document.getElementById('setting-alert-whatsapp').checked = s.alert_whatsapp || false;
+            document.getElementById('setting-alert-whatsapp-number').value = s.alert_whatsapp_number || '';
+            const threshold = s.alert_threshold || 70;
+            document.getElementById('setting-alert-threshold').value = threshold;
+            document.getElementById('threshold-val').textContent = threshold + '%';
+            document.getElementById('setting-weekly-cto').checked = s.weekly_cto_report !== false;
+
+            // Team
+            document.getElementById('setting-default-role').value = s.default_member_role || 'developer';
+            document.getElementById('setting-invite-expiry').value = s.invite_expiry_days || 7;
+        } catch (e) { console.error('Failed to load app settings:', e); }
+    }
+
+    // ─── Save Functions ──────────────────────────────────────
+    async function saveProfile(e) {
+        e.preventDefault();
+        const res = await fetch('/api/settings/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                full_name: document.getElementById('setting-fullname').value,
+                email: document.getElementById('setting-email').value,
+            })
+        });
+        const data = await res.json();
+        showToast(data.message || data.detail, res.ok ? 'success' : 'error');
+    }
+
+    async function changePassword(e) {
+        e.preventDefault();
+        const res = await fetch('/api/settings/password', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                current_password: document.getElementById('setting-current-pw').value,
+                new_password: document.getElementById('setting-new-pw').value,
+                confirm_password: document.getElementById('setting-confirm-pw').value,
+            })
+        });
+        const data = await res.json();
+        showToast(data.message || data.detail, res.ok ? 'success' : 'error');
+        if (res.ok) document.getElementById('password-form').reset();
+    }
+
+    async function saveAppSettings(e) {
+        e.preventDefault();
+        const res = await fetch('/api/settings/app', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                url: document.getElementById('setting-app-url').value,
+                description: document.getElementById('setting-app-desc').value,
+                monitoring_enabled: document.getElementById('setting-monitoring-enabled').checked,
+                check_interval: parseInt(document.getElementById('setting-check-interval').value),
+            })
+        });
+        const data = await res.json();
+        showToast(data.message || data.detail, res.ok ? 'success' : 'error');
+    }
+
+    async function saveNotificationSettings(e) {
+        e.preventDefault();
+        const res = await fetch('/api/settings/notifications', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                alert_email: document.getElementById('setting-alert-email').checked,
+                alert_email_address: document.getElementById('setting-alert-email-address').value,
+                alert_whatsapp: document.getElementById('setting-alert-whatsapp').checked,
+                alert_whatsapp_number: document.getElementById('setting-alert-whatsapp-number').value,
+                alert_threshold: parseInt(document.getElementById('setting-alert-threshold').value),
+                weekly_cto_report: document.getElementById('setting-weekly-cto').checked,
+            })
+        });
+        const data = await res.json();
+        showToast(data.message || data.detail, res.ok ? 'success' : 'error');
+    }
+
+    async function saveAppearance(e) {
+        e.preventDefault();
+        const theme = document.querySelector('input[name="theme"]:checked').value;
+        const res = await fetch('/api/settings/appearance', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                theme: theme,
+                sidebar_collapsed: document.getElementById('setting-sidebar-collapsed').checked,
+                language: document.getElementById('setting-language').value,
+            })
+        });
+        const data = await res.json();
+        showToast(data.message || data.detail, res.ok ? 'success' : 'error');
+    }
+
+    async function saveTeamDefaults(e) {
+        e.preventDefault();
+        const res = await fetch('/api/settings/team-defaults', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                default_member_role: document.getElementById('setting-default-role').value,
+                invite_expiry_days: parseInt(document.getElementById('setting-invite-expiry').value),
+            })
+        });
+        const data = await res.json();
+        showToast(data.message || data.detail, res.ok ? 'success' : 'error');
+    }
+
+    // ─── Security ────────────────────────────────────────────
+    function copyClientKey() {
+        const key = document.getElementById('setting-client-key').value;
+        navigator.clipboard.writeText(key);
+        showToast('API key copied to clipboard', 'success');
+    }
+
+    async function regenerateKey() {
+        if (!confirm('Regenerate API key? Your old key will stop working immediately.')) return;
+        const res = await fetch('/api/settings/security/regenerate-key', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+            document.getElementById('setting-client-key').value = data.client_key;
+            showToast('API key regenerated', 'success');
+        } else {
+            showToast(data.detail || 'Failed', 'error');
+        }
+    }
+
+    async function logoutAllDevices() {
+        if (!confirm('Logout from all devices? You will need to log in again.')) return;
+        const res = await fetch('/api/settings/security/logout-all', { method: 'POST' });
+        if (res.ok) window.location.href = '/auth/login';
+    }
+
+    // ─── Danger Zone ─────────────────────────────────────────
+    function exportData() {
+        window.location.href = '/api/settings/danger/export-data';
+    }
+
+    let modalAction = null;
+
+    function confirmDeleteApp() {
+        document.getElementById('modal-title').textContent = 'Delete App?';
+        document.getElementById('modal-message').textContent = 'This will permanently delete the current app and ALL its data (uptime, bugs, maintenance, roadmap). This cannot be undone.';
+        modalAction = deleteApp;
+        document.getElementById('settings-modal').style.display = 'flex';
+    }
+
+    function confirmDeleteAccount() {
+        document.getElementById('modal-title').textContent = 'Delete Account?';
+        document.getElementById('modal-message').textContent = 'This will permanently delete your account, ALL your apps, and ALL associated data. This cannot be undone.';
+        modalAction = deleteAccount;
+        document.getElementById('settings-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('settings-modal').style.display = 'none';
+        modalAction = null;
+    }
+
+    document.getElementById('modal-confirm-btn').addEventListener('click', () => {
+        if (modalAction) modalAction();
+        closeModal();
+    });
+
+    async function deleteApp() {
+        const res = await fetch('/api/settings/danger/delete-app', { method: 'DELETE' });
+        const data = await res.json();
+        if (res.ok) {
+            showToast(data.message, 'success');
+            setTimeout(() => window.location.href = '/apps', 1500);
+        } else {
+            showToast(data.detail || 'Failed to delete app', 'error');
+        }
+    }
+
+    async function deleteAccount() {
+        const res = await fetch('/api/settings/danger/delete-account', { method: 'DELETE' });
+        if (res.ok) {
+            window.location.href = '/auth/login';
+        } else {
+            const data = await res.json();
+            showToast(data.detail || 'Failed to delete account', 'error');
+        }
+    }
+</script>
+{% endblock %}
