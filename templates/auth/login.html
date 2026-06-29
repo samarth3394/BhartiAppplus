@@ -175,6 +175,30 @@
         </div>
     </div>
 
+    <!-- Why Nexvora Cinematic Section -->
+    <section id="why-nexvora" class="cinematic-section">
+        <div class="cinematic-item">
+            <img src="{{ url_for('static', path='images/why/1.png') }}" alt="Why Nexvora 1">
+            <p class="cinematic-caption">There is a 4-hour gap between reality and your dashboard.</p>
+        </div>
+        <div class="cinematic-item">
+            <img src="{{ url_for('static', path='images/why/2.png') }}" alt="Why Nexvora 2">
+            <p class="cinematic-caption">Everything looks fine. Are you sure?</p>
+        </div>
+        <div class="cinematic-item">
+            <img src="{{ url_for('static', path='images/why/3.png') }}" alt="Why Nexvora 3">
+            <p class="cinematic-caption">Your app crashed at 3 AM. You found out at 9 AM.</p>
+        </div>
+        <div class="cinematic-item">
+            <img src="{{ url_for('static', path='images/why/4.png') }}" alt="Why Nexvora 4">
+            <p class="cinematic-caption">You closed your laptop on Friday. Who's watching?</p>
+        </div>
+        <div class="cinematic-item">
+            <img src="{{ url_for('static', path='images/why/5.png') }}" alt="Why Nexvora 5">
+            <p class="cinematic-caption">Silence isn't always a good sign.</p>
+        </div>
+    </section>
+
     <script>
         async function handleLogin(e) {
             e.preventDefault();
@@ -278,6 +302,21 @@
                   "retina_detect": true
                 });
             }
+            
+            // Cinematic Scroll Observer
+            const cinematicItems = document.querySelectorAll('.cinematic-item');
+            const cinematicObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.3
+            });
+
+            cinematicItems.forEach(item => cinematicObserver.observe(item));
         });
     </script>
     <!-- Load Particles JS -->
