@@ -20,7 +20,7 @@ async function loadMembers() {
         grid.innerHTML = data.members.map(member => `
             <div class="member-card animate-in">
                 <div class="member-avatar">
-                    ${member.user ? getInitials(member.user.full_name) : '?'}
+                    ${member.user ? (member.user.avatar_url ? `<img src="${member.user.avatar_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` : getInitials(member.user.full_name)) : '?'}
                 </div>
                 <div class="member-info">
                     <div class="member-name">
@@ -66,7 +66,7 @@ async function loadActivity() {
         feed.innerHTML = data.activities.map(activity => `
             <div class="activity-item animate-in">
                 <div class="activity-avatar">
-                    ${activity.user ? getInitials(activity.user.full_name) : '⚡'}
+                    ${activity.user ? (activity.user.avatar_url ? `<img src="${activity.user.avatar_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` : getInitials(activity.user.full_name)) : '⚡'}
                 </div>
                 <div class="activity-content">
                     <div class="activity-text">

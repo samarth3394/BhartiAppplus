@@ -166,7 +166,7 @@ async function loadActivity() {
             <div class="activity-item animate-in">
                 <a href="/settings" style="text-decoration: none;">
                     <div class="activity-avatar" style="cursor: pointer;" title="View Profile">
-                        ${activity.user ? getInitials(activity.user.full_name) : '⚡'}
+                        ${activity.user ? (activity.user.avatar_url ? `<img src="${activity.user.avatar_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` : getInitials(activity.user.full_name)) : '⚡'}
                     </div>
                 </a>
                 <div class="activity-content">

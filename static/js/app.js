@@ -109,10 +109,19 @@ async function loadUserInfo() {
             const nameEl = document.getElementById('user-name');
             const emailEl = document.getElementById('user-email');
             const avatarEl = document.getElementById('user-avatar');
+            const topbarProfile = document.getElementById('topbar-profile-icon');
 
             if (nameEl) nameEl.textContent = data.user.full_name;
             if (emailEl) emailEl.textContent = data.user.email;
-            if (avatarEl) avatarEl.textContent = getInitials(data.user.full_name);
+            
+            if (topbarProfile) {
+                if (data.user.avatar_url) {
+                    topbarProfile.innerHTML = `<img src="${data.user.avatar_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                    topbarProfile.style.border = 'none'; // Optional: remove border if image
+                } else {
+                    topbarProfile.innerHTML = `<span style="font-size:12px; font-weight:bold;">${getInitials(data.user.full_name)}</span>`;
+                }
+            }
         }
     } catch (err) {
         // Silent fail — user will be redirected if unauthorized

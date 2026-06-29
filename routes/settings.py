@@ -80,6 +80,27 @@ async def update_profile(data: ProfileUpdateRequest, user: User = Depends(get_cu
     db.refresh(user)
     return {"status": "success", "message": "Profile updated", "data": user.to_dict()}
 
+import shutil
+
+@router.post("/api/settings/profile/avatar")
+async def upload_avatar(avatar: UploadFile = File(...), user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if not avatar.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Invalid file type")
+    
+    upload_dir = os.path.join("static", "uploads", "avatars")
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    ext = avatar.filename.split('.')[-1] if '.' in avatar.filename else 'jpg'
+    filename = f"{user.id}_{generate_uuid()[:8]}.{ext}"
+    filepath = os.path.join(upload_dir, filename)
+    
+    with open(filepath, "wb") as buffer:
+        shutil.copyfileobj(avatar.file, buffer)
+        
+    user.avatar_url = f"/static/uploads/avatars/{filename}"
+    db.commit()
+    return {"status": "success", "message": "Avatar uploaded", "avatar_url": user.avatar_url}
+
 
 @router.put("/api/settings/password")
 async def change_password(data: PasswordChangeRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
