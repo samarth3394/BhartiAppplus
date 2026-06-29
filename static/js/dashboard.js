@@ -164,9 +164,11 @@ async function loadActivity() {
 
         feed.innerHTML = data.activities.map(activity => `
             <div class="activity-item animate-in">
-                <div class="activity-avatar">
-                    ${activity.user ? getInitials(activity.user.full_name) : '⚡'}
-                </div>
+                <a href="/settings" style="text-decoration: none;">
+                    <div class="activity-avatar" style="cursor: pointer;" title="View Profile">
+                        ${activity.user ? getInitials(activity.user.full_name) : '⚡'}
+                    </div>
+                </a>
                 <div class="activity-content">
                     <div class="activity-text">
                         <strong>${activity.user ? activity.user.full_name : 'System'}</strong>

@@ -1648,14 +1648,14 @@ select.form-input {
 }
 
 .activity-avatar {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: var(--radius-full);
     background: var(--bg-elevated);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--font-xs);
+    font-size: 10px;
     font-weight: 700;
     color: var(--accent-primary);
     flex-shrink: 0;
