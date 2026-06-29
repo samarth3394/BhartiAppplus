@@ -80,6 +80,10 @@ async def root(request: Request, user = Depends(get_current_user_optional)):
         return RedirectResponse(url="/dashboard", status_code=303)
     return RedirectResponse(url="/auth/login", status_code=303)
 
+@app.get("/why-nexvora")
+async def why_nexvora(request: Request):
+    return templates.TemplateResponse("why_nexvora.html", {"request": request})
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)

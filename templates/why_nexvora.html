@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Nexvora</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}?v=3">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #0a0a0a;
+        }
+        /* The global background is applied via style.css body and body::before */
+        
+        .seamless-image-container {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .seamless-image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+        
+        /* Back button styling */
+        .back-home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .back-home-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-home-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back
+    </a>
+    
+    <div class="seamless-image-container">
+        <img src="{{ url_for('static', path='images/why/1.png') }}" alt="There is a 4-hour gap between reality and your dashboard.">
+        <img src="{{ url_for('static', path='images/why/2.png') }}" alt="Everything looks fine. Are you sure?">
+        <img src="{{ url_for('static', path='images/why/3.png') }}" alt="Your app crashed at 3 AM. You found out at 9 AM.">
+        <img src="{{ url_for('static', path='images/why/4.png') }}" alt="You closed your laptop on Friday. Who's watching?">
+        <img src="{{ url_for('static', path='images/why/5.png') }}" alt="Silence isn't always a good sign.">
+    </div>
+</body>
+</html>
