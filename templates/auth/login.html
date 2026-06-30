@@ -200,7 +200,7 @@
                 if (res.ok) {
                     window.location.href = '/dashboard';
                 } else {
-                    errorDiv.textContent = data.error || 'Login failed';
+                    errorDiv.textContent = data.error || data.detail || 'Login failed';
                     errorDiv.classList.remove('hidden');
                 }
             } catch (err) {

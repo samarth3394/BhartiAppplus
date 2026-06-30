@@ -66,13 +66,16 @@ async def startup_event():
     
     # Initialize DB (if needed)
     from models import init_db
+    print("Running init_db...")
     init_db(Config.SQLALCHEMY_DATABASE_URI)
+    print("Finished init_db")
     
     # In FastAPI with uvicorn workers, you may want to ensure scheduler only runs once.
     # For now, start it directly.
     def get_db_session_fn():
         return db_session()
         
+    print("Initializing scheduler...")
     init_scheduler(get_db_session_fn, check_interval_minutes=Config.UPTIME_CHECK_INTERVAL_MINUTES)
     print("FastAPI application started. Scheduler initialized.")
 
@@ -88,4 +91,4 @@ async def why_nexvora(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=5000)

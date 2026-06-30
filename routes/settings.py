@@ -35,6 +35,10 @@ class AppSettingsRequest(BaseModel):
     url: Optional[str] = None
     description: Optional[str] = None
 
+class GitHubSettingsRequest(BaseModel):
+    github_repo: Optional[str] = None
+    github_token: Optional[str] = None
+
 class NotificationSettingsRequest(BaseModel):
     alert_email: Optional[bool] = None
     alert_email_address: Optional[str] = None
@@ -157,6 +161,117 @@ async def update_app_settings(data: AppSettingsRequest, request: Request, user: 
     app.settings = settings
     db.commit()
     return {"status": "success", "message": "App settings updated"}
+
+
+@router.post("/api/settings/app/regenerate-key")
+async def regenerate_app_key(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get("current_app_id")
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+    app = db.query(App).filter(App.id == app_id).first()
+    if not app:
+        raise HTTPException(status_code=404, detail="App not found")
+    if app.owner_id != user.id:
+        raise HTTPException(status_code=403, detail="Only the app owner can regenerate the API key")
+    
+    app.client_key = generate_uuid()
+    db.commit()
+    return {"status": "success", "message": "API Key regenerated successfully", "client_key": app.client_key}
+
+
+# ─── Integrations APIs ───────────────────────────────────────────────────
+
+@router.post("/api/settings/integrations/github")
+async def update_github_settings(data: GitHubSettingsRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    app_id = request.cookies.get("current_app_id")
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+    app = db.query(App).filter(App.id == app_id).first()
+    if not app:
+        raise HTTPException(status_code=404, detail="App not found")
+    if app.owner_id != user.id:
+        raise HTTPException(status_code=403, detail="Only the app owner can update integrations")
+
+    settings = app.settings or {}
+    if data.github_repo is not None:
+        settings['github_repo'] = data.github_repo
+    if data.github_token is not None:
+        settings['github_token'] = data.github_token
+        
+    app.settings = settings
+    db.commit()
+    return {"status": "success", "message": "GitHub settings saved"}
+
+
+@router.post("/api/settings/integrations/github/sync")
+async def sync_github_issues(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    import requests
+    from models import BugStatusEnum, SeverityEnum
+    
+    app_id = request.cookies.get("current_app_id")
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+    app = db.query(App).filter(App.id == app_id).first()
+    if not app or app.owner_id != user.id:
+        raise HTTPException(status_code=403, detail="Permission denied")
+        
+    settings = app.settings or {}
+    repo = settings.get("github_repo")
+    token = settings.get("github_token")
+    
+    if not repo:
+        raise HTTPException(status_code=400, detail="GitHub Repo is not configured")
+        
+    headers = {"Accept": "application/vnd.github.v3+json"}
+    if token:
+        headers["Authorization"] = f"token {token}"
+        
+    # Fetch issues from GitHub
+    url = f"https://api.github.com/repos/{repo}/issues?state=all&per_page=100"
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code != 200:
+        raise HTTPException(status_code=400, detail=f"Failed to fetch from GitHub: {response.json().get('message', 'Unknown error')}")
+        
+    issues = response.json()
+    synced_count = 0
+    
+    for issue in issues:
+        # Skip pull requests
+        if "pull_request" in issue:
+            continue
+            
+        gh_id = str(issue["id"])
+        
+        # Check if bug exists by searching for github ID in title or custom logic.
+        # A better way is to search if a bug already has this title, or we add github_id to Bug model.
+        # Since we don't have github_id, we'll try to match by exact title to avoid duplicates, 
+        # or append [GH-#] to title. Let's use [GH-{number}]
+        
+        title = f"[GH-{issue['number']}] {issue['title']}"
+        existing = db.query(Bug).filter(Bug.app_id == app_id, Bug.title == title).first()
+        
+        status = BugStatusEnum.open if issue["state"] == "open" else BugStatusEnum.resolved
+        
+        if existing:
+            # Update existing
+            if existing.status != status:
+                existing.status = status
+        else:
+            # Create new
+            new_bug = Bug(
+                app_id=app_id,
+                title=title,
+                description=issue.get("body") or "No description provided.",
+                status=status,
+                severity=SeverityEnum.medium,
+                reported_by=user.id
+            )
+            db.add(new_bug)
+        synced_count += 1
+        
+    db.commit()
+    return {"status": "success", "message": f"Successfully synced {synced_count} issues from GitHub"}
 
 
 # ─── Notification Settings APIs ───────────────────────────────────────────

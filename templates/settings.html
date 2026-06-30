@@ -32,6 +32,10 @@
             <i data-lucide="shield"></i>
             <span>Security</span>
         </button>
+        <button class="settings-tab" data-tab="integrations" onclick="switchSettingsTab('integrations', this)">
+            <i data-lucide="plug"></i>
+            <span>Integrations</span>
+        </button>
         <button class="settings-tab" data-tab="danger" onclick="switchSettingsTab('danger', this)">
             <i data-lucide="alert-triangle"></i>
             <span>Danger Zone</span>
@@ -134,8 +138,71 @@
                         <option value="30">Every 30 minutes</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary settings-save-btn">Save App Settings</button>
+                <button type="button" class="btn btn-outline" style="color:var(--danger); border-color:var(--danger-border);">Revoke All Sessions</button>
             </form>
+        </div>
+
+        <!-- ═══ INTEGRATIONS TAB ═══ -->
+        <div class="settings-panel" id="panel-integrations">
+            <div class="settings-panel-header">
+                <h3>Integrations & API</h3>
+                <p class="settings-panel-desc">Connect external services and manage API access</p>
+            </div>
+
+            <!-- API Keys Section -->
+            <div class="settings-section">
+                <h4>API Key</h4>
+                <p class="settings-hint" style="margin-bottom: var(--space-md);">Use this Client Key to send bugs or activity logs from your website directly to Nexvora.</p>
+                <div class="settings-form-group">
+                    <label>Your Client Key</label>
+                    <div style="display: flex; gap: var(--space-sm);">
+                        <input type="password" id="setting-client-key" class="settings-input" readonly value="********************************" style="flex-grow: 1; font-family: monospace;">
+                        <button type="button" class="btn btn-outline" onclick="toggleApiKeyVisibility(this)" title="Show Key">
+                            <i data-lucide="eye"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="copyApiKey()" title="Copy Key">
+                            <i data-lucide="copy"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="regenerateApiKey()">Regenerate Key</button>
+
+                <div style="margin-top: var(--space-lg); background: var(--bg-card-secondary); padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid var(--border-default);">
+                    <h5 style="margin-bottom: var(--space-sm); font-size: var(--font-sm); color: var(--text-secondary);">Example Usage (JavaScript)</h5>
+                    <pre style="margin:0; font-family: monospace; font-size: 12px; color: var(--text-secondary); overflow-x: auto;">
+fetch('https://nexvora.com/api/ingest/bug', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Client-Key': 'YOUR_CLIENT_KEY'
+  },
+  body: JSON.stringify({ title: 'Payment failed', description: 'User reported...' })
+});</pre>
+                </div>
+            </div>
+
+            <hr class="settings-divider">
+
+            <!-- GitHub Integration Section -->
+            <div class="settings-section">
+                <h4>GitHub Integration</h4>
+                <p class="settings-hint" style="margin-bottom: var(--space-md);">Sync your GitHub repository issues to Nexvora automatically.</p>
+                <form id="github-form" onsubmit="saveGitHubSettings(event)">
+                    <div class="settings-form-group">
+                        <label>GitHub Repository (e.g. username/repo)</label>
+                        <input type="text" id="setting-github-repo" class="settings-input" placeholder="samarth3394/BhartiAppplus">
+                    </div>
+                    <div class="settings-form-group">
+                        <label>Personal Access Token (PAT)</label>
+                        <input type="password" id="setting-github-token" class="settings-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                        <span class="settings-hint">Required for private repositories or high rate limits.</span>
+                    </div>
+                    <div style="display: flex; gap: var(--space-md);">
+                        <button type="submit" class="btn btn-primary settings-save-btn">Save GitHub Settings</button>
+                        <button type="button" class="btn btn-outline" onclick="syncGitHubIssues()">Sync Now</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- ═══ NOTIFICATIONS TAB ═══ -->
@@ -469,8 +536,19 @@
 
             document.getElementById('setting-app-url').value = data.url || '';
             document.getElementById('setting-app-desc').value = data.description || '';
-            document.getElementById('setting-monitoring-enabled').checked = s.monitoring_enabled !== false;
-            document.getElementById('setting-check-interval').value = s.check_interval || 5;
+            if (data.settings) {
+                document.getElementById('setting-monitoring-enabled').checked = data.settings.monitoring_enabled;
+                document.getElementById('setting-check-interval').value = data.settings.check_interval || 5;
+                if (data.settings.github_repo) {
+                    document.getElementById('setting-github-repo').value = data.settings.github_repo;
+                }
+                if (data.settings.github_token) {
+                    document.getElementById('setting-github-token').value = '********'; // Masked token
+                }
+            }
+            if (data.client_key) {
+                window._currentClientKey = data.client_key;
+            }
             document.getElementById('setting-client-key').value = data.client_key || '';
 
             // Notifications
@@ -607,6 +685,80 @@
         if (!confirm('Logout from all devices? You will need to log in again.')) return;
         const res = await fetch('/api/settings/security/logout-all', { method: 'POST' });
         if (res.ok) window.location.href = '/auth/login';
+    }
+
+    // ─── Integrations & API Keys ─────────────────────────────
+    
+    function toggleApiKeyVisibility(btn) {
+        const input = document.getElementById('setting-client-key');
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            input.value = window._currentClientKey || '';
+            icon.setAttribute('data-lucide', 'eye-off');
+        } else {
+            input.type = 'password';
+            input.value = '********************************';
+            icon.setAttribute('data-lucide', 'eye');
+        }
+        lucide.createIcons();
+    }
+
+    function copyApiKey() {
+        const key = window._currentClientKey;
+        if (!key) return showToast('Client key not loaded yet', 'error');
+        navigator.clipboard.writeText(key).then(() => showToast('API Key copied to clipboard', 'success'));
+    }
+
+    async function regenerateApiKey() {
+        if (!confirm("Are you sure? Old API key will stop working immediately.")) return;
+        const res = await fetch('/api/settings/app/regenerate-key', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+            window._currentClientKey = data.client_key;
+            const input = document.getElementById('setting-client-key');
+            if (input.type === 'text') {
+                input.value = data.client_key;
+            }
+            showToast(data.message, 'success');
+        } else {
+            showToast(data.detail || 'Failed to regenerate key', 'error');
+        }
+    }
+
+    async function saveGitHubSettings(e) {
+        e.preventDefault();
+        const repo = document.getElementById('setting-github-repo').value;
+        const tokenInput = document.getElementById('setting-github-token').value;
+        const body = { github_repo: repo };
+        
+        // Only send token if it's not the masked value
+        if (tokenInput && tokenInput !== '********') {
+            body.github_token = tokenInput;
+        }
+
+        const res = await fetch('/api/settings/integrations/github', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (res.ok) {
+            showToast(data.message, 'success');
+        } else {
+            showToast(data.detail || 'Failed to save GitHub settings', 'error');
+        }
+    }
+
+    async function syncGitHubIssues() {
+        showToast('Syncing GitHub issues... please wait.', 'info');
+        const res = await fetch('/api/settings/integrations/github/sync', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+            showToast(data.message, 'success');
+        } else {
+            showToast(data.detail || 'Failed to sync GitHub issues', 'error');
+        }
     }
 
     // ─── Danger Zone ─────────────────────────────────────────
