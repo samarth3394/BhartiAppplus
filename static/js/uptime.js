@@ -169,7 +169,10 @@ async function loadIncidents() {
         const container = document.getElementById('incidents-list');
 
         if (!data.incidents || data.incidents.length === 0) {
-            container.innerHTML = '<div class="empty-state" style="padding:var(--space-xl);"><p class="text-muted">🎉 No incidents recorded — your app is running great!</p></div>';
+            container.innerHTML = '<div class="empty-state" style="padding:var(--space-xl);"><p class="text-muted" style="display: flex; align-items: center; justify-content: center;"><i data-lucide="check-circle" style="color: var(--success); margin-right: 8px;"></i>All systems operational. No downtime incidents have been recorded.</p></div>';
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
             return;
         }
 
