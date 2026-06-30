@@ -170,13 +170,13 @@
                 <div style="margin-top: var(--space-lg); background: var(--bg-card-secondary); padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid var(--border-default);">
                     <h5 style="margin-bottom: var(--space-sm); font-size: var(--font-sm); color: var(--text-secondary);">Example Usage (JavaScript)</h5>
                     <pre style="margin:0; font-family: monospace; font-size: 12px; color: var(--text-secondary); overflow-x: auto;">
-fetch('https://nexvora.com/api/ingest/bug', {
+fetch('http://localhost:8000/api/ingest/error', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'X-Client-Key': 'YOUR_CLIENT_KEY'
+    'X-Nexvora-Key': 'YOUR_CLIENT_KEY'
   },
-  body: JSON.stringify({ title: 'Payment failed', description: 'User reported...' })
+  body: JSON.stringify({ message: 'Unhandled exception', url: window.location.href, line: '42' })
 });</pre>
                 </div>
             </div>
