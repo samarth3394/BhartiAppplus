@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Security & Vulnerability Scanner — Nexvora{% endblock %}
+{% block nav_security %}active{% endblock %}
+{% block page_title %}Security Scanner{% endblock %}
+{% block page_subtitle %}Analyze your dependencies for CVEs and vulnerabilities.{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>Dependencies Input</h3>
+    </div>
+    <div style="padding: var(--space-md);">
+        <textarea id="deps-input" class="form-control" rows="10" placeholder="Paste your package.json, requirements.txt, or pom.xml here..."></textarea>
+        <button id="scan-btn" class="btn btn-primary mt-sm" style="width: 100%;"><i data-lucide="shield-alert"></i> Scan for Vulnerabilities</button>
+    </div>
+</div>
+
+<div id="loading-state" class="hidden" style="text-align: center; padding: var(--space-xl);">
+    <div class="spinner" style="margin: 0 auto;"></div>
+    <p class="mt-sm text-muted">AI is scanning your dependencies for known vulnerabilities...</p>
+</div>
+
+<div id="results-container" class="hidden mt-md">
+    <div class="card">
+        <div class="card-header">
+            <h3>Security Report</h3>
+        </div>
+        <div style="padding: var(--space-md);">
+            <div id="summary-section" class="mb-md" style="font-size: var(--font-lg); font-weight: 500;"></div>
+            <h4>Detected Vulnerabilities</h4>
+            <div id="vulnerabilities-list" style="display: flex; flex-direction: column; gap: var(--space-md); margin-top: var(--space-md);">
+                <!-- Vulnerabilities will be rendered here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/security.js') }}"></script>
+{% endblock %}

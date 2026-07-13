@@ -220,3 +220,87 @@ Rules for your response:
             'revenue_impact': 'unknown',
             'raw': str(e),
         }
+
+def analyze_raw_logs_with_ai(logs: str) -> dict:
+    if not GENAI_API_KEY or not genai:
+        return {'status': 'error', 'message': 'AI Analysis is disabled. Please configure GEMINI_API_KEY in .env'}
+        
+    model = genai.GenerativeModel('gemini-flash-latest')
+    prompt = f"""
+You are an expert DevOps AI and Log Analyzer. I will provide you with a raw server log dump.
+Your job is to identify errors, warnings, exceptions, and anomalies.
+
+Please return the response in EXACTLY this JSON format (no markdown code blocks, just raw JSON):
+{
+    "summary": "A brief 2-3 sentence summary of what is wrong.",
+    "anomalies": [
+        {
+            "timestamp": "time of error if available, else N/A",
+            "level": "ERROR/WARNING",
+            "description": "What happened",
+            "recommendation": "How to fix it"
+        }
+    ]
+}
+
+RAW LOGS:
+{logs[:10000]}  # limit logs to avoid token limits
+"""
+    
+    try:
+        response = _call_gemini_with_retry(model, prompt)
+        raw_text = response.text.strip()
+        import json
+        clean = raw_text
+        if '`' in clean:
+            clean = clean.split('`')[1]
+            if clean.startswith('json'):
+                clean = clean[4:]
+            clean = clean.strip()
+            
+        parsed = json.loads(clean)
+        return {'status': 'success', 'data': parsed}
+    except Exception as e:
+        return {'status': 'error', 'message': str(e)}
+
+def scan_security_vulnerabilities(dependencies: str) -> dict:
+    if not GENAI_API_KEY or not genai:
+        return {'status': 'error', 'message': 'AI Analysis is disabled. Please configure GEMINI_API_KEY in .env'}
+        
+    model = genai.GenerativeModel('gemini-flash-latest')
+    prompt = f"""
+You are an expert Cybersecurity AI. I will provide you with a list of dependencies (like package.json or requirements.txt).
+Identify any known vulnerabilities, outdated packages with CVEs, and security risks.
+
+Please return the response in EXACTLY this JSON format (no markdown code blocks, just raw JSON):
+{
+    "summary": "Brief summary of the security posture.",
+    "vulnerabilities": [
+        {
+            "package": "name of package",
+            "severity": "High/Medium/Low",
+            "issue": "Description of the CVE or vulnerability",
+            "recommendation": "Update to version X.Y.Z"
+        }
+    ]
+}
+
+DEPENDENCIES:
+{dependencies[:5000]}
+"""
+    
+    try:
+        response = _call_gemini_with_retry(model, prompt)
+        raw_text = response.text.strip()
+        import json
+        clean = raw_text
+        if '`' in clean:
+            clean = clean.split('`')[1]
+            if clean.startswith('json'):
+                clean = clean[4:]
+            clean = clean.strip()
+            
+        parsed = json.loads(clean)
+        return {'status': 'success', 'data': parsed}
+    except Exception as e:
+        return {'status': 'error', 'message': str(e)}
