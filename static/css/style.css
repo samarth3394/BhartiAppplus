@@ -1024,7 +1024,7 @@ select.form-input {
 /* ─── Sidebar ──────────────────────────────────────────────────────────── */
 
 .sidebar {
-    width: var(--sidebar-collapsed);
+    width: var(--sidebar-width);
     height: 100vh;
     position: fixed;
     left: 0;
@@ -1070,7 +1070,7 @@ select.form-input {
     color: #ffffff;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.2);
     white-space: nowrap;
-    display: none;
+    display: block;
 }
 
 .sidebar-logo .logo-badge {
@@ -1158,14 +1158,21 @@ select.form-input {
 }
 
 .nav-section-label {
-    display: none;
+    display: block;
+    margin: 16px 0 8px 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    font-weight: 600;
 }
 
 .nav-item {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 10px;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     font-size: var(--font-base);
@@ -1178,7 +1185,7 @@ select.form-input {
 }
 
 .nav-item span {
-    display: none;
+    display: block;
 }
 
 .nav-item:hover {
@@ -1287,7 +1294,7 @@ select.form-input {
 /* ─── Main Content ─────────────────────────────────────────────────────── */
 
 .main-content {
-    margin-left: var(--sidebar-collapsed);
+    margin-left: var(--sidebar-width);
     flex: 1;
     min-height: 100vh;
     display: flex;
