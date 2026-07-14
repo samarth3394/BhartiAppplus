@@ -128,6 +128,57 @@ async function loadUserInfo() {
     }
 }
 
+// ─── Workspace Switcher ───────────────────────────────────────────────────
+
+async function loadWorkspaceSwitcher() {
+    try {
+        const data = await api('/api/workspaces');
+        const select = document.getElementById('workspace-switcher-select');
+        window.currentWorkspaceId = data.current_workspace_id || null;
+
+        if (select) {
+            select.innerHTML = '<option value="personal">Personal Apps</option>';
+            if (data.workspaces && data.workspaces.length > 0) {
+                data.workspaces.forEach(ws => {
+                    const option = document.createElement('option');
+                    option.value = ws.id;
+                    option.textContent = ws.name;
+                    if (ws.id === data.current_workspace_id) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+            }
+        }
+        
+        // Also populate app creation modal workspace select if it exists
+        const appWorkspaceSelect = document.getElementById('app-workspace');
+        if (appWorkspaceSelect) {
+            appWorkspaceSelect.innerHTML = '<option value="">Personal (Standalone App)</option>';
+            if (data.workspaces && data.workspaces.length > 0) {
+                data.workspaces.forEach(ws => {
+                    const option = document.createElement('option');
+                    option.value = ws.id;
+                    option.textContent = ws.name;
+                    appWorkspaceSelect.appendChild(option);
+                });
+            }
+        }
+    } catch (err) {
+        // Silent fail
+    }
+}
+
+async function switchWorkspace(workspaceId) {
+    if (!workspaceId) return;
+    try {
+        await api(`/api/workspaces/switch/${workspaceId}`, { method: 'POST' });
+        window.location.reload(); // Reload context
+    } catch (err) {
+        showToast(err.message, 'error');
+    }
+}
+
 // ─── App Switcher ───────────────────────────────────────────────────────
 
 async function loadAppSwitcher() {

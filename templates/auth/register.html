@@ -123,7 +123,7 @@ Nexvora.init({
                 if (res.ok) {
                     window.location.href = '/setup';
                 } else {
-                    errorDiv.textContent = data.error || 'Registration failed';
+                    errorDiv.textContent = data.error || data.detail || 'Registration failed';
                     errorDiv.classList.remove('hidden');
                 }
             } catch (err) {

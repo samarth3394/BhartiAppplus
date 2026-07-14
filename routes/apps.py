@@ -14,6 +14,7 @@ class AppCreateRequest(BaseModel):
     name: str
     url: Optional[str] = ""
     description: Optional[str] = ""
+    workspace_id: Optional[str] = None
 
 class AppUpdateRequest(BaseModel):
     name: Optional[str] = None
@@ -28,25 +29,40 @@ async def apps_page(request: Request, user: User = Depends(get_current_user)):
 
 @router.get("/api/apps")
 async def list_apps(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    owned = db.query(App).filter(App.owner_id == user.id).all()
-    member_apps = db.query(App).join(AppMember).filter(AppMember.user_id == user.id).all()
-
+    current_workspace_id = request.cookies.get('current_workspace_id')
     all_apps = {}
-    for a in owned:
-        all_apps[a.id] = {**a.to_dict(), 'is_owner': True, 'role': 'admin'}
-    for a in member_apps:
-        if a.id not in all_apps:
-            member = db.query(AppMember).filter(AppMember.app_id == a.id, AppMember.user_id == user.id).first()
-            all_apps[a.id] = {
-                **a.to_dict(),
-                'is_owner': False,
-                'role': member.role.value if member else 'viewer',
-            }
+
+    if current_workspace_id:
+        from models import Workspace, WorkspaceMember
+        workspace = db.query(Workspace).filter(Workspace.id == current_workspace_id).first()
+        is_owner = (workspace and workspace.owner_id == user.id)
+        wm = db.query(WorkspaceMember).filter(WorkspaceMember.workspace_id == current_workspace_id, WorkspaceMember.user_id == user.id).first()
+        
+        if is_owner or wm:
+            role = 'admin' if is_owner else (wm.role.value if wm else 'viewer')
+            w_apps = db.query(App).filter(App.workspace_id == current_workspace_id).all()
+            for a in w_apps:
+                all_apps[a.id] = {**a.to_dict(), 'is_owner': is_owner, 'role': role}
+    else:
+        owned = db.query(App).filter(App.owner_id == user.id, App.workspace_id == None).all()
+        member_apps = db.query(App).join(AppMember).filter(AppMember.user_id == user.id, App.workspace_id == None).all()
+        
+        for a in owned:
+            all_apps[a.id] = {**a.to_dict(), 'is_owner': True, 'role': 'admin'}
+        for a in member_apps:
+            if a.id not in all_apps:
+                member = db.query(AppMember).filter(AppMember.app_id == a.id, AppMember.user_id == user.id).first()
+                all_apps[a.id] = {
+                    **a.to_dict(),
+                    'is_owner': False,
+                    'role': member.role.value if member else 'viewer',
+                }
 
     current_app_id = request.cookies.get('current_app_id')
     return {
         'apps': list(all_apps.values()),
         'current_app_id': current_app_id,
+        'current_workspace_id': current_workspace_id
     }
 
 @router.post("/api/apps", status_code=status.HTTP_201_CREATED)
@@ -60,6 +76,7 @@ async def create_app(data: AppCreateRequest, response: Response, user: User = De
         url=data.url.strip() if data.url else "",
         description=data.description.strip() if data.description else "",
         owner_id=user.id,
+        workspace_id=data.workspace_id,
     )
     db.add(new_app)
     db.flush()  # Populate new_app.id

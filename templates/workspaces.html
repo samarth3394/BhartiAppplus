@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Workspaces & Organizations — Nexvora{% endblock %}
+{% block nav_workspaces %}active{% endblock %}
+{% block page_title %}Workspaces / Organizations{% endblock %}
+{% block page_subtitle %}Manage your companies, teams, and apps in one place{% endblock %}
+
+{% block topbar_actions %}
+<button class="btn btn-primary btn-sm" onclick="openCreateWorkspaceModal()">
+    <i data-lucide="plus"></i> Create Workspace
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-xl">
+    <div class="card-header">
+        <h3>Your Workspaces</h3>
+    </div>
+    <div class="grid" id="workspaces-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; padding: 1.5rem;">
+        <div class="page-loader"><div class="spinner"></div></div>
+    </div>
+</div>
+
+<!-- Current Workspace Members (Only show if a workspace is active) -->
+<div class="card mb-xl" id="workspace-members-section" style="display:none;">
+    <div class="card-header">
+        <h3>Members in Active Workspace</h3>
+        <button class="btn btn-primary btn-sm" onclick="openInviteModal()">
+            <i data-lucide="user-plus"></i> Invite Member
+        </button>
+    </div>
+    <div class="member-grid" id="workspace-members-grid">
+        <div class="page-loader"><div class="spinner"></div></div>
+    </div>
+</div>
+
+<!-- Create Workspace Modal -->
+<div class="modal-overlay" id="create-workspace-modal">
+    <div class="modal" style="max-width:420px;">
+        <div class="modal-header">
+            <h3>Create a New Workspace</h3>
+            <button class="modal-close" onclick="closeModal('create-workspace-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="workspace-name">Workspace Name (e.g. TCS, Infosys) *</label>
+                <input type="text" id="workspace-name" class="form-input" placeholder="Enter company or team name" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('create-workspace-modal')">Cancel</button>
+            <button class="btn btn-primary" onclick="createWorkspace()">Create Workspace</button>
+        </div>
+    </div>
+</div>
+
+<!-- Invite Modal -->
+<div class="modal-overlay" id="invite-workspace-modal">
+    <div class="modal" style="max-width:420px;">
+        <div class="modal-header">
+            <h3>Invite Member to Workspace</h3>
+            <button class="modal-close" onclick="closeModal('invite-workspace-modal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="invite-email">Email Address *</label>
+                <input type="email" id="invite-email" class="form-input" placeholder="colleague@company.com" required>
+            </div>
+            <div class="form-group">
+                <label for="invite-role">Role</label>
+                <select id="invite-role" class="form-input">
+                    <option value="developer">Developer — Can manage bugs & tasks</option>
+                    <option value="viewer">Viewer — Read-only access</option>
+                    <option value="admin">Admin — Full access</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('invite-workspace-modal')">Cancel</button>
+            <button class="btn btn-primary" onclick="sendWorkspaceInvite()">Send Invite</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/workspaces.js') }}"></script>
+{% endblock %}

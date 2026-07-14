@@ -69,6 +69,10 @@
                     <i data-lucide="map"></i>
                     <span>Roadmap</span>
                 </a>
+                <a href="/kanban" class="nav-item {% block nav_kanban %}{% endblock %}" id="nav-kanban" data-tooltip="Kanban Board">
+                    <i data-lucide="trello"></i>
+                    <span>Kanban Board</span>
+                </a>
                 <a href="{{ url_for('server_page') }}" class="nav-item {% block nav_server %}{% endblock %}" data-tooltip="Infrastructure">
                     <i data-lucide="server"></i>
                     <span>Infrastructure</span>
@@ -79,8 +83,12 @@
                     <span class="nav-badge hidden" id="maintenance-badge">0</span>
                 </a>
 
-                <div class="nav-section-label">Team</div>
-                <a href="/teams" class="nav-item {% block nav_teams %}{% endblock %}" id="nav-teams" data-tooltip="Team">
+                <div class="nav-section-label">Team & Org</div>
+                <a href="/workspaces" class="nav-item {% block nav_workspaces %}{% endblock %}" id="nav-workspaces" data-tooltip="Workspaces">
+                    <i data-lucide="building"></i>
+                    <span>Workspaces</span>
+                </a>
+                <a href="/teams" class="nav-item {% block nav_teams %}{% endblock %}" id="nav-teams" data-tooltip="App Team">
                     <i data-lucide="users"></i>
                     <span>Team</span>
                 </a>
@@ -110,6 +118,13 @@
                     <h2>{% block header_title %}Dashboard{% endblock %}</h2>
                 </div>
                 <div class="topbar-right" style="display: flex; align-items: center; gap: 16px;">
+                    <!-- Workspace Switcher Topbar -->
+                    <div class="topbar-app-switcher" style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-default);">
+                        <i data-lucide="building" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+                        <select id="workspace-switcher-select" onchange="switchWorkspace(this.value)" style="background: transparent; border: none; color: var(--text-primary); font-family: var(--font-family); font-size: var(--font-sm); outline: none; cursor: pointer; padding-right: 28px; max-width: 180px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                            <option value="">Loading...</option>
+                        </select>
+                    </div>
                     <!-- App Switcher Topbar -->
                     <div class="topbar-app-switcher" style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-default);">
                         <i data-lucide="layers" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
@@ -146,6 +161,7 @@
         // Load user info and app list
         document.addEventListener('DOMContentLoaded', () => {
             loadUserInfo();
+            loadWorkspaceSwitcher();
             loadAppSwitcher();
         });
     </script>

@@ -47,6 +47,13 @@
                 <label for="app-description">Description</label>
                 <textarea id="app-description" class="form-input" placeholder="Brief description of this application..."></textarea>
             </div>
+            <div class="form-group">
+                <label for="app-workspace">Workspace (Optional)</label>
+                <select id="app-workspace" class="form-input">
+                    <option value="">Personal (Standalone App)</option>
+                </select>
+                <div class="text-muted text-sm mt-sm">Group this app under a specific company or team workspace.</div>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('app-modal')">Cancel</button>

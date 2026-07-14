@@ -71,6 +71,10 @@ function openCreateAppModal() {
     document.getElementById('app-name').value = '';
     document.getElementById('app-url').value = '';
     document.getElementById('app-description').value = '';
+    
+    const wsSelect = document.getElementById('app-workspace');
+    if (wsSelect) wsSelect.value = window.currentWorkspaceId || '';
+    
     document.getElementById('app-modal-title').textContent = 'New Application';
     document.getElementById('app-submit-btn').textContent = 'Create App';
     openModal('app-modal');
@@ -84,6 +88,10 @@ function openEditAppModal(appId) {
     document.getElementById('app-name').value = app.name;
     document.getElementById('app-url').value = app.url || '';
     document.getElementById('app-description').value = app.description || '';
+    
+    const wsSelect = document.getElementById('app-workspace');
+    if (wsSelect) wsSelect.value = app.workspace_id || '';
+    
     document.getElementById('app-modal-title').textContent = 'Edit Application';
     document.getElementById('app-submit-btn').textContent = 'Update App';
     openModal('app-modal');
@@ -103,6 +111,11 @@ async function submitApp() {
         url: document.getElementById('app-url').value.trim(),
         description: document.getElementById('app-description').value.trim(),
     };
+    
+    const wsSelect = document.getElementById('app-workspace');
+    if (wsSelect && wsSelect.value) {
+        body.workspace_id = wsSelect.value;
+    }
 
     try {
         if (editId) {

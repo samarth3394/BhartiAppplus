@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block title %}Kanban Board - Nexvora{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1"><i class="bi bi-kanban"></i> Kanban Board</h2>
+        <p class="text-secondary mb-0">Manage issues, tasks, and bugs across your projects.</p>
+    </div>
+    <button class="btn btn-primary" onclick="openCreateIssueModal()">
+        <i class="bi bi-plus-lg"></i> Create Issue
+    </button>
+</div>
+
+<!-- Kanban Board Container -->
+<div class="kanban-container">
+    
+    <!-- To Do Column -->
+    <div class="kanban-column" id="col-todo" data-status="todo">
+        <div class="kanban-column-header">
+            <h5 class="kanban-column-title">To Do <span class="badge bg-secondary ms-2" id="count-todo">0</span></h5>
+        </div>
+        <div class="kanban-tasks" id="tasks-todo" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <!-- Tasks will be populated here -->
+        </div>
+    </div>
+
+    <!-- In Progress Column -->
+    <div class="kanban-column" id="col-in_progress" data-status="in_progress">
+        <div class="kanban-column-header">
+            <h5 class="kanban-column-title text-primary">In Progress <span class="badge bg-primary ms-2" id="count-in_progress">0</span></h5>
+        </div>
+        <div class="kanban-tasks" id="tasks-in_progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <!-- Tasks will be populated here -->
+        </div>
+    </div>
+
+    <!-- Review Column -->
+    <div class="kanban-column" id="col-review" data-status="review">
+        <div class="kanban-column-header">
+            <h5 class="kanban-column-title text-warning">Review <span class="badge bg-warning text-dark ms-2" id="count-review">0</span></h5>
+        </div>
+        <div class="kanban-tasks" id="tasks-review" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <!-- Tasks will be populated here -->
+        </div>
+    </div>
+
+    <!-- Done Column -->
+    <div class="kanban-column" id="col-done" data-status="done">
+        <div class="kanban-column-header">
+            <h5 class="kanban-column-title text-success">Done <span class="badge bg-success ms-2" id="count-done">0</span></h5>
+        </div>
+        <div class="kanban-tasks" id="tasks-done" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <!-- Tasks will be populated here -->
+        </div>
+    </div>
+
+</div>
+
+<!-- Create Issue Modal -->
+<div class="modal fade" id="createIssueModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content glass-panel text-light border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Create Issue</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createIssueForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Issue Type</label>
+                            <select class="form-select bg-dark text-light border-secondary" id="issueType" required>
+                                <option value="task">Task</option>
+                                <option value="story">Story</option>
+                                <option value="bug">Bug</option>
+                                <option value="epic">Epic</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select bg-dark text-light border-secondary" id="issuePriority" required>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                                <option value="high">High</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control bg-dark text-light border-secondary" id="issueTitle" placeholder="What needs to be done?" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control bg-dark text-light border-secondary" id="issueDescription" rows="4" placeholder="Provide more details..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitCreateIssue()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Kanban Board Styles */
+.kanban-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    align-items: flex-start;
+}
+
+.kanban-column {
+    background: rgba(30, 33, 40, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    min-width: 300px;
+    max-width: 350px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 200px);
+}
+
+.kanban-column-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.kanban-column-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.kanban-tasks {
+    padding: 1rem;
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 150px; /* Important for drag and drop into empty columns */
+}
+
+/* Kanban Card Styles */
+.kanban-card {
+    background: rgba(40, 44, 52, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    cursor: grab;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.kanban-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.kanban-card:active {
+    cursor: grabbing;
+}
+
+.kanban-card.dragging {
+    opacity: 0.5;
+}
+
+.kanban-card-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #e2e8f0;
+}
+
+.kanban-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+/* Badges */
+.type-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.7rem;
+}
+.type-task { background-color: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+.type-story { background-color: rgba(74, 222, 128, 0.15); color: #4ade80; }
+.type-bug { background-color: rgba(248, 113, 113, 0.15); color: #f87171; }
+.type-epic { background-color: rgba(167, 139, 250, 0.15); color: #a78bfa; }
+
+.priority-icon {
+    font-size: 1rem;
+}
+.priority-low { color: #94a3b8; }
+.priority-medium { color: #facc15; }
+.priority-high { color: #fb923c; }
+.priority-critical { color: #ef4444; }
+
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/kanban.js"></script>
+{% endblock %}

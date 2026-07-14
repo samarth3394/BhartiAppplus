@@ -38,6 +38,20 @@ class FrequencyEnum(enum.Enum):
     monthly = "monthly"
 
 
+class IssueTypeEnum(enum.Enum):
+    epic = "epic"
+    story = "story"
+    task = "task"
+    bug = "bug"
+
+
+class IssueStatusEnum(enum.Enum):
+    todo = "todo"
+    in_progress = "in_progress"
+    review = "review"
+    done = "done"
+
+
 # ─── Helper ───────────────────────────────────────────────────────────────
 
 def generate_uuid():
@@ -67,6 +81,8 @@ class User(Base):
     })
 
     # Relationships
+    owned_workspaces = relationship('Workspace', back_populates='owner', lazy='dynamic')
+    workspace_memberships = relationship('WorkspaceMember', back_populates='user', lazy='dynamic', foreign_keys='WorkspaceMember.user_id')
     owned_apps = relationship('App', back_populates='owner', lazy='dynamic')
     memberships = relationship('AppMember', back_populates='user', lazy='dynamic', foreign_keys='AppMember.user_id')
 
@@ -82,12 +98,70 @@ class User(Base):
         }
 
 
+# ─── Workspaces ───────────────────────────────────────────────────────────
+
+class Workspace(Base):
+    __tablename__ = 'workspaces'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    name = Column(String(255), nullable=False)
+    owner_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    created_at = Column(DateTime, default=utc_now)
+    is_active = Column(Boolean, default=True)
+
+    # Relationships
+    owner = relationship('User', back_populates='owned_workspaces')
+    members = relationship('WorkspaceMember', back_populates='workspace', lazy='dynamic', cascade='all, delete-orphan')
+    apps = relationship('App', back_populates='workspace', lazy='dynamic', cascade='all, delete-orphan')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'owner_id': self.owner_id,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'is_active': self.is_active,
+        }
+
+
+class WorkspaceMember(Base):
+    __tablename__ = 'workspace_members'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    workspace_id = Column(String(36), ForeignKey('workspaces.id'), nullable=False)
+    user_id = Column(String(36), ForeignKey('users.id'), nullable=True)
+    role = Column(Enum(RoleEnum), default=RoleEnum.developer)
+    invite_email = Column(String(255), default='')
+    invite_token = Column(String(100), unique=True, nullable=True)
+    invited_by = Column(String(36), ForeignKey('users.id'), nullable=True)
+    invited_at = Column(DateTime, default=utc_now)
+    accepted_at = Column(DateTime, nullable=True)
+
+    # Relationships
+    workspace = relationship('Workspace', back_populates='members')
+    user = relationship('User', back_populates='workspace_memberships', foreign_keys=[user_id])
+    inviter = relationship('User', foreign_keys=[invited_by])
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'workspace_id': self.workspace_id,
+            'user_id': self.user_id,
+            'role': self.role.value if self.role else None,
+            'invite_email': self.invite_email,
+            'invited_at': self.invited_at.isoformat() if self.invited_at else None,
+            'accepted_at': self.accepted_at.isoformat() if self.accepted_at else None,
+            'user': self.user.to_dict() if self.user else None,
+        }
+
+
 # ─── Apps ─────────────────────────────────────────────────────────────────
 
 class App(Base):
     __tablename__ = 'apps'
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
+    workspace_id = Column(String(36), ForeignKey('workspaces.id'), nullable=True)
     name = Column(String(255), nullable=False)
     url = Column(String(500), default='')
     description = Column(Text, default='')
@@ -103,6 +177,7 @@ class App(Base):
     })
 
     # Relationships
+    workspace = relationship('Workspace', back_populates='apps')
     owner = relationship('User', back_populates='owned_apps')
     members = relationship('AppMember', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
     uptime_checks = relationship('UptimeCheck', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
@@ -116,6 +191,7 @@ class App(Base):
     def to_dict(self):
         return {
             'id': self.id,
+            'workspace_id': self.workspace_id,
             'name': self.name,
             'url': self.url,
             'description': self.description,
@@ -526,6 +602,48 @@ class RoadmapFeature(Base):
         }
 
 
+
+
+# ─── Kanban Issues ────────────────────────────────────────────────────────
+
+class Issue(Base):
+    __tablename__ = 'issues'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, default='')
+    type = Column(Enum(IssueTypeEnum), default=IssueTypeEnum.task)
+    status = Column(Enum(IssueStatusEnum), default=IssueStatusEnum.todo)
+    priority = Column(String(50), default='medium')  # low, medium, high, critical
+    assignee_id = Column(String(36), ForeignKey('users.id'), nullable=True)
+    reporter_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    due_date = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+
+    # Relationships
+    app = relationship('App')
+    assignee = relationship('User', foreign_keys=[assignee_id])
+    reporter = relationship('User', foreign_keys=[reporter_id])
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'title': self.title,
+            'description': self.description,
+            'type': self.type.value if self.type else None,
+            'status': self.status.value if self.status else None,
+            'priority': self.priority,
+            'assignee_id': self.assignee_id,
+            'reporter_id': self.reporter_id,
+            'due_date': self.due_date.isoformat() if self.due_date else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'assignee': self.assignee.to_dict() if self.assignee else None,
+            'reporter': self.reporter.to_dict() if self.reporter else None,
+        }
 
 
 # ─── Failure Predictions ──────────────────────────────────────────────────
