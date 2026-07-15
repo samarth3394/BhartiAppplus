@@ -187,6 +187,8 @@ class App(Base):
     activity_logs = relationship('ActivityLog', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
     server_metrics = relationship('ServerMetric', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
     roadmap_features = relationship('RoadmapFeature', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
+    issues = relationship('Issue', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
+    failure_predictions = relationship('FailurePrediction', back_populates='app', lazy='dynamic', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
@@ -623,7 +625,7 @@ class Issue(Base):
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
 
     # Relationships
-    app = relationship('App')
+    app = relationship('App', back_populates='issues')
     assignee = relationship('User', foreign_keys=[assignee_id])
     reporter = relationship('User', foreign_keys=[reporter_id])
 
@@ -660,7 +662,7 @@ class FailurePrediction(Base):
     created_at = Column(DateTime, default=utc_now)
 
     # Relationships
-    app = relationship('App')
+    app = relationship('App', back_populates='failure_predictions')
 
     def to_dict(self):
         return {
