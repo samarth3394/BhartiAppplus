@@ -160,9 +160,8 @@ async function updateIssueStatus(issueId, newStatus) {
 
 // Modal handling
 function openCreateIssueModal() {
-    const modal = new bootstrap.Modal(document.getElementById('createIssueModal'));
     document.getElementById('createIssueForm').reset();
-    modal.show();
+    openModal('createIssueModal');
 }
 
 async function submitCreateIssue() {
@@ -185,7 +184,7 @@ async function submitCreateIssue() {
 
         const result = await response.json();
         if (response.ok) {
-            bootstrap.Modal.getInstance(document.getElementById('createIssueModal')).hide();
+            closeModal('createIssueModal');
             showToast('Success', 'Issue created successfully', 'success');
             loadIssues();
         } else {
