@@ -113,8 +113,8 @@ async function submitApp() {
     };
     
     const wsSelect = document.getElementById('app-workspace');
-    if (wsSelect && wsSelect.value) {
-        body.workspace_id = wsSelect.value;
+    if (wsSelect) {
+        body.workspace_id = wsSelect.value || "personal";
     }
 
     try {

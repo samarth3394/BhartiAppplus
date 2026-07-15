@@ -66,17 +66,22 @@ async def list_apps(request: Request, user: User = Depends(get_current_user), db
     }
 
 @router.post("/api/apps", status_code=status.HTTP_201_CREATED)
-async def create_app(data: AppCreateRequest, response: Response, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+async def create_app(data: AppCreateRequest, request: Request, response: Response, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     name = data.name.strip()
     if not name:
         raise HTTPException(status_code=400, detail="App name is required")
+
+    # If the frontend sent an empty string or didn't send a workspace, fallback to current workspace
+    workspace_id = data.workspace_id if data.workspace_id else request.cookies.get('current_workspace_id')
+    if not workspace_id or workspace_id == "personal":
+        workspace_id = None
 
     new_app = App(
         name=name,
         url=data.url.strip() if data.url else "",
         description=data.description.strip() if data.description else "",
         owner_id=user.id,
-        workspace_id=data.workspace_id,
+        workspace_id=workspace_id,
     )
     db.add(new_app)
     db.flush()  # Populate new_app.id
