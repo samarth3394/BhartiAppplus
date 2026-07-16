@@ -1115,7 +1115,14 @@ select.form-input {
 .primary-nav-item.active {
     background: var(--bg-card);
     color: var(--accent-primary);
-    box-shadow: inset 3px 0 0 var(--accent-primary);
+    /* Removed the box-shadow that created the vertical line */
+}
+
+/* Increase the icon size */
+.primary-nav-item i,
+.primary-nav-item svg {
+    width: 28px !important;
+    height: 28px !important;
 }
 
 .secondary-nav-group {
