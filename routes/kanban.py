@@ -59,8 +59,13 @@ async def create_issue(data: IssueCreateRequest, request: Request, user: User = 
         raise HTTPException(status_code=400, detail="Title is required")
 
     app_id = data.app_id or request.cookies.get('current_app_id')
-    if not app_id:
-        raise HTTPException(status_code=400, detail="App ID is required. Please select an app first.")
+    
+    if not app_id or app_id == "None" or app_id == "":
+        app = db.query(App).filter(App.owner_id == user.id).first()
+        if app:
+            app_id = app.id
+        else:
+            raise HTTPException(status_code=400, detail="App ID is required. Please select an app first.")
 
     # Validate enums
     try:
