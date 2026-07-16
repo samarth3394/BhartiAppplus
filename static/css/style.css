@@ -92,7 +92,7 @@
     --transition-slow: 500ms cubic-bezier(0.25, 1, 0.5, 1);
 
     /* Layout */
-    --sidebar-width: 250px;
+    --sidebar-width: 260px;
     --sidebar-collapsed: 72px;
     --topbar-height: 64px;
 }
@@ -1159,7 +1159,7 @@ select.form-input {
 
 .nav-section-label {
     display: block;
-    margin: 20px 0 6px 12px;
+    margin: 16px 0 8px 10px;
     font-size: 11px;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -1172,14 +1172,14 @@ select.form-input {
     align-items: center;
     justify-content: flex-start;
     gap: 12px;
-    padding: 8px 12px;
+    padding: 10px 14px;
     border-radius: var(--radius-md);
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: var(--font-base);
     font-weight: 500;
     cursor: pointer;
     transition: all var(--transition-fast);
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     text-decoration: none;
     position: relative;
 }
