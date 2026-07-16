@@ -224,37 +224,22 @@
                 }
             }
 
-            // Initialize active tab
-            switchSidebarTab(activeCategory);
-
             const sidebar = document.getElementById('sidebar');
 
-            // Add click listeners to primary items
+            // Add hover listeners to primary items
             primaryItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                item.addEventListener('mouseenter', () => {
                     const target = item.getAttribute('data-target');
-                    
-                    if (!sidebar.classList.contains('open')) {
-                        // Open and show target
-                        sidebar.classList.add('open');
-                        switchSidebarTab(target);
-                    } else {
-                        // If already open, check if clicking same icon
-                        if (item.classList.contains('active')) {
-                            sidebar.classList.remove('open');
-                        } else {
-                            switchSidebarTab(target);
-                        }
-                    }
+                    sidebar.classList.add('open');
+                    switchSidebarTab(target);
                 });
             });
 
-            // Close sidebar when clicking outside
-            document.addEventListener('click', (e) => {
-                if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
-                    sidebar.classList.remove('open');
-                }
+            // Close sidebar when mouse leaves the sidebar area
+            sidebar.addEventListener('mouseleave', () => {
+                sidebar.classList.remove('open');
+                // Optionally revert to the active page's category when closed
+                switchSidebarTab(activeCategory);
             });
         });
 
