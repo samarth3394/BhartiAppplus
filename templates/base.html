@@ -24,87 +24,114 @@
     <div class="app-layout">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
+            <!-- Primary Tier -->
+            <div class="sidebar-primary">
                 <div class="sidebar-logo">
                     <img src="{{ url_for('static', path='images/bnexora_logo.png') }}" class="logo-icon" style="object-fit: contain; background: transparent; border-radius: 50%;">
-                    <div>
-                        <div class="logo-text">BNexora</div>
-                    </div>
                 </div>
+                <nav class="primary-nav">
+                    <div class="primary-nav-item active" data-target="overview" data-tooltip="Overview">
+                        <i data-lucide="layout-dashboard"></i>
+                    </div>
+                    <div class="primary-nav-item" data-target="ai" data-tooltip="AI Tools">
+                        <i data-lucide="brain"></i>
+                    </div>
+                    <div class="primary-nav-item" data-target="manage" data-tooltip="Manage">
+                        <i data-lucide="briefcase"></i>
+                    </div>
+                    <div class="primary-nav-item" data-target="team" data-tooltip="Team & Org">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <div class="primary-nav-item" data-target="settings" data-tooltip="Settings">
+                        <i data-lucide="settings"></i>
+                    </div>
+                </nav>
             </div>
 
+            <!-- Secondary Tier -->
+            <div class="sidebar-secondary">
+                <div class="sidebar-secondary-header">
+                    <div class="logo-text">BNexora</div>
+                </div>
+                
+                <nav class="secondary-nav-group active" id="nav-group-overview">
+                    <div class="nav-section-label">Overview</div>
+                    <a href="/dashboard" class="nav-item {% block nav_dashboard %}{% endblock %}" id="nav-dashboard">
+                        <i data-lucide="layout-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/uptime" class="nav-item {% block nav_uptime %}{% endblock %}" id="nav-uptime">
+                        <i data-lucide="activity"></i>
+                        <span>Uptime Monitor</span>
+                    </a>
+                </nav>
 
+                <nav class="secondary-nav-group hidden" id="nav-group-ai">
+                    <div class="nav-section-label">AI Tools</div>
+                    <a href="/ai-dashboard" class="nav-item {% block nav_ai_dashboard %}{% endblock %}" id="nav-ai-dashboard" style="color: var(--primary);">
+                        <i data-lucide="brain"></i>
+                        <span>AI CTO Dashboard</span>
+                    </a>
+                    <a href="/ai-logs" class="nav-item {% block nav_ai_logs %}{% endblock %}" id="nav-ai-logs" style="color: var(--primary);">
+                        <i data-lucide="file-text"></i>
+                        <span>AI Log Analyzer</span>
+                    </a>
+                    <a href="/security" class="nav-item {% block nav_security %}{% endblock %}" id="nav-security" style="color: var(--primary);">
+                        <i data-lucide="shield-alert"></i>
+                        <span>Security Scanner</span>
+                    </a>
+                </nav>
 
-            <!-- Navigation -->
-            <nav class="sidebar-nav">
-                <div class="nav-section-label">Overview</div>
-                <a href="/dashboard" class="nav-item {% block nav_dashboard %}{% endblock %}" id="nav-dashboard" data-tooltip="Dashboard">
-                    <i data-lucide="layout-dashboard"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/ai-dashboard" class="nav-item {% block nav_ai_dashboard %}{% endblock %}" id="nav-ai-dashboard" data-tooltip="AI CTO Dashboard" style="color: var(--primary);">
-                    <i data-lucide="brain"></i>
-                    <span>AI CTO Dashboard</span>
-                </a>
-                <a href="/ai-logs" class="nav-item {% block nav_ai_logs %}{% endblock %}" id="nav-ai-logs" data-tooltip="AI Log Analyzer" style="color: var(--primary);">
-                    <i data-lucide="file-text"></i>
-                    <span>AI Log Analyzer</span>
-                </a>
-                <a href="/security" class="nav-item {% block nav_security %}{% endblock %}" id="nav-security" data-tooltip="Security Scanner" style="color: var(--primary);">
-                    <i data-lucide="shield-alert"></i>
-                    <span>Security Scanner</span>
-                </a>
-                <a href="/uptime" class="nav-item {% block nav_uptime %}{% endblock %}" id="nav-uptime" data-tooltip="Uptime Monitor">
-                    <i data-lucide="activity"></i>
-                    <span>Uptime Monitor</span>
-                </a>
+                <nav class="secondary-nav-group hidden" id="nav-group-manage">
+                    <div class="nav-section-label">Manage</div>
+                    <a href="{{ url_for('bugs_page') }}" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs">
+                        <i data-lucide="bug"></i>
+                        <span>Bug Tracker</span>
+                        <span class="nav-badge hidden" id="bugs-badge">0</span>
+                    </a>
+                    <a href="{{ url_for('roadmap_page') }}" class="nav-item {% block nav_roadmap %}{% endblock %}">
+                        <i data-lucide="map"></i>
+                        <span>Roadmap</span>
+                    </a>
+                    <a href="/kanban" class="nav-item {% block nav_kanban %}{% endblock %}" id="nav-kanban">
+                        <i data-lucide="kanban"></i>
+                        <span>Kanban Board</span>
+                    </a>
+                    <a href="{{ url_for('server_page') }}" class="nav-item {% block nav_server %}{% endblock %}">
+                        <i data-lucide="server"></i>
+                        <span>Infrastructure</span>
+                    </a>
+                    <a href="{{ url_for('maintenance_page') }}" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance">
+                        <i data-lucide="clipboard-check"></i>
+                        <span>Maintenance</span>
+                        <span class="nav-badge hidden" id="maintenance-badge">0</span>
+                    </a>
+                </nav>
 
-                <div class="nav-section-label">Manage</div>
-                <a href="{{ url_for('bugs_page') }}" class="nav-item {% block nav_bugs %}{% endblock %}" id="nav-bugs" data-tooltip="Bug Tracker">
-                    <i data-lucide="bug"></i>
-                    <span>Bug Tracker</span>
-                    <span class="nav-badge hidden" id="bugs-badge">0</span>
-                </a>
-                <a href="{{ url_for('roadmap_page') }}" class="nav-item {% block nav_roadmap %}{% endblock %}" data-tooltip="Roadmap">
-                    <i data-lucide="map"></i>
-                    <span>Roadmap</span>
-                </a>
-                <a href="/kanban" class="nav-item {% block nav_kanban %}{% endblock %}" id="nav-kanban" data-tooltip="Kanban Board">
-                    <i data-lucide="kanban"></i>
-                    <span>Kanban Board</span>
-                </a>
-                <a href="{{ url_for('server_page') }}" class="nav-item {% block nav_server %}{% endblock %}" data-tooltip="Infrastructure">
-                    <i data-lucide="server"></i>
-                    <span>Infrastructure</span>
-                </a>
-                <a href="{{ url_for('maintenance_page') }}" class="nav-item {% block nav_maintenance %}{% endblock %}" id="nav-maintenance" data-tooltip="Maintenance">
-                    <i data-lucide="clipboard-check"></i>
-                    <span>Maintenance</span>
-                    <span class="nav-badge hidden" id="maintenance-badge">0</span>
-                </a>
+                <nav class="secondary-nav-group hidden" id="nav-group-team">
+                    <div class="nav-section-label">Team & Org</div>
+                    <a href="/workspaces" class="nav-item {% block nav_workspaces %}{% endblock %}" id="nav-workspaces">
+                        <i data-lucide="building"></i>
+                        <span>Workspaces</span>
+                    </a>
+                    <a href="/teams" class="nav-item {% block nav_teams %}{% endblock %}" id="nav-teams">
+                        <i data-lucide="users"></i>
+                        <span>Team</span>
+                    </a>
+                    <a href="/apps" class="nav-item {% block nav_apps %}{% endblock %}" id="nav-apps">
+                        <i data-lucide="layers"></i>
+                        <span>My Apps</span>
+                    </a>
+                </nav>
 
-                <div class="nav-section-label">Team & Org</div>
-                <a href="/workspaces" class="nav-item {% block nav_workspaces %}{% endblock %}" id="nav-workspaces" data-tooltip="Workspaces">
-                    <i data-lucide="building"></i>
-                    <span>Workspaces</span>
-                </a>
-                <a href="/teams" class="nav-item {% block nav_teams %}{% endblock %}" id="nav-teams" data-tooltip="App Team">
-                    <i data-lucide="users"></i>
-                    <span>Team</span>
-                </a>
-                <a href="/apps" class="nav-item {% block nav_apps %}{% endblock %}" id="nav-apps" data-tooltip="My Apps">
-                    <i data-lucide="layers"></i>
-                    <span>My Apps</span>
-                </a>
-
-                <div class="nav-section-label">Settings</div>
-                <a href="/settings" class="nav-item {% block nav_settings %}{% endblock %}" id="nav-settings" data-tooltip="Settings">
-                    <i data-lucide="settings"></i>
-                    <span>Settings</span>
-                </a>
-            </nav>
-
-
+                <nav class="secondary-nav-group hidden" id="nav-group-settings">
+                    <div class="nav-section-label">Settings</div>
+                    <a href="/settings" class="nav-item {% block nav_settings %}{% endblock %}" id="nav-settings">
+                        <i data-lucide="settings"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -155,6 +182,60 @@
     {% block scripts %}{% endblock %}
 
     <script>
+        // Two-Tier Sidebar Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const primaryItems = document.querySelectorAll('.primary-nav-item');
+            const secondaryGroups = document.querySelectorAll('.secondary-nav-group');
+
+            // Auto-detect active category based on current path
+            const currentPath = window.location.pathname;
+            let activeCategory = 'overview';
+            
+            if (currentPath.includes('/dashboard') || currentPath.includes('/uptime')) {
+                activeCategory = 'overview';
+            } else if (currentPath.includes('/ai-') || currentPath.includes('/security')) {
+                activeCategory = 'ai';
+            } else if (currentPath.includes('/bug') || currentPath.includes('/roadmap') || currentPath.includes('/kanban') || currentPath.includes('/server') || currentPath.includes('/maintenance')) {
+                activeCategory = 'manage';
+            } else if (currentPath.includes('/workspace') || currentPath.includes('/team') || currentPath.includes('/app')) {
+                activeCategory = 'team';
+            } else if (currentPath.includes('/setting')) {
+                activeCategory = 'settings';
+            }
+
+            // Function to switch tabs
+            function switchSidebarTab(target) {
+                // Update primary nav active state
+                primaryItems.forEach(i => i.classList.remove('active'));
+                const activePrimary = document.querySelector(`.primary-nav-item[data-target="${target}"]`);
+                if (activePrimary) activePrimary.classList.add('active');
+
+                // Update secondary nav group visibility
+                secondaryGroups.forEach(g => {
+                    g.classList.remove('active');
+                    g.classList.add('hidden');
+                    g.style.display = 'none';
+                });
+                const activeSecondary = document.getElementById(`nav-group-${target}`);
+                if (activeSecondary) {
+                    activeSecondary.classList.remove('hidden');
+                    activeSecondary.classList.add('active');
+                    activeSecondary.style.display = 'flex';
+                }
+            }
+
+            // Initialize active tab
+            switchSidebarTab(activeCategory);
+
+            // Add click listeners to primary items
+            primaryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const target = item.getAttribute('data-target');
+                    switchSidebarTab(target);
+                });
+            });
+        });
+
         // Initialize Lucide icons
         lucide.createIcons();
 
