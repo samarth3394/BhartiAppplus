@@ -5,6 +5,59 @@
 
 // ─── Utilities ─────────────────────────────────────────────────────────────
 
+// Spotlight Effect Tracking
+document.addEventListener('mousemove', (e) => {
+    document.querySelectorAll('.card, .stat-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    });
+});
+
+// Command Palette Logic
+document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        const palette = document.getElementById('command-palette');
+        if (palette) {
+            const isHidden = palette.classList.contains('hidden');
+            if (isHidden) {
+                palette.classList.remove('hidden');
+                // Small delay to allow display block to apply before opacity transition
+                setTimeout(() => {
+                    palette.style.opacity = '1';
+                    palette.querySelector('.cmd-box').style.transform = 'scale(1)';
+                    document.getElementById('cmd-input').focus();
+                }, 10);
+            } else {
+                closeCommandPalette();
+            }
+        }
+    }
+    if (e.key === 'Escape') {
+        closeCommandPalette();
+    }
+});
+
+function closeCommandPalette() {
+    const palette = document.getElementById('command-palette');
+    if (palette && !palette.classList.contains('hidden')) {
+        palette.style.opacity = '0';
+        palette.querySelector('.cmd-box').style.transform = 'scale(0.95)';
+        setTimeout(() => palette.classList.add('hidden'), 200);
+    }
+}
+
+// Click outside to close palette
+document.addEventListener('click', (e) => {
+    const palette = document.getElementById('command-palette');
+    if (palette && e.target === palette) {
+        closeCommandPalette();
+    }
+});
+
 function escapeHtml(unsafe) {
     if (unsafe == null) return '';
     return String(unsafe)
