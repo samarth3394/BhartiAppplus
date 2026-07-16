@@ -59,9 +59,14 @@ async def create_issue(data: IssueCreateRequest, request: Request, user: User = 
         raise HTTPException(status_code=400, detail="Title is required")
 
     app_id = data.app_id or request.cookies.get('current_app_id')
+    current_workspace_id = request.cookies.get('current_workspace_id')
     
-    if not app_id or app_id == "None" or app_id == "":
-        app = db.query(App).filter(App.owner_id == user.id).first()
+    if not app_id or app_id in ("None", ""):
+        if current_workspace_id and current_workspace_id not in ("None", ""):
+            app = db.query(App).filter(App.workspace_id == current_workspace_id).first()
+        else:
+            app = db.query(App).filter(App.owner_id == user.id, App.workspace_id == None).first()
+            
         if app:
             app_id = app.id
         else:
