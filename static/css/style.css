@@ -1378,7 +1378,7 @@ select.form-input {
 /* ─── Main Content ─────────────────────────────────────────────────────── */
 
 .main-content {
-    margin-left: var(--sidebar-width);
+    margin-left: 72px; /* Adjusted for the collapsed sidebar */
     flex: 1;
     min-height: 100vh;
     display: flex;
