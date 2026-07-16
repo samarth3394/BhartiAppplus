@@ -227,12 +227,34 @@
             // Initialize active tab
             switchSidebarTab(activeCategory);
 
+            const sidebar = document.getElementById('sidebar');
+
             // Add click listeners to primary items
             primaryItems.forEach(item => {
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const target = item.getAttribute('data-target');
-                    switchSidebarTab(target);
+                    
+                    if (!sidebar.classList.contains('open')) {
+                        // Open and show target
+                        sidebar.classList.add('open');
+                        switchSidebarTab(target);
+                    } else {
+                        // If already open, check if clicking same icon
+                        if (item.classList.contains('active')) {
+                            sidebar.classList.remove('open');
+                        } else {
+                            switchSidebarTab(target);
+                        }
+                    }
                 });
+            });
+
+            // Close sidebar when clicking outside
+            document.addEventListener('click', (e) => {
+                if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
             });
         });
 
