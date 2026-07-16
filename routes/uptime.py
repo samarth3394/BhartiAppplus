@@ -22,15 +22,29 @@ async def uptime_page(request: Request, user: User = Depends(get_current_user)):
     return templates.TemplateResponse(request=request, name="uptime.html")
 
 
+def _get_current_app_or_fallback(request: Request, user: User, db: Session):
+    app_id = request.cookies.get('current_app_id')
+    app = None
+    if app_id:
+        app = db.query(App).filter(App.id == app_id).first()
+    
+    if not app:
+        app = db.query(App).filter(App.owner_id == user.id).first()
+        if not app:
+            from models import AppMember
+            member = db.query(AppMember).filter(AppMember.user_id == user.id).first()
+            if member:
+                app = member.app
+
+    if not app:
+        raise HTTPException(status_code=400, detail="No app selected or created")
+    return app
+
+
 @router.get("/api/uptime/status")
 async def uptime_status(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    app_id = request.cookies.get('current_app_id')
-    if not app_id:
-        raise HTTPException(status_code=400, detail="No app selected")
-
-    app = db.query(App).filter(App.id == app_id).first()
-    if not app:
-        raise HTTPException(status_code=404, detail="App not found")
+    app = _get_current_app_or_fallback(request, user, db)
+    app_id = app.id
 
     # Latest check
     latest = db.query(UptimeCheck).filter(UptimeCheck.app_id == app_id).order_by(
@@ -76,9 +90,8 @@ async def uptime_status(request: Request, user: User = Depends(get_current_user)
 
 @router.get("/api/uptime/history")
 async def uptime_history(request: Request, period: str = "24h", user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    app_id = request.cookies.get('current_app_id')
-    if not app_id:
-        raise HTTPException(status_code=400, detail="No app selected")
+    app = _get_current_app_or_fallback(request, user, db)
+    app_id = app.id
 
     hours_map = {'24h': 24, '7d': 168, '30d': 720}
     hours = hours_map.get(period, 24)
@@ -97,9 +110,8 @@ async def uptime_history(request: Request, period: str = "24h", user: User = Dep
 
 @router.get("/api/uptime/incidents")
 async def uptime_incidents(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    app_id = request.cookies.get('current_app_id')
-    if not app_id:
-        raise HTTPException(status_code=400, detail="No app selected")
+    app = _get_current_app_or_fallback(request, user, db)
+    app_id = app.id
 
     incidents = db.query(UptimeIncident).filter(
         UptimeIncident.app_id == app_id
@@ -117,13 +129,8 @@ async def uptime_incidents(request: Request, user: User = Depends(get_current_us
 
 @router.post("/api/uptime/configure")
 async def configure_monitoring(data: ConfigureMonitoringRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    app_id = request.cookies.get('current_app_id')
-    if not app_id:
-        raise HTTPException(status_code=400, detail="No app selected")
-
-    app = db.query(App).filter(App.id == app_id).first()
-    if not app:
-        raise HTTPException(status_code=404, detail="App not found")
+    app = _get_current_app_or_fallback(request, user, db)
+    app_id = app.id
 
     if app.owner_id != user.id:
         raise HTTPException(status_code=403, detail="Only the app owner can change monitoring settings")
