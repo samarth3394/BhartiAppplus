@@ -38,9 +38,9 @@ async def list_issues(request: Request, user: User = Depends(get_current_user), 
     current_app_id = request.cookies.get('current_app_id')
     current_workspace_id = request.cookies.get('current_workspace_id')
 
-    if current_app_id:
+    if current_app_id and current_app_id not in ("None", ""):
         issues = db.query(Issue).filter(Issue.app_id == current_app_id).all()
-    elif current_workspace_id:
+    elif current_workspace_id and current_workspace_id not in ("None", ""):
         apps = db.query(App).filter(App.workspace_id == current_workspace_id).all()
         app_ids = [a.id for a in apps]
         issues = db.query(Issue).filter(Issue.app_id.in_(app_ids)).all()
