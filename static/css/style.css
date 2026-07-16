@@ -93,7 +93,7 @@
 
     /* Layout */
     --sidebar-width: 260px;
-    --sidebar-collapsed: 72px;
+    --sidebar-collapsed: 88px;
     --topbar-height: 64px;
 }
 
@@ -1034,7 +1034,7 @@ select.form-input {
 /* ─── Sidebar ──────────────────────────────────────────────────────────── */
 
 .sidebar {
-    width: 72px; /* Closed by default */
+    width: 88px; /* Closed by default */
     height: 100vh;
     position: fixed;
     left: 0;
@@ -1050,11 +1050,11 @@ select.form-input {
 }
 
 .sidebar.open {
-    width: 280px; /* Wider to accommodate both tiers */
+    width: 296px; /* Wider to accommodate both tiers */
 }
 
 .sidebar-primary {
-    width: 72px;
+    width: 88px;
     height: 100vh;
     background: rgba(0, 0, 0, 0.6);
     display: flex;
@@ -1388,7 +1388,7 @@ select.form-input {
 /* ─── Main Content ─────────────────────────────────────────────────────── */
 
 .main-content {
-    margin-left: 72px; /* Adjusted for the collapsed sidebar */
+    margin-left: 88px; /* Adjusted for the collapsed sidebar */
     flex: 1;
     min-height: 100vh;
     display: flex;
@@ -2784,12 +2784,12 @@ select.form-input {
 
     /* Sidebar to Hamburger Menu */
     .sidebar {
-        width: 280px !important;
+        width: 296px !important;
         height: 100vh;
         position: fixed;
         bottom: auto;
         top: 0;
-        left: -280px;
+        left: -296px;
         flex-direction: column;
         border-right: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 0;
