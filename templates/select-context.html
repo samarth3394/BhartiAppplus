@@ -211,11 +211,7 @@
         // Load Workspaces
         async function loadWorkspaces() {
             try {
-                const res = await fetch('/api/workspaces', {
-                    headers: {
-                        'Authorization': 'Bearer ' + getCookie('access_token')
-                    }
-                });
+                const res = await fetch('/api/workspaces');
                 if (res.ok) {
                     const data = await res.json();
                     renderWorkspaces(data.workspaces);
