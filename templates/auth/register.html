@@ -121,7 +121,7 @@ Nexvora.init({
                 const data = await res.json();
 
                 if (res.ok) {
-                    window.location.href = '/setup';
+                    window.location.href = '/onboarding';
                 } else {
                     errorDiv.textContent = data.error || data.detail || 'Registration failed';
                     errorDiv.classList.remove('hidden');

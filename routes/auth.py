@@ -35,6 +35,10 @@ async def register_page(request: Request, user: User = Depends(get_current_user_
         return RedirectResponse(url="/select-context", status_code=303)
     return templates.TemplateResponse(request=request, name="auth/register.html")
 
+@router.get("/onboarding", response_class=HTMLResponse)
+async def onboarding_page(request: Request, user: User = Depends(get_current_user)):
+    return templates.TemplateResponse(request=request, name="auth/onboarding.html")
+
 @router.get("/setup", response_class=HTMLResponse)
 async def setup_page(request: Request, user: User = Depends(get_current_user)):
     return templates.TemplateResponse(request=request, name="auth/setup.html")
