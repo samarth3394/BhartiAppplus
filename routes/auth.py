@@ -26,13 +26,13 @@ class LoginRequest(BaseModel):
 @router.get("/auth/login", response_class=HTMLResponse)
 async def login_page(request: Request, user: User = Depends(get_current_user_optional)):
     if user:
-        return RedirectResponse(url="/dashboard", status_code=303)
+        return RedirectResponse(url="/select-context", status_code=303)
     return templates.TemplateResponse(request=request, name="auth/login.html")
 
 @router.get("/auth/register", response_class=HTMLResponse)
 async def register_page(request: Request, user: User = Depends(get_current_user_optional)):
     if user:
-        return RedirectResponse(url="/dashboard", status_code=303)
+        return RedirectResponse(url="/select-context", status_code=303)
     return templates.TemplateResponse(request=request, name="auth/register.html")
 
 @router.get("/setup", response_class=HTMLResponse)

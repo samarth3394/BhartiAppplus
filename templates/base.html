@@ -145,13 +145,10 @@
                     <h2>{% block header_title %}Dashboard{% endblock %}</h2>
                 </div>
                 <div class="topbar-right" style="display: flex; align-items: center; gap: 16px;">
-                    <!-- Workspace Switcher Topbar -->
-                    <div class="topbar-app-switcher" style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-default);">
-                        <i data-lucide="building" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
-                        <select id="workspace-switcher-select" onchange="switchWorkspace(this.value)" style="background: transparent; border: none; color: var(--text-primary); font-family: var(--font-family); font-size: var(--font-sm); outline: none; cursor: pointer; padding-right: 28px; max-width: 180px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                            <option value="">Loading...</option>
-                        </select>
-                    </div>
+                    <a href="/select-context" style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-default); color: var(--text-primary); text-decoration: none; font-size: var(--font-sm); transition: all 0.2s;" title="Switch Context" onmouseover="this.style.background='var(--border-default)'" onmouseout="this.style.background='var(--bg-secondary)'">
+                        <i data-lucide="arrow-left-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+                        <span>Switch Context</span>
+                    </a>
                     <!-- App Switcher Topbar -->
                     <div class="topbar-app-switcher" style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-default);">
                         <i data-lucide="layers" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
@@ -253,7 +250,7 @@
         // Load user info and app list
         document.addEventListener('DOMContentLoaded', () => {
             loadUserInfo();
-            loadWorkspaceSwitcher();
+            loadWorkspaceSwitcher(); // Needed for app creation modal
             loadAppSwitcher();
         });
     </script>
