@@ -208,6 +208,9 @@ async function loadWorkspaceSwitcher() {
                     const option = document.createElement('option');
                     option.value = ws.id;
                     option.textContent = ws.name;
+                    if (ws.id === data.current_workspace_id) {
+                        option.selected = true;
+                    }
                     appWorkspaceSelect.appendChild(option);
                 });
             }
