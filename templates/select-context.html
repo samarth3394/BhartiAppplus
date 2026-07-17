@@ -238,18 +238,18 @@
                 return;
             }
 
-            container.innerHTML = workspaces.map(ws => \`
-                <div class="context-card" onclick="selectContext('\${ws.id}')">
+            container.innerHTML = workspaces.map(ws => `
+                <div class="context-card" onclick="selectContext('${ws.id}')">
                     <div class="context-icon workspace">
                         <i data-lucide="briefcase"></i>
                     </div>
                     <div class="context-info">
-                        <h3>\${ws.name}</h3>
-                        <p>\${ws.role === 'owner' ? 'Owner' : 'Member'}</p>
+                        <h3>${ws.name}</h3>
+                        <p>${ws.role === 'owner' ? 'Owner' : 'Member'}</p>
                     </div>
                     <i data-lucide="chevron-right" class="context-arrow"></i>
                 </div>
-            \`).join('');
+            `).join('');
             lucide.createIcons();
         }
 
@@ -270,8 +270,8 @@
 
         // Helper to get cookie
         function getCookie(name) {
-            const value = \`; \${document.cookie}\`;
-            const parts = value.split(\`; \${name}=\`);
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
             return '';
         }
