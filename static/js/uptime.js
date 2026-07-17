@@ -80,9 +80,27 @@ async function loadUptimeHistory(period) {
 
 function renderResponseTimeChart(checks, period) {
     const ctx = document.getElementById('response-time-chart');
-    if (!ctx) return;
+    const container = ctx ? ctx.parentElement : null;
+    if (!ctx || !container) return;
 
     if (responseTimeChart) responseTimeChart.destroy();
+    
+    // Remove existing empty state if any
+    const existingEmpty = container.querySelector('.chart-empty-state');
+    if (existingEmpty) existingEmpty.remove();
+
+    if (!checks || checks.length === 0) {
+        ctx.style.display = 'none';
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'chart-empty-state';
+        emptyDiv.style = 'position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.9rem; flex-direction: column; gap: 8px;';
+        emptyDiv.innerHTML = '<i data-lucide="activity" style="width: 24px; height: 24px; opacity: 0.5;"></i><p>No response time data yet. Add a URL in settings and wait a few minutes.</p>';
+        container.appendChild(emptyDiv);
+        if (window.lucide) window.lucide.createIcons();
+        return;
+    } else {
+        ctx.style.display = 'block';
+    }
 
     const labels = checks.map(c => {
         const d = new Date(c.checked_at);
