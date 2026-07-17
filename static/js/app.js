@@ -212,6 +212,14 @@ async function loadWorkspaceSwitcher() {
                 });
             }
         }
+        
+        // Update Dynamic Header Context
+        window.currentWorkspaceName = 'Personal Workspace';
+        if (data.current_workspace_id && data.workspaces) {
+            const ws = data.workspaces.find(w => w.id === data.current_workspace_id);
+            if (ws) window.currentWorkspaceName = ws.name;
+        }
+        updateDynamicHeader();
     } catch (err) {
         // Silent fail
     }
@@ -227,6 +235,7 @@ async function loadAppSwitcher() {
         if (!select) return;
 
         select.innerHTML = '';
+        window.currentAppName = null;
 
         if (data.apps && data.apps.length > 0) {
             data.apps.forEach(app => {
@@ -235,14 +244,43 @@ async function loadAppSwitcher() {
                 option.textContent = app.name;
                 if (app.id === data.current_app_id) {
                     option.selected = true;
+                    window.currentAppName = app.name;
                 }
                 select.appendChild(option);
             });
         } else {
             select.innerHTML = '<option value="">No apps — create one</option>';
         }
+        
+        updateDynamicHeader();
     } catch (err) {
         // Silent fail
+    }
+}
+
+function updateDynamicHeader() {
+    const headerTitle = document.getElementById('dynamic-header-title');
+    if (!headerTitle) return;
+    
+    let html = '';
+    
+    // Workspace Badge
+    if (window.currentWorkspaceName === 'Personal Workspace') {
+        html += `<span style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); background: var(--bg-secondary); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-default);"><i data-lucide="user" style="width: 14px; height: 14px;"></i> Personal</span>`;
+    } else if (window.currentWorkspaceName) {
+        html += `<span style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; color: var(--text-muted); background: rgba(59, 130, 246, 0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.2);"><i data-lucide="briefcase" style="width: 14px; height: 14px; color: #3b82f6;"></i> ${window.currentWorkspaceName}</span>`;
+    }
+    
+    // App Name
+    if (window.currentAppName) {
+        html += `<span style="color: var(--text-muted); margin: 0 4px;">/</span> <span style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600;">${window.currentAppName}</span>`;
+    } else {
+        html += `<span style="color: var(--text-muted); margin: 0 4px;">/</span> <span style="font-size: 1.1rem; color: var(--text-muted); font-weight: 400;">Dashboard</span>`;
+    }
+    
+    headerTitle.innerHTML = html;
+    if (window.lucide) {
+        window.lucide.createIcons();
     }
 }
 
