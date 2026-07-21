@@ -38,6 +38,8 @@ async function loadMembers() {
                     <div class="member-actions">
                         <select class="filter-select" onchange="changeRole('${member.id}', this.value)" ${member.is_owner ? 'disabled' : ''}>
                             <option value="developer" ${member.role === 'developer' ? 'selected' : ''}>Developer</option>
+                            <option value="project_manager" ${member.role === 'project_manager' ? 'selected' : ''}>Project Manager</option>
+                            <option value="tester" ${member.role === 'tester' ? 'selected' : ''}>QA/Tester</option>
                             <option value="viewer" ${member.role === 'viewer' ? 'selected' : ''}>Viewer</option>
                             <option value="admin" ${member.role === 'admin' ? 'selected' : ''}>Admin</option>
                         </select>

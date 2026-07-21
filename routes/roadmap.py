@@ -43,7 +43,7 @@ def _check_permission(db: Session, app_id: str, current_user_id: str, min_role: 
     if not member:
         raise HTTPException(status_code=403, detail="You are not a member of this app")
 
-    role_hierarchy = {RoleEnum.admin: 3, RoleEnum.developer: 2, RoleEnum.viewer: 1}
+    role_hierarchy = {RoleEnum.admin: 5, RoleEnum.project_manager: 4, RoleEnum.developer: 3, RoleEnum.tester: 2, RoleEnum.viewer: 1}
     if role_hierarchy.get(member.role, 0) < role_hierarchy.get(min_role, 0):
         raise HTTPException(status_code=403, detail=f"Insufficient permissions. Required: {min_role.value}")
 

@@ -15,6 +15,10 @@ class Config:
     SQLALCHEMY_DATABASE_URI = db_url or f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'nexvora.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Supabase Storage
+    SUPABASE_URL = os.getenv('SUPABASE_URL')
+    SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+
     # File uploads
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB max

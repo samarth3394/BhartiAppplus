@@ -345,8 +345,10 @@ fetch('http://localhost:8000/api/ingest/error', {
                 <div class="settings-form-group">
                     <label>Default Role for New Members</label>
                     <select id="setting-default-role" class="settings-input settings-select">
-                        <option value="viewer">Viewer</option>
                         <option value="developer" selected>Developer</option>
+                        <option value="project_manager">Project Manager</option>
+                        <option value="tester">QA/Tester</option>
+                        <option value="viewer">Viewer</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>

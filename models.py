@@ -14,7 +14,9 @@ Base = declarative_base()
 
 class RoleEnum(enum.Enum):
     admin = "admin"
+    project_manager = "project_manager"
     developer = "developer"
+    tester = "tester"
     viewer = "viewer"
 
 

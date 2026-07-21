@@ -85,23 +85,44 @@ async def update_profile(data: ProfileUpdateRequest, user: User = Depends(get_cu
     return {"status": "success", "message": "Profile updated", "data": user.to_dict()}
 
 import shutil
+from config import Config
+try:
+    from supabase import create_client, Client
+except ImportError:
+    pass
 
 @router.post("/api/settings/profile/avatar")
 async def upload_avatar(avatar: UploadFile = File(...), user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if not avatar.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Invalid file type")
     
-    upload_dir = os.path.join("static", "uploads", "avatars")
-    os.makedirs(upload_dir, exist_ok=True)
-    
     ext = avatar.filename.split('.')[-1] if '.' in avatar.filename else 'jpg'
     filename = f"{user.id}_{generate_uuid()[:8]}.{ext}"
-    filepath = os.path.join(upload_dir, filename)
     
-    with open(filepath, "wb") as buffer:
-        shutil.copyfileobj(avatar.file, buffer)
+    if Config.SUPABASE_URL and Config.SUPABASE_KEY:
+        try:
+            supabase: Client = create_client(Config.SUPABASE_URL, Config.SUPABASE_KEY)
+            file_bytes = await avatar.read()
+            # Upload to Supabase Storage bucket 'avatars'
+            supabase.storage.from_("avatars").upload(filename, file_bytes, {"content-type": avatar.content_type})
+            
+            # Get public URL
+            public_url = supabase.storage.from_("avatars").get_public_url(filename)
+            user.avatar_url = public_url
+        except Exception as e:
+            print(f"Supabase upload error: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to upload to Supabase: {str(e)}")
+    else:
+        # Fallback to local storage if Supabase is not configured
+        upload_dir = os.path.join("static", "uploads", "avatars")
+        os.makedirs(upload_dir, exist_ok=True)
+        filepath = os.path.join(upload_dir, filename)
         
-    user.avatar_url = f"/static/uploads/avatars/{filename}"
+        with open(filepath, "wb") as buffer:
+            shutil.copyfileobj(avatar.file, buffer)
+            
+        user.avatar_url = f"/static/uploads/avatars/{filename}"
+        
     db.commit()
     return {"status": "success", "message": "Avatar uploaded", "avatar_url": user.avatar_url}
 

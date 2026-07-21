@@ -52,7 +52,7 @@ function renderTaskGroup(group, tasks, role) {
 
     groupEl.style.display = 'block';
 
-    const canEdit = (role === 'admin' || role === 'developer');
+    const canEdit = (['admin', 'project_manager', 'developer'].includes(role));
     const canDelete = (role === 'admin');
 
     container.innerHTML = tasks.map(task => `

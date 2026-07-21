@@ -142,11 +142,11 @@ async def invite_member(workspace_id: str, data: InviteMemberRequest, user: User
     is_admin = (workspace_obj.owner_id == user.id)
     if not is_admin:
         member = db.query(WorkspaceMember).filter(WorkspaceMember.workspace_id == workspace_id, WorkspaceMember.user_id == user.id).first()
-        if member and member.role == RoleEnum.admin:
+        if member and member.role in [RoleEnum.admin, RoleEnum.project_manager]:
             is_admin = True
             
     if not is_admin:
-        raise HTTPException(status_code=403, detail="Only admins can invite members")
+        raise HTTPException(status_code=403, detail="Only admins and project managers can invite members")
         
     email_to_invite = data.email.lower().strip()
     if email_to_invite == user.email.lower():

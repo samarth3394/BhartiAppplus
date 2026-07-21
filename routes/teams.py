@@ -75,9 +75,9 @@ async def invite_member(data: InviteMemberRequest, request: Request, user: User 
         raise HTTPException(status_code=404, detail="App not found")
 
     if app.owner_id != user.id:
-        member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == user.id, AppMember.role == RoleEnum.admin).first()
+        member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == user.id, AppMember.role.in_([RoleEnum.admin, RoleEnum.project_manager])).first()
         if not member:
-            raise HTTPException(status_code=403, detail="Only admins can invite members")
+            raise HTTPException(status_code=403, detail="Only admins and project managers can invite members")
 
     email = data.email.lower().strip()
     try:
@@ -135,8 +135,13 @@ async def update_member_role(member_id: str, data: UpdateRoleRequest, request: R
         raise HTTPException(status_code=400, detail="No app selected")
 
     app = db.query(App).filter(App.id == app_id).first()
-    if not app or app.owner_id != user.id:
-        raise HTTPException(status_code=403, detail="Only the owner can change roles")
+    if not app:
+        raise HTTPException(status_code=404, detail="App not found")
+        
+    if app.owner_id != user.id:
+        admin_member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == user.id, AppMember.role == RoleEnum.admin).first()
+        if not admin_member:
+            raise HTTPException(status_code=403, detail="Only the owner or admins can change roles")
 
     member = db.query(AppMember).filter(AppMember.id == member_id, AppMember.app_id == app_id).first()
     if not member:
