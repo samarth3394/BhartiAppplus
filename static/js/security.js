@@ -48,19 +48,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     const card = document.createElement('div');
-                    card.style.borderLeft = 4px solid \;
+                    card.style.borderLeft = `4px solid ${color}`;
                     card.style.padding = 'var(--space-md)';
                     card.style.backgroundColor = 'var(--surface)';
                     card.style.borderRadius = 'var(--radius-md)';
                     
-                    card.innerHTML = \
+                    card.innerHTML = `
                         <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-sm);">
-                            <span style="font-weight: bold; font-size: var(--font-lg);">\</span>
-                            <span style="font-weight: bold; color: \; padding: 2px 8px; border-radius: 12px; background: \22;">\</span>
+                            <span style="font-weight: bold; font-size: var(--font-lg);">${vuln.package}</span>
+                            <span style="font-weight: bold; color: ${color}; padding: 2px 8px; border-radius: 12px; background: ${color}22;">${vuln.severity}</span>
                         </div>
-                        <p style="margin-bottom: var(--space-sm);"><strong>Issue:</strong> \</p>
-                        <p style="color: var(--text-muted);"><strong>Recommendation:</strong> \</p>
-                    \;
+                        <p style="margin-bottom: var(--space-sm);"><strong>Issue:</strong> ${vuln.issue}</p>
+                        <p style="color: var(--text-muted);"><strong>Recommendation:</strong> ${vuln.recommendation}</p>
+                    `;
                     vulnerabilitiesList.appendChild(card);
                 });
             } else {
