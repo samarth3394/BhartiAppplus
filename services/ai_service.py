@@ -273,17 +273,17 @@ You are an expert Cybersecurity AI. I will provide you with a list of dependenci
 Identify any known vulnerabilities, outdated packages with CVEs, and security risks.
 
 Please return the response in EXACTLY this JSON format (no markdown code blocks, just raw JSON):
-{
+{{
     "summary": "Brief summary of the security posture.",
     "vulnerabilities": [
-        {
+        {{
             "package": "name of package",
             "severity": "High/Medium/Low",
             "issue": "Description of the CVE or vulnerability",
             "recommendation": "Update to version X.Y.Z"
-        }
+        }}
     ]
-}
+}}
 
 DEPENDENCIES:
 {dependencies[:5000]}
