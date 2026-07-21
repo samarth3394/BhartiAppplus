@@ -150,11 +150,18 @@
                         <span>Switch Context</span>
                     </a>
                     <!-- App Switcher Topbar -->
-                    <div class="topbar-app-switcher" style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-default);">
+                    <div class="topbar-app-switcher" style="display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid var(--border-default); position: relative;">
                         <i data-lucide="layers" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
                         <select id="app-switcher-select" onchange="switchApp(this.value)" style="background: transparent; border: none; color: var(--text-primary); font-family: var(--font-family); font-size: var(--font-sm); outline: none; cursor: pointer; padding-right: 28px; max-width: 280px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                            <option value="">Loading apps...</option>
+                            <option value="">Select App...</option>
                         </select>
+                        <style>
+                            #app-switcher-select option {
+                                background-color: #0f0f14; /* Dark background */
+                                color: #f8f9fa; /* Light text */
+                            }
+                        </style>
+                        <i data-lucide="chevron-down" style="width: 14px; height: 14px; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-secondary);"></i>
                     </div>
                     <a href="/settings" class="topbar-profile" id="topbar-profile-icon" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--bg-secondary); color: var(--text-primary); text-decoration: none; border: 1px solid var(--border-default); transition: all 0.2s;" title="Profile Settings" onmouseover="this.style.background='var(--border-default)'" onmouseout="this.style.background='var(--bg-secondary)'">
                         <i data-lucide="user" style="width: 16px; height: 16px;"></i>
