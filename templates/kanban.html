@@ -62,17 +62,19 @@
 
 <!-- Create Issue Modal -->
 <div id="createIssueModal" class="modal-overlay">
-    <div class="modal">
-        <div class="modal-header">
-            <h3>Create Issue</h3>
-            <button type="button" class="modal-close" onclick="closeModal('createIssueModal')">&times;</button>
+    <div class="modal" style="background: rgba(15, 15, 20, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+            <h3 style="margin: 0; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="plus-circle" style="color: var(--primary);"></i> Create Issue
+            </h3>
+            <button type="button" class="modal-close" onclick="closeModal('createIssueModal')" style="color: var(--text-muted);">&times;</button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding: var(--space-lg);">
             <form id="createIssueForm" onsubmit="event.preventDefault(); submitCreateIssue();">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-md);">
                     <div class="form-group">
-                        <label>Issue Type</label>
-                        <select id="issueType" class="input" required>
+                        <label style="color: var(--text-muted); font-size: 13px; font-weight: 500; margin-bottom: 4px; display: block;">Issue Type</label>
+                        <select id="issueType" class="form-control" style="width: 100%; background: #0a0a0c; color: white; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-md);" required>
                             <option value="task">Task</option>
                             <option value="story">Story</option>
                             <option value="bug">Bug</option>
@@ -80,8 +82,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Priority</label>
-                        <select id="issuePriority" class="input" required>
+                        <label style="color: var(--text-muted); font-size: 13px; font-weight: 500; margin-bottom: 4px; display: block;">Priority</label>
+                        <select id="issuePriority" class="form-control" style="width: 100%; background: #0a0a0c; color: white; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-md);" required>
                             <option value="medium">Medium</option>
                             <option value="low">Low</option>
                             <option value="high">High</option>
@@ -90,18 +92,18 @@
                     </div>
                 </div>
                 <div class="form-group" style="margin-bottom: var(--space-md);">
-                    <label>Title</label>
-                    <input type="text" id="issueTitle" class="input" placeholder="What needs to be done?" required>
+                    <label style="color: var(--text-muted); font-size: 13px; font-weight: 500; margin-bottom: 4px; display: block;">Title</label>
+                    <input type="text" id="issueTitle" class="form-control" style="width: 100%; background: #0a0a0c; color: white; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-md);" placeholder="What needs to be done?" required>
                 </div>
                 <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="issueDescription" class="input" rows="4" placeholder="Provide more details..."></textarea>
+                    <label style="color: var(--text-muted); font-size: 13px; font-weight: 500; margin-bottom: 4px; display: block;">Description</label>
+                    <textarea id="issueDescription" class="form-control" rows="4" style="width: 100%; background: #0a0a0c; color: white; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-md); resize: vertical;" placeholder="Provide more details..."></textarea>
                 </div>
             </form>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal('createIssueModal')">Cancel</button>
-            <button type="button" class="btn btn-primary" onclick="submitCreateIssue()">Create</button>
+        <div class="modal-footer" style="border-top: 1px solid var(--border-color); padding: var(--space-md); display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text);" onclick="closeModal('createIssueModal')">Cancel</button>
+            <button type="button" class="btn" style="background: linear-gradient(135deg, var(--primary), #8a2be2); color: white; border: none; box-shadow: 0 4px 15px rgba(0, 194, 255, 0.3);" onclick="submitCreateIssue()">Create</button>
         </div>
     </div>
 </div>
