@@ -3534,3 +3534,88 @@ select.form-input {
         align-items: flex-start;
     }
 }
+
+/* ─── Global Mobile Responsiveness ─────────────────────────────────────── */
+@media (max-width: 768px) {
+    /* Topbar adjustments */
+    #mobile-menu-btn {
+        display: flex !important;
+    }
+    .topbar {
+        padding: 0 16px;
+    }
+    .topbar-app-switcher select {
+        max-width: 120px !important;
+    }
+
+    /* Sidebar adjustments (Slide out) */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        z-index: 10000;
+        transition: left 0.3s ease;
+        background: var(--bg-elevated);
+        box-shadow: var(--shadow-xl);
+    }
+    .sidebar.open {
+        left: 0;
+    }
+
+    /* Main Content adjustments */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    .page-content {
+        padding: 16px !important;
+    }
+
+    /* Grid layout overrides (Stack items vertically) */
+    .dashboard-grid,
+    .metrics-grid,
+    .kanban-board,
+    .roadmap-grid,
+    .settings-layout,
+    .bug-grid,
+    .split-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    .kanban-column {
+        width: 100% !important;
+        min-width: unset !important;
+    }
+
+    /* Cinematic view / Landing page */
+    #why-nexvora {
+        padding: 60px 16px;
+        gap: 80px;
+    }
+    .cinematic-caption {
+        font-size: var(--font-lg) !important;
+    }
+}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.sidebar-overlay.visible {
+    display: block;
+    opacity: 1;
+}

@@ -18,10 +18,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}?v=4">
 </head>
 <body>
     <div class="app-layout">
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+        
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <!-- Primary Tier -->
@@ -230,20 +233,26 @@
 
             const sidebar = document.getElementById('sidebar');
 
-            // Add hover listeners to primary items
+            // Add hover and click listeners to primary items
             primaryItems.forEach(item => {
-                item.addEventListener('mouseenter', () => {
+                const handler = (e) => {
                     const target = item.getAttribute('data-target');
-                    sidebar.classList.add('open');
+                    if (window.innerWidth > 768) {
+                        sidebar.classList.add('open');
+                    }
                     switchSidebarTab(target);
-                });
+                };
+                item.addEventListener('mouseenter', handler);
+                item.addEventListener('click', handler);
             });
 
-            // Close sidebar when mouse leaves the sidebar area
+            // Close sidebar when mouse leaves the sidebar area (Desktop only)
             sidebar.addEventListener('mouseleave', () => {
-                sidebar.classList.remove('open');
-                // Optionally revert to the active page's category when closed
-                switchSidebarTab(activeCategory);
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('open');
+                    // Optionally revert to the active page's category when closed
+                    switchSidebarTab(activeCategory);
+                }
             });
         });
 
