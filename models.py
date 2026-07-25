@@ -324,6 +324,31 @@ class AiIncident(Base):
         }
 
 
+class FlaggedDiagnosis(Base):
+    __tablename__ = 'flagged_diagnoses'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False)
+    incident_id = Column(String(36), ForeignKey('uptime_incidents.id'), nullable=False)
+    raw_llm_response = Column(Text, default='')
+    flagged_reason = Column(String(500), default='')
+    created_at = Column(DateTime, default=utc_now)
+
+    # Relationships
+    app = relationship('App')
+    incident = relationship('UptimeIncident')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'incident_id': self.incident_id,
+            'raw_llm_response': self.raw_llm_response,
+            'flagged_reason': self.flagged_reason,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+        }
+
+
 # ─── Bugs ─────────────────────────────────────────────────────────────────
 
 class Bug(Base):

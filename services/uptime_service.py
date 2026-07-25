@@ -168,13 +168,27 @@ def _trigger_ai_analysis(session, app, incident, failed_check):
     Send logs and metrics to Gemini API on downtime.
     Parse response and save to ai_incidents table.
     """
-    from services.ai_service import analyze_incident_root_cause
-    from models import AiIncident
+    from services.ai_service import analyze_incident_root_cause, validate_diagnosis
+    from models import AiIncident, UptimeCheck, ServerMetric, FlaggedDiagnosis
+    from datetime import datetime, timezone, timedelta
 
     # Gather recent checks for context
     recent_checks = session.query(UptimeCheck).filter(
         UptimeCheck.app_id == app.id
     ).order_by(UptimeCheck.checked_at.desc()).limit(15).all()
+
+    # Gather recent metrics for cross-check context (e.g. last 5 mins)
+    five_mins_ago = datetime.now(timezone.utc) - timedelta(minutes=5)
+    recent_metrics = session.query(ServerMetric).filter(
+        ServerMetric.app_id == app.id,
+        ServerMetric.timestamp >= five_mins_ago
+    ).all()
+    
+    context = {}
+    if recent_metrics:
+        context['cpu_percent'] = max(m.cpu_percent for m in recent_metrics)
+        context['ram_percent'] = max(m.ram_percent for m in recent_metrics)
+        context['disk_percent'] = max(m.disk_percent for m in recent_metrics)
 
     # Call Gemini AI
     result = analyze_incident_root_cause(
@@ -184,6 +198,33 @@ def _trigger_ai_analysis(session, app, incident, failed_check):
         duration_seconds=0,  # Just started
         recent_checks=list(reversed(recent_checks)),
     )
+    
+    is_valid, error_reason = validate_diagnosis(result, context)
+    
+    # Also deterministic cross-check logic
+    # If any metric > 90% but LLM says 'no issue' or confidence is low, flag it
+    is_critical_metric = context.get('cpu_percent', 0) > 90 or context.get('ram_percent', 0) > 90 or context.get('disk_percent', 0) > 90
+    if is_critical_metric and (result.get('confidence', 0) < 50 or 'no issue' in str(result.get('root_cause', '')).lower()):
+        is_valid = False
+        error_reason = "Contradiction: Critical metrics observed but LLM reported low confidence or no issue."
+
+    if not is_valid:
+        # Save to flagged_diagnoses table
+        flagged = FlaggedDiagnosis(
+            app_id=app.id,
+            incident_id=incident.id,
+            raw_llm_response=result.get('raw', ''),
+            flagged_reason=error_reason
+        )
+        session.add(flagged)
+        
+        # Fallback to raw-alert path
+        result = {
+            'root_cause': f"Automated Alert: {failed_check.error_message or 'Service Down'} (Fallback)",
+            'confidence': 0.0,
+            'revenue_impact': 'unknown',
+            'raw': result.get('raw', '')
+        }
 
     # Save to ai_incidents table
     ai_incident = AiIncident(
