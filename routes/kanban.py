@@ -29,9 +29,7 @@ class IssueUpdateRequest(BaseModel):
     priority: Optional[str] = None
     assignee_id: Optional[str] = None
 
-@router.get("/kanban", response_class=HTMLResponse)
-async def kanban_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse("kanban.html", {"request": request})
+# Removed HTML Route
 
 @router.get("/api/kanban/issues")
 async def list_issues(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
