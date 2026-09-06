@@ -22,10 +22,7 @@ class InviteMemberRequest(BaseModel):
 class UpdateRoleRequest(BaseModel):
     role: str
 
-@router.get("/teams", response_class=HTMLResponse)
-async def teams_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="teams.html")
-
+# Removed HTML Route
 
 @router.get("/api/teams/members")
 async def list_members(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
