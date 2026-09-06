@@ -17,10 +17,7 @@ class ConfigureMonitoringRequest(BaseModel):
     monitoring_enabled: Optional[bool] = True
 
 
-@router.get("/uptime", response_class=HTMLResponse)
-async def uptime_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="uptime.html")
-
+# Removed HTML Route
 
 def _get_current_app_or_fallback(request: Request, user: User, db: Session):
     app_id = request.cookies.get('current_app_id')
