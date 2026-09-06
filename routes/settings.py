@@ -59,9 +59,7 @@ class TeamDefaultsRequest(BaseModel):
 
 # ─── Page Route ───────────────────────────────────────────────────────────
 
-@router.get("/settings", response_class=HTMLResponse)
-async def settings_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="settings.html")
+# Removed HTML Route
 
 
 # ─── Profile APIs ─────────────────────────────────────────────────────────
