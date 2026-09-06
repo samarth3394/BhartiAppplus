@@ -30,15 +30,14 @@ app = FastAPI(title="Nexvora", description="All-in-one intelligent app maintenan
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Static files and Templates
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+# API Routes only, Static files and Templates removed for SPA migration
+
 
 # Register Routers
 app.include_router(auth_router)
@@ -88,14 +87,9 @@ async def startup_event():
     print("FastAPI application started. Scheduler initialized.")
 
 @app.get("/")
-async def root(request: Request, user = Depends(get_current_user_optional)):
-    if user:
-        return RedirectResponse(url="/dashboard", status_code=303)
-    return RedirectResponse(url="/auth/login", status_code=303)
+async def root():
+    return JSONResponse(content={"message": "Nexvora API is running"})
 
-@app.get("/why-nexvora")
-async def why_nexvora(request: Request):
-    return templates.TemplateResponse("why_nexvora.html", {"request": request})
 
 if __name__ == "__main__":
     import uvicorn

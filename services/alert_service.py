@@ -2,6 +2,7 @@
 Alert Service — Send WhatsApp and Email alerts for failure predictions.
 WhatsApp is currently stubbed (logged to console).
 Email uses Flask-Mail if SMTP is configured.
+ 
 """
 
 import logging

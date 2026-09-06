@@ -31,13 +31,7 @@ def _get_current_app(db: Session, user: User, current_app_id: Optional[str] = No
             app = member.app
     return app
 
-@router.get("/select-context", response_class=HTMLResponse)
-async def select_context_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="select-context.html")
 
-@router.get("/dashboard", response_class=HTMLResponse)
-async def dashboard_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="dashboard.html")
 
 @router.get("/api/dashboard/stats")
 async def dashboard_stats(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):

@@ -22,33 +22,7 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
-# --- HTML Pages ---
-@router.get("/auth/login", response_class=HTMLResponse)
-async def login_page(request: Request, user: User = Depends(get_current_user_optional)):
-    if user:
-        return RedirectResponse(url="/select-context", status_code=303)
-    return templates.TemplateResponse(request=request, name="auth/login.html")
-
-@router.get("/auth/register", response_class=HTMLResponse)
-async def register_page(request: Request, user: User = Depends(get_current_user_optional)):
-    if user:
-        return RedirectResponse(url="/select-context", status_code=303)
-    return templates.TemplateResponse(request=request, name="auth/register.html")
-
-@router.get("/onboarding", response_class=HTMLResponse)
-async def onboarding_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="auth/onboarding.html")
-
-@router.get("/setup", response_class=HTMLResponse)
-async def setup_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="auth/setup.html")
-
-@router.get("/logout")
-async def logout_page(response: Response):
-    res = RedirectResponse(url="/auth/login", status_code=303)
-    res.delete_cookie("access_token", path="/")
-    res.delete_cookie("current_app_id", path="/")
-    return res
+# --- APIs ---
 
 
 # --- APIs ---
