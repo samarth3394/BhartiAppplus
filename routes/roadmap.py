@@ -57,10 +57,7 @@ def parse_dt(dt_str):
         return None
 
 
-@router.get("/roadmap", response_class=HTMLResponse)
-async def roadmap_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="roadmap.html")
-
+# Removed HTML Route
 
 @router.get("/api/roadmap")
 async def list_features(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
