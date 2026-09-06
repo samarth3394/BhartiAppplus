@@ -49,10 +49,7 @@ def _check_permission(db: Session, app_id: str, current_user_id: str, min_role: 
     
     return member
 
-@router.get("/maintenance", response_class=HTMLResponse)
-async def maintenance_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="maintenance.html")
-
+# Removed HTML Route
 @router.get("/api/maintenance")
 async def list_tasks(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     app_id = request.cookies.get('current_app_id')
