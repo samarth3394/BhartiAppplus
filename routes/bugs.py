@@ -54,11 +54,7 @@ def _check_permission(db: Session, app_id: str, current_user_id: str, min_role: 
         raise HTTPException(status_code=403, detail=f'Insufficient permissions. Required: {min_role.value}')
 
 
-# --- HTML ---
-@router.get("/bugs", response_class=HTMLResponse)
-async def bugs_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="bugs.html")
-
+# Removed HTML Route
 
 # --- APIs ---
 @router.get("/api/bugs")
