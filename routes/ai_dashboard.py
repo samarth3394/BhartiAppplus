@@ -15,10 +15,7 @@ templates = Jinja2Templates(directory="templates")
 class AISettingsRequest(BaseModel):
     hourly_revenue: Optional[float] = 0.0
 
-@router.get("/ai-dashboard", response_class=HTMLResponse)
-async def ai_dashboard_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="ai_dashboard.html")
-
+# Removed HTML Route
 @router.get("/api/ai-dashboard/summary")
 async def get_ai_summary(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     app_id = request.cookies.get('current_app_id')
