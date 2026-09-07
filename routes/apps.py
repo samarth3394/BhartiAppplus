@@ -122,7 +122,9 @@ async def update_app(app_id: str, data: AppUpdateRequest, user: User = Depends(g
     if data.is_active is not None:
         app_obj.is_active = data.is_active
     if data.settings is not None:
-        app_obj.settings = data.settings
+        current_settings = app_obj.settings or {}
+        current_settings.update(data.settings)
+        app_obj.settings = current_settings
         from sqlalchemy.orm.attributes import flag_modified
         flag_modified(app_obj, 'settings')
 

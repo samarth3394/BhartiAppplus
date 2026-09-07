@@ -46,6 +46,7 @@ class NotificationSettingsRequest(BaseModel):
     alert_whatsapp_number: Optional[str] = None
     alert_threshold: Optional[int] = None
     weekly_cto_report: Optional[bool] = None
+    slack_webhook: Optional[str] = None
 
 class AppearanceSettingsRequest(BaseModel):
     theme: Optional[str] = None
@@ -319,7 +320,12 @@ async def update_notification_settings(data: NotificationSettingsRequest, reques
         settings['alert_threshold'] = data.alert_threshold
     if data.weekly_cto_report is not None:
         settings['weekly_cto_report'] = data.weekly_cto_report
+    if data.slack_webhook is not None:
+        settings['slack_webhook'] = data.slack_webhook
+
     app.settings = settings
+    from sqlalchemy.orm.attributes import flag_modified
+    flag_modified(app, "settings")
     db.commit()
     return {"status": "success", "message": "Notification settings updated"}
 

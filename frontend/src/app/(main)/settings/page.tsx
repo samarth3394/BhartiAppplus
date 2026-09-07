@@ -11,8 +11,19 @@ export default function SettingsPage() {
   const [savingProfile, setSavingProfile] = useState(false);
 
   // App Settings State
-  const [appSettings, setAppSettings] = useState({ url: "", description: "", monitoring_enabled: true, check_interval: 5, client_key: "" });
+  const [appSettings, setAppSettings] = useState({ 
+    url: "", description: "", monitoring_enabled: true, check_interval: 5, client_key: "",
+    logo_url: "", is_active: true
+  });
   const [savingApp, setSavingApp] = useState(false);
+
+  // Notification Settings State
+  const [notificationSettings, setNotificationSettings] = useState({
+    alert_email: true, alert_email_address: "",
+    alert_whatsapp: false, alert_whatsapp_number: "",
+    weekly_cto_report: false, slack_webhook: ""
+  });
+  const [savingNotifications, setSavingNotifications] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -34,6 +45,16 @@ export default function SettingsPage() {
           monitoring_enabled: data.settings?.monitoring_enabled ?? true,
           check_interval: data.settings?.check_interval ?? 5,
           client_key: data.client_key,
+          logo_url: data.settings?.logo_url || "",
+          is_active: data.is_active ?? true
+        });
+        setNotificationSettings({
+          alert_email: data.settings?.alert_email ?? true,
+          alert_email_address: data.settings?.alert_email_address || "",
+          alert_whatsapp: data.settings?.alert_whatsapp ?? false,
+          alert_whatsapp_number: data.settings?.alert_whatsapp_number || "",
+          weekly_cto_report: data.settings?.weekly_cto_report ?? false,
+          slack_webhook: data.settings?.slack_webhook || ""
         });
       }
     } catch (err) {
@@ -69,10 +90,42 @@ export default function SettingsPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(appSettings)
+        body: JSON.stringify({
+          description: appSettings.description,
+          url: appSettings.url,
+          is_active: appSettings.is_active,
+          settings: {
+            monitoring_enabled: appSettings.monitoring_enabled,
+            check_interval: appSettings.check_interval,
+            logo_url: appSettings.logo_url
+          }
+        })
       });
+      alert("App settings saved!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save app settings");
     } finally {
       setSavingApp(false);
+    }
+  };
+
+  const saveNotifications = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingNotifications(true);
+    try {
+      await fetch("http://localhost:5000/api/settings/notifications", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(notificationSettings)
+      });
+      alert("Notification settings saved!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save notification settings");
+    } finally {
+      setSavingNotifications(false);
     }
   };
 
@@ -91,6 +144,23 @@ export default function SettingsPage() {
 
   const exportData = () => {
     window.open("http://localhost:5000/api/settings/danger/export-data", "_blank");
+  };
+
+  const deleteApp = async () => {
+    if (!confirm("Are you ABSOLUTELY sure? This will delete the app and ALL its data permanently!")) return;
+    try {
+      const res = await fetch("http://localhost:5000/api/settings/danger/delete-app", { method: "DELETE", credentials: "include" });
+      if (res.ok) {
+        alert("App deleted successfully.");
+        window.location.href = "/dashboard";
+      } else {
+        const errorData = await res.json();
+        alert(errorData.detail || "Failed to delete app");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred");
+    }
   };
 
   return (
@@ -171,6 +241,29 @@ export default function SettingsPage() {
             <div className="p-8">
               <h2 className="text-2xl font-bold text-white mb-6">Application Settings</h2>
               <form onSubmit={saveApp} className="space-y-6 max-w-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-400 mb-2">App Logo URL</label>
+                    <input
+                      type="url"
+                      placeholder="https://example.com/logo.png"
+                      value={appSettings.logo_url || ""}
+                      onChange={(e) => setAppSettings({ ...appSettings, logo_url: e.target.value })}
+                      className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-purple-500/50 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-400 mb-2">App Status</label>
+                    <select
+                      value={appSettings.is_active ? "active" : "maintenance"}
+                      onChange={(e) => setAppSettings({ ...appSettings, is_active: e.target.value === "active" })}
+                      className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-purple-500/50 transition-colors appearance-none"
+                    >
+                      <option value="active">Active</option>
+                      <option value="maintenance">Maintenance Mode</option>
+                    </select>
+                  </div>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-zinc-400 mb-2">App Description</label>
                   <textarea
@@ -227,31 +320,61 @@ export default function SettingsPage() {
           {activeTab === "notifications" && (
             <div className="p-8">
               <h2 className="text-2xl font-bold text-white mb-6">Notification Preferences</h2>
-              <div className="space-y-6 max-w-lg">
-                <div className="p-5 border border-white/10 rounded-xl bg-black/20">
+              <form onSubmit={saveNotifications} className="space-y-6 max-w-lg">
+                {/* Email Alerts */}
+                <div className="p-5 border border-white/10 rounded-xl bg-black/20 space-y-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <h4 className="text-white font-medium mb-1">Downtime Alerts (Email)</h4>
                       <p className="text-sm text-zinc-400">Receive an email immediately when your app goes offline.</p>
                     </div>
-                    <div className="w-12 h-6 bg-emerald-500 rounded-full relative cursor-pointer">
-                      <div className="w-4 h-4 bg-white rounded-full absolute right-1 top-1"></div>
-                    </div>
+                    <button type="button" onClick={() => setNotificationSettings(s => ({ ...s, alert_email: !s.alert_email }))}
+                      className={`w-12 h-6 rounded-full relative transition-colors ${notificationSettings.alert_email ? 'bg-emerald-500' : 'bg-zinc-700'}`}>
+                      <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all ${notificationSettings.alert_email ? 'right-1' : 'left-1'}`}></div>
+                    </button>
                   </div>
+                  {notificationSettings.alert_email && (
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-400 mb-2">Alert Email Address</label>
+                      <div className="relative">
+                        <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+                        <input type="email" placeholder="alerts@yourcompany.com"
+                          value={notificationSettings.alert_email_address}
+                          onChange={(e) => setNotificationSettings(s => ({ ...s, alert_email_address: e.target.value }))}
+                          className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 pl-10 pr-4 outline-none focus:border-emerald-500/50 transition-colors" />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
+                {/* Weekly CTO Report */}
                 <div className="p-5 border border-white/10 rounded-xl bg-black/20">
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start justify-between">
                     <div>
                       <h4 className="text-white font-medium mb-1">Weekly CTO Report</h4>
                       <p className="text-sm text-zinc-400">Receive AI-generated executive summaries every Monday.</p>
                     </div>
-                    <div className="w-12 h-6 bg-zinc-700 rounded-full relative cursor-pointer">
-                      <div className="w-4 h-4 bg-white rounded-full absolute left-1 top-1"></div>
-                    </div>
+                    <button type="button" onClick={() => setNotificationSettings(s => ({ ...s, weekly_cto_report: !s.weekly_cto_report }))}
+                      className={`w-12 h-6 rounded-full relative transition-colors ${notificationSettings.weekly_cto_report ? 'bg-emerald-500' : 'bg-zinc-700'}`}>
+                      <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all ${notificationSettings.weekly_cto_report ? 'right-1' : 'left-1'}`}></div>
+                    </button>
                   </div>
                 </div>
-              </div>
+
+                {/* Slack Integration */}
+                <div className="p-5 border border-white/10 rounded-xl bg-black/20">
+                  <h4 className="text-white font-medium mb-1">Slack Integration</h4>
+                  <p className="text-sm text-zinc-400 mb-3">Send downtime and critical alerts to a Slack channel via Webhook.</p>
+                  <input type="url" placeholder="https://hooks.slack.com/services/..."
+                    value={notificationSettings.slack_webhook}
+                    onChange={(e) => setNotificationSettings(s => ({ ...s, slack_webhook: e.target.value }))}
+                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-purple-500/50 transition-colors font-mono text-sm" />
+                </div>
+
+                <button type="submit" disabled={savingNotifications} className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50">
+                  {savingNotifications ? "Saving..." : "Save Notification Settings"}
+                </button>
+              </form>
             </div>
           )}
 
@@ -293,7 +416,7 @@ export default function SettingsPage() {
                 <div className="pt-8 border-t border-white/5">
                   <h3 className="text-lg font-semibold text-red-400 mb-2">Danger Zone</h3>
                   <p className="text-sm text-zinc-400 mb-4">Permanent actions that cannot be undone.</p>
-                  <button className="px-5 py-2.5 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 rounded-xl transition flex items-center gap-2">
+                  <button onClick={deleteApp} className="px-5 py-2.5 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 rounded-xl transition flex items-center gap-2">
                     <Trash2 size={18} /> Delete Application
                   </button>
                 </div>
