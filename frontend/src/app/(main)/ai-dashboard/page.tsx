@@ -19,7 +19,7 @@ export default function AIDashboard() {
       const res = await fetch("http://localhost:5000/api/ai-dashboard/summary", { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
-        setSummary(data.summary);
+        setSummary(typeof data.summary === 'string' ? data.summary : data.summary?.report || "");
       }
     } catch (err) {
       console.error("Failed to fetch AI summary", err);
