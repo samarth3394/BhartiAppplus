@@ -8,6 +8,8 @@ export default function InfrastructurePage() {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState("1h");
 
+  const [showGuide, setShowGuide] = useState(false);
+
   const fetchMetrics = async () => {
     setLoading(true);
     try {
@@ -47,10 +49,26 @@ export default function InfrastructurePage() {
     return (sum / metrics.length).toFixed(1);
   };
 
+  const scriptCode = `#!/bin/bash
+# BhartiAppPlus Server Metrics Ingestion Script
+
+API_KEY="YOUR_API_CLIENT_KEY"
+URL="http://YOUR_SERVER_IP:5000/api/ingest/metrics"
+
+CPU=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\\([0-9.]*\\)%* id.*/\\1/" | awk '{print 100 - $1}')
+RAM=$(free | awk '/Mem/{printf("%.2f", $3/$2 * 100)}')
+DISK=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
+
+curl -X POST $URL \\
+  -H "X-Nexvora-Key: $API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d "{\\"cpu_percent\\": $CPU, \\"ram_percent\\": $RAM, \\"disk_percent\\": $DISK}"
+`;
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col pb-12">
       {/* Header */}
-      <div className="flex items-center justify-between shrink-0">
+      <div className="flex flex-col md:flex-row md:items-center justify-between shrink-0 gap-4">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-blue-500/20 text-blue-400 rounded-xl border border-blue-500/30">
             <Server size={28} />
@@ -61,6 +79,12 @@ export default function InfrastructurePage() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setShowGuide(true)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition"
+          >
+            Integration Guide
+          </button>
           <select 
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
@@ -171,6 +195,52 @@ export default function InfrastructurePage() {
           </div>
         )}
       </div>
+
+      {/* Integration Guide Modal */}
+      {showGuide && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-white/10 flex items-center justify-between bg-zinc-950">
+              <h2 className="text-xl font-bold text-white">Server Integration Guide</h2>
+              <button onClick={() => setShowGuide(false)} className="text-zinc-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto space-y-6 text-zinc-300">
+              <p>To start monitoring your server, you need to run a small bash script via cron job that collects metrics and sends them to BhartiAppPlus.</p>
+              
+              <div className="space-y-2">
+                <h3 className="text-white font-semibold">1. Create the script file</h3>
+                <p className="text-sm">Connect to your server via SSH and create a file named <code>metrics.sh</code>:</p>
+                <pre className="bg-black p-4 rounded-xl border border-white/10 overflow-x-auto text-sm text-blue-400">
+                  <code>nano metrics.sh</code>
+                </pre>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-white font-semibold">2. Copy and Paste</h3>
+                <p className="text-sm">Paste the following code into the file. Replace <code className="text-white">YOUR_API_CLIENT_KEY</code> with your App's Client Key (found in Settings):</p>
+                <pre className="bg-black p-4 rounded-xl border border-white/10 overflow-x-auto text-sm text-zinc-300">
+                  <code>{scriptCode}</code>
+                </pre>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-white font-semibold">3. Make it executable & Set up Cron Job</h3>
+                <p className="text-sm">Make the script executable and add it to your crontab to run every 5 minutes:</p>
+                <pre className="bg-black p-4 rounded-xl border border-white/10 overflow-x-auto text-sm text-emerald-400">
+                  <code>
+                    chmod +x metrics.sh{'\n'}
+                    crontab -e{'\n'}
+                    # Add this line at the bottom:{'\n'}
+                    */5 * * * * /path/to/metrics.sh
+                  </code>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
