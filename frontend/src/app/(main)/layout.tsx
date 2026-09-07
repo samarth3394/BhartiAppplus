@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { 
     LayoutDashboard, 
     Bug, 
@@ -16,12 +16,50 @@ import {
     LogOut,
     Menu,
     X,
-    Server
+    Server,
+    ChevronDown,
+    Check
 } from "lucide-react";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [apps, setApps] = useState<any[]>([]);
+  const [currentAppId, setCurrentAppId] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    fetchApps();
+  }, []);
+
+  const fetchApps = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/apps", { credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
+        setApps(data.apps || []);
+        setCurrentAppId(data.current_app_id);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const switchApp = async (appId: string) => {
+    try {
+      setIsDropdownOpen(false);
+      const res = await fetch(`http://localhost:5000/api/apps/switch/${appId}`, {
+        method: "POST",
+        credentials: "include"
+      });
+      if (res.ok) {
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -35,6 +73,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     { name: "Roadmap", href: "/roadmap", icon: Map },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
+
+  const currentApp = apps.find(a => a.id === currentAppId);
 
   return (
     <div className="min-h-screen bg-black text-white flex">
@@ -91,11 +131,45 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Optional Top Header for contextual actions */}
-        <header className="h-16 border-b border-white/10 bg-zinc-950/50 backdrop-blur-md flex items-center justify-between px-8">
-            <div className="text-zinc-400 text-sm">
-                Workspace / <span className="text-zinc-100 font-medium">Production App</span>
+        {/* Top Header */}
+        <header className="h-16 border-b border-white/10 bg-zinc-950/50 backdrop-blur-md flex items-center justify-between px-8 relative z-30">
+            
+            {/* App Switcher Dropdown */}
+            <div className="relative">
+              <button 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center gap-2 text-zinc-400 text-sm hover:text-zinc-200 transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
+              >
+                Workspace / <span className="text-zinc-100 font-medium">{currentApp ? currentApp.name : "Select App"}</span>
+                <ChevronDown size={14} className="ml-1" />
+              </button>
+
+              {isDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)}></div>
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl py-2 z-20 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-3 py-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Your Apps</div>
+                    {apps.length === 0 ? (
+                      <div className="px-4 py-3 text-sm text-zinc-400">No apps found</div>
+                    ) : (
+                      apps.map(app => (
+                        <button
+                          key={app.id}
+                          onClick={() => switchApp(app.id)}
+                          className="w-full text-left px-4 py-2.5 text-sm hover:bg-white/5 flex items-center justify-between group transition-colors"
+                        >
+                          <span className={`${app.id === currentAppId ? 'text-blue-400 font-medium' : 'text-zinc-300 group-hover:text-white'}`}>
+                            {app.name}
+                          </span>
+                          {app.id === currentAppId && <Check size={16} className="text-blue-400" />}
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </>
+              )}
             </div>
+
             <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border border-white/20"></div>
             </div>
