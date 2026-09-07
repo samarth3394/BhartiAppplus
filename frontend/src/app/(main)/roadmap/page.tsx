@@ -56,9 +56,13 @@ export default function RoadmapPage() {
         setShowFeatureModal(false);
         setNewFeature({ title: '', description: '', status: 'planned', priority: 'medium' });
         fetchFeatures();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.detail || "Failed to suggest feature");
       }
     } catch (err) {
       console.error(err);
+      alert("An error occurred");
     }
   };
 

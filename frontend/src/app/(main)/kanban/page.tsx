@@ -113,11 +113,15 @@ export default function KanbanPage() {
       });
       if (res.ok) {
         setShowTaskModal(false);
-        setNewTask({ title: '', description: '', type: 'task', priority: 'medium' });
+        setNewTask({ title: '', description: '', type: 'task', priority: 'medium', status: 'todo' });
         fetchIssues();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.detail || "Failed to create task");
       }
     } catch (err) {
       console.error(err);
+      alert("An error occurred");
     }
   };
 

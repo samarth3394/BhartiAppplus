@@ -73,9 +73,13 @@ export default function MaintenancePage() {
         setShowTaskModal(false);
         setNewTask({ title: '', description: '', frequency: 'weekly', due_date: '' });
         fetchTasks();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.detail || "Failed to schedule task");
       }
     } catch (err) {
-      console.error("Failed to create task", err);
+      console.error(err);
+      alert("An error occurred");
     }
   };
 

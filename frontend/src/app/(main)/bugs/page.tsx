@@ -41,9 +41,13 @@ export default function BugsPage() {
         setShowBugModal(false);
         setNewBug({ title: '', description: '', severity: 'medium' });
         window.location.reload();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.detail || "Failed to create bug");
       }
     } catch (err) {
       console.error(err);
+      alert("An error occurred");
     }
   };
 
