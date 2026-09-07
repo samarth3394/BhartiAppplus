@@ -89,6 +89,18 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await fetch("http://localhost:5000/api/auth/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+      router.push("/login");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const createWorkspace = async () => {
     if (!newName.trim()) return;
     try {
@@ -181,7 +193,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </nav>
 
         <div className="p-4 border-t border-white/10">
-          <button className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors border border-transparent hover:border-red-500/20">
+          <button onClick={handleSignOut} className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors border border-transparent hover:border-red-500/20">
             <LogOut size={18} />
             Sign out
           </button>

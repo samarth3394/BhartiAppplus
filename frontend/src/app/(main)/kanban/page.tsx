@@ -25,6 +25,8 @@ export default function KanbanPage() {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const [draggedIssueId, setDraggedIssueId] = useState<string | null>(null);
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [newTask, setNewTask] = useState({ title: '', description: '', type: 'task', priority: 'medium' });
 
   const fetchIssues = async () => {
     try {
@@ -100,6 +102,25 @@ export default function KanbanPage() {
     }
   };
 
+  const handleCreateTask = async () => {
+    if (!newTask.title.trim()) return;
+    try {
+      const res = await fetch("http://localhost:5000/api/kanban/issues", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(newTask)
+      });
+      if (res.ok) {
+        setShowTaskModal(false);
+        setNewTask({ title: '', description: '', type: 'task', priority: 'medium' });
+        fetchIssues();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "critical": return "text-red-400 bg-red-400/10 border-red-400/20";
@@ -136,15 +157,12 @@ export default function KanbanPage() {
           </div>
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white mb-1">Kanban Board</h1>
-            <p className="text-zinc-400">Manage tasks, sprints, and product roadmap.</p>
+            <p className="text-zinc-400">Manage tasks, features, and track progress.</p>
           </div>
         </div>
-        <button 
-          onClick={createPlaceholderIssue}
-          className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]"
-        >
+        <button onClick={() => setShowTaskModal(true)} className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]">
           <Plus size={18} />
-          New Issue
+          Add Task
         </button>
       </div>
 
@@ -227,6 +245,67 @@ export default function KanbanPage() {
           </div>
         ))}
       </div>
+
+      {showTaskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+            <h2 className="text-xl font-bold text-white mb-6">Create New Task</h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Title</label>
+                <input 
+                  type="text" 
+                  placeholder="Task title"
+                  value={newTask.title}
+                  onChange={e => setNewTask({...newTask, title: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Description</label>
+                <textarea 
+                  rows={3}
+                  placeholder="Details..."
+                  value={newTask.description}
+                  onChange={e => setNewTask({...newTask, description: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-zinc-400 mb-1">Type</label>
+                  <select 
+                    value={newTask.type}
+                    onChange={e => setNewTask({...newTask, type: e.target.value})}
+                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  >
+                    <option value="task">Task</option>
+                    <option value="bug">Bug</option>
+                    <option value="feature">Feature</option>
+                    <option value="epic">Epic</option>
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-zinc-400 mb-1">Priority</label>
+                  <select 
+                    value={newTask.priority}
+                    onChange={e => setNewTask({...newTask, priority: e.target.value})}
+                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowTaskModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+              <button onClick={handleCreateTask} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Create Task</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

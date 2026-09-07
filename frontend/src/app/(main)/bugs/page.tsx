@@ -6,6 +6,8 @@ import { Bug, Search, Plus, Filter, AlertCircle, CheckCircle2, Clock } from "luc
 export default function BugsPage() {
   const [bugs, setBugs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showBugModal, setShowBugModal] = useState(false);
+  const [newBug, setNewBug] = useState({ title: '', description: '', severity: 'medium' });
 
   useEffect(() => {
     const fetchBugs = async () => {
@@ -25,6 +27,25 @@ export default function BugsPage() {
     };
     fetchBugs();
   }, []);
+
+  const handleCreateBug = async () => {
+    if (!newBug.title.trim()) return;
+    try {
+      const res = await fetch("http://localhost:5000/api/bugs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(newBug)
+      });
+      if (res.ok) {
+        setShowBugModal(false);
+        setNewBug({ title: '', description: '', severity: 'medium' });
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -53,7 +74,7 @@ export default function BugsPage() {
           <h1 className="text-3xl font-bold tracking-tight text-white mb-1">Issues & Bugs</h1>
           <p className="text-zinc-400">Track and manage application errors and user reports.</p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+        <button onClick={() => setShowBugModal(true)} className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]">
           <Plus size={18} />
           Report Bug
         </button>
@@ -134,6 +155,53 @@ export default function BugsPage() {
           </div>
         )}
       </div>
+
+      {showBugModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+            <h2 className="text-xl font-bold text-white mb-6">Report New Bug</h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Bug Title</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. App crashes on login"
+                  value={newBug.title}
+                  onChange={e => setNewBug({...newBug, title: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Description</label>
+                <textarea 
+                  rows={3}
+                  placeholder="Steps to reproduce..."
+                  value={newBug.description}
+                  onChange={e => setNewBug({...newBug, description: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Severity</label>
+                <select 
+                  value={newBug.severity}
+                  onChange={e => setNewBug({...newBug, severity: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowBugModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+              <button onClick={handleCreateBug} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Report Bug</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

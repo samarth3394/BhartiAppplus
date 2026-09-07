@@ -21,8 +21,12 @@ type TaskCategories = {
 };
 
 export default function MaintenancePage() {
-  const [tasks, setTasks] = useState<TaskCategories>({ overdue: [], today: [], upcoming: [] });
+  const [tasks, setTasks] = useState<{ overdue: MaintenanceTask[], today: MaintenanceTask[], upcoming: MaintenanceTask[] }>({
+    overdue: [], today: [], upcoming: []
+  });
   const [loading, setLoading] = useState(true);
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [newTask, setNewTask] = useState({ title: '', description: '', frequency: 'weekly', due_date: '' });
 
   const fetchTasks = async () => {
     try {
@@ -56,15 +60,20 @@ export default function MaintenancePage() {
     }
   };
 
-  const createPlaceholderTask = async () => {
+  const handleCreateTask = async () => {
+    if (!newTask.title.trim()) return;
     try {
       const res = await fetch("http://localhost:5000/api/maintenance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ title: "New Maintenance Task", description: "Perform routine check", frequency: "weekly" })
+        body: JSON.stringify(newTask)
       });
-      if (res.ok) fetchTasks();
+      if (res.ok) {
+        setShowTaskModal(false);
+        setNewTask({ title: '', description: '', frequency: 'weekly', due_date: '' });
+        fetchTasks();
+      }
     } catch (err) {
       console.error("Failed to create task", err);
     }
@@ -125,11 +134,11 @@ export default function MaintenancePage() {
           </div>
         </div>
         <button 
-          onClick={createPlaceholderTask}
+          onClick={() => setShowTaskModal(true)}
           className="flex items-center gap-2 bg-purple-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-purple-500 transition shadow-[0_0_20px_rgba(168,85,247,0.3)]"
         >
           <Plus size={18} />
-          New Task
+          Schedule Task
         </button>
       </div>
 
@@ -180,6 +189,64 @@ export default function MaintenancePage() {
           )}
         </div>
       </div>
+
+      {showTaskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+            <h2 className="text-xl font-bold text-white mb-6">Schedule Maintenance Task</h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Title</label>
+                <input 
+                  type="text" 
+                  placeholder="Task title"
+                  value={newTask.title}
+                  onChange={e => setNewTask({...newTask, title: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-purple-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Description</label>
+                <textarea 
+                  rows={3}
+                  placeholder="Details..."
+                  value={newTask.description}
+                  onChange={e => setNewTask({...newTask, description: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-purple-500"
+                />
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-zinc-400 mb-1">Frequency</label>
+                  <select 
+                    value={newTask.frequency}
+                    onChange={e => setNewTask({...newTask, frequency: e.target.value})}
+                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-purple-500"
+                  >
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-zinc-400 mb-1">Due Date (Optional)</label>
+                  <input 
+                    type="date"
+                    value={newTask.due_date}
+                    onChange={e => setNewTask({...newTask, due_date: e.target.value})}
+                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-purple-500"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowTaskModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+              <button onClick={handleCreateTask} className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-medium transition">Create Task</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

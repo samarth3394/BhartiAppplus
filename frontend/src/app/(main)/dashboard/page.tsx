@@ -131,8 +131,8 @@ export default function Dashboard() {
             <p className="text-zinc-400">Monitor the health and performance of {stats.app.name}</p>
         </div>
         <div className="flex gap-3">
-            <button className="px-4 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white font-medium hover:bg-zinc-800 transition">View Logs</button>
-            <button className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.4)]">Analyze with AI</button>
+            <button onClick={() => router.push('/infrastructure')} className="px-4 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white font-medium hover:bg-zinc-800 transition">View Logs</button>
+            <button onClick={() => router.push('/ai-dashboard')} className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.4)]">Analyze with AI</button>
         </div>
       </div>
       

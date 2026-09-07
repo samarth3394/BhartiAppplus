@@ -22,6 +22,8 @@ const STATUS_COLS = [
 export default function RoadmapPage() {
   const [features, setFeatures] = useState<RoadmapFeature[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showFeatureModal, setShowFeatureModal] = useState(false);
+  const [newFeature, setNewFeature] = useState({ title: '', description: '', status: 'planned', priority: 'medium' });
 
   const fetchFeatures = async () => {
     try {
@@ -41,20 +43,20 @@ export default function RoadmapPage() {
     fetchFeatures();
   }, []);
 
-  const createPlaceholderFeature = async () => {
+  const handleCreateFeature = async () => {
+    if (!newFeature.title.trim()) return;
     try {
       const res = await fetch("http://localhost:5000/api/roadmap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          title: "New Epic Feature",
-          description: "Describe what this feature will accomplish.",
-          status: "planned",
-          priority: "high"
-        })
+        body: JSON.stringify(newFeature)
       });
-      if (res.ok) fetchFeatures();
+      if (res.ok) {
+        setShowFeatureModal(false);
+        setNewFeature({ title: '', description: '', status: 'planned', priority: 'medium' });
+        fetchFeatures();
+      }
     } catch (err) {
       console.error(err);
     }
@@ -105,11 +107,11 @@ export default function RoadmapPage() {
           </div>
         </div>
         <button 
-          onClick={createPlaceholderFeature}
-          className="flex items-center gap-2 bg-purple-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-purple-500 transition shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+          onClick={() => setShowFeatureModal(true)}
+          className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]"
         >
           <Plus size={18} />
-          New Feature
+          Suggest Feature
         </button>
       </div>
 
@@ -178,6 +180,67 @@ export default function RoadmapPage() {
           );
         })}
       </div>
+
+      {showFeatureModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+            <h2 className="text-xl font-bold text-white mb-6">Suggest Roadmap Feature</h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Title</label>
+                <input 
+                  type="text" 
+                  placeholder="Feature title"
+                  value={newFeature.title}
+                  onChange={e => setNewFeature({...newFeature, title: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-400 mb-1">Description</label>
+                <textarea 
+                  rows={3}
+                  placeholder="Details..."
+                  value={newFeature.description}
+                  onChange={e => setNewFeature({...newFeature, description: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                />
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-zinc-400 mb-1">Status</label>
+                  <select 
+                    value={newFeature.status}
+                    onChange={e => setNewFeature({...newFeature, status: e.target.value})}
+                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  >
+                    <option value="planned">Planned Ideas</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Launched</option>
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-zinc-400 mb-1">Priority</label>
+                  <select 
+                    value={newFeature.priority}
+                    onChange={e => setNewFeature({...newFeature, priority: e.target.value})}
+                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowFeatureModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+              <button onClick={handleCreateFeature} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Suggest Feature</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
