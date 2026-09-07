@@ -9,6 +9,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [appName, setAppName] = useState("");
+  const [appUrl, setAppUrl] = useState("");
   const router = useRouter();
 
   const [activities, setActivities] = useState<any[]>([]);
@@ -61,7 +62,7 @@ export default function Dashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name: appName, workspace_id: "personal" })
+        body: JSON.stringify({ name: appName, url: appUrl, workspace_id: "personal" })
       });
       if (res.ok) {
         window.location.reload();
@@ -92,14 +93,21 @@ export default function Dashboard() {
           <div className="w-full max-w-sm mt-4 p-6 bg-zinc-900 border border-white/10 rounded-2xl animate-in zoom-in-95">
              <input 
                 type="text"
-                placeholder="My Awesome App"
+                placeholder="App Name (e.g. Bharti AI)"
                 value={appName}
                 onChange={(e) => setAppName(e.target.value)}
                 className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-4 outline-none focus:border-blue-500"
                 autoFocus
              />
+             <input 
+                type="url"
+                placeholder="App URL (e.g. https://myapp.com) - Optional"
+                value={appUrl}
+                onChange={(e) => setAppUrl(e.target.value)}
+                className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-4 outline-none focus:border-blue-500"
+             />
              <div className="flex gap-3 justify-end">
-                <button onClick={() => setShowCreate(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+                <button onClick={() => { setShowCreate(false); setAppUrl(""); }} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
                 <button onClick={createApp} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Create App</button>
              </div>
           </div>

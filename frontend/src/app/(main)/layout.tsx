@@ -39,6 +39,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const [showAppModal, setShowAppModal] = useState(false);
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [newName, setNewName] = useState("");
+  const [newUrl, setNewUrl] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -110,7 +111,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name: newName, workspace_id: currentWorkspaceId || "personal" })
+        body: JSON.stringify({ name: newName, url: newUrl, workspace_id: currentWorkspaceId || "personal" })
       });
       if (res.ok) window.location.reload();
     } catch (err) {
@@ -295,13 +296,20 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <h2 className="text-xl font-bold text-white mb-4">Create New App</h2>
                 <input 
                   type="text" 
-                  placeholder="App Name"
+                  placeholder="App Name (e.g. My Awesome Startup)"
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-4 outline-none focus:border-blue-500"
+                />
+                <input 
+                  type="url" 
+                  placeholder="App URL (e.g. https://myapp.com) - Optional"
+                  value={newUrl}
+                  onChange={e => setNewUrl(e.target.value)}
                   className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-6 outline-none focus:border-blue-500"
                 />
                 <div className="flex justify-end gap-3">
-                  <button onClick={() => setShowAppModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+                  <button onClick={() => { setShowAppModal(false); setNewUrl(""); }} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
                   <button onClick={createApp} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Create App</button>
                 </div>
               </div>
