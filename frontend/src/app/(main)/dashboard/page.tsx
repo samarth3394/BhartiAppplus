@@ -11,6 +11,9 @@ export default function Dashboard() {
   const [appName, setAppName] = useState("");
   const router = useRouter();
 
+  const [activities, setActivities] = useState<any[]>([]);
+  const [metrics, setMetrics] = useState<any[]>([]);
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -25,6 +28,22 @@ export default function Dashboard() {
 
         const data = await res.json();
         setStats(data);
+        
+        // Fetch activity feed
+        if (data.has_app) {
+          const actRes = await fetch("http://localhost:5000/api/dashboard/activity?limit=5", { credentials: "include" });
+          if (actRes.ok) {
+            const actData = await actRes.json();
+            setActivities(actData.activities || []);
+          }
+
+          // Fetch metrics for performance graph
+          const metRes = await fetch("http://localhost:5000/api/server/metrics?period=24h", { credentials: "include" });
+          if (metRes.ok) {
+            const metData = await metRes.json();
+            setMetrics(metData.metrics || []);
+          }
+        }
       } catch (err) {
         console.error("Failed to fetch dashboard stats", err);
       } finally {
@@ -123,7 +142,7 @@ export default function Dashboard() {
               <h3 className="text-zinc-300 font-medium">Health Score</h3>
           </div>
           <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.health_score.total}</p>
+              <p className="text-5xl font-bold text-white tracking-tighter">{stats.health_score?.total || 100}</p>
               <span className="text-zinc-500 font-medium mb-1">/100</span>
           </div>
         </div>
@@ -140,7 +159,7 @@ export default function Dashboard() {
               <h3 className="text-zinc-300 font-medium">Active Issues</h3>
           </div>
           <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.bugs.active}</p>
+              <p className="text-5xl font-bold text-white tracking-tighter">{stats.bugs?.active || 0}</p>
               <span className="text-red-400 font-medium mb-2 text-sm flex items-center gap-1">
                   <TrendingUp size={14}/> Needs Attention
               </span>
@@ -159,7 +178,7 @@ export default function Dashboard() {
               <h3 className="text-zinc-300 font-medium">Uptime (24h)</h3>
           </div>
           <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.uptime.percentage_24h}</p>
+              <p className="text-5xl font-bold text-white tracking-tighter">{stats.uptime?.percentage_24h || 100}</p>
               <span className="text-zinc-500 font-medium mb-1">%</span>
           </div>
         </div>
@@ -176,7 +195,7 @@ export default function Dashboard() {
               <h3 className="text-zinc-300 font-medium">Maintenance</h3>
           </div>
           <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.maintenance.total_tasks}</p>
+              <p className="text-5xl font-bold text-white tracking-tighter">{stats.maintenance?.total_tasks || 0}</p>
               <span className="text-zinc-500 font-medium mb-1">Tasks</span>
           </div>
         </div>
@@ -184,16 +203,53 @@ export default function Dashboard() {
       
       {/* Charts / Activity Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-96 flex flex-col">
+        <div className="lg:col-span-2 bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px] flex flex-col">
             <h3 className="text-lg font-semibold text-white mb-4">System Performance</h3>
-            <div className="flex-1 border border-white/5 rounded-xl border-dashed flex items-center justify-center text-zinc-600">
-                Performance Graph Placeholder
+            <div className="flex-1 flex items-center justify-center text-zinc-500">
+                {metrics.length === 0 ? (
+                    <div className="text-center">
+                        <Activity className="mx-auto mb-3 opacity-20" size={48} />
+                        <p>Waiting for metrics data...</p>
+                        <p className="text-sm mt-2 opacity-50">Integrate the infrastructure agent to see live data.</p>
+                    </div>
+                ) : (
+                    <div className="w-full h-full text-blue-400 flex items-center justify-center border border-white/5 rounded-xl border-dashed">
+                        {/* We'll use Recharts here in future, for now show stats */}
+                        <p>Data received! {metrics.length} data points collected in the last 24h.</p>
+                    </div>
+                )}
             </div>
         </div>
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-96 flex flex-col">
-            <h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
-            <div className="flex-1 border border-white/5 rounded-xl border-dashed flex items-center justify-center text-zinc-600">
-                Activity Feed Placeholder
+        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px] flex flex-col">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                Recent Activity
+                <span className="bg-white/10 text-xs px-2 py-1 rounded-full">{activities.length}</span>
+            </h3>
+            <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+                {activities.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center text-zinc-600 text-sm">
+                        <Clock className="mb-2 opacity-20" size={32} />
+                        No recent activity
+                    </div>
+                ) : (
+                    activities.map((act) => (
+                        <div key={act.id} className="flex gap-4 group">
+                            <div className="flex flex-col items-center">
+                                <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
+                                <div className="w-[1px] h-full bg-white/10 my-1 group-last:hidden"></div>
+                            </div>
+                            <div className="flex-1 pb-4">
+                                <p className="text-sm text-zinc-200">{act.action}</p>
+                                <div className="flex justify-between items-center mt-1">
+                                    <p className="text-xs text-zinc-500">{act.user_name || "System"}</p>
+                                    <p className="text-xs text-zinc-600">
+                                        {new Date(act.created_at).toLocaleDateString()}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
       </div>
