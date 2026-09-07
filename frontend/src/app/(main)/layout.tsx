@@ -110,9 +110,15 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         credentials: "include",
         body: JSON.stringify({ name: newName })
       });
-      if (res.ok) window.location.reload();
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.detail || "Failed to create workspace");
+      }
     } catch (err) {
       console.error(err);
+      alert("An error occurred");
     }
   };
 
@@ -125,9 +131,15 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         credentials: "include",
         body: JSON.stringify({ name: newName, url: newUrl, workspace_id: currentWorkspaceId || "personal" })
       });
-      if (res.ok) window.location.reload();
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.detail || "Failed to create app");
+      }
     } catch (err) {
       console.error(err);
+      alert("An error occurred");
     }
   };
 
