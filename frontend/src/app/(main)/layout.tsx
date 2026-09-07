@@ -15,7 +15,8 @@ import {
     Users,
     LogOut,
     Menu,
-    X
+    X,
+    Server
 } from "lucide-react";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -28,6 +29,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     { name: "Issues & Bugs", href: "/bugs", icon: Bug },
     { name: "Kanban", href: "/kanban", icon: KanbanSquare },
     { name: "Uptime", href: "/uptime", icon: Activity },
+    { name: "Infrastructure", href: "/infrastructure", icon: Server },
     { name: "Maintenance", href: "/maintenance", icon: Wrench },
     { name: "Teams", href: "/teams", icon: Users },
     { name: "Roadmap", href: "/roadmap", icon: Map },

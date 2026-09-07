@@ -11,9 +11,7 @@ from dependencies import get_db, get_current_user
 router = APIRouter(tags=["server"])
 templates = Jinja2Templates(directory="templates")
 
-@router.get("/server", response_class=HTMLResponse)
-async def server_page(request: Request, user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(request=request, name="server.html")
+# Removed HTML Route
 
 
 @router.get("/api/server/metrics")
