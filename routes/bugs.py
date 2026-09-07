@@ -36,29 +36,10 @@ class CommentCreateRequest(BaseModel):
     content: str
 
 
-# --- Helper ---
-def _check_permission(db: Session, app_id: str, current_user_id: str, min_role: RoleEnum = RoleEnum.developer):
-    app = db.query(App).filter(App.id == app_id).first()
-    if not app:
-        raise HTTPException(status_code=404, detail='App not found')
-
-    if app.owner_id == current_user_id:
-        return  # Owner has full access
-
-    member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == current_user_id).first()
-    if not member:
-        raise HTTPException(status_code=403, detail='You are not a member of this app')
-
-    role_hierarchy = {RoleEnum.admin: 5, RoleEnum.project_manager: 4, RoleEnum.developer: 3, RoleEnum.tester: 2, RoleEnum.viewer: 1}
-    if role_hierarchy.get(member.role, 0) < role_hierarchy.get(min_role, 0):
-        raise HTTPException(status_code=403, detail=f'Insufficient permissions. Required: {min_role.value}')
-
-
-# Removed HTML Route
-
 # --- APIs ---
 @router.get("/api/bugs")
 async def list_bugs(request: Request, status: Optional[str] = None, severity: Optional[str] = None, assignee: Optional[str] = None, search: Optional[str] = None, sort: str = "newest", user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import get_user_app_role
     app_id = request.cookies.get('current_app_id')
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
@@ -89,16 +70,18 @@ async def list_bugs(request: Request, status: Optional[str] = None, severity: Op
         query = query.order_by(Bug.created_at.desc())
 
     bugs = query.all()
-    return {'bugs': [b.to_dict() for b in bugs]}
+    role = get_user_app_role(db, user, app_id)
+    return {'bugs': [b.to_dict() for b in bugs], 'user_role': role}
 
 
 @router.post("/api/bugs", status_code=status.HTTP_201_CREATED)
 async def create_bug(data: BugCreateRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
     app_id = request.cookies.get('current_app_id')
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
 
-    _check_permission(db, app_id, user.id, min_role=RoleEnum.tester)
+    check_app_role(db, user, app_id, [RoleEnum.admin, RoleEnum.project_manager, RoleEnum.developer, RoleEnum.tester])
 
     title = data.title.strip()
     if not title:
@@ -147,15 +130,17 @@ async def create_bug(data: BugCreateRequest, request: Request, user: User = Depe
 
 @router.put("/api/bugs/{bug_id}")
 async def update_bug(bug_id: str, data: BugUpdateRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
     app_id = request.cookies.get('current_app_id')
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
 
-    _check_permission(db, app_id, user.id, min_role=RoleEnum.developer)
+    check_app_role(db, user, app_id, [RoleEnum.admin, RoleEnum.project_manager, RoleEnum.developer, RoleEnum.tester])
 
     bug = db.query(Bug).filter(Bug.id == bug_id, Bug.app_id == app_id).first()
     if not bug:
         raise HTTPException(status_code=404, detail="Bug not found")
+
 
     changes = []
     if data.title is not None and data.title != bug.title:
@@ -220,11 +205,12 @@ async def update_bug(bug_id: str, data: BugUpdateRequest, request: Request, user
 
 @router.delete("/api/bugs/{bug_id}")
 async def delete_bug(bug_id: str, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
     app_id = request.cookies.get('current_app_id')
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
 
-    _check_permission(db, app_id, user.id, min_role=RoleEnum.admin)
+    check_app_role(db, user, app_id, [RoleEnum.admin, RoleEnum.project_manager])
 
     bug = db.query(Bug).filter(Bug.id == bug_id, Bug.app_id == app_id).first()
     if not bug:

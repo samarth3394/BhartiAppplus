@@ -24,6 +24,7 @@ export default function RoadmapPage() {
   const [loading, setLoading] = useState(true);
   const [showFeatureModal, setShowFeatureModal] = useState(false);
   const [newFeature, setNewFeature] = useState({ title: '', description: '', status: 'planned', priority: 'medium' });
+  const [userRole, setUserRole] = useState<string>("viewer");
 
   const fetchFeatures = async () => {
     try {
@@ -31,6 +32,7 @@ export default function RoadmapPage() {
       if (res.ok) {
         const data = await res.json();
         setFeatures(data.features || []);
+        setUserRole(data.user_role || "viewer");
       }
     } catch (err) {
       console.error("Failed to fetch roadmap", err);
@@ -43,7 +45,10 @@ export default function RoadmapPage() {
     fetchFeatures();
   }, []);
 
+  const canEdit = ["admin", "project_manager", "developer"].includes(userRole);
+
   const handleCreateFeature = async () => {
+    if (!canEdit) return;
     if (!newFeature.title.trim()) return;
     try {
       const res = await fetch("http://localhost:5000/api/roadmap", {
@@ -110,13 +115,15 @@ export default function RoadmapPage() {
             <p className="text-zinc-400">Plan epics, track major features, and share vision.</p>
           </div>
         </div>
-        <button 
-          onClick={() => setShowFeatureModal(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]"
-        >
-          <Plus size={18} />
-          Suggest Feature
-        </button>
+        {canEdit && (
+          <button 
+            onClick={() => setShowFeatureModal(true)}
+            className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+          >
+            <Plus size={18} />
+            Suggest Feature
+          </button>
+        )}
       </div>
 
       <div className="flex-1 grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">

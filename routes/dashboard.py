@@ -7,7 +7,8 @@ from typing import Optional
 
 from models import (
     App, AppMember, Bug, BugStatusEnum, SeverityEnum,
-    MaintenanceTask, UptimeCheck, ActivityLog, UptimeIncident, User
+    MaintenanceTask, UptimeCheck, ActivityLog, UptimeIncident, User,
+    Workspace, WorkspaceMember
 )
 from services.health_score import calculate_health_score, get_uptime_percentage
 from dependencies import get_db, get_current_user, get_current_user_optional
@@ -39,8 +40,21 @@ async def dashboard_stats(request: Request, user: User = Depends(get_current_use
     app = _get_current_app(db, user, current_app_id)
     
     if not app:
+        owned = db.query(Workspace).filter(Workspace.owner_id == user.id).all()
+        member_workspaces = db.query(Workspace).join(WorkspaceMember).filter(WorkspaceMember.user_id == user.id).all()
+        
+        all_workspaces = {}
+        for w in owned:
+            all_workspaces[w.id] = w.to_dict()
+        for w in member_workspaces:
+            all_workspaces[w.id] = w.to_dict()
+            
+        workspaces_list = list(all_workspaces.values())
+        
         return {
             'has_app': False,
+            'has_workspace': len(workspaces_list) > 0,
+            'workspaces': workspaces_list,
             'message': 'No app found. Create your first app to get started.'
         }
 
@@ -95,8 +109,22 @@ async def dashboard_stats(request: Request, user: User = Depends(get_current_use
         UptimeIncident.resolved_at == None
     ).count()
 
+    # Determine current user role
+    current_user_role = 'viewer'
+    if app.owner_id == user.id:
+        current_user_role = 'admin'
+    else:
+        wm = db.query(WorkspaceMember).filter(WorkspaceMember.workspace_id == app.workspace_id, WorkspaceMember.user_id == user.id).first()
+        if wm:
+            current_user_role = wm.role.value
+        else:
+            am = db.query(AppMember).filter(AppMember.app_id == app.id, AppMember.user_id == user.id).first()
+            if am:
+                current_user_role = am.role.value
+
     return {
         'has_app': True,
+        'current_user_role': current_user_role,
         'app': {
             'id': app.id,
             'name': app.name,

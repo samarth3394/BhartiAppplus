@@ -8,27 +8,33 @@ export default function BugsPage() {
   const [loading, setLoading] = useState(true);
   const [showBugModal, setShowBugModal] = useState(false);
   const [newBug, setNewBug] = useState({ title: '', description: '', severity: 'medium' });
+  const [userRole, setUserRole] = useState<string>("viewer");
+
+  const fetchBugs = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/bugs", {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setBugs(data.bugs || []);
+        setUserRole(data.user_role || "viewer");
+      }
+    } catch (err) {
+      console.error("Failed to fetch bugs", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBugs = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/bugs", {
-          credentials: "include",
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setBugs(data.bugs || []);
-        }
-      } catch (err) {
-        console.error("Failed to fetch bugs", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchBugs();
   }, []);
 
+  const canEdit = ["admin", "project_manager", "developer", "tester"].includes(userRole);
+
   const handleCreateBug = async () => {
+    if (!canEdit) return;
     if (!newBug.title.trim()) return;
     try {
       const res = await fetch("http://localhost:5000/api/bugs", {
@@ -83,10 +89,12 @@ export default function BugsPage() {
             <p className="text-zinc-400">Track and manage application errors and user reports.</p>
           </div>
         </div>
-        <button onClick={() => setShowBugModal(true)} className="flex items-center gap-2 bg-red-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-red-500 transition shadow-lg shadow-red-500/20">
-          <Plus size={18} />
-          Report Bug
-        </button>
+        {canEdit && (
+          <button onClick={() => setShowBugModal(true)} className="flex items-center gap-2 bg-red-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-red-500 transition shadow-lg shadow-red-500/20">
+            <Plus size={18} />
+            Report Bug
+          </button>
+        )}
       </div>
 
       {/* Toolbar */}

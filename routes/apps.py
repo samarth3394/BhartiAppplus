@@ -67,6 +67,7 @@ async def list_apps(request: Request, user: User = Depends(get_current_user), db
 
 @router.post("/api/apps", status_code=status.HTTP_201_CREATED)
 async def create_app(data: AppCreateRequest, request: Request, response: Response, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_workspace_role
     name = data.name.strip()
     if not name:
         raise HTTPException(status_code=400, detail="App name is required")
@@ -75,6 +76,8 @@ async def create_app(data: AppCreateRequest, request: Request, response: Respons
     workspace_id = data.workspace_id if data.workspace_id else request.cookies.get('current_workspace_id')
     if not workspace_id or workspace_id == "personal":
         workspace_id = None
+    else:
+        check_workspace_role(db, user, workspace_id, [RoleEnum.admin, RoleEnum.project_manager])
 
     new_app = App(
         name=name,
@@ -103,15 +106,12 @@ async def create_app(data: AppCreateRequest, request: Request, response: Respons
 
 @router.put("/api/apps/{app_id}")
 async def update_app(app_id: str, data: AppUpdateRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
     app_obj = db.query(App).filter(App.id == app_id).first()
     if not app_obj:
         raise HTTPException(status_code=404, detail="App not found")
 
-    is_owner = (app_obj.owner_id == user.id)
-    if not is_owner:
-        member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == user.id).first()
-        if not member or member.role != RoleEnum.admin:
-            raise HTTPException(status_code=403, detail="Only the owner or an admin can update app settings")
+    check_app_role(db, user, app_id, [RoleEnum.admin])
 
     if data.name is not None:
         app_obj.name = data.name.strip()
@@ -142,12 +142,12 @@ async def update_app(app_id: str, data: AppUpdateRequest, user: User = Depends(g
 
 @router.delete("/api/apps/{app_id}")
 async def delete_app(app_id: str, request: Request, response: Response, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
     app_obj = db.query(App).filter(App.id == app_id).first()
     if not app_obj:
         raise HTTPException(status_code=404, detail="App not found")
 
-    if app_obj.owner_id != user.id:
-        raise HTTPException(status_code=403, detail="Only the owner can delete an app")
+    check_app_role(db, user, app_id, [RoleEnum.admin])
 
     app_name = app_obj.name
     db.delete(app_obj)

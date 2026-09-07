@@ -31,23 +31,6 @@ class FeatureUpdateRequest(BaseModel):
     due_date: Optional[str] = None
 
 
-def _check_permission(db: Session, app_id: str, current_user_id: str, min_role: RoleEnum = RoleEnum.developer):
-    app = db.query(App).filter(App.id == app_id).first()
-    if not app:
-        raise HTTPException(status_code=404, detail="App not found")
-
-    if app.owner_id == current_user_id:
-        return
-
-    member = db.query(AppMember).filter(AppMember.app_id == app_id, AppMember.user_id == current_user_id).first()
-    if not member:
-        raise HTTPException(status_code=403, detail="You are not a member of this app")
-
-    role_hierarchy = {RoleEnum.admin: 5, RoleEnum.project_manager: 4, RoleEnum.developer: 3, RoleEnum.tester: 2, RoleEnum.viewer: 1}
-    if role_hierarchy.get(member.role, 0) < role_hierarchy.get(min_role, 0):
-        raise HTTPException(status_code=403, detail=f"Insufficient permissions. Required: {min_role.value}")
-
-
 def parse_dt(dt_str):
     if not dt_str: 
         return None
@@ -61,6 +44,7 @@ def parse_dt(dt_str):
 
 @router.get("/api/roadmap")
 async def list_features(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import get_user_app_role
     app_id = request.cookies.get('current_app_id')
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
@@ -69,16 +53,19 @@ async def list_features(request: Request, user: User = Depends(get_current_user)
         RoadmapFeature.created_at.desc()
     ).all()
 
-    return {'features': [f.to_dict() for f in features]}
+    role = get_user_app_role(db, user, app_id)
+
+    return {'features': [f.to_dict() for f in features], 'user_role': role}
 
 
 @router.post("/api/roadmap", status_code=status.HTTP_201_CREATED)
 async def create_feature(data: FeatureCreateRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
     app_id = request.cookies.get('current_app_id')
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
 
-    _check_permission(db, app_id, user.id, min_role=RoleEnum.developer)
+    check_app_role(db, user, app_id, [RoleEnum.admin, RoleEnum.project_manager])
 
     title = data.title.strip()
     if not title:
@@ -111,11 +98,12 @@ async def create_feature(data: FeatureCreateRequest, request: Request, user: Use
 
 @router.put("/api/roadmap/{feature_id}")
 async def update_feature(feature_id: str, data: FeatureUpdateRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
     app_id = request.cookies.get('current_app_id')
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
 
-    _check_permission(db, app_id, user.id, min_role=RoleEnum.developer)
+    check_app_role(db, user, app_id, [RoleEnum.admin, RoleEnum.project_manager])
 
     feature = db.query(RoadmapFeature).filter(RoadmapFeature.id == feature_id, RoadmapFeature.app_id == app_id).first()
     if not feature:
@@ -151,11 +139,12 @@ async def update_feature(feature_id: str, data: FeatureUpdateRequest, request: R
 
 @router.delete("/api/roadmap/{feature_id}")
 async def delete_feature(feature_id: str, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
     app_id = request.cookies.get('current_app_id')
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
 
-    _check_permission(db, app_id, user.id, min_role=RoleEnum.admin)
+    check_app_role(db, user, app_id, [RoleEnum.admin, RoleEnum.project_manager])
 
     feature = db.query(RoadmapFeature).filter(RoadmapFeature.id == feature_id, RoadmapFeature.app_id == app_id).first()
     if not feature:
@@ -168,6 +157,7 @@ async def delete_feature(feature_id: str, request: Request, user: User = Depends
         entity_type='roadmap',
         entity_id=feature.id,
     )
+
     db.add(log)
     db.delete(feature)
     db.commit()

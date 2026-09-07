@@ -226,8 +226,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center gap-2 text-zinc-300 text-sm hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/10"
               >
-                {currentWorkspace ? currentWorkspace.name : "Personal"} / <span className="font-bold text-white">{currentApp ? currentApp.name : "Select App"}</span>
-                <ChevronDown size={14} className="ml-2 text-zinc-500" />
+                {currentWorkspace ? currentWorkspace.name : "Personal"} / <span className="font-bold text-white mr-1">{currentApp ? currentApp.name : "Select App"}</span>
+                {currentApp && currentApp.role && (
+                  <span className="px-1.5 py-0.5 rounded text-[10px] bg-violet-500/20 text-violet-300 border border-violet-500/30 uppercase tracking-wider font-semibold">
+                    {currentApp.role}
+                  </span>
+                )}
+                <ChevronDown size={14} className="ml-1 text-zinc-500" />
               </button>
 
               {isDropdownOpen && (

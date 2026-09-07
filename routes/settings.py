@@ -143,30 +143,38 @@ async def change_password(data: PasswordChangeRequest, user: User = Depends(get_
 
 @router.get("/api/settings/app")
 async def get_app_settings(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import get_user_app_role
     app_id = request.cookies.get("current_app_id")
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
     app = db.query(App).filter(App.id == app_id).first()
     if not app:
         raise HTTPException(status_code=404, detail="App not found")
+    
+    role = get_user_app_role(db, user, app_id)
+
     return {
         "url": app.url,
         "description": app.description,
         "settings": app.settings or {},
         "client_key": app.client_key,
+        "user_role": role,
     }
 
 
 @router.put("/api/settings/app")
 async def update_app_settings(data: AppSettingsRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
+    from models import RoleEnum
     app_id = request.cookies.get("current_app_id")
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
+    
+    check_app_role(db, user, app_id, [RoleEnum.admin])
+
     app = db.query(App).filter(App.id == app_id).first()
     if not app:
         raise HTTPException(status_code=404, detail="App not found")
-    if app.owner_id != user.id:
-        raise HTTPException(status_code=403, detail="Only the app owner can change settings")
 
     if data.url is not None:
         app.url = data.url
@@ -185,14 +193,17 @@ async def update_app_settings(data: AppSettingsRequest, request: Request, user: 
 
 @router.post("/api/settings/app/regenerate-key")
 async def regenerate_app_key(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
+    from models import RoleEnum
     app_id = request.cookies.get("current_app_id")
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
+    
+    check_app_role(db, user, app_id, [RoleEnum.admin])
+
     app = db.query(App).filter(App.id == app_id).first()
     if not app:
         raise HTTPException(status_code=404, detail="App not found")
-    if app.owner_id != user.id:
-        raise HTTPException(status_code=403, detail="Only the app owner can regenerate the API key")
     
     app.client_key = generate_uuid()
     db.commit()
@@ -203,14 +214,17 @@ async def regenerate_app_key(request: Request, user: User = Depends(get_current_
 
 @router.post("/api/settings/integrations/github")
 async def update_github_settings(data: GitHubSettingsRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from dependencies import check_app_role
+    from models import RoleEnum
     app_id = request.cookies.get("current_app_id")
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
+    
+    check_app_role(db, user, app_id, [RoleEnum.admin])
+
     app = db.query(App).filter(App.id == app_id).first()
     if not app:
         raise HTTPException(status_code=404, detail="App not found")
-    if app.owner_id != user.id:
-        raise HTTPException(status_code=403, detail="Only the app owner can update integrations")
 
     settings = app.settings or {}
     if data.github_repo is not None:
@@ -231,9 +245,13 @@ async def sync_github_issues(request: Request, user: User = Depends(get_current_
     app_id = request.cookies.get("current_app_id")
     if not app_id:
         raise HTTPException(status_code=400, detail="No app selected")
+    from dependencies import check_app_role
+    from models import RoleEnum as RE
+    check_app_role(db, user, app_id, [RE.admin])
+
     app = db.query(App).filter(App.id == app_id).first()
-    if not app or app.owner_id != user.id:
-        raise HTTPException(status_code=403, detail="Permission denied")
+    if not app:
+        raise HTTPException(status_code=404, detail="App not found")
         
     settings = app.settings or {}
     repo = settings.get("github_repo")

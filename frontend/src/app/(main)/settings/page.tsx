@@ -24,6 +24,7 @@ export default function SettingsPage() {
     weekly_cto_report: false, slack_webhook: ""
   });
   const [savingNotifications, setSavingNotifications] = useState(false);
+  const [userRole, setUserRole] = useState<string>("viewer");
 
   const fetchProfile = async () => {
     try {
@@ -39,6 +40,7 @@ export default function SettingsPage() {
       const res = await fetch("http://localhost:5000/api/settings/app", { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
+        setUserRole(data.user_role || "viewer");
         setAppSettings({
           url: data.url || "",
           description: data.description || "",
@@ -185,24 +187,28 @@ export default function SettingsPage() {
           >
             <User size={18} /> My Profile
           </button>
-          <button 
-            onClick={() => setActiveTab("app")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "app" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
-          >
-            <Smartphone size={18} /> App Settings
-          </button>
+          {["admin", "project_manager"].includes(userRole) && (
+            <button 
+              onClick={() => setActiveTab("app")}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "app" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
+            >
+              <Smartphone size={18} /> App Settings
+            </button>
+          )}
           <button 
             onClick={() => setActiveTab("notifications")}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "notifications" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
           >
             <Bell size={18} /> Notifications
           </button>
-          <button 
-            onClick={() => setActiveTab("security")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "security" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
-          >
-            <Shield size={18} /> Security
-          </button>
+          {["admin"].includes(userRole) && (
+            <button 
+              onClick={() => setActiveTab("security")}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "security" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
+            >
+              <Shield size={18} /> Security
+            </button>
+          )}
         </div>
 
         {/* Content Area */}

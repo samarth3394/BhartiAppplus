@@ -97,3 +97,78 @@ def get_current_user_optional(request: Request, db: Session = Depends(get_db)):
     except JWTError:
         pass
     return None
+
+# --- RBAC Helpers ---
+from models import RoleEnum, Workspace, WorkspaceMember, App, AppMember
+
+def check_workspace_role(db: Session, user: User, workspace_id: str, allowed_roles: list[RoleEnum]):
+    workspace = db.query(Workspace).filter(Workspace.id == workspace_id).first()
+    if not workspace:
+        raise HTTPException(status_code=404, detail="Workspace not found")
+        
+    if workspace.owner_id == user.id:
+        return True # Owner is admin
+        
+    member = db.query(WorkspaceMember).filter(
+        WorkspaceMember.workspace_id == workspace_id,
+        WorkspaceMember.user_id == user.id
+    ).first()
+    
+    if not member or member.role not in allowed_roles:
+        raise HTTPException(status_code=403, detail="You do not have permission to perform this action in this workspace")
+        
+    return True
+
+def check_app_role(db: Session, user: User, app_id: str, allowed_roles: list[RoleEnum]):
+    app = db.query(App).filter(App.id == app_id).first()
+    if not app:
+        raise HTTPException(status_code=404, detail="App not found")
+        
+    if app.owner_id == user.id:
+        return True
+        
+    # Check workspace level first (inherits role)
+    member = db.query(WorkspaceMember).filter(
+        WorkspaceMember.workspace_id == app.workspace_id,
+        WorkspaceMember.user_id == user.id
+    ).first()
+    
+    if member and member.role in allowed_roles:
+        return True
+        
+    # If app-level memberships exist, check there (optional logic)
+    app_member = db.query(AppMember).filter(
+        AppMember.app_id == app_id,
+        AppMember.user_id == user.id
+    ).first()
+    
+    if not app_member or app_member.role not in allowed_roles:
+        raise HTTPException(status_code=403, detail="You do not have permission to perform this action for this app")
+        
+    return True
+
+def get_user_app_role(db: Session, user: User, app_id: str) -> str:
+    app = db.query(App).filter(App.id == app_id).first()
+    if not app:
+        return 'viewer'
+    if app.owner_id == user.id:
+        return 'admin'
+        
+    member = db.query(WorkspaceMember).filter(
+        WorkspaceMember.workspace_id == app.workspace_id,
+        WorkspaceMember.user_id == user.id
+    ).first()
+    
+    if member:
+        return member.role.value
+        
+    app_member = db.query(AppMember).filter(
+        AppMember.app_id == app_id,
+        AppMember.user_id == user.id
+    ).first()
+    
+    if app_member:
+        return app_member.role.value
+        
+    return 'viewer'
+
