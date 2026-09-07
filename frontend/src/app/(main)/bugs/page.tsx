@@ -74,11 +74,16 @@ export default function BugsPage() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white mb-1">Issues & Bugs</h1>
-          <p className="text-zinc-400">Track and manage application errors and user reports.</p>
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-red-500/10 text-red-400 rounded-xl border border-red-500/20">
+            <Bug size={28} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-white mb-1">Issues & Bugs</h1>
+            <p className="text-zinc-400">Track and manage application errors and user reports.</p>
+          </div>
         </div>
-        <button onClick={() => setShowBugModal(true)} className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+        <button onClick={() => setShowBugModal(true)} className="flex items-center gap-2 bg-red-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-red-500 transition shadow-lg shadow-red-500/20">
           <Plus size={18} />
           Report Bug
         </button>

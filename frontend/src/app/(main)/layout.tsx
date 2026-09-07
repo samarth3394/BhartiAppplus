@@ -176,8 +176,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         fixed inset-y-0 left-0 z-40 w-64 bg-zinc-950 border-r border-white/10 flex flex-col transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static
       `}>
-        <div className="p-6">
-          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+        <div className="p-6 flex items-center gap-3">
+          <div className="w-9 h-9 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
+            <Zap size={18} className="text-white" />
+          </div>
+          <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-400 tracking-tight">
             BNexora
           </h1>
         </div>
@@ -191,13 +194,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 key={item.name}
                 href={item.href}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                  flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
                   ${isActive 
-                    ? "bg-blue-500/10 text-blue-400 border border-blue-500/20" 
+                    ? "bg-violet-500/10 text-violet-400 border border-violet-500/20 shadow-sm shadow-violet-500/5" 
                     : "text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent"}
                 `}
               >
-                <Icon size={18} className={isActive ? "text-blue-400" : "text-zinc-500"} />
+                <Icon size={18} className={isActive ? "text-violet-400" : "text-zinc-500"} />
                 {item.name}
               </a>
             );

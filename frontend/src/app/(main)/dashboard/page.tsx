@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Activity, ShieldAlert, Zap, Clock, TrendingUp } from "lucide-react";
+import { Activity, ShieldAlert, Zap, Clock, TrendingUp, ArrowUpRight, Sparkles, BarChart3, RefreshCw } from "lucide-react";
 
 export default function Dashboard() {
   const [stats, setStats] = useState<any>(null);
@@ -30,7 +30,6 @@ export default function Dashboard() {
         const data = await res.json();
         setStats(data);
         
-        // Fetch activity feed
         if (data.has_app) {
           const actRes = await fetch("http://localhost:5000/api/dashboard/activity?limit=5", { credentials: "include" });
           if (actRes.ok) {
@@ -38,7 +37,6 @@ export default function Dashboard() {
             setActivities(actData.activities || []);
           }
 
-          // Fetch metrics for performance graph
           const metRes = await fetch("http://localhost:5000/api/server/metrics?period=24h", { credentials: "include" });
           if (metRes.ok) {
             const metData = await metRes.json();
@@ -75,190 +73,228 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative w-16 h-16">
+            <div className="absolute inset-0 border-4 border-blue-500/20 rounded-full" />
+            <div className="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin" />
+          </div>
+          <p className="text-zinc-500 text-sm animate-pulse">Loading dashboard...</p>
+        </div>
       </div>
     );
   }
 
   if (!stats || !stats.has_app) {
     return (
-      <div className="flex flex-col items-center justify-center h-full max-w-lg mx-auto text-center space-y-6">
-        <div className="w-24 h-24 bg-zinc-900 rounded-full flex items-center justify-center border border-white/10 mb-4 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
-          <Activity size={40} className="text-blue-500" />
+      <div className="flex flex-col items-center justify-center h-full max-w-lg mx-auto text-center space-y-6 animate-in fade-in duration-500">
+        <div className="relative">
+          <div className="w-24 h-24 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-full flex items-center justify-center border border-white/10 shadow-[0_0_60px_rgba(59,130,246,0.15)]">
+            <Sparkles size={40} className="text-blue-400" />
+          </div>
+          <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center animate-bounce">
+            <ArrowUpRight size={14} className="text-white" />
+          </div>
         </div>
-        <h2 className="text-3xl font-bold text-white tracking-tight">Welcome to BNexora</h2>
-        <p className="text-zinc-400 text-lg">Create your first application to start monitoring bugs, server health, and AI analytics.</p>
+        <div>
+          <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Welcome to BNexora</h2>
+          <p className="text-zinc-400 text-lg leading-relaxed">Create your first application to start monitoring bugs, server health, and AI analytics.</p>
+        </div>
         
         {showCreate ? (
-          <div className="w-full max-w-sm mt-4 p-6 bg-zinc-900 border border-white/10 rounded-2xl animate-in zoom-in-95">
+          <div className="w-full max-w-sm p-6 bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-2xl animate-in zoom-in-95 duration-200 space-y-4">
              <input 
                 type="text"
                 placeholder="App Name (e.g. Bharti AI)"
                 value={appName}
                 onChange={(e) => setAppName(e.target.value)}
-                className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-4 outline-none focus:border-blue-500"
+                className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all placeholder:text-zinc-600"
                 autoFocus
              />
              <input 
                 type="url"
-                placeholder="App URL (e.g. https://myapp.com) - Optional"
+                placeholder="App URL (optional)"
                 value={appUrl}
                 onChange={(e) => setAppUrl(e.target.value)}
-                className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-4 outline-none focus:border-blue-500"
+                className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all placeholder:text-zinc-600"
              />
-             <div className="flex gap-3 justify-end">
-                <button onClick={() => { setShowCreate(false); setAppUrl(""); }} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
-                <button onClick={createApp} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Create App</button>
+             <div className="flex gap-3 justify-end pt-2">
+                <button onClick={() => { setShowCreate(false); setAppUrl(""); }} className="px-4 py-2.5 text-zinc-400 hover:text-white transition rounded-xl hover:bg-white/5">Cancel</button>
+                <button onClick={createApp} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition shadow-lg shadow-blue-500/20">Create App</button>
              </div>
           </div>
         ) : (
           <button 
             onClick={() => setShowCreate(true)}
-            className="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform"
+            className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white px-8 py-3.5 rounded-xl font-semibold transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 flex items-center gap-2 group"
           >
-            Create Application
+            <Sparkles size={18} />
+            Create Your First App
+            <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </button>
         )}
       </div>
     );
   }
 
+  const metricCards = [
+    {
+      icon: Activity,
+      label: "Health Score",
+      value: stats.health_score?.total || 100,
+      suffix: "/100",
+      color: "blue",
+      trend: null
+    },
+    {
+      icon: ShieldAlert,
+      label: "Active Issues",
+      value: stats.bugs?.active || 0,
+      suffix: "",
+      color: "red",
+      trend: (stats.bugs?.active || 0) > 0 ? "Needs Attention" : "All Clear"
+    },
+    {
+      icon: Zap,
+      label: "Uptime (24h)",
+      value: stats.uptime?.percentage_24h || 100,
+      suffix: "%",
+      color: "emerald",
+      trend: null
+    },
+    {
+      icon: Clock,
+      label: "Maintenance",
+      value: stats.maintenance?.total_tasks || 0,
+      suffix: " Tasks",
+      color: "amber",
+      trend: null
+    }
+  ];
+
+  const colorMap: any = {
+    blue: { bg: "bg-blue-500/10", text: "text-blue-400", border: "hover:border-blue-500/30", glow: "text-blue-500" },
+    red: { bg: "bg-red-500/10", text: "text-red-400", border: "hover:border-red-500/30", glow: "text-red-500" },
+    emerald: { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "hover:border-emerald-500/30", glow: "text-emerald-500" },
+    amber: { bg: "bg-amber-500/10", text: "text-amber-400", border: "hover:border-amber-500/30", glow: "text-amber-500" },
+  };
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-8">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
+            <BarChart3 size={28} />
+          </div>
+          <div>
             <h1 className="text-3xl font-bold tracking-tight text-white mb-1">Overview</h1>
-            <p className="text-zinc-400">Monitor the health and performance of {stats.app.name}</p>
+            <p className="text-zinc-400">Monitor the health and performance of <span className="text-zinc-200 font-medium">{stats.app.name}</span></p>
+          </div>
         </div>
         <div className="flex gap-3">
-            <button onClick={() => router.push('/infrastructure')} className="px-4 py-2 rounded-lg bg-zinc-900 border border-white/10 text-white font-medium hover:bg-zinc-800 transition">View Logs</button>
-            <button onClick={() => router.push('/ai-dashboard')} className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.4)]">Analyze with AI</button>
+            <button onClick={() => router.push('/infrastructure')} className="px-4 py-2.5 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-300 font-medium hover:bg-zinc-800 hover:text-white transition-all">View Logs</button>
+            <button onClick={() => router.push('/ai-dashboard')} className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 text-white font-medium hover:from-violet-500 hover:to-blue-500 transition-all shadow-lg shadow-violet-500/20 flex items-center gap-2">
+              <Sparkles size={16} />
+              AI Copilot
+            </button>
         </div>
       </div>
       
       {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Health Score */}
-        <div className="bg-zinc-900/40 backdrop-blur-xl p-6 rounded-2xl border border-white/10 relative overflow-hidden group hover:border-blue-500/30 transition-colors">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Activity size={60} className="text-blue-500" />
-          </div>
-          <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-blue-500/20 text-blue-400 rounded-lg">
-                  <Activity size={20} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {metricCards.map((card, idx) => {
+          const colors = colorMap[card.color];
+          return (
+            <div key={idx} className={`bg-zinc-900/40 backdrop-blur-xl p-6 rounded-2xl border border-white/[0.06] relative overflow-hidden group ${colors.border} transition-all duration-300`}>
+              <div className="absolute top-0 right-0 p-4 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity">
+                <card.icon size={80} className={colors.glow} />
               </div>
-              <h3 className="text-zinc-300 font-medium">Health Score</h3>
-          </div>
-          <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.health_score?.total || 100}</p>
-              <span className="text-zinc-500 font-medium mb-1">/100</span>
-          </div>
-        </div>
-
-        {/* Active Bugs */}
-        <div className="bg-zinc-900/40 backdrop-blur-xl p-6 rounded-2xl border border-white/10 relative overflow-hidden group hover:border-red-500/30 transition-colors">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <ShieldAlert size={60} className="text-red-500" />
-          </div>
-          <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-red-500/20 text-red-400 rounded-lg">
-                  <ShieldAlert size={20} />
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`p-2.5 ${colors.bg} ${colors.text} rounded-xl`}>
+                  <card.icon size={20} />
+                </div>
+                <h3 className="text-zinc-400 font-medium text-sm">{card.label}</h3>
               </div>
-              <h3 className="text-zinc-300 font-medium">Active Issues</h3>
-          </div>
-          <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.bugs?.active || 0}</p>
-              <span className="text-red-400 font-medium mb-2 text-sm flex items-center gap-1">
-                  <TrendingUp size={14}/> Needs Attention
-              </span>
-          </div>
-        </div>
-
-        {/* Uptime */}
-        <div className="bg-zinc-900/40 backdrop-blur-xl p-6 rounded-2xl border border-white/10 relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Zap size={60} className="text-emerald-500" />
-          </div>
-          <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg">
-                  <Zap size={20} />
+              <div className="flex items-end gap-2">
+                <p className="text-4xl font-bold text-white tracking-tighter">{card.value}</p>
+                <span className="text-zinc-500 font-medium mb-1 text-sm">{card.suffix}</span>
               </div>
-              <h3 className="text-zinc-300 font-medium">Uptime (24h)</h3>
-          </div>
-          <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.uptime?.percentage_24h || 100}</p>
-              <span className="text-zinc-500 font-medium mb-1">%</span>
-          </div>
-        </div>
-
-        {/* Maintenance */}
-        <div className="bg-zinc-900/40 backdrop-blur-xl p-6 rounded-2xl border border-white/10 relative overflow-hidden group hover:border-amber-500/30 transition-colors">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <Clock size={60} className="text-amber-500" />
-          </div>
-          <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-amber-500/20 text-amber-400 rounded-lg">
-                  <Clock size={20} />
-              </div>
-              <h3 className="text-zinc-300 font-medium">Maintenance</h3>
-          </div>
-          <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.maintenance?.total_tasks || 0}</p>
-              <span className="text-zinc-500 font-medium mb-1">Tasks</span>
-          </div>
-        </div>
+              {card.trend && (
+                <p className={`text-xs mt-2 flex items-center gap-1 ${card.value > 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                  <TrendingUp size={12} /> {card.trend}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
       
       {/* Charts / Activity Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px] flex flex-col">
-            <h3 className="text-lg font-semibold text-white mb-4">System Performance</h3>
-            <div className="flex-1 flex items-center justify-center text-zinc-500">
-                {metrics.length === 0 ? (
-                    <div className="text-center">
-                        <Activity className="mx-auto mb-3 opacity-20" size={48} />
-                        <p>Waiting for metrics data...</p>
-                        <p className="text-sm mt-2 opacity-50">Integrate the infrastructure agent to see live data.</p>
-                    </div>
-                ) : (
-                    <div className="w-full h-full text-blue-400 flex items-center justify-center border border-white/5 rounded-xl border-dashed">
-                        {/* We'll use Recharts here in future, for now show stats */}
-                        <p>Data received! {metrics.length} data points collected in the last 24h.</p>
-                    </div>
-                )}
-            </div>
-        </div>
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px] flex flex-col">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                Recent Activity
-                <span className="bg-white/10 text-xs px-2 py-1 rounded-full">{activities.length}</span>
+        <div className="lg:col-span-2 bg-zinc-900/40 backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 h-[400px] flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <Activity size={18} className="text-blue-400" />
+              System Performance
             </h3>
-            <div className="flex-1 overflow-y-auto pr-2 space-y-4">
-                {activities.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center text-zinc-600 text-sm">
-                        <Clock className="mb-2 opacity-20" size={32} />
-                        No recent activity
-                    </div>
-                ) : (
-                    activities.map((act) => (
-                        <div key={act.id} className="flex gap-4 group">
-                            <div className="flex flex-col items-center">
-                                <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
-                                <div className="w-[1px] h-full bg-white/10 my-1 group-last:hidden"></div>
-                            </div>
-                            <div className="flex-1 pb-4">
-                                <p className="text-sm text-zinc-200">{act.action}</p>
-                                <div className="flex justify-between items-center mt-1">
-                                    <p className="text-xs text-zinc-500">{act.user_name || "System"}</p>
-                                    <p className="text-xs text-zinc-600">
-                                        {new Date(act.created_at).toLocaleDateString()}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
+            <span className="text-xs text-zinc-500 bg-zinc-800/50 px-3 py-1.5 rounded-lg">Last 24h</span>
+          </div>
+          <div className="flex-1 flex items-center justify-center text-zinc-500">
+              {metrics.length === 0 ? (
+                  <div className="text-center space-y-3">
+                      <div className="w-16 h-16 bg-zinc-800/50 rounded-2xl flex items-center justify-center mx-auto border border-white/5">
+                        <Activity className="opacity-30" size={32} />
+                      </div>
+                      <div>
+                        <p className="text-zinc-400 font-medium">No metrics data yet</p>
+                        <p className="text-sm text-zinc-600 mt-1">Integrate the infrastructure agent to see live performance data.</p>
+                      </div>
+                  </div>
+              ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-4">
+                      <div className="flex items-center gap-2 text-emerald-400">
+                        <RefreshCw size={16} className="animate-spin" style={{ animationDuration: '3s' }} />
+                        <span className="font-medium">Live data streaming</span>
+                      </div>
+                      <p className="text-zinc-400">{metrics.length} data points collected in the last 24h</p>
+                  </div>
+              )}
+          </div>
+        </div>
+        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 h-[400px] flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <Clock size={18} className="text-amber-400" />
+              Recent Activity
+            </h3>
+            <span className="bg-white/10 text-zinc-300 text-xs px-2.5 py-1 rounded-full font-medium">{activities.length}</span>
+          </div>
+          <div className="flex-1 overflow-y-auto pr-2 space-y-1">
+              {activities.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-center space-y-3">
+                      <div className="w-12 h-12 bg-zinc-800/50 rounded-xl flex items-center justify-center border border-white/5">
+                        <Clock className="opacity-30" size={24} />
+                      </div>
+                      <p className="text-zinc-500 text-sm">No recent activity</p>
+                  </div>
+              ) : (
+                  activities.map((act) => (
+                      <div key={act.id} className="flex gap-3 p-3 rounded-xl hover:bg-white/[0.02] transition group">
+                          <div className="flex flex-col items-center pt-0.5">
+                              <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                              <div className="w-[1px] flex-1 bg-white/5 my-1 group-last:hidden" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                              <p className="text-sm text-zinc-300 leading-snug">{act.action}</p>
+                              <div className="flex justify-between items-center mt-1.5">
+                                  <p className="text-xs text-zinc-500">{act.user_name || "System"}</p>
+                                  <p className="text-xs text-zinc-600">{new Date(act.created_at).toLocaleDateString()}</p>
+                              </div>
+                          </div>
+                      </div>
+                  ))
+              )}
+          </div>
         </div>
       </div>
     </div>
