@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { Activity, Globe, CheckCircle2, XCircle, AlertTriangle, Settings2, History, Clock } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function UptimePage() {
   const [statusData, setStatusData] = useState<any>(null);
   const [incidents, setIncidents] = useState<any[]>([]);
+  const [historyData, setHistoryData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [monitorUrl, setMonitorUrl] = useState("");
   const [monitoringEnabled, setMonitoringEnabled] = useState(true);
@@ -13,9 +15,10 @@ export default function UptimePage() {
 
   const fetchUptimeData = async () => {
     try {
-      const [statusRes, incidentsRes] = await Promise.all([
+      const [statusRes, incidentsRes, historyRes] = await Promise.all([
         fetch("http://localhost:5000/api/uptime/status", { credentials: "include" }),
-        fetch("http://localhost:5000/api/uptime/incidents", { credentials: "include" })
+        fetch("http://localhost:5000/api/uptime/incidents", { credentials: "include" }),
+        fetch("http://localhost:5000/api/uptime/history?period=24h", { credentials: "include" })
       ]);
 
       if (statusRes.ok) {
@@ -28,6 +31,11 @@ export default function UptimePage() {
       if (incidentsRes.ok) {
         const iData = await incidentsRes.json();
         setIncidents(iData.incidents || []);
+      }
+
+      if (historyRes.ok) {
+        const hData = await historyRes.json();
+        setHistoryData(hData.checks || []);
       }
     } catch (err) {
       console.error("Failed to fetch uptime data", err);
@@ -121,6 +129,48 @@ export default function UptimePage() {
                 </div>
               );
             })}
+          </div>
+
+          {/* Uptime Graph */}
+          <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-6 rounded-2xl">
+            <div className="flex items-center gap-2 mb-6">
+              <Activity size={20} className="text-zinc-400" />
+              <h2 className="text-xl font-bold text-white">Response Time (24h)</h2>
+            </div>
+            <div className="h-[300px] w-full">
+              {historyData.length === 0 ? (
+                <div className="h-full flex items-center justify-center text-zinc-500">No data available yet</div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={historyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
+                    <XAxis 
+                      dataKey="checked_at" 
+                      tickFormatter={(tick) => new Date(tick).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      stroke="#71717a"
+                      fontSize={12}
+                    />
+                    <YAxis 
+                      stroke="#71717a" 
+                      fontSize={12}
+                      tickFormatter={(tick) => `${tick}ms`}
+                    />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#18181b', borderColor: '#ffffff10', borderRadius: '8px' }}
+                      labelFormatter={(label) => new Date(label).toLocaleString()}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="response_time_ms" 
+                      stroke="#10b981" 
+                      strokeWidth={2}
+                      dot={false}
+                      activeDot={{ r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
+            </div>
           </div>
 
           {/* Incidents List */}
