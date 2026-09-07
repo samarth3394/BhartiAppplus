@@ -123,7 +123,7 @@ export default function Dashboard() {
               <h3 className="text-zinc-300 font-medium">Health Score</h3>
           </div>
           <div className="flex items-end gap-2">
-              <p className="text-5xl font-bold text-white tracking-tighter">{stats.health_score}</p>
+              <p className="text-5xl font-bold text-white tracking-tighter">{stats.health_score.total}</p>
               <span className="text-zinc-500 font-medium mb-1">/100</span>
           </div>
         </div>
