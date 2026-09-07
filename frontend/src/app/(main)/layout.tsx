@@ -18,29 +18,59 @@ import {
     X,
     Server,
     ChevronDown,
-    Check
+    Check,
+    Plus,
+    Folder,
+    Box
 } from "lucide-react";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   const [apps, setApps] = useState<any[]>([]);
+  const [workspaces, setWorkspaces] = useState<any[]>([]);
   const [currentAppId, setCurrentAppId] = useState<string | null>(null);
+  const [currentWorkspaceId, setCurrentWorkspaceId] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  // Modals
+  const [showAppModal, setShowAppModal] = useState(false);
+  const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
+  const [newName, setNewName] = useState("");
+
   useEffect(() => {
-    fetchApps();
+    fetchData();
   }, []);
 
-  const fetchApps = async () => {
+  const fetchData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/apps", { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        setApps(data.apps || []);
-        setCurrentAppId(data.current_app_id);
+      const wRes = await fetch("http://localhost:5000/api/workspaces", { credentials: "include" });
+      if (wRes.ok) {
+        const wData = await wRes.json();
+        setWorkspaces(wData.workspaces || []);
+        setCurrentWorkspaceId(wData.current_workspace_id);
       }
+
+      const aRes = await fetch("http://localhost:5000/api/apps", { credentials: "include" });
+      if (aRes.ok) {
+        const aData = await aRes.json();
+        setApps(aData.apps || []);
+        setCurrentAppId(aData.current_app_id);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const switchWorkspace = async (workspaceId: string) => {
+    try {
+      await fetch(`http://localhost:5000/api/workspaces/switch/${workspaceId}`, {
+        method: "POST",
+        credentials: "include"
+      });
+      window.location.reload();
     } catch (err) {
       console.error(err);
     }
@@ -48,14 +78,41 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   const switchApp = async (appId: string) => {
     try {
-      setIsDropdownOpen(false);
-      const res = await fetch(`http://localhost:5000/api/apps/switch/${appId}`, {
+      await fetch(`http://localhost:5000/api/apps/switch/${appId}`, {
         method: "POST",
         credentials: "include"
       });
-      if (res.ok) {
-        window.location.reload();
-      }
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const createWorkspace = async () => {
+    if (!newName.trim()) return;
+    try {
+      const res = await fetch("http://localhost:5000/api/workspaces", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name: newName })
+      });
+      if (res.ok) window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const createApp = async () => {
+    if (!newName.trim()) return;
+    try {
+      const res = await fetch("http://localhost:5000/api/apps", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name: newName, workspace_id: currentWorkspaceId || "personal" })
+      });
+      if (res.ok) window.location.reload();
     } catch (err) {
       console.error(err);
     }
@@ -75,6 +132,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   ];
 
   const currentApp = apps.find(a => a.id === currentAppId);
+  const currentWorkspace = workspaces.find(w => w.id === currentWorkspaceId);
 
   return (
     <div className="min-h-screen bg-black text-white flex">
@@ -138,33 +196,66 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <div className="relative">
               <button 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 text-zinc-400 text-sm hover:text-zinc-200 transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
+                className="flex items-center gap-2 text-zinc-300 text-sm hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/10"
               >
-                Workspace / <span className="text-zinc-100 font-medium">{currentApp ? currentApp.name : "Select App"}</span>
-                <ChevronDown size={14} className="ml-1" />
+                {currentWorkspace ? currentWorkspace.name : "Personal"} / <span className="font-bold text-white">{currentApp ? currentApp.name : "Select App"}</span>
+                <ChevronDown size={14} className="ml-2 text-zinc-500" />
               </button>
 
               {isDropdownOpen && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)}></div>
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl py-2 z-20 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-3 py-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Your Apps</div>
-                    {apps.length === 0 ? (
-                      <div className="px-4 py-3 text-sm text-zinc-400">No apps found</div>
-                    ) : (
-                      apps.map(app => (
+                  <div className="absolute top-full left-0 mt-2 w-72 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden z-20 animate-in fade-in slide-in-from-top-2">
+                    
+                    {/* Workspaces Section */}
+                    <div className="p-2 border-b border-white/10 bg-zinc-950/50">
+                      <div className="px-2 py-1.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider flex items-center justify-between">
+                        Workspaces
+                        <button onClick={() => { setIsDropdownOpen(false); setNewName(""); setShowWorkspaceModal(true); }} className="hover:text-white"><Plus size={14} /></button>
+                      </div>
+                      <button
+                        onClick={() => switchWorkspace("personal")}
+                        className="w-full text-left px-2 py-2 text-sm hover:bg-white/5 flex items-center justify-between group transition-colors rounded-lg"
+                      >
+                        <span className="flex items-center gap-2 text-zinc-300"><Folder size={14} className="text-zinc-500"/> Personal</span>
+                        {!currentWorkspaceId && <Check size={14} className="text-blue-400" />}
+                      </button>
+                      {workspaces.map(w => (
                         <button
-                          key={app.id}
-                          onClick={() => switchApp(app.id)}
-                          className="w-full text-left px-4 py-2.5 text-sm hover:bg-white/5 flex items-center justify-between group transition-colors"
+                          key={w.id}
+                          onClick={() => switchWorkspace(w.id)}
+                          className="w-full text-left px-2 py-2 text-sm hover:bg-white/5 flex items-center justify-between group transition-colors rounded-lg"
                         >
-                          <span className={`${app.id === currentAppId ? 'text-blue-400 font-medium' : 'text-zinc-300 group-hover:text-white'}`}>
-                            {app.name}
-                          </span>
-                          {app.id === currentAppId && <Check size={16} className="text-blue-400" />}
+                          <span className="flex items-center gap-2 text-zinc-300"><Folder size={14} className="text-zinc-500"/> {w.name}</span>
+                          {w.id === currentWorkspaceId && <Check size={14} className="text-blue-400" />}
                         </button>
-                      ))
-                    )}
+                      ))}
+                    </div>
+
+                    {/* Apps Section */}
+                    <div className="p-2">
+                      <div className="px-2 py-1.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider flex items-center justify-between">
+                        Apps in {currentWorkspace ? currentWorkspace.name : "Personal"}
+                        <button onClick={() => { setIsDropdownOpen(false); setNewName(""); setShowAppModal(true); }} className="hover:text-white"><Plus size={14} /></button>
+                      </div>
+                      {apps.length === 0 ? (
+                        <div className="px-2 py-3 text-sm text-zinc-500 text-center">No apps found. Create one!</div>
+                      ) : (
+                        apps.map(app => (
+                          <button
+                            key={app.id}
+                            onClick={() => switchApp(app.id)}
+                            className="w-full text-left px-2 py-2 text-sm hover:bg-white/5 flex items-center justify-between group transition-colors rounded-lg"
+                          >
+                            <span className={`flex items-center gap-2 ${app.id === currentAppId ? 'text-blue-400 font-medium' : 'text-zinc-300 group-hover:text-white'}`}>
+                              <Box size={14} className={app.id === currentAppId ? 'text-blue-400' : 'text-zinc-500'} /> {app.name}
+                            </span>
+                            {app.id === currentAppId && <Check size={14} className="text-blue-400" />}
+                          </button>
+                        ))
+                      )}
+                    </div>
+
                   </div>
                 </>
               )}
@@ -175,8 +266,47 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto bg-black p-8">
+        <div className="flex-1 overflow-y-auto bg-black p-8 relative">
           {children}
+
+          {/* Creation Modals */}
+          {showWorkspaceModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+              <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+                <h2 className="text-xl font-bold text-white mb-4">Create New Workspace</h2>
+                <input 
+                  type="text" 
+                  placeholder="Workspace Name"
+                  value={newName}
+                  onChange={e => setNewName(e.target.value)}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-6 outline-none focus:border-blue-500"
+                />
+                <div className="flex justify-end gap-3">
+                  <button onClick={() => setShowWorkspaceModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+                  <button onClick={createWorkspace} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Create Workspace</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showAppModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+              <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+                <h2 className="text-xl font-bold text-white mb-4">Create New App</h2>
+                <input 
+                  type="text" 
+                  placeholder="App Name"
+                  value={newName}
+                  onChange={e => setNewName(e.target.value)}
+                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-6 outline-none focus:border-blue-500"
+                />
+                <div className="flex justify-end gap-3">
+                  <button onClick={() => setShowAppModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+                  <button onClick={createApp} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Create App</button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
