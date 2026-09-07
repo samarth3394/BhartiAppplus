@@ -7,6 +7,8 @@ import { Activity, ShieldAlert, Zap, Clock, TrendingUp } from "lucide-react";
 export default function Dashboard() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showCreate, setShowCreate] = useState(false);
+  const [appName, setAppName] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -33,6 +35,23 @@ export default function Dashboard() {
     fetchStats();
   }, [router]);
 
+  const createApp = async () => {
+    if (!appName.trim()) return;
+    try {
+      const res = await fetch("http://localhost:5000/api/apps", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name: appName, workspace_id: "personal" })
+      });
+      if (res.ok) {
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -47,11 +66,32 @@ export default function Dashboard() {
         <div className="w-24 h-24 bg-zinc-900 rounded-full flex items-center justify-center border border-white/10 mb-4 shadow-[0_0_50px_rgba(59,130,246,0.1)]">
           <Activity size={40} className="text-blue-500" />
         </div>
-        <h2 className="text-3xl font-bold text-white tracking-tight">No Active Workspace</h2>
-        <p className="text-zinc-400 text-lg">Create your first application workspace to start monitoring bugs, server health, and AI analytics.</p>
-        <button className="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform">
-          Create Workspace
-        </button>
+        <h2 className="text-3xl font-bold text-white tracking-tight">Welcome to BNexora</h2>
+        <p className="text-zinc-400 text-lg">Create your first application to start monitoring bugs, server health, and AI analytics.</p>
+        
+        {showCreate ? (
+          <div className="w-full max-w-sm mt-4 p-6 bg-zinc-900 border border-white/10 rounded-2xl animate-in zoom-in-95">
+             <input 
+                type="text"
+                placeholder="My Awesome App"
+                value={appName}
+                onChange={(e) => setAppName(e.target.value)}
+                className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 mb-4 outline-none focus:border-blue-500"
+                autoFocus
+             />
+             <div className="flex gap-3 justify-end">
+                <button onClick={() => setShowCreate(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
+                <button onClick={createApp} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Create App</button>
+             </div>
+          </div>
+        ) : (
+          <button 
+            onClick={() => setShowCreate(true)}
+            className="bg-white text-black px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform"
+          >
+            Create Application
+          </button>
+        )}
       </div>
     );
   }
