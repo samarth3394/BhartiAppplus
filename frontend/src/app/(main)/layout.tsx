@@ -145,18 +145,43 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     }
   };
 
-  const navItems = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "AI Copilot", href: "/ai-dashboard", icon: Zap },
-    { name: "Issues & Bugs", href: "/bugs", icon: Bug },
-    { name: "Kanban", href: "/kanban", icon: KanbanSquare },
-    { name: "Uptime", href: "/uptime", icon: Activity },
-    { name: "Infrastructure", href: "/infrastructure", icon: Server },
-    { name: "Maintenance", href: "/maintenance", icon: Wrench },
-    { name: "Inbox", href: "/inbox", icon: MessageSquare },
-    { name: "Teams", href: "/teams", icon: Users },
-    { name: "Roadmap", href: "/roadmap", icon: Map },
-    { name: "Settings", href: "/settings", icon: Settings },
+  const navGroups = [
+    {
+      title: "Overview",
+      items: [
+        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+        { name: "AI Copilot", href: "/ai-dashboard", icon: Zap },
+      ]
+    },
+    {
+      title: "Communication",
+      items: [
+        { name: "Inbox", href: "/inbox", icon: MessageSquare },
+        { name: "Teams", href: "/teams", icon: Users },
+      ]
+    },
+    {
+      title: "Planning",
+      items: [
+        { name: "Kanban", href: "/kanban", icon: KanbanSquare },
+        { name: "Issues & Bugs", href: "/bugs", icon: Bug },
+        { name: "Roadmap", href: "/roadmap", icon: Map },
+      ]
+    },
+    {
+      title: "Operations",
+      items: [
+        { name: "Uptime", href: "/uptime", icon: Activity },
+        { name: "Infrastructure", href: "/infrastructure", icon: Server },
+        { name: "Maintenance", href: "/maintenance", icon: Wrench },
+      ]
+    },
+    {
+      title: "System",
+      items: [
+        { name: "Settings", href: "/settings", icon: Settings },
+      ]
+    }
   ];
 
   const currentApp = apps.find(a => a.id === currentAppId);
@@ -188,26 +213,33 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </h1>
         </div>
         
-        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-            return (
-              <a
-                key={item.name}
-                href={item.href}
-                className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                  ${isActive 
-                    ? "bg-white/10 text-white shadow-sm shadow-white/5" 
-                    : "text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent"}
-                `}
-              >
-                <Icon size={18} className={isActive ? "text-white" : "text-zinc-500"} />
-                {item.name}
-              </a>
-            );
-          })}
+        <nav className="flex-1 px-4 py-2 space-y-6 overflow-y-auto">
+          {navGroups.map((group, idx) => (
+            <div key={idx} className="space-y-1">
+              <h3 className="px-3 text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2">
+                {group.title}
+              </h3>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className={`
+                      flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                      ${isActive 
+                        ? "bg-white/10 text-white shadow-sm shadow-white/5" 
+                        : "text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent"}
+                    `}
+                  >
+                    <Icon size={18} className={isActive ? "text-white" : "text-zinc-500"} />
+                    {item.name}
+                  </a>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         <div className="p-4 border-t border-white/10">
