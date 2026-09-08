@@ -22,6 +22,16 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+class AcceptInviteRequest(BaseModel):
+    token: str
+    password: str
+    full_name: str
+
+class UpdateProfileRequest(BaseModel):
+    full_name: str
+    avatar_url: str | None = None
+    password: str | None = None
+
 # --- APIs ---
 
 
@@ -73,3 +83,69 @@ async def logout(response: Response, user: User = Depends(get_current_user)):
 @router.get("/api/auth/me")
 async def me(user: User = Depends(get_current_user)):
     return {"user": user.to_dict()}
+
+@router.put("/api/auth/me")
+async def update_profile(data: UpdateProfileRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if data.full_name:
+        user.full_name = data.full_name
+    if data.avatar_url is not None:
+        user.avatar_url = data.avatar_url
+    if data.password:
+        if len(data.password) < 6:
+            raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+        user.password_hash = get_password_hash(data.password)
+    
+    db.commit()
+    db.refresh(user)
+    return {"message": "Profile updated successfully", "user": user.to_dict()}
+
+from models import WorkspaceMember, AppMember
+
+@router.post("/api/auth/accept-invite")
+async def accept_invite(data: AcceptInviteRequest, response: Response, db: Session = Depends(get_db)):
+    if len(data.password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+        
+    # Search in WorkspaceMember
+    ws_member = db.query(WorkspaceMember).filter(WorkspaceMember.invite_token == data.token).first()
+    app_member = db.query(AppMember).filter(AppMember.invite_token == data.token).first()
+    
+    if not ws_member and not app_member:
+        raise HTTPException(status_code=404, detail="Invalid or expired invite token")
+        
+    member = ws_member or app_member
+    
+    if member.accepted_at:
+        raise HTTPException(status_code=400, detail="Invite already accepted")
+
+    # Check if user already exists with this email
+    user = db.query(User).filter(User.email == member.invite_email.lower()).first()
+    if not user:
+        user = User(
+            email=member.invite_email.lower(),
+            password_hash=get_password_hash(data.password),
+            full_name=data.full_name,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    else:
+        # If they exist, optionally update full name and password if they provide it
+        if data.full_name:
+            user.full_name = data.full_name
+        if data.password:
+            user.password_hash = get_password_hash(data.password)
+        db.commit()
+        db.refresh(user)
+
+    # Link member to user
+    member.user_id = user.id
+    member.accepted_at = utc_now()
+    member.invite_token = None # clear token after use
+    db.commit()
+
+    # Auto login
+    access_token = create_access_token(data={"sub": str(user.id)})
+    response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60*24*7, path="/")
+    
+    return {"message": "Invite accepted and registered successfully", "user": user.to_dict()}

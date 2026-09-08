@@ -7,7 +7,7 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   
   // Profile State
-  const [profile, setProfile] = useState({ full_name: "", email: "" });
+  const [profile, setProfile] = useState({ full_name: "", email: "", password: "", avatar_url: "" });
   const [savingProfile, setSavingProfile] = useState(false);
 
   // App Settings State
@@ -28,8 +28,11 @@ export default function SettingsPage() {
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/settings/profile", { credentials: "include" });
-      if (res.ok) setProfile(await res.json());
+      const res = await fetch("http://localhost:5000/api/auth/me", { credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
+        setProfile({ ...data.user, password: "" });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -73,12 +76,27 @@ export default function SettingsPage() {
     e.preventDefault();
     setSavingProfile(true);
     try {
-      await fetch("http://localhost:5000/api/settings/profile", {
+      const payload = {
+        full_name: profile.full_name,
+        avatar_url: profile.avatar_url || null,
+        password: profile.password || null
+      };
+      const res = await fetch("http://localhost:5000/api/auth/me", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(profile)
+        body: JSON.stringify(payload)
       });
+      if (res.ok) {
+        alert("Profile updated successfully!");
+        setProfile(prev => ({ ...prev, password: "" }));
+      } else {
+        const data = await res.json();
+        alert(data.detail || "Failed to update profile");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error updating profile");
     } finally {
       setSavingProfile(false);
     }
@@ -232,7 +250,27 @@ export default function SettingsPage() {
                   <input
                     type="email"
                     value={profile.email || ""}
-                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                    disabled
+                    className="w-full bg-black/20 border border-white/5 text-zinc-500 rounded-xl py-2.5 px-4 outline-none cursor-not-allowed font-light"
+                  />
+                  <p className="text-xs text-zinc-500 mt-1">Email address cannot be changed.</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-2">Avatar URL (Optional)</label>
+                  <input
+                    type="url"
+                    value={profile.avatar_url || ""}
+                    onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
+                    className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors font-light"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-2">New Password</label>
+                  <input
+                    type="password"
+                    placeholder="Leave blank to keep current password"
+                    value={profile.password || ""}
+                    onChange={(e) => setProfile({ ...profile, password: e.target.value })}
                     className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors font-light"
                   />
                 </div>

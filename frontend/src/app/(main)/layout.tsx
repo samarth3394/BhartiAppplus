@@ -21,7 +21,8 @@ import {
     Check,
     Plus,
     Folder,
-    Box
+    Box,
+    User
 } from "lucide-react";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -295,7 +296,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             </div>
 
             <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border border-white/20"></div>
+                <Link href="/settings" className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border border-white/20 flex items-center justify-center hover:ring-2 ring-white/50 transition-all cursor-pointer overflow-hidden relative">
+                    <User size={16} className="text-white/70" />
+                </Link>
             </div>
         </header>
 
