@@ -13,6 +13,7 @@ from routes.apps import router as apps_router
 from routes.dashboard import router as dashboard_router
 from routes.uptime import router as uptime_router
 from routes.bugs import router as bugs_router
+from routes.chat import router as chat_router
 from routes.maintenance import router as maintenance_router
 from routes.teams import router as teams_router
 from routes.roadmap import router as roadmap_router
@@ -45,6 +46,7 @@ app.include_router(apps_router)
 app.include_router(dashboard_router)
 app.include_router(uptime_router)
 app.include_router(bugs_router)
+app.include_router(chat_router)
 app.include_router(maintenance_router)
 app.include_router(teams_router)
 app.include_router(roadmap_router)

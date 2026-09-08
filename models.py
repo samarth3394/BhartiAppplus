@@ -703,6 +703,32 @@ class FailurePrediction(Base):
         }
 
 
+# ─── Chat Messaging ─────────────────────────────────────────────────────────
+
+class ChatMessage(Base):
+    __tablename__ = 'chat_messages'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    workspace_id = Column(String(36), ForeignKey('workspaces.id'), nullable=False)
+    sender_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=utc_now, index=True)
+
+    # Relationships
+    workspace = relationship('Workspace')
+    sender = relationship('User')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'workspace_id': self.workspace_id,
+            'sender_id': self.sender_id,
+            'content': self.content,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'sender': self.sender.to_dict() if self.sender else None,
+        }
+
+
 # ─── Database Setup ───────────────────────────────────────────────────────
 
 def init_db(db_uri):
