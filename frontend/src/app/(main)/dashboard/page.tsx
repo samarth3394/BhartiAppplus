@@ -88,11 +88,11 @@ export default function Dashboard() {
     return (
       <div className="flex flex-col items-center justify-center h-full max-w-lg mx-auto text-center space-y-6 animate-in fade-in duration-500">
         <div className="relative">
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-full flex items-center justify-center border border-white/10 shadow-[0_0_60px_rgba(59,130,246,0.15)]">
-            <Sparkles size={40} className="text-blue-400" />
+          <div className="w-24 h-24 bg-white/[0.02] rounded-full flex items-center justify-center border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+            <Sparkles size={40} className="text-white" />
           </div>
-          <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center animate-bounce">
-            <ArrowUpRight size={14} className="text-white" />
+          <div className="absolute -top-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center animate-bounce shadow-md shadow-white/10">
+            <ArrowUpRight size={14} className="text-black font-bold" />
           </div>
         </div>
         <div>
@@ -101,13 +101,13 @@ export default function Dashboard() {
         </div>
         
         {showCreate ? (
-          <div className="w-full max-w-sm p-6 bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-2xl animate-in zoom-in-95 duration-200 space-y-4">
+          <div className="w-full max-w-sm p-6 bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-2xl animate-in zoom-in-95 duration-200 space-y-4">
              <input 
                 type="text"
                 placeholder="App Name (e.g. Bharti AI)"
                 value={appName}
                 onChange={(e) => setAppName(e.target.value)}
-                className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all placeholder:text-zinc-600"
+                className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-3 px-4 outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all placeholder:text-zinc-600 font-light"
                 autoFocus
              />
              <input 
@@ -115,21 +115,21 @@ export default function Dashboard() {
                 placeholder="App URL (optional)"
                 value={appUrl}
                 onChange={(e) => setAppUrl(e.target.value)}
-                className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-3 px-4 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all placeholder:text-zinc-600"
+                className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-3 px-4 outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all placeholder:text-zinc-600 font-light"
              />
              <div className="flex gap-3 justify-end pt-2">
-                <button onClick={() => { setShowCreate(false); setAppUrl(""); }} className="px-4 py-2.5 text-zinc-400 hover:text-white transition rounded-xl hover:bg-white/5">Cancel</button>
-                <button onClick={createApp} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition shadow-lg shadow-blue-500/20">Create App</button>
+                <button onClick={() => { setShowCreate(false); setAppUrl(""); }} className="px-4 py-2.5 text-zinc-400 hover:text-white transition rounded-xl hover:bg-white/5 font-medium">Cancel</button>
+                <button onClick={createApp} className="px-5 py-2.5 bg-white hover:bg-zinc-200 text-black rounded-xl font-medium transition shadow-lg shadow-white/10">Create App</button>
              </div>
           </div>
         ) : (
           <button 
             onClick={() => setShowCreate(true)}
-            className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white px-8 py-3.5 rounded-xl font-semibold transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 flex items-center gap-2 group"
+            className="bg-white hover:bg-zinc-200 text-black px-8 py-3.5 rounded-xl font-semibold transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center gap-2 group"
           >
             <Sparkles size={18} />
             Create Your First App
-            <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform opacity-70" />
           </button>
         )}
       </div>
@@ -172,7 +172,7 @@ export default function Dashboard() {
   ];
 
   const colorMap: any = {
-    blue: { bg: "bg-blue-500/10", text: "text-blue-400", border: "hover:border-blue-500/30", glow: "text-blue-500" },
+    blue: { bg: "bg-white/10", text: "text-zinc-300", border: "hover:border-white/20", glow: "text-white" },
     red: { bg: "bg-red-500/10", text: "text-red-400", border: "hover:border-red-500/30", glow: "text-red-500" },
     emerald: { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "hover:border-emerald-500/30", glow: "text-emerald-500" },
     amber: { bg: "bg-amber-500/10", text: "text-amber-400", border: "hover:border-amber-500/30", glow: "text-amber-500" },
@@ -183,7 +183,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
+          <div className="p-3 bg-white/10 text-white rounded-xl border border-white/10">
             <BarChart3 size={28} />
           </div>
           <div>
@@ -192,8 +192,8 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="flex gap-3">
-            <button onClick={() => router.push('/infrastructure')} className="px-4 py-2.5 rounded-xl bg-zinc-900/60 border border-white/10 text-zinc-300 font-medium hover:bg-zinc-800 hover:text-white transition-all">View Logs</button>
-            <button onClick={() => router.push('/ai-dashboard')} className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 text-white font-medium hover:from-violet-500 hover:to-blue-500 transition-all shadow-lg shadow-violet-500/20 flex items-center gap-2">
+            <button onClick={() => router.push('/infrastructure')} className="px-4 py-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-zinc-300 font-medium hover:bg-white/[0.05] hover:border-white/10 hover:text-white transition-all">View Logs</button>
+            <button onClick={() => router.push('/ai-dashboard')} className="px-4 py-2.5 rounded-xl bg-white text-black font-medium hover:bg-zinc-200 transition-all shadow-[0_0_15px_rgba(255,255,255,0.1)] flex items-center gap-2">
               <Sparkles size={16} />
               AI Copilot
             </button>
@@ -205,8 +205,8 @@ export default function Dashboard() {
         {metricCards.map((card, idx) => {
           const colors = colorMap[card.color];
           return (
-            <div key={idx} className={`bg-zinc-900/40 backdrop-blur-xl p-6 rounded-2xl border border-white/[0.06] relative overflow-hidden group ${colors.border} transition-all duration-300`}>
-              <div className="absolute top-0 right-0 p-4 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity">
+            <div key={idx} className={`bg-white/[0.02] backdrop-blur-2xl p-6 rounded-2xl border border-white/5 relative overflow-hidden group ${colors.border} transition-all duration-300`}>
+              <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
                 <card.icon size={80} className={colors.glow} />
               </div>
               <div className="flex items-center gap-3 mb-4">
@@ -231,10 +231,10 @@ export default function Dashboard() {
       
       {/* Charts / Activity Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-zinc-900/40 backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 h-[400px] flex flex-col">
+        <div className="lg:col-span-2 bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-2xl p-6 h-[400px] flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <Activity size={18} className="text-blue-400" />
+              <Activity size={18} className="text-white opacity-80" />
               System Performance
             </h3>
             <span className="text-xs text-zinc-500 bg-zinc-800/50 px-3 py-1.5 rounded-lg">Last 24h</span>
@@ -242,8 +242,8 @@ export default function Dashboard() {
           <div className="flex-1 flex items-center justify-center text-zinc-500">
               {metrics.length === 0 ? (
                   <div className="text-center space-y-3">
-                      <div className="w-16 h-16 bg-zinc-800/50 rounded-2xl flex items-center justify-center mx-auto border border-white/5">
-                        <Activity className="opacity-30" size={32} />
+                      <div className="w-16 h-16 bg-white/[0.02] rounded-2xl flex items-center justify-center mx-auto border border-white/5">
+                        <Activity className="opacity-30 text-white" size={32} />
                       </div>
                       <div>
                         <p className="text-zinc-400 font-medium">No metrics data yet</p>
@@ -261,10 +261,10 @@ export default function Dashboard() {
               )}
           </div>
         </div>
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 h-[400px] flex flex-col">
+        <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-2xl p-6 h-[400px] flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <Clock size={18} className="text-amber-400" />
+              <Clock size={18} className="text-white opacity-80" />
               Recent Activity
             </h3>
             <span className="bg-white/10 text-zinc-300 text-xs px-2.5 py-1 rounded-full font-medium">{activities.length}</span>
@@ -272,17 +272,17 @@ export default function Dashboard() {
           <div className="flex-1 overflow-y-auto pr-2 space-y-1">
               {activities.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center space-y-3">
-                      <div className="w-12 h-12 bg-zinc-800/50 rounded-xl flex items-center justify-center border border-white/5">
-                        <Clock className="opacity-30" size={24} />
+                      <div className="w-12 h-12 bg-white/[0.02] rounded-xl flex items-center justify-center border border-white/5">
+                        <Clock className="opacity-30 text-white" size={24} />
                       </div>
                       <p className="text-zinc-500 text-sm">No recent activity</p>
                   </div>
               ) : (
                   activities.map((act) => (
-                      <div key={act.id} className="flex gap-3 p-3 rounded-xl hover:bg-white/[0.02] transition group">
+                      <div key={act.id} className="flex gap-3 p-3 rounded-xl hover:bg-white/[0.02] transition group border border-transparent hover:border-white/5">
                           <div className="flex flex-col items-center pt-0.5">
-                              <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
-                              <div className="w-[1px] flex-1 bg-white/5 my-1 group-last:hidden" />
+                              <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.4)]" />
+                              <div className="w-[1px] flex-1 bg-white/10 my-1 group-last:hidden" />
                           </div>
                           <div className="flex-1 min-w-0">
                               <p className="text-sm text-zinc-300 leading-snug">{act.action}</p>

@@ -81,7 +81,7 @@ export default function BugsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-red-500/10 text-red-400 rounded-xl border border-red-500/20">
+          <div className="p-3 bg-white/10 text-white rounded-xl border border-white/10">
             <Bug size={28} />
           </div>
           <div>
@@ -90,7 +90,7 @@ export default function BugsPage() {
           </div>
         </div>
         {canEdit && (
-          <button onClick={() => setShowBugModal(true)} className="flex items-center gap-2 bg-red-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-red-500 transition shadow-lg shadow-red-500/20">
+          <button onClick={() => setShowBugModal(true)} className="flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-xl font-medium hover:bg-zinc-200 transition shadow-[0_0_15px_rgba(255,255,255,0.1)]">
             <Plus size={18} />
             Report Bug
           </button>
@@ -104,34 +104,34 @@ export default function BugsPage() {
           <input 
             type="text" 
             placeholder="Search issues..." 
-            className="w-full bg-zinc-900/50 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-white outline-none focus:border-blue-500/50 transition-colors"
+            className="w-full bg-white/[0.02] border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-white outline-none focus:border-white/30 transition-colors font-light"
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-zinc-900/50 border border-white/10 rounded-xl text-zinc-300 hover:bg-zinc-800 transition">
+        <button className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.02] border border-white/10 rounded-xl text-white hover:bg-white/[0.05] transition font-medium">
           <Filter size={18} />
           Filters
         </button>
       </div>
 
       {/* Bug List */}
-      <div className="flex-1 bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden flex flex-col">
+      <div className="flex-1 bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-2xl overflow-hidden flex flex-col">
         {loading ? (
           <div className="flex-1 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
           </div>
         ) : bugs.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4 text-zinc-500 border border-white/5">
+            <div className="w-16 h-16 bg-white/[0.02] rounded-full flex items-center justify-center mb-4 text-zinc-500 border border-white/5">
               <Bug size={32} />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">No bugs found</h3>
-            <p className="text-zinc-400 max-w-md">You're all caught up! There are no open issues matching your criteria.</p>
+            <h3 className="text-xl font-semibold text-white mb-2 tracking-tight">No bugs found</h3>
+            <p className="text-zinc-400 max-w-md font-light">You're all caught up! There are no open issues matching your criteria.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/5 bg-zinc-900/50 text-xs uppercase tracking-wider text-zinc-500">
+                <tr className="border-b border-white/5 bg-white/[0.02] text-xs uppercase tracking-wider text-zinc-500">
                   <th className="px-6 py-4 font-medium">Issue</th>
                   <th className="px-6 py-4 font-medium">Status</th>
                   <th className="px-6 py-4 font-medium">Severity</th>
@@ -141,10 +141,10 @@ export default function BugsPage() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {bugs.map((bug) => (
-                  <tr key={bug.id} className="hover:bg-white/[0.02] transition-colors cursor-pointer group">
+                  <tr key={bug.id} className="hover:bg-white/[0.03] transition-colors cursor-pointer group">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="font-medium text-zinc-200 group-hover:text-blue-400 transition-colors">{bug.title}</span>
+                        <span className="font-medium text-white transition-colors">{bug.title}</span>
                         <span className="text-sm text-zinc-500 truncate max-w-md">{bug.description || "No description provided"}</span>
                       </div>
                     </td>
@@ -174,36 +174,36 @@ export default function BugsPage() {
       </div>
 
       {showBugModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
-            <h2 className="text-xl font-bold text-white mb-6">Report New Bug</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="bg-zinc-950 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+            <h2 className="text-xl font-bold text-white mb-6 tracking-tight">Report New Bug</h2>
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1">Bug Title</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Bug Title</label>
                 <input 
                   type="text" 
                   placeholder="e.g. App crashes on login"
                   value={newBug.title}
                   onChange={e => setNewBug({...newBug, title: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1">Description</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Description</label>
                 <textarea 
                   rows={3}
                   placeholder="Steps to reproduce..."
                   value={newBug.description}
                   onChange={e => setNewBug({...newBug, description: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1">Severity</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Severity</label>
                 <select 
                   value={newBug.severity}
                   onChange={e => setNewBug({...newBug, severity: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -213,8 +213,8 @@ export default function BugsPage() {
               </div>
             </div>
             <div className="flex justify-end gap-3">
-              <button onClick={() => setShowBugModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
-              <button onClick={handleCreateBug} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Report Bug</button>
+              <button onClick={() => setShowBugModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition font-medium">Cancel</button>
+              <button onClick={handleCreateBug} className="px-5 py-2 bg-white hover:bg-zinc-200 text-black rounded-xl font-medium transition shadow-lg shadow-white/10">Report Bug</button>
             </div>
           </div>
         </div>

@@ -173,14 +173,14 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
       {/* Sidebar */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-zinc-950 border-r border-white/10 flex flex-col transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-40 w-64 bg-black border-r border-white/5 flex flex-col transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static
       `}>
         <div className="p-6 flex items-center gap-3">
-          <div className="w-9 h-9 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
-            <Zap size={18} className="text-white" />
+          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)] shrink-0">
+            <Zap size={18} className="text-black" />
           </div>
-          <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-400 tracking-tight">
+          <h1 className="text-xl font-bold text-white tracking-tight">
             BNexora
           </h1>
         </div>
@@ -196,11 +196,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
                   ${isActive 
-                    ? "bg-violet-500/10 text-violet-400 border border-violet-500/20 shadow-sm shadow-violet-500/5" 
+                    ? "bg-white/10 text-white shadow-sm shadow-white/5" 
                     : "text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent"}
                 `}
               >
-                <Icon size={18} className={isActive ? "text-violet-400" : "text-zinc-500"} />
+                <Icon size={18} className={isActive ? "text-white" : "text-zinc-500"} />
                 {item.name}
               </a>
             );
@@ -218,7 +218,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Top Header */}
-        <header className="h-16 border-b border-white/10 bg-zinc-950/50 backdrop-blur-md flex items-center justify-between px-8 relative z-30">
+        <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-8 relative z-30">
             
             {/* App Switcher Dropdown */}
             <div className="relative">
@@ -228,7 +228,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               >
                 {currentWorkspace ? currentWorkspace.name : "Personal"} / <span className="font-bold text-white mr-1">{currentApp ? currentApp.name : "Select App"}</span>
                 {currentApp && currentApp.role && (
-                  <span className="px-1.5 py-0.5 rounded text-[10px] bg-violet-500/20 text-violet-300 border border-violet-500/30 uppercase tracking-wider font-semibold">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] bg-white/10 text-zinc-300 border border-white/10 uppercase tracking-wider font-semibold">
                     {currentApp.role}
                   </span>
                 )}
@@ -238,7 +238,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               {isDropdownOpen && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)}></div>
-                  <div className="absolute top-full left-0 mt-2 w-72 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden z-20 animate-in fade-in slide-in-from-top-2">
+                  <div className="absolute top-full left-0 mt-2 w-72 bg-zinc-950/90 backdrop-blur-2xl border border-white/5 rounded-xl shadow-2xl overflow-hidden z-20 animate-in fade-in slide-in-from-top-2">
                     
                     {/* Workspaces Section */}
                     <div className="p-2 border-b border-white/10 bg-zinc-950/50">

@@ -14,9 +14,9 @@ type RoadmapFeature = {
 };
 
 const STATUS_COLS = [
-  { id: "planned", title: "Planned Ideas", icon: Lightbulb, color: "text-blue-400" },
-  { id: "in_progress", title: "In Progress", icon: Clock, color: "text-orange-400" },
-  { id: "completed", title: "Launched", icon: Rocket, color: "text-emerald-400" },
+  { id: "planned", title: "Planned Ideas", icon: Lightbulb, color: "text-zinc-400" },
+  { id: "in_progress", title: "In Progress", icon: Clock, color: "text-white" },
+  { id: "completed", title: "Launched", icon: Rocket, color: "text-zinc-500" },
 ];
 
 export default function RoadmapPage() {
@@ -87,17 +87,17 @@ export default function RoadmapPage() {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "urgent": return "bg-red-500/10 text-red-400 border-red-500/20";
-      case "high": return "bg-orange-500/10 text-orange-400 border-orange-500/20";
-      case "low": return "bg-blue-500/10 text-blue-400 border-blue-500/20";
-      default: return "bg-zinc-500/10 text-zinc-400 border-zinc-500/20";
+      case "urgent": return "bg-white/10 text-white border-white/20";
+      case "high": return "bg-white/[0.05] text-zinc-300 border-white/10";
+      case "low": return "bg-white/[0.02] text-zinc-500 border-white/5";
+      default: return "bg-white/[0.03] text-zinc-400 border-white/10";
     }
   };
 
   if (loading) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
       </div>
     );
   }
@@ -107,7 +107,7 @@ export default function RoadmapPage() {
       {/* Header */}
       <div className="flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-purple-500/20 text-purple-400 rounded-xl border border-purple-500/30">
+          <div className="p-3 bg-white/10 text-white rounded-xl border border-white/10">
             <Map size={28} />
           </div>
           <div>
@@ -118,7 +118,7 @@ export default function RoadmapPage() {
         {canEdit && (
           <button 
             onClick={() => setShowFeatureModal(true)}
-            className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+            className="flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-xl font-medium hover:bg-zinc-200 transition shadow-[0_0_15px_rgba(255,255,255,0.1)]"
           >
             <Plus size={18} />
             Suggest Feature
@@ -130,31 +130,31 @@ export default function RoadmapPage() {
         {STATUS_COLS.map((col) => {
           const colFeatures = features.filter((f) => f.status === col.id);
           return (
-            <div key={col.id} className="bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-6 rounded-2xl flex flex-col max-h-full">
+            <div key={col.id} className="bg-white/[0.02] backdrop-blur-2xl border border-white/5 p-6 rounded-2xl flex flex-col max-h-full">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2 tracking-tight">
                   <col.icon size={20} className={col.color} /> {col.title}
                 </h2>
-                <span className="bg-white/10 text-zinc-300 text-xs px-2.5 py-1 rounded-full font-medium">
+                <span className="bg-white/10 text-white text-xs px-2.5 py-1 rounded-full font-medium">
                   {colFeatures.length}
                 </span>
               </div>
               
               <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2 pb-4">
                 {colFeatures.length === 0 ? (
-                  <div className="text-center py-8 text-zinc-600 border border-dashed border-white/5 rounded-xl">
+                  <div className="text-center py-8 text-zinc-600 border border-dashed border-white/10 rounded-xl font-light">
                     No features in this phase.
                   </div>
                 ) : (
                   colFeatures.map((feature) => (
-                    <div key={feature.id} className="p-5 bg-black/40 border border-white/5 hover:border-white/10 rounded-xl transition-all hover:bg-white/[0.02] group relative">
+                    <div key={feature.id} className="p-5 bg-white/[0.02] border border-white/5 hover:border-white/10 rounded-xl transition-all hover:bg-white/[0.04] group relative">
                       <div className="flex items-start justify-between mb-3">
                         <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${getPriorityColor(feature.priority)}`}>
                           {feature.priority} Priority
                         </span>
                         
                         {/* Quick actions on hover */}
-                        <div className="opacity-0 group-hover:opacity-100 transition flex gap-1 bg-black/80 rounded-lg backdrop-blur-sm p-1 border border-white/10 absolute right-4 top-4">
+                        <div className="opacity-0 group-hover:opacity-100 transition flex gap-1 bg-black/80 rounded-lg backdrop-blur-md p-1 border border-white/10 absolute right-4 top-4">
                           {col.id !== "planned" && (
                             <button onClick={() => updateStatus(feature.id, "planned")} className="p-1.5 text-zinc-400 hover:text-white rounded-md hover:bg-white/10" title="Move to Planned">
                               <Lightbulb size={14} />
@@ -166,7 +166,7 @@ export default function RoadmapPage() {
                             </button>
                           )}
                           {col.id !== "completed" && (
-                            <button onClick={() => updateStatus(feature.id, "completed")} className="p-1.5 text-zinc-400 hover:text-emerald-400 rounded-md hover:bg-white/10" title="Mark Completed">
+                            <button onClick={() => updateStatus(feature.id, "completed")} className="p-1.5 text-zinc-400 hover:text-white rounded-md hover:bg-white/10" title="Mark Completed">
                               <CheckCircle2 size={14} />
                             </button>
                           )}
@@ -193,37 +193,37 @@ export default function RoadmapPage() {
       </div>
 
       {showFeatureModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
-            <h2 className="text-xl font-bold text-white mb-6">Suggest Roadmap Feature</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="bg-zinc-950 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
+            <h2 className="text-xl font-bold text-white mb-6 tracking-tight">Suggest Roadmap Feature</h2>
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1">Title</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Title</label>
                 <input 
                   type="text" 
                   placeholder="Feature title"
                   value={newFeature.title}
                   onChange={e => setNewFeature({...newFeature, title: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1">Description</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Description</label>
                 <textarea 
                   rows={3}
                   placeholder="Details..."
                   value={newFeature.description}
                   onChange={e => setNewFeature({...newFeature, description: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
                 />
               </div>
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-zinc-400 mb-1">Status</label>
+                  <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Status</label>
                   <select 
                     value={newFeature.status}
                     onChange={e => setNewFeature({...newFeature, status: e.target.value})}
-                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                    className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
                   >
                     <option value="planned">Planned Ideas</option>
                     <option value="in_progress">In Progress</option>
@@ -231,11 +231,11 @@ export default function RoadmapPage() {
                   </select>
                 </div>
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-zinc-400 mb-1">Priority</label>
+                  <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Priority</label>
                   <select 
                     value={newFeature.priority}
                     onChange={e => setNewFeature({...newFeature, priority: e.target.value})}
-                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                    className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -246,8 +246,8 @@ export default function RoadmapPage() {
               </div>
             </div>
             <div className="flex justify-end gap-3">
-              <button onClick={() => setShowFeatureModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
-              <button onClick={handleCreateFeature} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Suggest Feature</button>
+              <button onClick={() => setShowFeatureModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition font-medium">Cancel</button>
+              <button onClick={handleCreateFeature} className="px-5 py-2 bg-white hover:bg-zinc-200 text-black rounded-xl font-medium transition shadow-lg shadow-white/10">Suggest Feature</button>
             </div>
           </div>
         </div>

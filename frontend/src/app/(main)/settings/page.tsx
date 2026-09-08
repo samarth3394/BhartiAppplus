@@ -169,7 +169,7 @@ export default function SettingsPage() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col pb-12">
       {/* Header */}
       <div className="flex items-center gap-3 shrink-0">
-        <div className="p-3 bg-zinc-800 text-zinc-300 rounded-xl border border-white/10">
+        <div className="p-3 bg-white/10 text-white rounded-xl border border-white/10">
           <Settings size={28} />
         </div>
         <div>
@@ -180,31 +180,31 @@ export default function SettingsPage() {
 
       <div className="flex flex-col lg:flex-row gap-8 flex-1 items-start">
         {/* Sidebar Nav */}
-        <div className="w-full lg:w-64 bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shrink-0 flex flex-col gap-1">
+        <div className="w-full lg:w-64 bg-white/[0.02] backdrop-blur-2xl border border-white/5 p-4 rounded-2xl shrink-0 flex flex-col gap-1">
           <button 
             onClick={() => setActiveTab("profile")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "profile" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "profile" ? "bg-white text-black font-medium shadow-[0_0_10px_rgba(255,255,255,0.1)]" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
           >
             <User size={18} /> My Profile
           </button>
           {["admin", "project_manager"].includes(userRole) && (
             <button 
               onClick={() => setActiveTab("app")}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "app" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "app" ? "bg-white text-black font-medium shadow-[0_0_10px_rgba(255,255,255,0.1)]" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
             >
               <Smartphone size={18} /> App Settings
             </button>
           )}
           <button 
             onClick={() => setActiveTab("notifications")}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "notifications" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "notifications" ? "bg-white text-black font-medium shadow-[0_0_10px_rgba(255,255,255,0.1)]" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
           >
             <Bell size={18} /> Notifications
           </button>
           {["admin"].includes(userRole) && (
             <button 
               onClick={() => setActiveTab("security")}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "security" ? "bg-white/10 text-white font-medium" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "security" ? "bg-white text-black font-medium shadow-[0_0_10px_rgba(255,255,255,0.1)]" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
             >
               <Shield size={18} /> Security
             </button>
@@ -212,7 +212,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 w-full bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
+        <div className="flex-1 w-full bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-2xl overflow-hidden">
           
           {activeTab === "profile" && (
             <div className="p-8">
@@ -224,7 +224,7 @@ export default function SettingsPage() {
                     type="text"
                     value={profile.full_name || ""}
                     onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-blue-500/50 transition-colors"
+                    className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors font-light"
                   />
                 </div>
                 <div>
@@ -233,10 +233,10 @@ export default function SettingsPage() {
                     type="email"
                     value={profile.email || ""}
                     onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-blue-500/50 transition-colors"
+                    className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors font-light"
                   />
                 </div>
-                <button type="submit" disabled={savingProfile} className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50">
+                <button type="submit" disabled={savingProfile} className="bg-white hover:bg-zinc-200 text-black px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   {savingProfile ? "Saving..." : "Save Profile"}
                 </button>
               </form>
@@ -255,7 +255,7 @@ export default function SettingsPage() {
                       placeholder="https://example.com/logo.png"
                       value={appSettings.logo_url || ""}
                       onChange={(e) => setAppSettings({ ...appSettings, logo_url: e.target.value })}
-                      className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-purple-500/50 transition-colors"
+                      className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors font-light"
                     />
                   </div>
                   <div>
@@ -263,7 +263,7 @@ export default function SettingsPage() {
                     <select
                       value={appSettings.is_active ? "active" : "maintenance"}
                       onChange={(e) => setAppSettings({ ...appSettings, is_active: e.target.value === "active" })}
-                      className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-purple-500/50 transition-colors appearance-none"
+                      className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors appearance-none font-light"
                     >
                       <option value="active">Active</option>
                       <option value="maintenance">Maintenance Mode</option>
@@ -275,7 +275,7 @@ export default function SettingsPage() {
                   <textarea
                     value={appSettings.description || ""}
                     onChange={(e) => setAppSettings({ ...appSettings, description: e.target.value })}
-                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-purple-500/50 transition-colors h-24 resize-none"
+                    className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors h-24 resize-none font-light"
                   />
                 </div>
                 <div>
@@ -286,7 +286,7 @@ export default function SettingsPage() {
                       type="url"
                       value={appSettings.url || ""}
                       onChange={(e) => setAppSettings({ ...appSettings, url: e.target.value })}
-                      className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 pl-10 pr-4 outline-none focus:border-purple-500/50 transition-colors"
+                      className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 pl-10 pr-4 outline-none focus:border-white/30 transition-colors font-light"
                     />
                   </div>
                 </div>
@@ -298,7 +298,7 @@ export default function SettingsPage() {
                       id="monitor"
                       checked={appSettings.monitoring_enabled}
                       onChange={(e) => setAppSettings({ ...appSettings, monitoring_enabled: e.target.checked })}
-                      className="w-5 h-5 rounded accent-purple-500 bg-black/50 border-white/10" 
+                      className="w-5 h-5 rounded accent-white bg-white/[0.02] border-white/10" 
                     />
                     <label htmlFor="monitor" className="text-zinc-300">Enable automated uptime checks</label>
                   </div>
@@ -307,7 +307,7 @@ export default function SettingsPage() {
                     <select
                       value={appSettings.check_interval}
                       onChange={(e) => setAppSettings({ ...appSettings, check_interval: parseInt(e.target.value) })}
-                      className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-purple-500/50 transition-colors appearance-none"
+                      className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors appearance-none font-light"
                     >
                       <option value={1}>Every 1 Minute</option>
                       <option value={5}>Every 5 Minutes</option>
@@ -316,7 +316,7 @@ export default function SettingsPage() {
                     </select>
                   </div>
                 </div>
-                <button type="submit" disabled={savingApp} className="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50">
+                <button type="submit" disabled={savingApp} className="bg-white hover:bg-zinc-200 text-black px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   {savingApp ? "Saving..." : "Save App Settings"}
                 </button>
               </form>
@@ -328,15 +328,15 @@ export default function SettingsPage() {
               <h2 className="text-2xl font-bold text-white mb-6">Notification Preferences</h2>
               <form onSubmit={saveNotifications} className="space-y-6 max-w-lg">
                 {/* Email Alerts */}
-                <div className="p-5 border border-white/10 rounded-xl bg-black/20 space-y-4">
+                <div className="p-5 border border-white/5 rounded-xl bg-white/[0.02] space-y-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <h4 className="text-white font-medium mb-1">Downtime Alerts (Email)</h4>
                       <p className="text-sm text-zinc-400">Receive an email immediately when your app goes offline.</p>
                     </div>
                     <button type="button" onClick={() => setNotificationSettings(s => ({ ...s, alert_email: !s.alert_email }))}
-                      className={`w-12 h-6 rounded-full relative transition-colors ${notificationSettings.alert_email ? 'bg-emerald-500' : 'bg-zinc-700'}`}>
-                      <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all ${notificationSettings.alert_email ? 'right-1' : 'left-1'}`}></div>
+                      className={`w-12 h-6 rounded-full relative transition-colors ${notificationSettings.alert_email ? 'bg-white' : 'bg-white/10'}`}>
+                      <div className={`w-4 h-4 bg-black rounded-full absolute top-1 transition-all ${notificationSettings.alert_email ? 'right-1' : 'left-1'}`}></div>
                     </button>
                   </div>
                   {notificationSettings.alert_email && (
@@ -347,37 +347,37 @@ export default function SettingsPage() {
                         <input type="email" placeholder="alerts@yourcompany.com"
                           value={notificationSettings.alert_email_address}
                           onChange={(e) => setNotificationSettings(s => ({ ...s, alert_email_address: e.target.value }))}
-                          className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 pl-10 pr-4 outline-none focus:border-emerald-500/50 transition-colors" />
+                          className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 pl-10 pr-4 outline-none focus:border-white/30 transition-colors font-light" />
                       </div>
                     </div>
                   )}
                 </div>
 
                 {/* Weekly CTO Report */}
-                <div className="p-5 border border-white/10 rounded-xl bg-black/20">
+                <div className="p-5 border border-white/5 rounded-xl bg-white/[0.02]">
                   <div className="flex items-start justify-between">
                     <div>
                       <h4 className="text-white font-medium mb-1">Weekly CTO Report</h4>
                       <p className="text-sm text-zinc-400">Receive AI-generated executive summaries every Monday.</p>
                     </div>
                     <button type="button" onClick={() => setNotificationSettings(s => ({ ...s, weekly_cto_report: !s.weekly_cto_report }))}
-                      className={`w-12 h-6 rounded-full relative transition-colors ${notificationSettings.weekly_cto_report ? 'bg-emerald-500' : 'bg-zinc-700'}`}>
-                      <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all ${notificationSettings.weekly_cto_report ? 'right-1' : 'left-1'}`}></div>
+                      className={`w-12 h-6 rounded-full relative transition-colors ${notificationSettings.weekly_cto_report ? 'bg-white' : 'bg-white/10'}`}>
+                      <div className={`w-4 h-4 bg-black rounded-full absolute top-1 transition-all ${notificationSettings.weekly_cto_report ? 'right-1' : 'left-1'}`}></div>
                     </button>
                   </div>
                 </div>
 
                 {/* Slack Integration */}
-                <div className="p-5 border border-white/10 rounded-xl bg-black/20">
+                <div className="p-5 border border-white/5 rounded-xl bg-white/[0.02]">
                   <h4 className="text-white font-medium mb-1">Slack Integration</h4>
                   <p className="text-sm text-zinc-400 mb-3">Send downtime and critical alerts to a Slack channel via Webhook.</p>
                   <input type="url" placeholder="https://hooks.slack.com/services/..."
                     value={notificationSettings.slack_webhook}
                     onChange={(e) => setNotificationSettings(s => ({ ...s, slack_webhook: e.target.value }))}
-                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-purple-500/50 transition-colors font-mono text-sm" />
+                    className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2.5 px-4 outline-none focus:border-white/30 transition-colors font-mono text-sm font-light" />
                 </div>
 
-                <button type="submit" disabled={savingNotifications} className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50">
+                <button type="submit" disabled={savingNotifications} className="bg-white hover:bg-zinc-200 text-black px-6 py-2.5 rounded-xl font-medium transition disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                   {savingNotifications ? "Saving..." : "Save Notification Settings"}
                 </button>
               </form>
@@ -397,7 +397,7 @@ export default function SettingsPage() {
                       type="text" 
                       readOnly 
                       value={appSettings.client_key}
-                      className="flex-1 bg-black/80 border border-white/10 text-emerald-400 font-mono rounded-xl py-2.5 px-4 outline-none"
+                      className="flex-1 bg-white/[0.02] border border-white/10 text-white font-mono rounded-xl py-2.5 px-4 outline-none"
                     />
                     <button 
                       onClick={regenerateKey}
