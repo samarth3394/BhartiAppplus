@@ -201,23 +201,24 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
       {/* Sidebar */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-black border-r border-white/5 flex flex-col transition-transform duration-300 ease-in-out
-        ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static
+        fixed inset-y-0 left-0 z-40 bg-black border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out group
+        ${isMobileMenuOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0 lg:w-[80px] lg:hover:w-64"} 
       `}>
-        <div className="p-6 flex items-center gap-3">
+        <div className="p-6 flex items-center gap-3 overflow-hidden whitespace-nowrap h-20">
           <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)] shrink-0">
             <Zap size={18} className="text-black" />
           </div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-white tracking-tight transition-opacity duration-200 lg:opacity-0 lg:group-hover:opacity-100">
             BNexora
           </h1>
         </div>
         
-        <nav className="flex-1 px-4 py-2 space-y-6 overflow-y-auto">
+        <nav className="flex-1 px-4 py-2 space-y-6 overflow-y-auto overflow-x-hidden no-scrollbar">
           {navGroups.map((group, idx) => (
             <div key={idx} className="space-y-1">
-              <h3 className="px-3 text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2">
-                {group.title}
+              <h3 className="px-3 text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2 transition-opacity duration-200 lg:opacity-0 lg:group-hover:opacity-100 whitespace-nowrap h-4">
+                <span className="lg:hidden lg:group-hover:inline-block">{group.title}</span>
+                <span className="hidden lg:inline-block lg:group-hover:hidden tracking-normal text-center w-full">...</span>
               </h3>
               {group.items.map((item) => {
                 const Icon = item.icon;
@@ -226,15 +227,18 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                   <a
                     key={item.name}
                     href={item.href}
+                    title={item.name}
                     className={`
-                      flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                      flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap overflow-hidden
                       ${isActive 
                         ? "bg-white/10 text-white shadow-sm shadow-white/5" 
                         : "text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent"}
                     `}
                   >
-                    <Icon size={18} className={isActive ? "text-white" : "text-zinc-500"} />
-                    {item.name}
+                    <Icon size={18} className={`shrink-0 ${isActive ? "text-white" : "text-zinc-500"}`} />
+                    <span className="transition-opacity duration-200 lg:opacity-0 lg:group-hover:opacity-100">
+                      {item.name}
+                    </span>
                   </a>
                 );
               })}
@@ -242,10 +246,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           ))}
         </nav>
 
-        <div className="p-4 border-t border-white/10">
-          <button onClick={handleSignOut} className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors border border-transparent hover:border-red-500/20">
-            <LogOut size={18} />
-            Sign out
+        <div className="p-4 border-t border-white/10 overflow-hidden whitespace-nowrap">
+          <button onClick={handleSignOut} title="Sign out" className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors border border-transparent hover:border-red-500/20">
+            <LogOut size={18} className="shrink-0" />
+            <span className="transition-opacity duration-200 lg:opacity-0 lg:group-hover:opacity-100">Sign out</span>
           </button>
         </div>
       </aside>
