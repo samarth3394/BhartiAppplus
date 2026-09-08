@@ -125,32 +125,141 @@ export default function LandingPage() {
               <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
               <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
             </div>
-            {/* Mockup Content (Abstract representation of dashboard) */}
-            <div className="w-full aspect-[16/9] bg-zinc-950 p-8 flex flex-col gap-6">
+            {/* Mockup Content (Realistic Dashboard UI) */}
+            <div className="w-full aspect-[16/9] bg-[#0a0a0a] p-8 flex flex-col gap-6 relative overflow-hidden font-sans">
+              
+              {/* Top Stats Row */}
               <div className="w-full flex gap-6 h-1/4">
-                <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-2xl p-6">
-                  <div className="w-12 h-4 bg-white/10 rounded mb-4"></div>
-                  <div className="w-24 h-8 bg-white/20 rounded"></div>
+                {/* Stat Card 1 */}
+                <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col justify-between hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Activity size={48} />
+                  </div>
+                  <h3 className="text-zinc-400 font-medium text-sm">Total Active Users</h3>
+                  <div className="flex items-end gap-3">
+                    <span className="text-4xl font-bold text-white tracking-tight">124,592</span>
+                    <span className="text-emerald-500 text-sm font-medium mb-1 flex items-center bg-emerald-500/10 px-2 py-0.5 rounded-full">+14.2%</span>
+                  </div>
                 </div>
-                <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-2xl p-6">
-                  <div className="w-12 h-4 bg-white/10 rounded mb-4"></div>
-                  <div className="w-32 h-8 bg-white/20 rounded"></div>
+                
+                {/* Stat Card 2 */}
+                <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col justify-between hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Cpu size={48} />
+                  </div>
+                  <h3 className="text-zinc-400 font-medium text-sm">System Uptime</h3>
+                  <div className="flex items-end gap-3">
+                    <span className="text-4xl font-bold text-white tracking-tight">99.99%</span>
+                    <span className="text-zinc-500 text-sm font-medium mb-1">Last 30 days</span>
+                  </div>
                 </div>
-                <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-2xl p-6">
-                  <div className="w-12 h-4 bg-white/10 rounded mb-4"></div>
-                  <div className="w-20 h-8 bg-emerald-500/20 rounded"></div>
+
+                {/* Stat Card 3 */}
+                <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col justify-between hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Shield size={48} />
+                  </div>
+                  <h3 className="text-zinc-400 font-medium text-sm">Security Threats Blocked</h3>
+                  <div className="flex items-end gap-3">
+                    <span className="text-4xl font-bold text-white tracking-tight">8,432</span>
+                    <span className="text-emerald-500 text-sm font-medium mb-1 flex items-center bg-emerald-500/10 px-2 py-0.5 rounded-full">-5.1%</span>
+                  </div>
                 </div>
               </div>
+
+              {/* Bottom Row */}
               <div className="w-full flex gap-6 h-3/4">
-                <div className="w-2/3 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col gap-4">
-                  <div className="w-32 h-4 bg-white/10 rounded mb-4"></div>
-                  <div className="w-full h-full bg-blue-500/10 rounded-xl border border-blue-500/20"></div>
+                
+                {/* Main Chart Area */}
+                <div className="w-2/3 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-white font-medium">Network Traffic (TB/s)</h3>
+                    <div className="flex gap-2">
+                      <span className="text-xs bg-white/10 text-white px-3 py-1 rounded-full cursor-pointer hover:bg-white/20">1H</span>
+                      <span className="text-xs bg-blue-600 text-white px-3 py-1 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]">24H</span>
+                      <span className="text-xs bg-white/10 text-white px-3 py-1 rounded-full cursor-pointer hover:bg-white/20">7D</span>
+                    </div>
+                  </div>
+                  
+                  {/* Glowing SVG Line Chart */}
+                  <div className="flex-1 relative w-full h-full mt-2">
+                    {/* Grid lines */}
+                    <div className="absolute inset-0 flex flex-col justify-between">
+                      {[1,2,3,4].map(i => <div key={i} className="w-full h-px bg-white/5"></div>)}
+                    </div>
+                    {/* SVG Chart */}
+                    <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+                      <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="rgba(59, 130, 246, 0.4)" />
+                          <stop offset="100%" stopColor="rgba(59, 130, 246, 0)" />
+                        </linearGradient>
+                      </defs>
+                      <path 
+                        d="M0,80 C10,70 20,90 30,50 C40,10 50,60 60,30 C70,0 80,40 90,20 C95,10 100,30 100,30 L100,100 L0,100 Z" 
+                        fill="url(#gradient)" 
+                      />
+                      <path 
+                        d="M0,80 C10,70 20,90 30,50 C40,10 50,60 60,30 C70,0 80,40 90,20 C95,10 100,30 100,30" 
+                        fill="none" 
+                        stroke="#3b82f6" 
+                        strokeWidth="1.5" 
+                        className="drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
+                      />
+                    </svg>
+                  </div>
                 </div>
-                <div className="w-1/3 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col gap-4">
-                  <div className="w-24 h-4 bg-white/10 rounded mb-4"></div>
-                  <div className="w-full h-12 bg-white/5 rounded-lg"></div>
-                  <div className="w-full h-12 bg-white/5 rounded-lg"></div>
-                  <div className="w-full h-12 bg-white/5 rounded-lg"></div>
+
+                {/* Activity Feed */}
+                <div className="w-1/3 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col">
+                  <h3 className="text-white font-medium mb-6">System Events</h3>
+                  <div className="flex flex-col gap-5 flex-1 overflow-hidden">
+                    
+                    {/* Event Item */}
+                    <div className="flex gap-4 items-start">
+                      <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                        <CheckCircle2 size={16} />
+                      </div>
+                      <div>
+                        <p className="text-sm text-white font-medium">Deployment Successful</p>
+                        <p className="text-xs text-zinc-500 mt-0.5">Production env updated • 2m ago</p>
+                      </div>
+                    </div>
+
+                    {/* Event Item */}
+                    <div className="flex gap-4 items-start">
+                      <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/30">
+                        <Activity size={16} />
+                      </div>
+                      <div>
+                        <p className="text-sm text-white font-medium">High CPU Load Detected</p>
+                        <p className="text-xs text-zinc-500 mt-0.5">Database cluster pg-main-1 • 14m ago</p>
+                      </div>
+                    </div>
+
+                    {/* Event Item */}
+                    <div className="flex gap-4 items-start">
+                      <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 border border-blue-500/30">
+                        <Shield size={16} />
+                      </div>
+                      <div>
+                        <p className="text-sm text-white font-medium">New Admin Access</p>
+                        <p className="text-xs text-zinc-500 mt-0.5">User sarah@company.com logged in • 1h ago</p>
+                      </div>
+                    </div>
+
+                    {/* Event Item */}
+                    <div className="flex gap-4 items-start">
+                      <div className="w-8 h-8 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center shrink-0 border border-red-500/30">
+                        <CheckCircle2 size={16} />
+                      </div>
+                      <div>
+                        <p className="text-sm text-white font-medium">Payment Gateway Error</p>
+                        <p className="text-xs text-zinc-500 mt-0.5">Stripe API connection timed out • 3h ago</p>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
               </div>
             </div>
