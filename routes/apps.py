@@ -100,7 +100,7 @@ async def create_app(data: AppCreateRequest, request: Request, response: Respons
     db.commit()
 
     # Auto-switch to new app
-    response.set_cookie(key="current_app_id", value=str(new_app.id), httponly=True, path="/")
+    response.set_cookie(key="current_app_id", value=str(new_app.id), httponly=True, max_age=60*60*24*30, path="/")
 
     return {'message': 'App created', 'app': new_app.to_dict()}
 
@@ -170,5 +170,5 @@ async def switch_app(app_id: str, response: Response, user: User = Depends(get_c
         if not member:
             raise HTTPException(status_code=403, detail="You do not have access to this app")
 
-    response.set_cookie(key="current_app_id", value=app_id, httponly=True, path="/")
+    response.set_cookie(key="current_app_id", value=app_id, httponly=True, max_age=60*60*24*30, path="/")
     return {"message": f"Switched to app {app_obj.name}"}

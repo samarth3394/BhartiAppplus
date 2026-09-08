@@ -76,7 +76,7 @@ async def create_workspace(data: WorkspaceCreateRequest, response: Response, use
     db.add(member)
     db.commit()
 
-    response.set_cookie(key="current_workspace_id", value=str(new_workspace.id), httponly=True, path="/")
+    response.set_cookie(key="current_workspace_id", value=str(new_workspace.id), httponly=True, max_age=60*60*24*30, path="/")
     return {'message': 'Workspace created', 'workspace': new_workspace.to_dict()}
 
 @router.put("/api/workspaces/{workspace_id}")
@@ -130,7 +130,7 @@ async def switch_workspace(workspace_id: str, response: Response, user: User = D
         if not member:
             raise HTTPException(status_code=403, detail="You do not have access to this workspace")
 
-    response.set_cookie(key="current_workspace_id", value=workspace_id, httponly=True, path="/")
+    response.set_cookie(key="current_workspace_id", value=workspace_id, httponly=True, max_age=60*60*24*30, path="/")
     return {"message": f"Switched to workspace {workspace_obj.name}"}
 
 @router.post("/api/workspaces/{workspace_id}/members")
