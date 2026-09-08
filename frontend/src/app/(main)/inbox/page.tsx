@@ -119,10 +119,10 @@ export default function InboxPage() {
   if (error) {
     return (
       <div className="flex-1 flex items-center justify-center h-[calc(100vh-8rem)]">
-        <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-8 max-w-md text-center">
-          <AlertCircle className="w-12 h-12 text-zinc-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-white mb-2">Workspace Required</h2>
-          <p className="text-zinc-400 text-sm">
+        <div className="bg-[#111] border border-white/[0.06] rounded-xl p-6 max-w-sm text-center">
+          <AlertCircle className="w-8 h-8 text-[#555] mx-auto mb-4" />
+          <h2 className="text-[15px] font-medium text-white mb-2">Workspace Required</h2>
+          <p className="text-[#888] text-[13px] leading-relaxed">
             {error}
           </p>
         </div>
@@ -131,17 +131,17 @@ export default function InboxPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col -m-8">
+    <div className="h-[calc(100vh-6rem)] flex flex-col -m-6 max-w-5xl mx-auto border-x border-white/[0.04] bg-[#0a0a0a]">
       {/* Header */}
-      <div className="h-16 border-b border-white/5 bg-zinc-950/50 px-8 flex items-center justify-between shrink-0">
+      <div className="h-14 border-b border-white/[0.04] bg-[#0a0a0a] px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center">
-            <MessageSquare size={20} className="text-blue-400" />
+          <div className="w-8 h-8 rounded bg-[#111] border border-white/[0.08] flex items-center justify-center">
+            <MessageSquare size={14} className="text-[#EDEDED]" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white leading-tight">Team Inbox</h1>
-            <p className="text-xs text-zinc-400 flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
+            <h1 className="text-[14px] font-medium text-[#EDEDED] leading-tight">Team Inbox</h1>
+            <p className="text-[11px] text-[#666] flex items-center gap-1.5 mt-0.5">
+              <span className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
               {isConnected ? 'Connected' : 'Connecting...'}
             </p>
           </div>
@@ -149,38 +149,38 @@ export default function InboxPage() {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-6 scroll-smooth bg-gradient-to-b from-transparent to-black/50">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-zinc-500">
-            <MessageSquare size={48} className="mb-4 opacity-20" />
-            <p>No messages yet. Say hello to your team!</p>
+          <div className="flex flex-col items-center justify-center h-full text-[#555]">
+            <MessageSquare size={32} className="mb-3 opacity-20" />
+            <p className="text-[13px]">No messages yet. Start the conversation.</p>
           </div>
         ) : (
           messages.map((msg, idx) => {
             const isMe = currentUser && msg.sender_id === currentUser.id;
             return (
-              <div key={msg.id || idx} className={`flex gap-4 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+              <div key={msg.id || idx} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                 {/* Avatar */}
-                <div className="w-10 h-10 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-8 h-8 rounded bg-[#1a1a1a] border border-white/[0.08] flex items-center justify-center overflow-hidden shrink-0">
                   {msg.sender?.avatar_url ? (
                     <img src={msg.sender.avatar_url} alt={msg.sender.full_name} className="w-full h-full object-cover" />
                   ) : (
-                    <UserIcon size={18} className="text-zinc-500" />
+                    <UserIcon size={14} className="text-[#666]" />
                   )}
                 </div>
                 
                 {/* Message Bubble */}
                 <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[70%]`}>
                   <div className="flex items-baseline gap-2 mb-1 px-1">
-                    <span className="text-xs font-semibold text-zinc-300">{msg.sender?.full_name || 'Unknown User'}</span>
-                    <span className="text-[10px] text-zinc-500">
+                    <span className="text-[11px] font-medium text-[#888]">{msg.sender?.full_name || 'Unknown User'}</span>
+                    <span className="text-[10px] text-[#555]">
                       {msg.created_at ? new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now'}
                     </span>
                   </div>
-                  <div className={`px-5 py-3 rounded-2xl text-sm ${
+                  <div className={`px-4 py-2.5 text-[13px] leading-relaxed ${
                     isMe 
-                      ? 'bg-blue-600 text-white rounded-tr-sm shadow-[0_0_15px_rgba(37,99,235,0.2)]' 
-                      : 'bg-zinc-800 text-zinc-200 border border-white/5 rounded-tl-sm shadow-xl'
+                      ? 'bg-white text-black rounded-lg rounded-tr-sm' 
+                      : 'bg-[#111] text-[#EDEDED] border border-white/[0.06] rounded-lg rounded-tl-sm'
                   }`}>
                     {msg.content}
                   </div>
@@ -193,9 +193,9 @@ export default function InboxPage() {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-zinc-950/80 border-t border-white/5 shrink-0 backdrop-blur-xl">
-        <form onSubmit={sendMessage} className="relative max-w-4xl mx-auto flex items-end gap-3">
-          <div className="flex-1 bg-zinc-900 border border-white/10 rounded-2xl overflow-hidden focus-within:border-blue-500/50 focus-within:ring-2 ring-blue-500/20 transition-all shadow-inner">
+      <div className="p-4 bg-[#0a0a0a] border-t border-white/[0.04] shrink-0">
+        <form onSubmit={sendMessage} className="relative flex items-end gap-2">
+          <div className="flex-1 bg-[#111] border border-white/[0.08] rounded-lg overflow-hidden focus-within:border-white/20 transition-all">
             <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
@@ -205,19 +205,22 @@ export default function InboxPage() {
                   sendMessage(e);
                 }
               }}
-              placeholder="Type your message..."
-              className="w-full bg-transparent text-white px-5 py-4 outline-none resize-none min-h-[60px] max-h-32 text-sm"
+              placeholder="Message team..."
+              className="w-full bg-transparent text-[#EDEDED] px-4 py-3 outline-none resize-none min-h-[44px] max-h-32 text-[13px] placeholder:text-[#555]"
               rows={1}
             />
           </div>
           <button 
             type="submit"
             disabled={!newMessage.trim() || !isConnected}
-            className="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(37,99,235,0.3)] shrink-0"
+            className="w-[44px] h-[44px] rounded-lg bg-white text-black flex items-center justify-center hover:bg-[#e5e5e5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
           >
-            <Send size={20} className="ml-1" />
+            <Send size={16} className="ml-0.5" />
           </button>
         </form>
+        <div className="text-center mt-2">
+          <span className="text-[10px] text-[#555]">Press <span className="font-mono bg-[#1a1a1a] px-1 rounded border border-white/[0.06]">Enter</span> to send, <span className="font-mono bg-[#1a1a1a] px-1 rounded border border-white/[0.06]">Shift + Enter</span> for new line</span>
+        </div>
       </div>
     </div>
   );

@@ -59,111 +59,111 @@ export default function BugsPage() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "critical": return "text-red-500 bg-red-500/10 border-red-500/20";
-      case "high": return "text-orange-500 bg-orange-500/10 border-orange-500/20";
-      case "medium": return "text-amber-500 bg-amber-500/10 border-amber-500/20";
-      case "low": return "text-blue-500 bg-blue-500/10 border-blue-500/20";
-      default: return "text-zinc-400 bg-zinc-500/10 border-zinc-500/20";
+      case "critical": return "text-red-400 bg-red-400/10 border-red-400/20";
+      case "high": return "text-orange-400 bg-orange-400/10 border-orange-400/20";
+      case "medium": return "text-amber-400 bg-amber-400/10 border-amber-400/20";
+      case "low": return "text-blue-400 bg-blue-400/10 border-blue-400/20";
+      default: return "text-[#888] bg-white/[0.04] border-white/[0.08]";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "open": return <AlertCircle size={16} className="text-red-400" />;
-      case "in_progress": return <Clock size={16} className="text-blue-400" />;
-      case "resolved": return <CheckCircle2 size={16} className="text-emerald-400" />;
-      default: return <Bug size={16} className="text-zinc-400" />;
+      case "open": return <AlertCircle size={14} className="text-red-400" />;
+      case "in_progress": return <Clock size={14} className="text-amber-400" />;
+      case "resolved": return <CheckCircle2 size={14} className="text-emerald-400" />;
+      default: return <Bug size={14} className="text-[#888]" />;
     }
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col">
+    <div className="space-y-6 max-w-[1200px] mx-auto h-full flex flex-col pb-8 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-white/10 text-white rounded-xl border border-white/10">
-            <Bug size={28} />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white mb-1">Issues & Bugs</h1>
-            <p className="text-zinc-400">Track and manage application errors and user reports.</p>
-          </div>
+      <div className="flex items-center justify-between shrink-0 pb-4 border-b border-white/[0.04]">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight text-[#EDEDED] mb-1">Issues & Bugs</h1>
+          <p className="text-[13px] text-[#888]">Track and manage application errors and user reports.</p>
         </div>
         {canEdit && (
-          <button onClick={() => setShowBugModal(true)} className="flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-xl font-medium hover:bg-zinc-200 transition shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-            <Plus size={18} />
-            Report Bug
+          <button onClick={() => setShowBugModal(true)} className="flex items-center gap-1.5 bg-white text-black px-3 py-1.5 rounded-md text-[13px] font-medium hover:bg-[#e5e5e5] transition">
+            <Plus size={16} />
+            Report Issue
           </button>
         )}
       </div>
 
       {/* Toolbar */}
-      <div className="flex gap-4">
-        <div className="relative flex-1">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+      <div className="flex gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555]" />
           <input 
             type="text" 
             placeholder="Search issues..." 
-            className="w-full bg-white/[0.02] border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-white outline-none focus:border-white/30 transition-colors font-light"
+            className="w-full bg-[#111] border border-white/[0.08] rounded-lg py-1.5 pl-9 pr-3 text-[#EDEDED] text-[13px] outline-none focus:border-white/20 transition-colors placeholder:text-[#555]"
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.02] border border-white/10 rounded-xl text-white hover:bg-white/[0.05] transition font-medium">
-          <Filter size={18} />
+        <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#111] border border-white/[0.08] rounded-lg text-[#EDEDED] text-[13px] hover:bg-[#1a1a1a] transition font-medium">
+          <Filter size={14} />
           Filters
         </button>
       </div>
 
       {/* Bug List */}
-      <div className="flex-1 bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-2xl overflow-hidden flex flex-col">
+      <div className="flex-1 bg-[#0a0a0a] border border-white/[0.04] rounded-xl overflow-hidden flex flex-col">
         {loading ? (
           <div className="flex-1 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+             <div className="w-5 h-5 border-2 border-[#333] border-t-[#EDEDED] rounded-full animate-spin" />
           </div>
         ) : bugs.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <div className="w-16 h-16 bg-white/[0.02] rounded-full flex items-center justify-center mb-4 text-zinc-500 border border-white/5">
-              <Bug size={32} />
+            <div className="w-12 h-12 bg-[#111] rounded border border-white/[0.08] flex items-center justify-center mb-4 text-[#555]">
+              <Bug size={24} />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2 tracking-tight">No bugs found</h3>
-            <p className="text-zinc-400 max-w-md font-light">You're all caught up! There are no open issues matching your criteria.</p>
+            <h3 className="text-[14px] font-medium text-[#EDEDED] mb-1">No issues found</h3>
+            <p className="text-[#888] text-[13px] max-w-xs">You're all caught up! There are no open issues matching your criteria.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/5 bg-white/[0.02] text-xs uppercase tracking-wider text-zinc-500">
-                  <th className="px-6 py-4 font-medium">Issue</th>
-                  <th className="px-6 py-4 font-medium">Status</th>
-                  <th className="px-6 py-4 font-medium">Severity</th>
-                  <th className="px-6 py-4 font-medium">Reporter</th>
-                  <th className="px-6 py-4 font-medium">Created</th>
+                <tr className="border-b border-white/[0.04] bg-[#111] text-[11px] uppercase tracking-wider text-[#888]">
+                  <th className="px-5 py-3 font-medium">Issue</th>
+                  <th className="px-5 py-3 font-medium">Status</th>
+                  <th className="px-5 py-3 font-medium">Severity</th>
+                  <th className="px-5 py-3 font-medium">Reporter</th>
+                  <th className="px-5 py-3 font-medium">Created</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-white/[0.04]">
                 {bugs.map((bug) => (
-                  <tr key={bug.id} className="hover:bg-white/[0.03] transition-colors cursor-pointer group">
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="font-medium text-white transition-colors">{bug.title}</span>
-                        <span className="text-sm text-zinc-500 truncate max-w-md">{bug.description || "No description provided"}</span>
+                  <tr key={bug.id} className="hover:bg-[#111] transition-colors cursor-pointer group">
+                    <td className="px-5 py-4">
+                      <div className="flex flex-col gap-0.5">
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-mono text-[#555]">{bug.id.substring(0, 8)}</span>
+                            <span className="font-medium text-[13px] text-[#EDEDED]">{bug.title}</span>
+                        </div>
+                        {bug.description && (
+                            <span className="text-[12px] text-[#666] truncate max-w-md pl-[52px]">{bug.description}</span>
+                        )}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
                         {getStatusIcon(bug.status)}
-                        <span className="text-sm text-zinc-300 capitalize">{bug.status.replace("_", " ")}</span>
+                        <span className="text-[12px] text-[#888] capitalize">{bug.status.replace("_", " ")}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getSeverityColor(bug.severity)} capitalize`}>
+                    <td className="px-5 py-4">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-medium border ${getSeverityColor(bug.severity)} capitalize tracking-wide`}>
                         {bug.severity}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-zinc-400">
+                    <td className="px-5 py-4 text-[12px] text-[#888]">
                       {bug.reporter?.full_name || "System"}
                     </td>
-                    <td className="px-6 py-4 text-sm text-zinc-500">
-                      {new Date(bug.created_at).toLocaleDateString()}
+                    <td className="px-5 py-4 text-[12px] text-[#666]">
+                      {new Date(bug.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
                   </tr>
                 ))}
@@ -174,36 +174,35 @@ export default function BugsPage() {
       </div>
 
       {showBugModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="bg-zinc-950 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
-            <h2 className="text-xl font-bold text-white mb-6 tracking-tight">Report New Bug</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-[#111111] border border-white/[0.08] rounded-xl w-full max-w-lg p-6 shadow-2xl">
+            <h2 className="text-[15px] font-medium text-[#EDEDED] mb-5">Report Issue</h2>
             <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Bug Title</label>
+              <div className="space-y-1.5">
                 <input 
                   type="text" 
-                  placeholder="e.g. App crashes on login"
+                  placeholder="Issue title"
                   value={newBug.title}
                   onChange={e => setNewBug({...newBug, title: e.target.value})}
-                  className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
+                  className="w-full bg-transparent border-b border-white/[0.08] text-[#EDEDED] py-2 px-1 outline-none focus:border-white/20 text-[15px] placeholder:text-[#555] transition-colors"
+                  autoFocus
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Description</label>
+              <div className="space-y-1.5">
                 <textarea 
                   rows={3}
-                  placeholder="Steps to reproduce..."
+                  placeholder="Describe the issue..."
                   value={newBug.description}
                   onChange={e => setNewBug({...newBug, description: e.target.value})}
-                  className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.08] text-[#EDEDED] rounded-lg py-2 px-3 outline-none focus:border-white/20 text-[13px] placeholder:text-[#555] resize-none transition-colors"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1 ml-1">Severity</label>
+              <div className="space-y-1.5">
+                <label className="block text-[11px] font-medium text-[#888] uppercase tracking-wider">Severity</label>
                 <select 
                   value={newBug.severity}
                   onChange={e => setNewBug({...newBug, severity: e.target.value})}
-                  className="w-full bg-white/[0.02] border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-white/30 font-light"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.08] text-[#EDEDED] rounded-lg py-2 px-3 outline-none focus:border-white/20 text-[13px] appearance-none transition-colors"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -212,9 +211,9 @@ export default function BugsPage() {
                 </select>
               </div>
             </div>
-            <div className="flex justify-end gap-3">
-              <button onClick={() => setShowBugModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition font-medium">Cancel</button>
-              <button onClick={handleCreateBug} className="px-5 py-2 bg-white hover:bg-zinc-200 text-black rounded-xl font-medium transition shadow-lg shadow-white/10">Report Bug</button>
+            <div className="flex justify-end gap-2 pt-2 border-t border-white/[0.04]">
+              <button onClick={() => setShowBugModal(false)} className="px-3 py-1.5 text-[13px] text-[#888] hover:text-[#EDEDED] transition">Cancel</button>
+              <button onClick={handleCreateBug} className="px-3 py-1.5 bg-white hover:bg-[#e5e5e5] text-black rounded-md text-[13px] font-medium transition">Submit Issue</button>
             </div>
           </div>
         </div>

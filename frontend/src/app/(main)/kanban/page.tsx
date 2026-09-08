@@ -15,9 +15,9 @@ type Issue = {
 };
 
 const COLUMNS = [
-  { id: "todo", title: "To Do", icon: Circle, color: "text-zinc-400" },
-  { id: "in_progress", title: "In Progress", icon: Clock, color: "text-blue-400" },
-  { id: "review", title: "Review", icon: AlertCircle, color: "text-orange-400" },
+  { id: "todo", title: "To Do", icon: Circle, color: "text-[#888]" },
+  { id: "in_progress", title: "In Progress", icon: Clock, color: "text-amber-400" },
+  { id: "review", title: "Review", icon: AlertCircle, color: "text-purple-400" },
   { id: "done", title: "Done", icon: CheckCircle2, color: "text-emerald-400" },
 ];
 
@@ -83,25 +83,6 @@ export default function KanbanPage() {
     setDraggedIssueId(null);
   };
 
-  const createPlaceholderIssue = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/kanban/issues", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          title: "New Task",
-          description: "Description here",
-          type: "task",
-          priority: "medium",
-        }),
-      });
-      if (res.ok) fetchIssues();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const handleCreateTask = async () => {
     if (!newTask.title.trim()) return;
     try {
@@ -113,7 +94,7 @@ export default function KanbanPage() {
       });
       if (res.ok) {
         setShowTaskModal(false);
-        setNewTask({ title: '', description: '', type: 'task', priority: 'medium', status: 'todo' });
+        setNewTask({ title: '', description: '', type: 'task', priority: 'medium' });
         fetchIssues();
       } else {
         const errorData = await res.json();
@@ -127,10 +108,10 @@ export default function KanbanPage() {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "critical": return "text-red-400 bg-red-400/10 border-red-400/20";
-      case "high": return "text-orange-400 bg-orange-400/10 border-orange-400/20";
+      case "high": return "text-red-400 bg-red-400/10 border-red-400/20";
+      case "medium": return "text-orange-400 bg-orange-400/10 border-orange-400/20";
       case "low": return "text-blue-400 bg-blue-400/10 border-blue-400/20";
-      default: return "text-zinc-400 bg-zinc-400/10 border-zinc-400/20"; // medium
+      default: return "text-[#888] bg-white/[0.04] border-white/[0.08]"; // medium/unspecified
     }
   };
 
@@ -138,63 +119,61 @@ export default function KanbanPage() {
     switch (type) {
       case "bug": return "text-red-400";
       case "epic": return "text-purple-400";
-      case "story": return "text-emerald-400";
-      default: return "text-blue-400"; // task
+      case "feature": return "text-emerald-400";
+      default: return "text-[#888]"; // task
     }
   };
 
   if (loading) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="w-5 h-5 border-2 border-[#333] border-t-[#EDEDED] rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 h-[calc(100vh-8rem)] flex flex-col">
+    <div className="space-y-6 max-w-[1400px] mx-auto h-full flex flex-col pb-6 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-blue-500/20 text-blue-400 rounded-xl border border-blue-500/30">
-            <Layout size={28} />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white mb-1">Kanban Board</h1>
-            <p className="text-zinc-400">Manage tasks, features, and track progress.</p>
-          </div>
+      <div className="flex items-center justify-between shrink-0 pb-4 border-b border-white/[0.04]">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight text-[#EDEDED] mb-1">Board</h1>
+          <p className="text-[13px] text-[#888]">Manage issues and track progress.</p>
         </div>
-        <button onClick={() => setShowTaskModal(true)} className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-blue-500 transition shadow-[0_0_20px_rgba(37,99,235,0.3)]">
-          <Plus size={18} />
-          Add Task
+        <button 
+          onClick={() => setShowTaskModal(true)} 
+          className="flex items-center gap-1.5 bg-white text-black px-3 py-1.5 rounded-md text-[13px] font-medium hover:bg-[#e5e5e5] transition"
+        >
+          <Plus size={16} />
+          New Issue
         </button>
       </div>
 
       {/* Board */}
-      <div className="flex-1 flex gap-6 overflow-x-auto pb-4">
+      <div className="flex-1 flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
         {COLUMNS.map((col) => (
           <div
             key={col.id}
-            className="flex-1 min-w-[320px] max-w-[400px] flex flex-col bg-zinc-900/40 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden"
+            className="flex-1 min-w-[300px] max-w-[340px] flex flex-col bg-[#0a0a0a] border border-white/[0.04] rounded-xl overflow-hidden shrink-0"
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, col.id)}
           >
             {/* Column Header */}
-            <div className="p-4 flex items-center justify-between border-b border-white/5 bg-black/20">
+            <div className="p-3.5 flex items-center justify-between border-b border-white/[0.04] bg-[#111]">
               <div className="flex items-center gap-2">
-                <col.icon size={18} className={col.color} />
-                <h3 className="font-semibold text-white">{col.title}</h3>
-                <span className="bg-white/10 text-zinc-300 text-xs px-2 py-0.5 rounded-full ml-2">
+                <col.icon size={14} className={col.color} />
+                <h3 className="font-medium text-[13px] text-[#EDEDED]">{col.title}</h3>
+                <span className="bg-[#222] text-[#888] text-[11px] font-medium px-1.5 py-0.5 rounded ml-1.5">
                   {issues.filter((i) => i.status === col.id).length}
                 </span>
               </div>
-              <button className="text-zinc-500 hover:text-zinc-300 transition">
-                <MoreHorizontal size={18} />
+              <button className="text-[#555] hover:text-[#EDEDED] transition">
+                <MoreHorizontal size={14} />
               </button>
             </div>
 
             {/* Column Body */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-4">
+            <div className="flex-1 p-3 overflow-y-auto space-y-3">
               {issues
                 .filter((i) => i.status === col.id)
                 .map((issue) => (
@@ -202,36 +181,38 @@ export default function KanbanPage() {
                     key={issue.id}
                     draggable
                     onDragStart={(e) => handleDragStart(e, issue.id)}
-                    className="bg-zinc-800/50 hover:bg-zinc-800 border border-white/10 hover:border-white/20 rounded-xl p-4 cursor-grab active:cursor-grabbing transition-all hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)] group"
+                    className="bg-[#111] hover:bg-[#1a1a1a] border border-white/[0.06] hover:border-white/[0.12] rounded-lg p-3.5 cursor-grab active:cursor-grabbing transition-all group"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <span className={`text-xs font-semibold uppercase tracking-wider ${getTypeColor(issue.type)}`}>
+                      <span className={`text-[10px] font-semibold uppercase tracking-wider ${getTypeColor(issue.type)}`}>
                         {issue.type}
                       </span>
-                      <button className="text-zinc-500 opacity-0 group-hover:opacity-100 hover:text-white transition">
-                        <MoreHorizontal size={16} />
-                      </button>
+                      <span className="text-[#555] text-[10px] font-mono">
+                        {issue.id.substring(0, 8)}
+                      </span>
                     </div>
                     
-                    <h4 className="text-zinc-200 font-medium mb-1 leading-snug">{issue.title}</h4>
-                    <p className="text-zinc-500 text-sm line-clamp-2 mb-4">{issue.description || "No description."}</p>
+                    <h4 className="text-[#EDEDED] text-[13px] font-medium mb-1.5 leading-snug">{issue.title}</h4>
+                    {issue.description && (
+                      <p className="text-[#888] text-[12px] line-clamp-2 mb-3 leading-relaxed">{issue.description}</p>
+                    )}
                     
-                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
-                      <div className="flex items-center gap-2 text-zinc-400">
-                        <MessageSquare size={14} />
-                        <span className="text-xs">0</span>
+                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.04]">
+                      <div className="flex items-center gap-2 text-[#555]">
+                        <MessageSquare size={12} />
+                        <span className="text-[11px]">0</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium border uppercase tracking-wider ${getPriorityColor(issue.priority)}`}>
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-medium border uppercase tracking-wider ${getPriorityColor(issue.priority)}`}>
                           {issue.priority}
                         </span>
                         {issue.assignee ? (
-                          <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold ring-2 ring-zinc-900" title={issue.assignee.full_name}>
+                          <div className="w-5 h-5 rounded-full bg-[#333] text-white flex items-center justify-center text-[10px] font-medium border border-white/[0.08]" title={issue.assignee.full_name}>
                             {issue.assignee.full_name.charAt(0)}
                           </div>
                         ) : (
-                          <div className="w-6 h-6 rounded-full bg-zinc-700 flex items-center justify-center border border-dashed border-zinc-500" title="Unassigned">
-                            <span className="text-zinc-400 text-xs">?</span>
+                          <div className="w-5 h-5 rounded-full bg-[#1a1a1a] flex items-center justify-center border border-dashed border-[#444]" title="Unassigned">
+                            <span className="text-[#555] text-[10px]">?</span>
                           </div>
                         )}
                       </div>
@@ -241,7 +222,7 @@ export default function KanbanPage() {
                 
               {/* Empty state for column */}
               {issues.filter((i) => i.status === col.id).length === 0 && (
-                <div className="h-24 border-2 border-dashed border-white/5 rounded-xl flex items-center justify-center text-zinc-600 text-sm font-medium">
+                <div className="h-20 border border-dashed border-white/[0.04] rounded-lg flex items-center justify-center text-[#555] text-[12px]">
                   Drop items here
                 </div>
               )}
@@ -250,38 +231,38 @@ export default function KanbanPage() {
         ))}
       </div>
 
+      {/* New Task Modal */}
       {showTaskModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
-            <h2 className="text-xl font-bold text-white mb-6">Create New Task</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-[#111111] border border-white/[0.08] rounded-xl w-full max-w-lg p-6 shadow-2xl">
+            <h2 className="text-[15px] font-medium text-[#EDEDED] mb-5">Create New Issue</h2>
             <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1">Title</label>
+              <div className="space-y-1.5">
                 <input 
                   type="text" 
-                  placeholder="Task title"
+                  placeholder="Issue title"
                   value={newTask.title}
                   onChange={e => setNewTask({...newTask, title: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  className="w-full bg-transparent border-b border-white/[0.08] text-[#EDEDED] py-2 px-1 outline-none focus:border-white/20 text-[15px] placeholder:text-[#555] transition-colors"
+                  autoFocus
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1">Description</label>
+              <div className="space-y-1.5">
                 <textarea 
                   rows={3}
-                  placeholder="Details..."
+                  placeholder="Add description..."
                   value={newTask.description}
                   onChange={e => setNewTask({...newTask, description: e.target.value})}
-                  className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.08] text-[#EDEDED] rounded-lg py-2 px-3 outline-none focus:border-white/20 text-[13px] placeholder:text-[#555] resize-none transition-colors"
                 />
               </div>
               <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-zinc-400 mb-1">Type</label>
+                <div className="flex-1 space-y-1.5">
+                  <label className="block text-[11px] font-medium text-[#888] uppercase tracking-wider">Type</label>
                   <select 
                     value={newTask.type}
                     onChange={e => setNewTask({...newTask, type: e.target.value})}
-                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                    className="w-full bg-[#0a0a0a] border border-white/[0.08] text-[#EDEDED] rounded-lg py-1.5 px-2 outline-none focus:border-white/20 text-[13px] appearance-none transition-colors"
                   >
                     <option value="task">Task</option>
                     <option value="bug">Bug</option>
@@ -289,12 +270,12 @@ export default function KanbanPage() {
                     <option value="epic">Epic</option>
                   </select>
                 </div>
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-zinc-400 mb-1">Priority</label>
+                <div className="flex-1 space-y-1.5">
+                  <label className="block text-[11px] font-medium text-[#888] uppercase tracking-wider">Priority</label>
                   <select 
                     value={newTask.priority}
                     onChange={e => setNewTask({...newTask, priority: e.target.value})}
-                    className="w-full bg-black/50 border border-white/10 text-white rounded-xl py-2 px-3 outline-none focus:border-blue-500"
+                    className="w-full bg-[#0a0a0a] border border-white/[0.08] text-[#EDEDED] rounded-lg py-1.5 px-2 outline-none focus:border-white/20 text-[13px] appearance-none transition-colors"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -303,9 +284,9 @@ export default function KanbanPage() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-end gap-3">
-              <button onClick={() => setShowTaskModal(false)} className="px-4 py-2 text-zinc-400 hover:text-white transition">Cancel</button>
-              <button onClick={handleCreateTask} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-medium transition">Create Task</button>
+            <div className="flex justify-end gap-2 pt-2 border-t border-white/[0.04]">
+              <button onClick={() => setShowTaskModal(false)} className="px-3 py-1.5 text-[13px] text-[#888] hover:text-[#EDEDED] transition">Cancel</button>
+              <button onClick={handleCreateTask} className="px-3 py-1.5 bg-white hover:bg-[#e5e5e5] text-black rounded-md text-[13px] font-medium transition">Create Issue</button>
             </div>
           </div>
         </div>
