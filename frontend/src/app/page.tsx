@@ -10,8 +10,28 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 
+const faqs = [
+  {
+    q: "How does the AI prediction work?",
+    a: "BREXAL uses historical log data and anomaly detection models to identify patterns that typically precede system failures, alerting you before an outage occurs."
+  },
+  {
+    q: "Can I self-host BREXAL?",
+    a: "Currently, BREXAL is a fully managed cloud solution. We provide dedicated VPC peering and single-tenant architecture for Enterprise customers who require strict data compliance."
+  },
+  {
+    q: "Do you have a free tier?",
+    a: "Yes, our Starter plan is completely free forever. It includes 3 team members, 2 apps, and basic uptime monitoring with no credit card required."
+  },
+  {
+    q: "How fast is the integration?",
+    a: "You can integrate BREXAL in under two minutes. Our SDK automatically detects your framework (Next.js, Python, Go) and instruments the necessary telemetry without manual configuration."
+  }
+];
+
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     Overview: true,
@@ -914,6 +934,104 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* 2. Interactive Terminal / Code Snippet */}
+        <section className="w-full max-w-5xl mx-auto px-6 mt-32 relative z-10">
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="flex-1 text-left">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Integrate in seconds.</h2>
+              <p className="text-[#888888] mb-6">Connect your entire stack with a single command. BREXAL auto-detects your environment and starts streaming metrics instantly.</p>
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2 text-sm font-medium text-white"><Check size={16} className="text-purple-400" /> Node.js</div>
+                <div className="flex items-center gap-2 text-sm font-medium text-white"><Check size={16} className="text-purple-400" /> Python</div>
+                <div className="flex items-center gap-2 text-sm font-medium text-white"><Check size={16} className="text-purple-400" /> Go</div>
+              </div>
+            </div>
+            <div className="flex-1 w-full">
+              <div className="rounded-xl bg-[#050505] border border-white/10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                <div className="bg-[#111] px-4 py-3 flex items-center gap-2 border-b border-white/[0.05]">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                  <div className="ml-4 text-xs font-mono text-[#666]">terminal</div>
+                </div>
+                <div className="p-6 font-mono text-sm">
+                  <div className="flex gap-4 text-[#888]">
+                    <span className="text-purple-400">~</span>
+                    <span className="text-white">npm install @brexal/sdk</span>
+                  </div>
+                  <div className="mt-4 text-[#666]">
+                    &gt; fetched 12 packages in 0.4s<br/>
+                    &gt; building... done.
+                  </div>
+                  <div className="mt-4 flex gap-4 text-[#888]">
+                    <span className="text-purple-400">~</span>
+                    <span className="text-white">brexal init</span>
+                  </div>
+                  <div className="mt-4 text-emerald-400">
+                    ✓ Environment detected: Next.js<br/>
+                    ✓ Connected to workspace: Production<br/>
+                    ✓ Metrics streaming started!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+        {/* 4. Minimalist FAQ Section */}
+        <section className="w-full max-w-3xl mx-auto px-6 mt-32 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Frequently asked questions</h2>
+            <p className="text-[#888] text-lg max-w-2xl mx-auto">Everything you need to know about the product and billing.</p>
+          </div>
+          <div className="flex flex-col border-t border-white/10">
+            {faqs.map((faq, index) => (
+              <div key={index} className="border-b border-white/10">
+                <button 
+                  onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
+                  className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
+                >
+                  <span className={`text-lg font-medium transition-colors ${openFaqIndex === index ? 'text-white' : 'text-[#a1a1aa] group-hover:text-white'}`}>
+                    {faq.q}
+                  </span>
+                  <div className={`ml-4 flex-shrink-0 transition-transform duration-300 ${openFaqIndex === index ? 'rotate-45 text-white' : 'text-[#555] group-hover:text-white'}`}>
+                    <Plus size={20} />
+                  </div>
+                </button>
+                <AnimatePresence>
+                  {openFaqIndex === index && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <p className="pb-6 text-[#888] leading-relaxed pr-12">
+                        {faq.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 5. Massive Final CTA */}
+        <section className="w-full max-w-5xl mx-auto px-6 mt-32 mb-32 relative z-10 text-center">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-purple-600/20 blur-[120px] rounded-[100%] pointer-events-none opacity-50"></div>
+          <div className="relative z-10 border border-white/10 rounded-[2rem] bg-[#050505] p-12 md:p-24 overflow-hidden">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6">Ready to build unbreakable software?</h2>
+            <p className="text-xl text-[#888] font-light max-w-2xl mx-auto mb-10">Join thousands of engineering teams who sleep better at night knowing BREXAL is watching their stack.</p>
+            <Link href="/register" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-medium hover:bg-zinc-200 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.15)] text-lg">
+              Start building for free <ArrowRight size={18} />
+            </Link>
           </div>
         </section>
 
