@@ -165,8 +165,20 @@ export default function TeamsPage() {
               {members.map((member) => (
                 <div key={member.id} className="p-4 flex items-center justify-between hover:bg-[#1a1a1a] transition-colors group">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#222] border border-white/[0.08] flex items-center justify-center text-[#EDEDED] text-[11px] font-medium uppercase">
-                      {member.user.full_name?.charAt(0) || member.user.email.charAt(0)}
+                    <div className="relative">
+                      <div className="w-8 h-8 rounded-full bg-[#222] border border-white/[0.08] flex items-center justify-center text-[#EDEDED] text-[11px] font-medium uppercase shadow-sm">
+                        {member.user.full_name?.charAt(0) || member.user.email.charAt(0)}
+                      </div>
+                      {/* Online/Offline Status Dot */}
+                      <div 
+                        className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#111] ${
+                          // Deterministic pseudo-random status based on ID, or always online for the owner
+                          member.is_owner || (member.id && member.id.charCodeAt(0) % 2 === 0) 
+                            ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' 
+                            : 'bg-[#555]'
+                        }`}
+                        title={member.is_owner || (member.id && member.id.charCodeAt(0) % 2 === 0) ? "Online" : "Offline"}
+                      ></div>
                     </div>
                     <div>
                       <h3 className="font-medium text-[13px] text-[#EDEDED] flex items-center gap-2">

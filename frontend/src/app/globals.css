@@ -9,3 +9,28 @@ body {
   background-color: var(--background);
   color: var(--foreground);
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080808; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222; 
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333; 
+}
+
+/* Custom Selection */
+::selection {
+  background-color: rgba(168, 85, 247, 0.3); /* Purple tint */
+  color: #fff;
+}

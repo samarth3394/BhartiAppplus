@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/Logo";
+import { CommandPalette } from "@/components/CommandPalette";
+import { Toaster } from "sonner";
 import { 
     LayoutDashboard, 
     Bug, 
@@ -92,7 +94,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         setNotifications(nData.notifications || []);
       }
     } catch (err) {
-      console.error(err);
+      // Silently fail if backend is unreachable, it will retry on next poll
+      // console.error("Failed to fetch data:", err);
     }
   };
 
@@ -439,6 +442,16 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
         <div className="flex-1 overflow-y-auto bg-[#080808] p-6 relative">
           {children}
+
+          {/* Premium UI Components */}
+          <CommandPalette />
+          <Toaster theme="dark" position="bottom-right" toastOptions={{
+            style: {
+              background: '#111111',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              color: '#EDEDED',
+            }
+          }} />
 
           {/* Creation Modals (Linear Style) */}
           {showWorkspaceModal && (

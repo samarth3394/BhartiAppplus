@@ -33,6 +33,8 @@ export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("Dashboard");
+  const [activeTerminalStep, setActiveTerminalStep] = useState(1);
+  const [copilotState, setCopilotState] = useState<'initial' | 'generating' | 'fixed'>('initial');
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     Overview: true,
     Communication: true,
@@ -253,32 +255,139 @@ export default function LandingPage() {
         );
       case "AI Copilot":
         return (
-          <>
-            <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between mb-6 shrink-0">
               <h2 className="text-xl font-semibold text-white tracking-tight flex items-center gap-2">
                 <Zap size={20} className="text-purple-400" /> AI Copilot
               </h2>
-            </div>
-            <div className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl p-6 flex flex-col gap-6 overflow-hidden">
-              <div className="flex gap-4">
-                 <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
-                   <Zap size={16} />
-                 </div>
-                 <div className="flex-1 bg-[#111] border border-white/[0.05] p-4 rounded-xl rounded-tl-none">
-                   <div className="text-[13px] text-[#EDEDED] mb-3 leading-relaxed font-medium">
-                     I've analyzed your recent commits. There is a potential unhandled exception in <code className="text-purple-400 font-mono bg-purple-400/10 px-1 py-0.5 rounded border border-purple-500/20">auth_service.py</code>. 
-                   </div>
-                   <div className="bg-[#0a0a0a] border border-white/[0.05] p-3 rounded-lg font-mono text-[12px] text-[#888] overflow-x-auto">
-                     <span className="text-blue-400">def</span> <span className="text-yellow-200">login</span>(user_id):<br/>
-                     &nbsp;&nbsp;&nbsp;&nbsp;user = db.get(user_id)<br/>
-                     <div className="bg-red-500/20 -mx-3 px-3 py-0.5 border-l-2 border-red-500 mt-1">
-                       &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-red-300">return user.token # user might be None</span>
-                     </div>
-                   </div>
-                 </div>
+              <div className="flex items-center gap-2 text-xs font-medium bg-white/[0.05] border border-white/[0.1] px-3 py-1.5 rounded-md">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                Agent Active
               </div>
             </div>
-          </>
+            
+            <div className="flex-1 bg-[#0a0a0a] border border-white/[0.04] rounded-xl flex flex-col overflow-hidden shadow-inner">
+              
+              {/* Chat History Area */}
+              <div className="flex-1 p-5 overflow-y-auto custom-scrollbar flex flex-col gap-6">
+                
+                {/* Previous Context */}
+                <div className="flex gap-4 opacity-50">
+                   <div className="w-8 h-8 rounded-full bg-[#222] border border-white/[0.1] flex items-center justify-center text-[#888] shrink-0 text-xs font-bold">JD</div>
+                   <div className="flex-1 bg-[#111] border border-white/[0.05] p-3 rounded-xl rounded-tl-none text-[13px] text-[#888]">
+                     Can you check the latency spikes on the payment gateway?
+                   </div>
+                </div>
+                
+                <div className="flex gap-4 opacity-50">
+                   <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
+                     <Zap size={16} />
+                   </div>
+                   <div className="flex-1 bg-[#111] border border-white/[0.05] p-3 rounded-xl rounded-tl-none text-[13px] text-[#888]">
+                     I've analyzed the logs. The spikes are caused by an unindexed query in <code className="text-purple-400/50 font-mono bg-purple-400/10 px-1 py-0.5 rounded">transactions</code> table. I've already created an issue (BAP-198) for the database team.
+                   </div>
+                </div>
+
+                <div className="flex gap-4">
+                   <div className="w-8 h-8 rounded-full bg-[#222] border border-white/[0.1] flex items-center justify-center text-[#EDEDED] shrink-0 text-xs font-bold">JD</div>
+                   <div className="flex-1 bg-[#111] border border-white/[0.05] p-3 rounded-xl rounded-tl-none text-[13px] text-[#EDEDED]">
+                     Awesome. What about the recent commit to <code className="text-purple-400 font-mono bg-purple-400/10 px-1 py-0.5 rounded">auth_service.py</code>?
+                   </div>
+                </div>
+
+                {/* Latest Interactive AI Message */}
+                <div className="flex gap-4">
+                   <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                     <Zap size={16} />
+                   </div>
+                   <div className="flex-1 flex flex-col gap-3">
+                     <div className="bg-[#111] border border-purple-500/20 p-4 rounded-xl rounded-tl-none shadow-md">
+                       <div className="text-[13px] text-[#EDEDED] mb-3 leading-relaxed font-medium">
+                         I've analyzed that commit. There is a potential unhandled exception.
+                       </div>
+                       <div className="bg-[#050505] border border-white/[0.05] p-3 rounded-lg font-mono text-[12px] text-[#888] overflow-x-auto mb-4">
+                         <span className="text-blue-400">def</span> <span className="text-yellow-200">login</span>(user_id):<br/>
+                         &nbsp;&nbsp;&nbsp;&nbsp;user = db.get(user_id)<br/>
+                         <div className="bg-red-500/10 -mx-3 px-3 py-0.5 border-l-2 border-red-500 mt-1">
+                           &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-red-400">return user.token # user might be None</span>
+                         </div>
+                       </div>
+                       
+                       {/* Interactive Buttons */}
+                       {copilotState === 'initial' && (
+                         <div className="flex flex-wrap gap-2">
+                           <button 
+                             onClick={() => {
+                               setCopilotState('generating');
+                               setTimeout(() => setCopilotState('fixed'), 1500);
+                             }}
+                             className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-[12px] font-medium rounded-md transition-colors flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.3)]"
+                           >
+                             <Wrench size={14} /> Generate Fix
+                           </button>
+                           <button className="px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-white text-[12px] font-medium rounded-md transition-colors">
+                             Create Bug Report
+                           </button>
+                           <button className="px-3 py-1.5 bg-transparent hover:bg-white/[0.05] text-[#888] hover:text-white text-[12px] font-medium rounded-md transition-colors">
+                             Ignore
+                           </button>
+                         </div>
+                       )}
+
+                       {/* Loading State */}
+                       {copilotState === 'generating' && (
+                         <div className="flex items-center gap-3 text-[13px] text-purple-400 font-medium">
+                           <div className="w-4 h-4 border-2 border-purple-500/30 border-t-purple-400 rounded-full animate-spin"></div>
+                           Generating patch...
+                         </div>
+                       )}
+
+                       {/* Fixed State */}
+                       {copilotState === 'fixed' && (
+                         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex flex-col gap-3">
+                           <div className="text-[13px] text-emerald-400 font-medium flex items-center gap-2">
+                             <Check size={14} /> Fix generated successfully
+                           </div>
+                           <div className="bg-[#050505] border border-white/[0.05] p-3 rounded-lg font-mono text-[12px] text-[#888] overflow-x-auto">
+                             <div className="text-emerald-400/70 border-l-2 border-emerald-500 px-3 -mx-3 bg-emerald-500/10">
+                               + &nbsp;&nbsp;&nbsp;&nbsp;if not user:<br/>
+                               + &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise AuthError("User not found")<br/>
+                             </div>
+                             &nbsp;&nbsp;&nbsp;&nbsp;return user.token
+                           </div>
+                           <div className="flex gap-2 mt-1">
+                             <button 
+                               onClick={() => setCopilotState('initial')}
+                               className="px-3 py-1.5 bg-white text-black hover:bg-zinc-200 text-[12px] font-medium rounded-md transition-colors flex items-center gap-1.5"
+                             >
+                               <GitBranch size={14} /> Create PR
+                             </button>
+                           </div>
+                         </motion.div>
+                       )}
+                     </div>
+                   </div>
+                </div>
+
+              </div>
+
+              {/* Chat Input Area */}
+              <div className="p-4 border-t border-white/[0.04] bg-[#0f0f0f] shrink-0">
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    placeholder="Ask Copilot to analyze code, check logs, or fix issues..." 
+                    className="w-full bg-[#1a1a1a] border border-white/[0.08] text-white rounded-lg py-2.5 pl-4 pr-10 text-[13px] outline-none focus:border-purple-500/50 transition-colors placeholder:text-[#555]"
+                    readOnly
+                  />
+                  <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/[0.05] hover:bg-white/[0.1] rounded-md transition-colors text-[#888] hover:text-white">
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
         );
       case "Teams":
         return (
@@ -828,6 +937,221 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* 2. Agent Integration & Interactive Terminal */}
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10" id="agent">
+          <div className="text-center md:text-left mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">The Invisible Agent.</h2>
+            <p className="text-[#888] text-lg max-w-2xl">Connect your entire stack with our lightweight SDK. Zero configuration, sub-millisecond overhead, and end-to-end encrypted telemetry.</p>
+          </div>
+
+          <div className="flex flex-col lg:flex-row items-stretch gap-8">
+            
+            {/* Architecture Flow Diagram */}
+            <div className="flex-1 rounded-2xl bg-[#050505] border border-white/10 p-8 flex flex-col justify-center items-center shadow-[0_0_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.05),transparent_70%)]"></div>
+              
+              <div className="flex items-center justify-between w-full max-w-md relative z-10">
+                {/* User App Node */}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-16 h-16 rounded-2xl bg-[#111] border border-white/20 flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                    <Server size={24} className="text-[#888]" />
+                  </div>
+                  <span className="text-xs font-mono text-[#888]">Your App</span>
+                </div>
+
+                {/* Animated Data Stream */}
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent relative mx-4">
+                  <motion.div 
+                    animate={{ left: ["0%", "100%"], x: ["0%", "-100%"], opacity: [0, 1, 0] }}
+                    transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-1/2 -translate-y-1/2 w-8 h-1 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)]"
+                  />
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#111] border border-white/10 rounded text-[9px] font-mono text-purple-400">
+                    Encrypted Metrics
+                  </div>
+                </div>
+
+                {/* BREXAL Node */}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-16 h-16 rounded-2xl bg-black border border-purple-500/50 flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+                    <Zap size={24} className="text-purple-400" />
+                  </div>
+                  <span className="text-xs font-mono text-white">BREXAL</span>
+                </div>
+              </div>
+
+              {/* Stats Bar */}
+              <div className="flex gap-8 mt-12 pt-8 border-t border-white/[0.05] w-full justify-center relative z-10">
+                <div className="flex flex-col items-center">
+                  <span className="text-white font-mono font-medium">{'<'} 1ms</span>
+                  <span className="text-[10px] text-[#666] uppercase tracking-widest mt-1">Overhead</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-white font-mono font-medium">10MB</span>
+                  <span className="text-[10px] text-[#666] uppercase tracking-widest mt-1">Memory</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-white font-mono font-medium">AES-256</span>
+                  <span className="text-[10px] text-[#666] uppercase tracking-widest mt-1">Encryption</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 3-Step Interactive Terminal */}
+            <div className="flex-1 flex flex-col md:flex-row rounded-2xl bg-[#050505] border border-white/10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+              
+              {/* Steps Sidebar */}
+              <div className="w-full md:w-48 bg-[#0a0a0a] border-b md:border-b-0 md:border-r border-white/10 p-4 flex flex-col gap-2">
+                {[
+                  { id: 1, title: "Install Agent", desc: "Add via npm" },
+                  { id: 2, title: "Initialize", desc: "Add API Key" },
+                  { id: 3, title: "Watch Magic", desc: "Data starts flowing" }
+                ].map(step => (
+                  <button 
+                    key={step.id}
+                    onClick={() => setActiveTerminalStep(step.id)}
+                    className={`text-left p-3 rounded-xl transition-all duration-200 border ${
+                      activeTerminalStep === step.id 
+                        ? "bg-[#111] border-white/20 shadow-lg" 
+                        : "bg-transparent border-transparent hover:bg-white/[0.02]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold ${
+                        activeTerminalStep === step.id ? "bg-purple-500 text-white" : "bg-white/10 text-[#888]"
+                      }`}>
+                        {step.id}
+                      </span>
+                      <span className={`text-sm font-medium ${activeTerminalStep === step.id ? "text-white" : "text-[#888]"}`}>
+                        {step.title}
+                      </span>
+                    </div>
+                    <div className="text-xs text-[#666] pl-7">{step.desc}</div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Terminal Window */}
+              <div className="flex-1 flex flex-col min-h-[300px]">
+                <div className="bg-[#111] px-4 py-3 flex items-center gap-2 border-b border-white/[0.05]">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                  <div className="ml-4 text-xs font-mono text-[#666]">terminal</div>
+                </div>
+                
+                <div className="p-6 font-mono text-sm flex-1 relative overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    {activeTerminalStep === 1 && (
+                      <motion.div key="step1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+                        <div className="flex gap-4 text-[#888]">
+                          <span className="text-purple-400">~</span>
+                          <span className="text-white">npm install @brexal/agent</span>
+                        </div>
+                        <div className="mt-4 text-[#666]">
+                          &gt; fetched 12 packages in 0.4s<br/>
+                          &gt; building... done.<br/>
+                          <br/>
+                          <span className="text-emerald-400">✓ Added 1 package, and audited 12 packages in 1s.</span>
+                        </div>
+                      </motion.div>
+                    )}
+                    {activeTerminalStep === 2 && (
+                      <motion.div key="step2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+                        <div className="text-purple-400 mb-2">// index.ts</div>
+                        <div className="text-[#888]">
+                          <span className="text-pink-400">import</span> { '{' } Brexal { '}' } <span className="text-pink-400">from</span> <span className="text-green-300">'@brexal/agent'</span>;
+                        </div>
+                        <br/>
+                        <div className="text-blue-400">Brexal<span className="text-white">.init</span><span className="text-[#888]">({'{'}</span></div>
+                        <div className="pl-4 text-white">apiKey: <span className="text-green-300">process.env.BREXAL_API_KEY</span>,</div>
+                        <div className="pl-4 text-white">environment: <span className="text-green-300">'production'</span>,</div>
+                        <div className="pl-4 text-white">captureLogs: <span className="text-orange-400">true</span></div>
+                        <div className="text-[#888]">{'}'})<span className="text-white">;</span></div>
+                      </motion.div>
+                    )}
+                    {activeTerminalStep === 3 && (
+                      <motion.div key="step3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+                        <div className="flex gap-4 text-[#888]">
+                          <span className="text-purple-400">~</span>
+                          <span className="text-white">npm start</span>
+                        </div>
+                        <div className="mt-4 text-[#666]">
+                          &gt; brexal-agent v1.2.0 initialized.<br/>
+                          &gt; environment detected: Node.js / Express<br/>
+                        </div>
+                        <div className="mt-4 text-emerald-400">
+                          ✓ Successfully connected to BREXAL secure gateway.<br/>
+                          ✓ Telemetry streaming started (PID: 48921)<br/>
+                        </div>
+                        <div className="mt-4 text-purple-400 animate-pulse">
+                          Waiting for events...
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+
+
+        {/* 4. Minimalist FAQ Section */}
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10" id="faq">
+          <div className="text-center md:text-left mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Frequently asked questions</h2>
+            <p className="text-[#888] text-lg max-w-2xl">Everything you need to know about the product and billing.</p>
+          </div>
+          <div className="flex flex-col border-t border-white/10">
+            {faqs.map((faq, index) => (
+              <div key={index} className="border-b border-white/10">
+                <button 
+                  onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
+                  className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
+                >
+                  <span className={`text-lg font-medium transition-colors ${openFaqIndex === index ? 'text-white' : 'text-[#a1a1aa] group-hover:text-white'}`}>
+                    {faq.q}
+                  </span>
+                  <div className={`ml-4 flex-shrink-0 transition-transform duration-300 ${openFaqIndex === index ? 'rotate-45 text-white' : 'text-[#555] group-hover:text-white'}`}>
+                    <Plus size={20} />
+                  </div>
+                </button>
+                <AnimatePresence>
+                  {openFaqIndex === index && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <p className="pb-6 text-[#888] leading-relaxed pr-12">
+                        {faq.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 5. Massive Final CTA */}
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 mb-32 relative z-10">
+          <div className="relative z-10 flex flex-col items-start text-left">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 bg-gradient-to-br from-white via-white to-white/40 text-transparent bg-clip-text">
+              Ready to build unbreakable software?
+            </h2>
+            <p className="text-xl text-[#888] font-light max-w-2xl">
+              Join thousands of engineering teams who sleep better at night knowing BREXAL is watching their stack.
+            </p>
+          </div>
+        </section>
+
+
         {/* Pricing Section */}
         <section className="w-full px-6 md:px-12 lg:px-24 mt-32 mb-16 relative" id="pricing">
           <div className="text-center md:text-left mb-16">
@@ -934,104 +1258,6 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* 2. Interactive Terminal / Code Snippet */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10">
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1 text-left">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Integrate in seconds.</h2>
-              <p className="text-[#888888] mb-6">Connect your entire stack with a single command. BREXAL auto-detects your environment and starts streaming metrics instantly.</p>
-              <div className="flex gap-4">
-                <div className="flex items-center gap-2 text-sm font-medium text-white"><Check size={16} className="text-purple-400" /> Node.js</div>
-                <div className="flex items-center gap-2 text-sm font-medium text-white"><Check size={16} className="text-purple-400" /> Python</div>
-                <div className="flex items-center gap-2 text-sm font-medium text-white"><Check size={16} className="text-purple-400" /> Go</div>
-              </div>
-            </div>
-            <div className="flex-1 w-full">
-              <div className="rounded-xl bg-[#050505] border border-white/10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-                <div className="bg-[#111] px-4 py-3 flex items-center gap-2 border-b border-white/[0.05]">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
-                  <div className="ml-4 text-xs font-mono text-[#666]">terminal</div>
-                </div>
-                <div className="p-6 font-mono text-sm">
-                  <div className="flex gap-4 text-[#888]">
-                    <span className="text-purple-400">~</span>
-                    <span className="text-white">npm install @brexal/sdk</span>
-                  </div>
-                  <div className="mt-4 text-[#666]">
-                    &gt; fetched 12 packages in 0.4s<br/>
-                    &gt; building... done.
-                  </div>
-                  <div className="mt-4 flex gap-4 text-[#888]">
-                    <span className="text-purple-400">~</span>
-                    <span className="text-white">brexal init</span>
-                  </div>
-                  <div className="mt-4 text-emerald-400">
-                    ✓ Environment detected: Next.js<br/>
-                    ✓ Connected to workspace: Production<br/>
-                    ✓ Metrics streaming started!
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-
-
-        {/* 4. Minimalist FAQ Section */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10" id="faq">
-          <div className="text-center md:text-left mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Frequently asked questions</h2>
-            <p className="text-[#888] text-lg max-w-2xl">Everything you need to know about the product and billing.</p>
-          </div>
-          <div className="flex flex-col border-t border-white/10">
-            {faqs.map((faq, index) => (
-              <div key={index} className="border-b border-white/10">
-                <button 
-                  onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                  className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
-                >
-                  <span className={`text-lg font-medium transition-colors ${openFaqIndex === index ? 'text-white' : 'text-[#a1a1aa] group-hover:text-white'}`}>
-                    {faq.q}
-                  </span>
-                  <div className={`ml-4 flex-shrink-0 transition-transform duration-300 ${openFaqIndex === index ? 'rotate-45 text-white' : 'text-[#555] group-hover:text-white'}`}>
-                    <Plus size={20} />
-                  </div>
-                </button>
-                <AnimatePresence>
-                  {openFaqIndex === index && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <p className="pb-6 text-[#888] leading-relaxed pr-12">
-                        {faq.a}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 5. Massive Final CTA */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 mb-32 relative z-10">
-          <div className="relative z-10 flex flex-col items-start text-left">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 bg-gradient-to-br from-white via-white to-white/40 text-transparent bg-clip-text">
-              Ready to build unbreakable software?
-            </h2>
-            <p className="text-xl text-[#888] font-light max-w-2xl">
-              Join thousands of engineering teams who sleep better at night knowing BREXAL is watching their stack.
-            </p>
           </div>
         </section>
 
