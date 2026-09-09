@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Settings, User, Bell, Shield, Key, Download, Trash2, Smartphone, Globe, Mail, Github } from "lucide-react";
+import { Settings, User, Bell, Shield, Key, Download, Trash2, Smartphone, Globe, Mail, Webhook } from "lucide-react";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -229,7 +229,7 @@ export default function SettingsPage() {
               onClick={() => setActiveTab("integrations")}
               className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] font-medium ${activeTab === "integrations" ? "bg-white/[0.06] text-white" : "text-[#888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}`}
             >
-              <Github size={16} className={activeTab === "integrations" ? "text-white" : "text-[#555]"} /> Integrations
+              <Webhook size={16} className={activeTab === "integrations" ? "text-white" : "text-[#555]"} /> Integrations
             </button>
           )}
         </div>
@@ -488,7 +488,7 @@ export default function SettingsPage() {
               
               <div className="p-4 border border-white/[0.06] rounded-xl bg-[#0a0a0a]">
                 <div className="flex items-center gap-3 mb-2">
-                  <Github size={18} className="text-white" />
+                  <Webhook size={18} className="text-white" />
                   <h4 className="text-[#EDEDED] text-[14px] font-medium">GitHub Webhook Integration</h4>
                 </div>
                 <p className="text-[12px] text-[#888] mb-4">Automatically close issues when a Pull Request is merged. Configure your repository webhook to point to the URL below.</p>
