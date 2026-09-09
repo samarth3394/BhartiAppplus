@@ -771,6 +771,37 @@ class ChatMessage(Base):
         }
 
 
+# ─── Notifications ────────────────────────────────────────────────────────
+class Notification(Base):
+    __tablename__ = 'notifications'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=True)
+    title = Column(String(255), nullable=False)
+    message = Column(Text, nullable=False)
+    type = Column(String(50), default='info') # info, alert, success, warning
+    is_read = Column(Boolean, default=False)
+    link = Column(String(500), nullable=True)
+    created_at = Column(DateTime, default=utc_now, index=True)
+
+    # Relationships
+    user = relationship('User')
+    app = relationship('App')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'app_id': self.app_id,
+            'title': self.title,
+            'message': self.message,
+            'type': self.type,
+            'is_read': self.is_read,
+            'link': self.link,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+        }
+
 # ─── Database Setup ───────────────────────────────────────────────────────
 
 def init_db(db_uri):

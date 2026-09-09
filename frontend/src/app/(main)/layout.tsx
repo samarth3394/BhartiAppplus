@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Logo } from "@/components/Logo";
 import { 
     LayoutDashboard, 
     Bug, 
@@ -25,7 +26,8 @@ import {
     User,
     MessageSquare,
     ChevronRight,
-    Terminal
+    Terminal,
+    Bell
 } from "lucide-react";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -59,8 +61,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const [newName, setNewName] = useState("");
   const [newUrl, setNewUrl] = useState("");
 
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
   useEffect(() => {
     fetchData();
+    const interval = setInterval(fetchData, 30000); // poll every 30s
+    return () => clearInterval(interval);
   }, []);
 
   const fetchData = async () => {
@@ -78,9 +85,29 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         setApps(aData.apps || []);
         setCurrentAppId(aData.current_app_id);
       }
+
+      const nRes = await fetch("http://localhost:5000/api/notifications", { credentials: "include" });
+      if (nRes.ok) {
+        const nData = await nRes.json();
+        setNotifications(nData.notifications || []);
+      }
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const markNotificationAsRead = async (id: string) => {
+    try {
+      await fetch(`http://localhost:5000/api/notifications/${id}/read`, { method: "POST", credentials: "include" });
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
+    } catch (err) { console.error(err); }
+  };
+
+  const markAllNotificationsAsRead = async () => {
+    try {
+      await fetch(`http://localhost:5000/api/notifications/read-all`, { method: "POST", credentials: "include" });
+      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+    } catch (err) { console.error(err); }
   };
 
   const switchWorkspace = async (workspaceId: string) => {
@@ -221,13 +248,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-white/[0.04] flex flex-col transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static
       `}>
-        <div className="px-4 py-4 flex items-center gap-2 h-14 border-b border-white/[0.02]">
-          <div className="w-5 h-5 bg-white rounded-sm flex items-center justify-center shrink-0">
-            <span className="text-[10px] font-bold text-black">B</span>
-          </div>
-          <h1 className="text-sm font-semibold text-[#EDEDED] tracking-tight">
-            BhartiAppPlus
-          </h1>
+        <div className="px-4 py-4 flex items-center h-14 border-b border-white/[0.02]">
+          <Logo className="h-4 text-white" />
         </div>
         
         <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto no-scrollbar">
@@ -363,6 +385,52 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             </div>
 
             <div className="flex items-center gap-4">
+                {/* Notifications Dropdown */}
+                <div className="relative">
+                  <button 
+                    onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                    className="w-7 h-7 rounded-full bg-[#1a1a1a] border border-white/[0.08] flex items-center justify-center hover:border-white/[0.2] transition-colors cursor-pointer relative"
+                  >
+                    <Bell size={14} className="text-[#888]" />
+                    {notifications.filter(n => !n.is_read).length > 0 && (
+                      <span className="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full border border-[#080808]"></span>
+                    )}
+                  </button>
+                  {isNotificationsOpen && (
+                    <>
+                      <div className="fixed inset-0 z-10" onClick={() => setIsNotificationsOpen(false)}></div>
+                      <div className="absolute top-full right-0 mt-2 w-80 bg-[#111111] border border-white/[0.08] rounded-lg shadow-2xl overflow-hidden z-20 flex flex-col max-h-[400px]">
+                        <div className="p-3 border-b border-white/[0.04] flex justify-between items-center bg-[#0a0a0a]">
+                          <span className="text-xs font-medium text-white">Notifications</span>
+                          {notifications.some(n => !n.is_read) && (
+                            <button onClick={markAllNotificationsAsRead} className="text-[10px] text-blue-400 hover:text-blue-300">Mark all read</button>
+                          )}
+                        </div>
+                        <div className="overflow-y-auto flex-1 p-2 space-y-1">
+                          {notifications.length === 0 ? (
+                            <div className="p-6 text-center text-xs text-[#666]">No notifications right now</div>
+                          ) : (
+                            notifications.map(notif => (
+                              <div 
+                                key={notif.id} 
+                                onClick={() => markNotificationAsRead(notif.id)}
+                                className={`p-3 rounded-md cursor-pointer transition-colors flex gap-3 ${notif.is_read ? 'opacity-50 hover:bg-white/[0.03]' : 'bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.04]'}`}
+                              >
+                                {!notif.is_read && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 mt-1.5"></div>}
+                                <div className={notif.is_read ? 'ml-4' : ''}>
+                                  <div className="text-[13px] text-white font-medium mb-1 leading-tight">{notif.title}</div>
+                                  <div className="text-[11px] text-[#888] leading-snug">{notif.message}</div>
+                                  <div className="text-[9px] text-[#555] mt-2 font-medium">{new Date(notif.created_at).toLocaleString()}</div>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
                 <Link href="/settings" className="w-7 h-7 rounded-full bg-[#1a1a1a] border border-white/[0.08] flex items-center justify-center hover:border-white/[0.2] transition-colors cursor-pointer overflow-hidden">
                     <User size={14} className="text-[#888]" />
                 </Link>

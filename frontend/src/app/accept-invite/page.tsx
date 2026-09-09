@@ -69,7 +69,7 @@ export default function AcceptInvitePage() {
             </div>
             <h1 className="text-[18px] font-medium tracking-tight mb-2 text-center text-[#EDEDED]">Complete Your Profile</h1>
             <p className="text-[#888] text-center text-[13px] leading-relaxed">
-              You've been invited to join a workspace on BhartiAppPlus.
+              You've been invited to join a workspace on BREXAL.
             </p>
           </div>
 

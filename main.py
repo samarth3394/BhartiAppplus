@@ -27,6 +27,8 @@ from routes.security import router as security_router
 from routes.workspaces import router as workspaces_router
 from routes.kanban import router as kanban_router
 from routes.logs import router as logs_router
+from routes.public import router as public_router
+from routes.notifications import router as notifications_router
 
 app = FastAPI(title="Nexvora", description="All-in-one intelligent app maintenance and monitoring platform.")
 
@@ -62,6 +64,8 @@ app.include_router(security_router)
 app.include_router(workspaces_router)
 app.include_router(kanban_router)
 app.include_router(logs_router)
+app.include_router(public_router)
+app.include_router(notifications_router)
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):

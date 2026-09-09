@@ -4,10 +4,11 @@ import Link from "next/link";
 import { 
   ArrowRight, Command, Zap, Layers, Lock, GitBranch, Terminal, User,
   LayoutDashboard, MessageSquare, Users, KanbanSquare, Bug, Map, 
-  Activity, Server, Wrench, Settings, ChevronDown, ChevronRight, Plus
+  Activity, Server, Wrench, Settings, ChevronDown, ChevronRight, Plus, Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Logo } from "@/components/Logo";
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
@@ -68,12 +69,12 @@ export default function LandingPage() {
     }
   ];
 
-  const fadeUp = {
+  const fadeUp: any = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
   };
 
-  const staggerContainer = {
+  const staggerContainer: any = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -435,7 +436,7 @@ export default function LandingPage() {
             <div className="space-y-6">
                <div className="pb-6 border-b border-white/[0.05]">
                  <div className="text-[13px] font-medium text-white mb-2">Workspace Name</div>
-                 <input type="text" disabled value="BhartiAppPlus Prod" className="w-full bg-[#111] border border-white/[0.05] rounded-lg px-3 py-2 text-[13px] text-[#888] focus:outline-none" />
+                 <input type="text" disabled value="BREXAL Prod" className="w-full bg-[#111] border border-white/[0.05] rounded-lg px-3 py-2 text-[13px] text-[#888] focus:outline-none" />
                </div>
                <div className="pb-6 border-b border-white/[0.05]">
                  <div className="text-[13px] font-medium text-white mb-2">Theme Preferences</div>
@@ -477,10 +478,7 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="fixed top-0 inset-x-0 h-14 bg-[#080808]/70 backdrop-blur-md border-b border-white/[0.08] z-50 flex items-center justify-between px-6">
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 text-white font-medium">
-            <div className="w-5 h-5 rounded-[4px] bg-white text-black flex items-center justify-center text-[10px] font-bold">B</div>
-            <span className="tracking-tight">BhartiAppPlus</span>
-          </div>
+          <Logo className="h-4 text-white" />
           <div className="hidden md:flex items-center gap-4 text-sm text-[#888888] font-medium">
             <Link href="#" className="hover:text-white transition-colors">Features</Link>
             <Link href="#" className="hover:text-white transition-colors">Method</Link>
@@ -510,11 +508,11 @@ export default function LandingPage() {
               <span className="flex items-center justify-center w-4 h-4 rounded-full bg-purple-500/20">
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></span>
               </span>
-              BhartiAppPlus 2.0 is here <ArrowRight size={12} />
+              BREXAL 2.0 is here <ArrowRight size={12} />
             </motion.div>
             
             <motion.h1 variants={fadeUp} className="text-6xl md:text-[80px] leading-[1.05] font-bold tracking-tighter mb-6 bg-gradient-to-b from-white to-[#888888] text-transparent bg-clip-text max-w-4xl">
-              Linear perfection for your software operations.
+              The ultimate command center for your software operations.
             </motion.h1>
             
             <motion.p variants={fadeUp} className="text-xl md:text-2xl text-[#888888] max-w-2xl mb-10 font-light tracking-tight">
@@ -550,7 +548,7 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center gap-2 bg-[#141414] px-3 py-1 rounded-md border border-white/[0.04]">
                 <Command size={12} className="text-[#888]" />
-                <span className="text-[#888] text-xs font-mono">BhartiAppPlus / {activeTab}</span>
+                <span className="text-[#888] text-xs font-mono">BREXAL / {activeTab}</span>
               </div>
               <div></div>
             </div>
@@ -619,6 +617,61 @@ export default function LandingPage() {
               </div>
             </div>
           </motion.div>
+        </section>
+
+        {/* Acronym Section */}
+        <section className="w-full max-w-5xl mx-auto px-6 mt-32 relative z-10">
+           <div className="text-center mb-16">
+             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10 text-xs font-medium text-[#888888] mb-6">
+               <Zap size={12} className="text-purple-400" /> The DNA of BREXAL
+             </div>
+             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Every letter stands for power.</h2>
+           </div>
+
+           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+             {/* B */}
+             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
+                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">B</div>
+                <div className="text-purple-400 font-mono text-xs mb-4">01</div>
+                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Bug</h3>
+                <p className="text-[#888] text-sm leading-relaxed relative z-10">Catch issues before they hit production with intelligent tracking.</p>
+             </div>
+             {/* R */}
+             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
+                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">R</div>
+                <div className="text-blue-400 font-mono text-xs mb-4">02</div>
+                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Runtime</h3>
+                <p className="text-[#888] text-sm leading-relaxed relative z-10">Monitor your application execution in real-time with zero latency.</p>
+             </div>
+             {/* E */}
+             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
+                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">E</div>
+                <div className="text-emerald-400 font-mono text-xs mb-4">03</div>
+                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Error</h3>
+                <p className="text-[#888] text-sm leading-relaxed relative z-10">Automated root cause analysis and stack trace isolation.</p>
+             </div>
+             {/* X */}
+             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
+                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">X</div>
+                <div className="text-amber-400 font-mono text-xs mb-4">04</div>
+                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">eXecution</h3>
+                <p className="text-[#888] text-sm leading-relaxed relative z-10">Flawless deployment pipelines and operational performance.</p>
+             </div>
+             {/* A */}
+             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
+                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">A</div>
+                <div className="text-rose-400 font-mono text-xs mb-4">05</div>
+                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Analytics</h3>
+                <p className="text-[#888] text-sm leading-relaxed relative z-10">Deep insights, metrics, and data-driven infrastructure decisions.</p>
+             </div>
+             {/* L */}
+             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
+                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">L</div>
+                <div className="text-indigo-400 font-mono text-xs mb-4">06</div>
+                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Logic</h3>
+                <p className="text-[#888] text-sm leading-relaxed relative z-10">The AI-powered brain that orchestrates your entire stack.</p>
+             </div>
+           </div>
         </section>
 
         {/* Bento Grid Features */}
@@ -755,16 +808,122 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Pricing Section */}
+        <section className="w-full max-w-5xl mx-auto px-6 mt-32 mb-16 relative" id="pricing">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Pricing that scales with you.</h2>
+            <p className="text-xl text-[#888888] font-light max-w-2xl mx-auto">Start for free, upgrade when you need advanced monitoring and AI capabilities.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Starter Plan */}
+            <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-8 flex flex-col hover:border-white/20 transition-colors">
+              <h3 className="text-xl font-semibold mb-2 text-[#EDEDED]">Starter</h3>
+              <p className="text-[#888888] text-[14px] mb-6 min-h-[40px]">Perfect for individuals and small side projects.</p>
+              <div className="mb-8">
+                <span className="text-4xl font-bold text-white">$0</span>
+                <span className="text-[#888888] font-medium"> / month</span>
+              </div>
+              <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8">
+                Start for free
+              </Link>
+              <div className="flex flex-col gap-4 mt-auto">
+                <div className="text-[12px] font-semibold tracking-wider uppercase text-[#666]">Includes</div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> 2 Apps Monitored
+                </div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> 15m Uptime Checks
+                </div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> Email Alerts
+                </div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> 3 Team Members
+                </div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> Basic Issue Tracking
+                </div>
+              </div>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="rounded-2xl bg-[#111] border border-purple-500/30 p-8 flex flex-col relative shadow-[0_0_40px_rgba(168,85,247,0.1)]">
+              <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-purple-500/10 to-transparent pointer-events-none rounded-2xl"></div>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-500 text-white text-[10px] font-bold tracking-wider uppercase px-3 py-1 rounded-full">
+                Most Popular
+              </div>
+              <div className="relative z-10 flex flex-col h-full">
+                <h3 className="text-xl font-semibold mb-2 text-[#EDEDED] flex items-center gap-2">Pro Platform <Zap size={16} className="text-purple-400" /></h3>
+                <p className="text-[#888888] text-[14px] mb-6 min-h-[40px]">Base platform fee + per-seat model for growing startups.</p>
+                <div className="mb-8">
+                  <span className="text-4xl font-bold text-white">$49</span>
+                  <span className="text-[#888888] font-medium"> / mo + $10/user</span>
+                </div>
+                <Link href="/register" className="w-full bg-white text-black px-4 py-2.5 rounded-full font-medium hover:bg-zinc-200 transition-colors text-center text-sm mb-8 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                  Upgrade to Pro
+                </Link>
+                <div className="flex flex-col gap-4 mt-auto">
+                  <div className="text-[12px] font-semibold tracking-wider uppercase text-[#EDEDED]">Everything in Starter, plus</div>
+                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
+                    <Check size={16} className="text-purple-400" /> 10 Apps Monitored
+                  </div>
+                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
+                    <Check size={16} className="text-purple-400" /> 50 Uptime Monitors
+                  </div>
+                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
+                    <Check size={16} className="text-purple-400" /> WhatsApp & Slack Alerts
+                  </div>
+                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
+                    <Check size={16} className="text-purple-400" /> AI Copilot & RCA
+                  </div>
+                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
+                    <Check size={16} className="text-purple-400" /> 30-day Log History
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Enterprise Plan */}
+            <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-8 flex flex-col hover:border-white/20 transition-colors">
+              <h3 className="text-xl font-semibold mb-2 text-[#EDEDED]">Enterprise</h3>
+              <p className="text-[#888888] text-[14px] mb-6 min-h-[40px]">Custom limits, dedicated support, and predictive AI.</p>
+              <div className="mb-8">
+                <span className="text-4xl font-bold text-white">$299+</span>
+                <span className="text-[#888888] font-medium"> / month</span>
+              </div>
+              <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8">
+                Contact Sales
+              </Link>
+              <div className="flex flex-col gap-4 mt-auto">
+                <div className="text-[12px] font-semibold tracking-wider uppercase text-[#666]">Everything in Pro, plus</div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> Predictive AI Failures
+                </div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> 1-year Log History
+                </div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> Single Sign-On (SSO)
+                </div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> 24/7 Priority Support
+                </div>
+                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
+                  <Check size={16} className="text-white" /> Custom SLAs
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-white/10 bg-[#080808] py-12 mt-20">
+      <footer className="w-full border-t border-white/[0.08] bg-[#050505] py-8">
         <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-white font-medium">
-            <div className="w-5 h-5 rounded-[4px] bg-white text-black flex items-center justify-center text-[10px] font-bold">B</div>
-            <span className="tracking-tight text-sm">BhartiAppPlus</span>
-          </div>
-          <p className="text-xs text-[#666]">© {new Date().getFullYear()} Bharti Nexus. All rights reserved.</p>
+          <Logo className="h-4 text-[#888]" />
+          <p className="text-xs text-[#666]">© {new Date().getFullYear()} BREXAL. All rights reserved.</p>
           <div className="flex gap-6 text-sm font-medium text-[#666]">
             <Link href="#" className="hover:text-white transition-colors">Twitter</Link>
             <Link href="#" className="hover:text-white transition-colors">GitHub</Link>

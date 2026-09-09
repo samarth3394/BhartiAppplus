@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+from sqlalchemy.exc import IntegrityError, DataError
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 from datetime import datetime, timezone
@@ -116,7 +117,11 @@ async def create_issue(data: IssueCreateRequest, request: Request, user: User = 
     )
 
     db.add(new_issue)
-    db.commit()
+    try:
+        db.commit()
+    except (IntegrityError, DataError):
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Invalid parent epic ID or data constraint violation")
 
     return {"message": "Issue created successfully", "issue": new_issue.to_dict()}
 
@@ -147,7 +152,11 @@ async def update_issue(issue_id: str, data: IssueUpdateRequest, user: User = Dep
         issue.labels = data.labels
 
     issue.updated_at = datetime.now(timezone.utc)
-    db.commit()
+    try:
+        db.commit()
+    except (IntegrityError, DataError):
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Invalid parent epic ID or data constraint violation")
 
     return {"message": "Issue updated", "issue": issue.to_dict()}
 

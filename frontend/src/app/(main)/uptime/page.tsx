@@ -159,7 +159,7 @@ export default function UptimePage() {
                     <Tooltip 
                       contentStyle={{ backgroundColor: '#111', borderColor: '#ffffff10', borderRadius: '6px', fontSize: '12px', color: '#EDEDED' }}
                       itemStyle={{ color: '#EDEDED' }}
-                      labelFormatter={(label) => new Date(label).toLocaleString()}
+                      labelFormatter={(label) => new Date(label as string).toLocaleString()}
                       cursor={{ stroke: '#ffffff10' }}
                     />
                     <Line 

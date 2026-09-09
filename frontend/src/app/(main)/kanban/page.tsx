@@ -123,12 +123,17 @@ export default function KanbanPage() {
         setNewTask({ title: '', description: '', type: 'task', priority: 'medium', parent_id: '', labels: '' });
         fetchIssues();
       } else {
-        const errorData = await res.json();
+        let errorData;
+        try {
+          errorData = await res.json();
+        } catch {
+          errorData = { detail: "Server error occurred" };
+        }
         alert(errorData.detail || "Failed to create task");
       }
     } catch (err) {
       console.error(err);
-      alert("An error occurred");
+      alert("A network error occurred. Please try again.");
     }
   };
 

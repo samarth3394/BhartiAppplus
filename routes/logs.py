@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Request, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from typing import List, Optional
@@ -10,13 +10,17 @@ router = APIRouter(tags=["logs"])
 
 @router.get("/api/logs")
 async def get_logs(
-    app_id: str,
+    request: Request,
     search: Optional[str] = None,
     limit: int = Query(50, le=200),
     offset: int = 0,
     db: Session = Depends(get_db),
     user = Depends(get_current_user)
 ):
+    app_id = request.cookies.get('current_app_id')
+    if not app_id:
+        raise HTTPException(status_code=400, detail="No app selected")
+
     query = db.query(AppErrorLog).filter(AppErrorLog.app_id == app_id)
 
     if search:
