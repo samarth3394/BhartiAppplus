@@ -136,7 +136,7 @@ export default function LandingPage() {
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-xl font-semibold text-white tracking-tight">Kanban Board</h2>
             </div>
-            <div className="flex gap-4 h-[250px]">
+            <div className="flex gap-4 h-full">
               {['Todo', 'In Progress', 'Done'].map(col => (
                 <div key={col} className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 flex flex-col">
                   <div className="text-[13px] font-medium text-[#888] mb-4 flex items-center justify-between">
@@ -161,7 +161,7 @@ export default function LandingPage() {
         );
       case "Inbox":
         return (
-          <div className="flex h-full gap-6 max-h-[300px]">
+          <div className="flex h-full gap-6">
             <div className="w-1/3 flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-2">
               <h2 className="text-xl font-semibold text-white tracking-tight mb-4 shrink-0">Inbox</h2>
               {[1, 2, 3].map(i => (
@@ -202,7 +202,7 @@ export default function LandingPage() {
                  <Plus size={14} /> New Issue
               </div>
             </div>
-            <div className="flex-1 bg-[#111] border border-white/[0.05] rounded-xl flex flex-col overflow-hidden max-h-[250px]">
+            <div className="flex-1 bg-[#111] border border-white/[0.05] rounded-xl flex flex-col overflow-hidden">
                <div className="flex items-center px-4 py-2 border-b border-white/[0.05] text-[11px] font-medium text-[#666] tracking-wider uppercase bg-[#141414]">
                  <div className="w-20">ID</div>
                  <div className="flex-1">Title</div>
@@ -238,7 +238,7 @@ export default function LandingPage() {
                 <Zap size={20} className="text-purple-400" /> AI Copilot
               </h2>
             </div>
-            <div className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl p-6 flex flex-col gap-6 overflow-hidden max-h-[250px]">
+            <div className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl p-6 flex flex-col gap-6 overflow-hidden">
               <div className="flex gap-4">
                  <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
                    <Zap size={16} />
@@ -268,7 +268,7 @@ export default function LandingPage() {
                  <Plus size={14} /> New Team
               </div>
             </div>
-            <div className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl flex flex-col overflow-hidden max-h-[250px]">
+            <div className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl flex flex-col overflow-hidden">
                <div className="flex items-center px-4 py-2 border-b border-white/[0.04] text-[11px] font-medium text-[#666] tracking-wider uppercase bg-[#111]">
                  <div className="w-10"></div>
                  <div className="flex-1">Name</div>
@@ -320,21 +320,41 @@ export default function LandingPage() {
       case "Uptime":
         return (
           <>
-            <div className="flex flex-col items-center justify-center h-full gap-6">
-              <div className="text-center">
-                 <div className="text-[#888] text-[13px] font-medium mb-1 uppercase tracking-widest">Global Status</div>
-                 <div className="text-5xl font-bold text-emerald-400 drop-shadow-[0_0_20px_rgba(52,211,153,0.3)]">All Systems Operational</div>
+            <div className="flex items-center justify-between mb-8 shrink-0">
+              <h2 className="text-xl font-semibold text-white tracking-tight">Uptime</h2>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0a0a0a] border border-white/[0.08] text-[#888] rounded-md text-[13px] font-medium">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                All Systems Operational
               </div>
-              <div className="w-full flex gap-1 mt-4">
-                 {Array.from({ length: 40 }).map((_, i) => (
-                   <div key={i} className={`h-8 flex-1 rounded-sm ${i === 24 || i === 25 ? 'bg-amber-500/80' : 'bg-emerald-500/80'} shadow-[0_0_10px_rgba(0,0,0,0.5)]`}></div>
-                 ))}
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4 mb-4 shrink-0">
+              <div className="bg-[#111] border border-white/[0.06] p-4 rounded-xl flex flex-col">
+                 <span className="text-[#888] font-medium text-[10px] mb-2 uppercase tracking-wider">24h Uptime</span>
+                 <div className="text-2xl font-semibold tracking-tight text-[#EDEDED]">100%</div>
               </div>
-              <div className="flex w-full justify-between text-[11px] text-[#555] font-mono">
-                 <span>90 days ago</span>
-                 <span>100.0% uptime</span>
-                 <span>Today</span>
+              <div className="bg-[#111] border border-white/[0.06] p-4 rounded-xl flex flex-col">
+                 <span className="text-[#888] font-medium text-[10px] mb-2 uppercase tracking-wider">7d Uptime</span>
+                 <div className="text-2xl font-semibold tracking-tight text-[#EDEDED]">99.9%</div>
               </div>
+              <div className="bg-[#111] border border-white/[0.06] p-4 rounded-xl flex flex-col">
+                 <span className="text-[#888] font-medium text-[10px] mb-2 uppercase tracking-wider">30d Uptime</span>
+                 <div className="text-2xl font-semibold tracking-tight text-[#EDEDED]">99.9%</div>
+              </div>
+            </div>
+
+            <div className="flex-1 bg-[#111] border border-white/[0.06] p-4 rounded-xl flex flex-col relative overflow-hidden min-h-[120px]">
+               <div className="flex items-center gap-2 mb-2">
+                 <Activity size={14} className="text-[#888]" />
+                 <h2 className="text-[13px] font-medium text-[#EDEDED]">Response Time (24h)</h2>
+               </div>
+               <div className="flex-1 border-b border-l border-white/[0.05] relative flex items-end ml-4 mb-4 mt-2">
+                 <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                    <path d="M0,70 L10,65 L20,75 L30,40 L40,60 L50,55 L60,80 L70,30 L80,50 L90,65 L100,60" fill="none" stroke="#555" strokeWidth="1.5" />
+                 </svg>
+                 <div className="absolute -bottom-5 left-0 text-[9px] text-[#555]">24h ago</div>
+                 <div className="absolute -bottom-5 right-0 text-[9px] text-[#555]">Now</div>
+               </div>
             </div>
           </>
         );
@@ -383,7 +403,7 @@ export default function LandingPage() {
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-xl font-semibold text-white tracking-tight">Maintenance Schedule</h2>
             </div>
-            <div className="space-y-3 max-h-[250px] overflow-y-auto custom-scrollbar pr-2">
+            <div className="flex-1 space-y-3 overflow-y-auto custom-scrollbar pr-2">
               {[
                 { title: 'Database Engine Upgrade', date: 'Oct 15, 02:00 UTC', duration: '2 hours', status: 'Upcoming' },
                 { title: 'SSL Certificate Renewal', date: 'Oct 20, 00:00 UTC', duration: '15 mins', status: 'Scheduled' },
@@ -410,7 +430,7 @@ export default function LandingPage() {
         );
       case "Settings":
         return (
-          <div className="max-h-[300px] overflow-y-auto custom-scrollbar pr-4">
+          <div className="h-full overflow-y-auto custom-scrollbar pr-4 flex flex-col">
             <h2 className="text-xl font-semibold text-white tracking-tight mb-8">Settings</h2>
             <div className="space-y-6">
                <div className="pb-6 border-b border-white/[0.05]">
