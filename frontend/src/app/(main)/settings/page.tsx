@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Settings, User, Bell, Shield, Key, Download, Trash2, Smartphone, Globe, Mail } from "lucide-react";
+import { Settings, User, Bell, Shield, Key, Download, Trash2, Smartphone, Globe, Mail, Github } from "lucide-react";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -222,6 +222,14 @@ export default function SettingsPage() {
               className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] font-medium ${activeTab === "security" ? "bg-white/[0.06] text-white" : "text-[#888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}`}
             >
               <Shield size={16} className={activeTab === "security" ? "text-white" : "text-[#555]"} /> Security
+            </button>
+          )}
+          {["admin", "project_manager"].includes(userRole) && (
+            <button 
+              onClick={() => setActiveTab("integrations")}
+              className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] font-medium ${activeTab === "integrations" ? "bg-white/[0.06] text-white" : "text-[#888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}`}
+            >
+              <Github size={16} className={activeTab === "integrations" ? "text-white" : "text-[#555]"} /> Integrations
             </button>
           )}
         </div>
@@ -469,6 +477,42 @@ export default function SettingsPage() {
                   <button onClick={deleteApp} className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg transition flex items-center gap-2 text-[13px] font-medium">
                     <Trash2 size={14} /> Delete Application
                   </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "integrations" && (
+            <div className="p-6">
+              <h2 className="text-[15px] font-semibold text-[#EDEDED] mb-6">Integrations</h2>
+              
+              <div className="p-4 border border-white/[0.06] rounded-xl bg-[#0a0a0a]">
+                <div className="flex items-center gap-3 mb-2">
+                  <Github size={18} className="text-white" />
+                  <h4 className="text-[#EDEDED] text-[14px] font-medium">GitHub Webhook Integration</h4>
+                </div>
+                <p className="text-[12px] text-[#888] mb-4">Automatically close issues when a Pull Request is merged. Configure your repository webhook to point to the URL below.</p>
+                
+                <div className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-[11px] font-medium text-[#888] uppercase tracking-wider">Payload URL</label>
+                    <input 
+                      type="text" 
+                      readOnly 
+                      value="https://your-domain.com/api/github/webhook"
+                      className="w-full bg-[#111] border border-white/[0.08] text-[#EDEDED] rounded-lg py-2 px-3 outline-none font-mono text-[12px]"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-[11px] font-medium text-[#888] uppercase tracking-wider">Secret (Stored in .env)</label>
+                    <input 
+                      type="password" 
+                      readOnly 
+                      value="GITHUB_WEBHOOK_SECRET_VALUE"
+                      className="w-full bg-[#111] border border-white/[0.08] text-[#EDEDED] rounded-lg py-2 px-3 outline-none font-mono text-[12px]"
+                    />
+                    <p className="text-[11px] text-[#555]">Ensure `GITHUB_WEBHOOK_SECRET` is set in your server environment variables.</p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -643,8 +643,12 @@ class Issue(Base):
     title = Column(String(255), nullable=False)
     description = Column(Text, default='')
     type = Column(Enum(IssueTypeEnum), default=IssueTypeEnum.task)
-    status = Column(Enum(IssueStatusEnum), default=IssueStatusEnum.todo)
+    status = Column(String(100), default='todo')
     priority = Column(String(50), default='medium')  # low, medium, high, critical
+    parent_id = Column(String(36), ForeignKey('issues.id'), nullable=True)
+    labels = Column(JSON, default=list)
+    github_pr_url = Column(String(500), nullable=True)
+    github_branch_name = Column(String(255), nullable=True)
     assignee_id = Column(String(36), ForeignKey('users.id'), nullable=True)
     reporter_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     due_date = Column(DateTime, nullable=True)
@@ -663,8 +667,12 @@ class Issue(Base):
             'title': self.title,
             'description': self.description,
             'type': self.type.value if self.type else None,
-            'status': self.status.value if self.status else None,
+            'status': self.status if isinstance(self.status, str) else (self.status.value if self.status else None),
             'priority': self.priority,
+            'parent_id': self.parent_id,
+            'labels': self.labels or [],
+            'github_pr_url': self.github_pr_url,
+            'github_branch_name': self.github_branch_name,
             'assignee_id': self.assignee_id,
             'reporter_id': self.reporter_id,
             'due_date': self.due_date.isoformat() if self.due_date else None,

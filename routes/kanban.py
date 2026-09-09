@@ -18,8 +18,11 @@ class IssueCreateRequest(BaseModel):
     description: Optional[str] = ""
     type: str  # epic, story, task, bug
     priority: Optional[str] = "medium"
+    status: Optional[str] = "todo"
     assignee_id: Optional[str] = None
     app_id: Optional[str] = None
+    parent_id: Optional[str] = None
+    labels: Optional[List[str]] = []
 
 class IssueUpdateRequest(BaseModel):
     title: Optional[str] = None
@@ -28,25 +31,48 @@ class IssueUpdateRequest(BaseModel):
     status: Optional[str] = None
     priority: Optional[str] = None
     assignee_id: Optional[str] = None
+    parent_id: Optional[str] = None
+    labels: Optional[List[str]] = None
 
 # Removed HTML Route
 
 @router.get("/api/kanban/issues")
-async def list_issues(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+async def list_issues(
+    request: Request, 
+    assignee_id: Optional[str] = None,
+    priority: Optional[str] = None,
+    status: Optional[str] = None,
+    parent_id: Optional[str] = None,
+    user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     current_app_id = request.cookies.get('current_app_id')
     current_workspace_id = request.cookies.get('current_workspace_id')
 
+    query = db.query(Issue)
+
     if current_app_id and current_app_id not in ("None", ""):
-        issues = db.query(Issue).filter(Issue.app_id == current_app_id).all()
+        query = query.filter(Issue.app_id == current_app_id)
     elif current_workspace_id and current_workspace_id not in ("None", ""):
         apps = db.query(App).filter(App.workspace_id == current_workspace_id).all()
         app_ids = [a.id for a in apps]
-        issues = db.query(Issue).filter(Issue.app_id.in_(app_ids)).all()
+        query = query.filter(Issue.app_id.in_(app_ids))
     else:
         # No app or workspace selected, get issues for apps owned by user
         apps = db.query(App).filter(App.owner_id == user.id, App.workspace_id == None).all()
         app_ids = [a.id for a in apps]
-        issues = db.query(Issue).filter(Issue.app_id.in_(app_ids)).all()
+        query = query.filter(Issue.app_id.in_(app_ids))
+
+    if assignee_id:
+        query = query.filter(Issue.assignee_id == assignee_id)
+    if priority:
+        query = query.filter(Issue.priority == priority)
+    if status:
+        query = query.filter(Issue.status == status)
+    if parent_id is not None:
+        query = query.filter(Issue.parent_id == (parent_id if parent_id else None))
+        
+    issues = query.all()
 
     return {"issues": [issue.to_dict() for issue in issues]}
 
@@ -81,10 +107,12 @@ async def create_issue(data: IssueCreateRequest, request: Request, user: User = 
         title=title,
         description=data.description,
         type=issue_type,
-        status=IssueStatusEnum.todo,
+        status=data.status or "todo",
         priority=data.priority,
         assignee_id=data.assignee_id if data.assignee_id else None,
         reporter_id=user.id,
+        parent_id=data.parent_id if data.parent_id else None,
+        labels=data.labels or []
     )
 
     db.add(new_issue)
@@ -108,14 +136,15 @@ async def update_issue(issue_id: str, data: IssueUpdateRequest, user: User = Dep
         except KeyError:
             raise HTTPException(status_code=400, detail="Invalid issue type")
     if data.status is not None:
-        try:
-            issue.status = IssueStatusEnum[data.status]
-        except KeyError:
-            raise HTTPException(status_code=400, detail="Invalid status")
+        issue.status = data.status
     if data.priority is not None:
         issue.priority = data.priority
     if data.assignee_id is not None:
         issue.assignee_id = data.assignee_id if data.assignee_id else None
+    if data.parent_id is not None:
+        issue.parent_id = data.parent_id if data.parent_id else None
+    if data.labels is not None:
+        issue.labels = data.labels
 
     issue.updated_at = datetime.now(timezone.utc)
     db.commit()

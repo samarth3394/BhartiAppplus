@@ -22,6 +22,7 @@ from routes.api_ingest import router as api_ingest_router
 from routes.server import router as server_router
 from routes.settings import router as settings_router
 from routes.ai_logs import router as ai_logs_router
+from routes.github import router as github_router
 from routes.security import router as security_router
 from routes.workspaces import router as workspaces_router
 from routes.kanban import router as kanban_router
@@ -55,6 +56,7 @@ app.include_router(api_ingest_router)
 app.include_router(server_router)
 app.include_router(settings_router)
 app.include_router(ai_logs_router)
+app.include_router(github_router)
 app.include_router(security_router)
 app.include_router(workspaces_router)
 app.include_router(kanban_router)
