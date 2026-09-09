@@ -572,6 +572,40 @@ class ActivityLog(Base):
         }
 
 
+# ─── App Error Logs ───────────────────────────────────────────────────────
+
+class AppErrorLog(Base):
+    __tablename__ = 'app_error_logs'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False)
+    message = Column(Text, nullable=False)
+    stack_trace = Column(Text, default='')
+    url = Column(String(500), default='')
+    line = Column(String(50), default='')
+    column = Column(String(50), default='')
+    user_agent = Column(String(500), default='')
+    metadata_json = Column(JSON, default=dict)
+    timestamp = Column(DateTime, default=utc_now, index=True)
+
+    # Relationships
+    app = relationship('App')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'message': self.message,
+            'stack_trace': self.stack_trace,
+            'url': self.url,
+            'line': self.line,
+            'column': self.column,
+            'user_agent': self.user_agent,
+            'metadata': self.metadata_json,
+            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+        }
+
+
 # ─── Server Metrics ───────────────────────────────────────────────────────
 
 class ServerMetric(Base):

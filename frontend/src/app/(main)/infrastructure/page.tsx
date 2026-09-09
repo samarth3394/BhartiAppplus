@@ -65,6 +65,46 @@ curl -X POST $URL \\
   -d "{\\"cpu_percent\\": $CPU, \\"ram_percent\\": $RAM, \\"disk_percent\\": $DISK}"
 `;
 
+  const nodeSnippet = `// Node.js (Express Example)
+const fetch = require('node-fetch');
+
+app.use((err, req, res, next) => {
+  fetch('http://YOUR_SERVER_IP:5000/api/ingest/error', {
+    method: 'POST',
+    headers: {
+      'X-Nexvora-Key': 'YOUR_API_CLIENT_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: err.message,
+      stack: err.stack,
+      url: req.originalUrl,
+      userAgent: req.get('User-Agent')
+    })
+  }).catch(console.error);
+
+  res.status(500).send('Something broke!');
+});`;
+
+  const pythonSnippet = `# Python (FastAPI/Flask Example)
+import requests
+import traceback
+
+def log_error_to_bharti(exception, request_url, user_agent):
+    try:
+        requests.post(
+            'http://YOUR_SERVER_IP:5000/api/ingest/error',
+            headers={'X-Nexvora-Key': 'YOUR_API_CLIENT_KEY'},
+            json={
+                'message': str(exception),
+                'stack': traceback.format_exc(),
+                'url': request_url,
+                'userAgent': user_agent
+            }
+        )
+    except Exception:
+        pass`;
+
   return (
     <div className="space-y-6 max-w-6xl mx-auto h-full flex flex-col pb-12 font-sans">
       {/* Header */}
@@ -231,6 +271,27 @@ curl -X POST $URL \\
                     <span className="text-[#EDEDED]">*/5 * * * * /path/to/metrics.sh</span>
                   </code>
                 </pre>
+              </div>
+
+              <div className="pt-6 border-t border-white/[0.04]">
+                <h2 className="text-[15px] font-medium text-[#EDEDED] mb-4">Error Logging (Exceptions)</h2>
+                <p className="mb-4 text-[#888] text-[13px]">Send runtime exceptions directly to the Logs dashboard.</p>
+                
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <h3 className="text-[#EDEDED] font-medium text-[14px]">Node.js / Express Middleware</h3>
+                    <pre className="bg-[#0a0a0a] p-4 rounded-lg border border-white/[0.04] overflow-x-auto text-[#888] font-mono text-[12px] leading-relaxed">
+                      <code>{nodeSnippet}</code>
+                    </pre>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-[#EDEDED] font-medium text-[14px]">Python / FastAPI Example</h3>
+                    <pre className="bg-[#0a0a0a] p-4 rounded-lg border border-white/[0.04] overflow-x-auto text-[#888] font-mono text-[12px] leading-relaxed">
+                      <code>{pythonSnippet}</code>
+                    </pre>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

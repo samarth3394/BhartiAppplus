@@ -24,7 +24,8 @@ import {
     Box,
     User,
     MessageSquare,
-    ChevronRight
+    ChevronRight,
+    Terminal
 } from "lucide-react";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -188,6 +189,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       items: [
         { name: "Uptime", href: "/uptime", icon: Activity },
         { name: "Infrastructure", href: "/infrastructure", icon: Server },
+        { name: "Logs", href: "/logs", icon: Terminal },
         { name: "Maintenance", href: "/maintenance", icon: Wrench },
       ]
     },

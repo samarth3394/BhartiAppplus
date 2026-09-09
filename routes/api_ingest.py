@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from pydantic import BaseModel
 from typing import Optional
 
-from models import App, Bug, BugStatusEnum, SeverityEnum, ServerMetric
+from models import App, Bug, BugStatusEnum, SeverityEnum, ServerMetric, AppErrorLog
 from dependencies import get_db
 
 router = APIRouter(tags=["api_ingest"])
@@ -40,30 +40,34 @@ async def ingest_error(data: ErrorIngestRequest, request: Request, x_nexvora_key
     user_agent = data.userAgent
     timestamp = data.timestamp or datetime.now(timezone.utc).isoformat()
 
-    title = f"[Auto] {message[:100]}"
-    description = f"Automated error report from {url}\n\n**Error:** {message}\n**Line:** {line}:{col}"
-
     metadata = {
         'stack': stack,
         'userAgent': user_agent,
-        'url': url,
-        'timestamp': timestamp
+        'url': url
     }
+    
+    parsed_timestamp = None
+    try:
+        if data.timestamp:
+            parsed_timestamp = datetime.fromisoformat(data.timestamp.replace('Z', '+00:00'))
+    except Exception:
+        pass
 
-    bug = Bug(
+    error_log = AppErrorLog(
         app_id=app.id,
-        title=title,
-        description=description,
-        severity=SeverityEnum.high,
-        status=BugStatusEnum.open,
-        is_automated=True,
+        message=message,
+        stack_trace=stack,
+        url=url,
+        line=line,
+        column=col,
+        user_agent=user_agent,
         metadata_json=metadata,
-        reported_by=None
+        timestamp=parsed_timestamp or datetime.now(timezone.utc)
     )
-    db.add(bug)
+    db.add(error_log)
     db.commit()
 
-    return {'message': 'Error ingested successfully', 'bug_id': bug.id}
+    return {'message': 'Error logged successfully', 'log_id': error_log.id}
 
 @router.options("/api/ingest/error", status_code=status.HTTP_204_NO_CONTENT)
 async def ingest_error_options():
