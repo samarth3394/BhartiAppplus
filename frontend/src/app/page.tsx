@@ -1041,7 +1041,10 @@ export default function LandingPage() {
       <footer className="w-full border-t border-white/[0.08] bg-[#050505] py-8">
         <div className="w-full px-6 md:px-12 lg:px-24 flex flex-col md:flex-row items-center justify-between gap-4">
           <Logo className="h-4 text-[#888]" />
-          <p className="text-xs text-[#666]">© {new Date().getFullYear()} BREXAL. All rights reserved.</p>
+          <div className="flex flex-col items-center gap-1 text-center md:text-left">
+            <p className="text-xs text-[#666]">© {new Date().getFullYear()} BREXAL. All rights reserved.</p>
+            <p className="text-[11px] text-[#555]">A product by <span className="font-medium text-[#888]">Bharti Nexus Technologies</span>.</p>
+          </div>
           <div className="flex gap-6 text-sm font-medium text-[#666]">
             <Link href="#" className="hover:text-white transition-colors">Twitter</Link>
             <Link href="#" className="hover:text-white transition-colors">GitHub</Link>
