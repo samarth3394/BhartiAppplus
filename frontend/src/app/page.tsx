@@ -500,10 +500,10 @@ export default function LandingPage() {
         <div className="flex items-center gap-6">
           <Logo className="h-4 text-white" />
           <div className="hidden md:flex items-center gap-4 text-sm text-[#888888] font-medium">
-            <Link href="#" className="hover:text-white transition-colors">Features</Link>
-            <Link href="#" className="hover:text-white transition-colors">Method</Link>
-            <Link href="#" className="hover:text-white transition-colors">Customers</Link>
-            <Link href="#" className="hover:text-white transition-colors">Pricing</Link>
+            <Link href="#features" className="hover:text-white transition-colors">Features</Link>
+            <Link href="#method" className="hover:text-white transition-colors">Method</Link>
+            <Link href="#faq" className="hover:text-white transition-colors">FAQ</Link>
+            <Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link>
           </div>
         </div>
         <div className="flex items-center gap-4 text-sm font-medium">
@@ -514,15 +514,15 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      <main className="pt-32 pb-24 flex flex-col items-center">
+      <main className="pt-32 pb-24 flex flex-col">
         
         {/* Hero Section */}
-        <section className="w-full max-w-5xl mx-auto px-6 flex flex-col items-center text-center relative z-10">
+        <section className="w-full px-6 md:px-12 lg:px-24 flex flex-col items-start text-left relative z-10">
           
           {/* Subtle Background Radial Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple-600/20 blur-[120px] rounded-[100%] pointer-events-none opacity-50"></div>
+          <div className="absolute top-0 left-0 -translate-x-[10%] w-[800px] h-[400px] bg-purple-600/20 blur-[120px] rounded-[100%] pointer-events-none opacity-50"></div>
 
-          <motion.div initial="hidden" animate={mounted ? "visible" : "hidden"} variants={staggerContainer} className="relative z-10 flex flex-col items-center">
+          <motion.div initial="hidden" animate={mounted ? "visible" : "hidden"} variants={staggerContainer} className="relative z-10 flex flex-col items-start">
             
             <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10 text-xs font-medium text-[#888888] mb-8 hover:bg-white/[0.05] transition-colors cursor-pointer">
               <span className="flex items-center justify-center w-4 h-4 rounded-full bg-purple-500/20">
@@ -531,15 +531,15 @@ export default function LandingPage() {
               BREXAL 2.0 is here <ArrowRight size={12} />
             </motion.div>
             
-            <motion.h1 variants={fadeUp} className="text-6xl md:text-[80px] leading-[1.05] font-bold tracking-tighter mb-6 bg-gradient-to-b from-white to-[#888888] text-transparent bg-clip-text max-w-4xl">
+            <motion.h1 variants={fadeUp} className="text-6xl md:text-[80px] leading-[1.05] font-bold tracking-tighter mb-6 bg-gradient-to-br from-white via-white to-[#888888] text-transparent bg-clip-text pr-12 lg:pr-24">
               The ultimate command center for your software operations.
             </motion.h1>
             
-            <motion.p variants={fadeUp} className="text-xl md:text-2xl text-[#888888] max-w-2xl mb-10 font-light tracking-tight">
+            <motion.p variants={fadeUp} className="text-xl md:text-2xl text-[#888888] max-w-4xl mb-10 font-light tracking-tight">
               Meet the new standard for modern software teams. Streamline issues, monitor infrastructure, and run your startup with magic.
             </motion.p>
             
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 w-full justify-start">
               <Link href="/register" className="w-full sm:w-auto bg-[#EEEEEE] text-[#000000] px-6 py-3 rounded-full font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)]">
                 Get Started <ArrowRight size={16} />
               </Link>
@@ -552,7 +552,7 @@ export default function LandingPage() {
         </section>
 
         {/* Mockup Section */}
-        <section className="w-full max-w-6xl mx-auto px-6 mt-24 relative perspective-1000">
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-24 relative perspective-1000">
           <motion.div 
             initial={{ opacity: 0, rotateX: 20, y: 100 }}
             animate={mounted ? { opacity: 1, rotateX: 0, y: 0 } : {}}
@@ -640,8 +640,8 @@ export default function LandingPage() {
         </section>
 
         {/* Acronym Section */}
-        <section className="w-full max-w-5xl mx-auto px-6 mt-32 relative z-10">
-           <div className="text-center mb-16">
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10" id="method">
+           <div className="text-center md:text-left mb-16">
              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10 text-xs font-medium text-[#888888] mb-6">
                <Zap size={12} className="text-purple-400" /> The DNA of BREXAL
              </div>
@@ -695,10 +695,10 @@ export default function LandingPage() {
         </section>
 
         {/* Bento Grid Features */}
-        <section className="w-full max-w-5xl mx-auto px-6 mt-32">
-          <div className="text-center mb-16">
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32" id="features">
+          <div className="text-center md:text-left mb-16">
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Built for speed. Designed for power.</h2>
-            <p className="text-xl text-[#888888] font-light max-w-2xl mx-auto">Everything you need to build faster, all in one seamlessly integrated platform.</p>
+            <p className="text-xl text-[#888888] font-light max-w-3xl">Everything you need to build faster, all in one seamlessly integrated platform.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
@@ -829,10 +829,10 @@ export default function LandingPage() {
         </section>
 
         {/* Pricing Section */}
-        <section className="w-full max-w-5xl mx-auto px-6 mt-32 mb-16 relative" id="pricing">
-          <div className="text-center mb-16">
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 mb-16 relative" id="pricing">
+          <div className="text-center md:text-left mb-16">
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Pricing that scales with you.</h2>
-            <p className="text-xl text-[#888888] font-light max-w-2xl mx-auto">Start for free, upgrade when you need advanced monitoring and AI capabilities.</p>
+            <p className="text-xl text-[#888888] font-light max-w-3xl">Start for free, upgrade when you need advanced monitoring and AI capabilities.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -938,7 +938,7 @@ export default function LandingPage() {
         </section>
 
         {/* 2. Interactive Terminal / Code Snippet */}
-        <section className="w-full max-w-5xl mx-auto px-6 mt-32 relative z-10">
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10">
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="flex-1 text-left">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Integrate in seconds.</h2>
@@ -984,10 +984,10 @@ export default function LandingPage() {
 
 
         {/* 4. Minimalist FAQ Section */}
-        <section className="w-full max-w-3xl mx-auto px-6 mt-32 relative z-10">
-          <div className="text-center mb-16">
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10" id="faq">
+          <div className="text-center md:text-left mb-16">
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Frequently asked questions</h2>
-            <p className="text-[#888] text-lg max-w-2xl mx-auto">Everything you need to know about the product and billing.</p>
+            <p className="text-[#888] text-lg max-w-2xl">Everything you need to know about the product and billing.</p>
           </div>
           <div className="flex flex-col border-t border-white/10">
             {faqs.map((faq, index) => (
@@ -1024,14 +1024,14 @@ export default function LandingPage() {
         </section>
 
         {/* 5. Massive Final CTA */}
-        <section className="w-full max-w-5xl mx-auto px-6 mt-32 mb-32 relative z-10 text-center">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-purple-600/20 blur-[120px] rounded-[100%] pointer-events-none opacity-50"></div>
-          <div className="relative z-10 border border-white/10 rounded-[2rem] bg-[#050505] p-12 md:p-24 overflow-hidden">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6">Ready to build unbreakable software?</h2>
-            <p className="text-xl text-[#888] font-light max-w-2xl mx-auto mb-10">Join thousands of engineering teams who sleep better at night knowing BREXAL is watching their stack.</p>
-            <Link href="/register" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-medium hover:bg-zinc-200 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.15)] text-lg">
-              Start building for free <ArrowRight size={18} />
-            </Link>
+        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 mb-32 relative z-10">
+          <div className="relative z-10 flex flex-col items-start text-left">
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 bg-gradient-to-br from-white via-white to-white/40 text-transparent bg-clip-text">
+              Ready to build unbreakable software?
+            </h2>
+            <p className="text-xl text-[#888] font-light max-w-2xl">
+              Join thousands of engineering teams who sleep better at night knowing BREXAL is watching their stack.
+            </p>
           </div>
         </section>
 
@@ -1039,7 +1039,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="w-full border-t border-white/[0.08] bg-[#050505] py-8">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="w-full px-6 md:px-12 lg:px-24 flex flex-col md:flex-row items-center justify-between gap-4">
           <Logo className="h-4 text-[#888]" />
           <p className="text-xs text-[#666]">© {new Date().getFullYear()} BREXAL. All rights reserved.</p>
           <div className="flex gap-6 text-sm font-medium text-[#666]">
