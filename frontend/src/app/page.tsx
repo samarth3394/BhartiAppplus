@@ -9,6 +9,7 @@ import {
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
+import { ThreeCanvas } from "@/components/ThreeCanvas";
 
 /* ──────────────────────────── ZERO-OVERHEAD 3D TILT CARD ──────────────────────────── */
 function TiltCard({ 
@@ -595,8 +596,11 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080808] text-[#EDEDED] font-sans overflow-x-clip selection:bg-white/20 selection:text-white">
+    <div className="min-h-screen bg-[#080808] text-[#EDEDED] font-sans overflow-x-clip selection:bg-white/20 selection:text-white relative">
       
+      {/* ═══════════════════ REAL 3D WEBGL SCENE (THREE.JS) ═══════════════════ */}
+      <ThreeCanvas />
+
       {/* ═══════════════════ CLEAN TRANSPARENT TOP NAVBAR ═══════════════════ */}
       <motion.nav
         initial={{ y: -30, opacity: 0 }}
