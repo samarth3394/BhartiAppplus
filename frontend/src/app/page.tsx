@@ -9,6 +9,7 @@ import {
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
+import { SplineScene } from "@/components/SplineScene";
 
 /* ──────────────────────────── ZERO-OVERHEAD 3D TILT CARD ──────────────────────────── */
 function TiltCard({ 
@@ -1225,45 +1226,33 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-col lg:flex-row items-stretch gap-6 [perspective:1400px]">
-            {/* Architecture Diagram */}
+            {/* Interactive 3D Spline Hardware Node */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1"
+              className="flex-1 min-h-[420px]"
             >
-              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col justify-center items-center relative overflow-hidden">
-                {/* Subtle architectural ambient background */}
-                <div className="absolute inset-0 pointer-events-none opacity-[0.03] select-none [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
-                <div className="absolute w-72 h-72 rounded-full bg-white/[0.02] blur-3xl pointer-events-none" />
-
-                <div className="flex items-center justify-between w-full max-w-md relative z-10 py-8">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-16 h-16 rounded-2xl bg-black border border-white/10 flex items-center justify-center shadow-md">
-                      <Server size={22} className="text-zinc-400" />
-                    </div>
-                    <span className="text-xs font-mono text-zinc-400">Target Stack</span>
+              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-6 flex flex-col justify-between relative overflow-hidden">
+                <div className="flex items-center justify-between z-10 mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs font-mono text-white">Interactive 3D Hardware Core</span>
                   </div>
-                  <div className="flex-1 flex items-center justify-center mx-6">
-                    <div className="relative w-full">
-                      <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-zinc-700 via-white/30 to-zinc-700"></div>
-                      <motion.div
-                        animate={{ x: ["0%", "100%"] }}
-                        transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
-                        className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-16 h-16 rounded-2xl bg-black border border-white/15 flex items-center justify-center shadow-md">
-                      <Zap size={22} className="text-white" />
-                    </div>
-                    <span className="text-xs font-mono text-white">BREXAL API</span>
-                  </div>
+                  <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider bg-white/[0.04] px-2 py-0.5 rounded border border-white/[0.06]">
+                    Spline 3D Scene
+                  </span>
                 </div>
-                <div className="mt-4 text-center relative z-10">
-                  <div className="text-[12px] font-mono text-zinc-500 uppercase tracking-wider">mTLS Encrypted • eBPF Fast • Zero Downtime</div>
+                
+                <div className="flex-1 w-full relative min-h-[280px]">
+                  <SplineScene />
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-zinc-500 z-10">
+                  <span>mTLS Encrypted</span>
+                  <span>eBPF Telemetry</span>
+                  <span className="text-emerald-400">Zero Downtime</span>
                 </div>
               </TiltCard>
             </motion.div>
