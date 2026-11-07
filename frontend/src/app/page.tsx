@@ -4,11 +4,13 @@ import Link from "next/link";
 import { 
   ArrowRight, Command, Zap, Layers, Lock, GitBranch, Terminal, User,
   LayoutDashboard, MessageSquare, Users, KanbanSquare, Bug, Map, 
-  Activity, Server, Wrench, Settings, ChevronDown, ChevronRight, Plus, Check
+  Activity, Server, Wrench, Settings, ChevronDown, ChevronRight, Plus, Check, MousePointer2
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
+
+/* ──────────────────────────── DATA ──────────────────────────── */
 
 const faqs = [
   {
@@ -29,6 +31,187 @@ const faqs = [
   }
 ];
 
+const reviewsData = [
+  {
+    quote: "BREXAL has completely transformed how we monitor our infrastructure. The zero-configuration setup and the sub-millisecond overhead mean we get enterprise-grade observability without sacrificing any performance. The AI Copilot caught three critical memory leaks before they even reached production.",
+    name: "Ganesh Vanave",
+    title: "Founder of Next Career Steps & Data Engineer in Germany",
+    initials: "GV",
+    gradient: "from-indigo-500 to-purple-600",
+    image: "/founders/ganesh-dada.png"
+  },
+  {
+    quote: "As a founder, I need to know my application is stable 24/7. BREXAL gives us that peace of mind. The automated root cause analysis is like having an extra senior engineer on the team who never sleeps. It's an absolute game-changer for modern startups.",
+    name: "Dhanaji Choudhar",
+    title: "Founder of Polivate Technologies",
+    initials: "DC",
+    gradient: "from-emerald-500 to-teal-600",
+    image: "/founders/dhanaji-choudhar.jpeg"
+  },
+  {
+    quote: "We migrated from Datadog to BREXAL, and the difference is night and day. The interface is breathtakingly fast, and the telemetry streaming is flawless. The way it ties issues directly to commits using AI has cut our debugging time in half.",
+    name: "Pururaj Varpe",
+    title: "Founder and CTO, Xpersify",
+    initials: "PV",
+    gradient: "from-blue-500 to-cyan-600",
+    image: "/founders/puru-varpe.jpeg"
+  },
+  {
+    quote: "From a financial and operational perspective, BREXAL is incredibly cost-effective. We get end-to-end encryption, predictive AI failure warnings, and a gorgeous dashboard that the whole team actually loves using. It's the best investment we've made in our tech stack.",
+    name: "Kunal Tambe",
+    title: "Founder and CFO of Xpersify",
+    initials: "KT",
+    gradient: "from-orange-500 to-red-600",
+    image: "/founders/kunal-tambe.jpeg"
+  },
+  {
+    quote: "We built BREXAL at Bharti Nexus Technologies to solve our own observability nightmares. Now, it's the very foundation that keeps our entire ecosystem running flawlessly. We designed it for engineers who refuse to compromise on speed and precision.",
+    name: "Samarth Choudhar",
+    title: "Founder and CTO of Bharti Nexus Technologies",
+    initials: "SC",
+    gradient: "from-purple-500 to-indigo-600",
+    image: "/founders/samarth-choudhar.png"
+  }
+];
+
+const trustedBy = [
+  "Next Career Steps", "Polivate Technologies", "Xpersify", "Bharti Nexus"
+];
+
+/* ──────────────────────────── ANIMATIONS ──────────────────────────── */
+
+const sectionReveal = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] }
+  }
+};
+
+const stagger = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.08 }
+  }
+};
+
+const itemReveal = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+  }
+};
+
+/* ──────────────────────────── REVIEWS SECTION ──────────────────────────── */
+
+function ReviewsSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={sectionReveal}
+      className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
+      id="reviews"
+    >
+      <div className="flex flex-col border-y border-white/[0.08]">
+        <button 
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full py-8 md:py-12 flex flex-col md:flex-row items-start md:items-center justify-between text-left group focus:outline-none"
+        >
+          <div>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 mb-2">Executive Perspectives</div>
+            <h2 className="text-2xl md:text-4xl font-medium tracking-tight mb-2 text-white group-hover:text-zinc-200 transition-colors">Trusted by engineering leaders worldwide.</h2>
+            <p className="text-zinc-400 text-sm md:text-base max-w-2xl font-normal">Real-world production feedback from CTOs and engineering directors running mission-critical workloads.</p>
+          </div>
+          <div className="mt-6 md:mt-0 ml-0 md:ml-8 flex items-center justify-center w-10 h-10 rounded-full border border-white/[0.1] group-hover:bg-white/[0.05] transition-all flex-shrink-0">
+            <motion.div animate={{ rotate: isExpanded ? 45 : 0 }} transition={{ duration: 0.2 }}>
+              <Plus size={18} className={isExpanded ? "text-white" : "text-zinc-400"} />
+            </motion.div>
+          </div>
+        </button>
+
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="py-16 flex flex-col items-center border-t border-white/[0.06]">
+                <div className="relative w-full max-w-4xl min-h-[260px] md:min-h-[220px] flex items-center justify-center text-center">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeIndex}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -15 }}
+                      transition={{ duration: 0.35 }}
+                      className="flex flex-col items-center justify-center"
+                    >
+                      <h3 className="text-xl md:text-2xl lg:text-3xl font-normal leading-relaxed tracking-tight text-zinc-200 mb-8 max-w-3xl">
+                        &ldquo;{reviewsData[activeIndex].quote}&rdquo;
+                      </h3>
+                      <div className="flex flex-col items-center gap-3">
+                        {reviewsData[activeIndex].image ? (
+                          <img 
+                            src={reviewsData[activeIndex].image} 
+                            alt={reviewsData[activeIndex].name} 
+                            className="w-14 h-14 rounded-full object-cover object-top border border-white/15 shadow-md"
+                          />
+                        ) : (
+                          <div className="w-14 h-14 rounded-full flex items-center justify-center text-white font-mono text-base bg-zinc-800 border border-white/10 shadow-md">
+                            {reviewsData[activeIndex].initials}
+                          </div>
+                        )}
+                        <div className="flex flex-col items-center">
+                          <div className="font-medium text-white text-base">{reviewsData[activeIndex].name}</div>
+                          <div className="text-zinc-500 text-xs md:text-sm mt-0.5">{reviewsData[activeIndex].title}</div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                {/* Avatars */}
+                <div className="flex items-center gap-4 mt-12 pt-6 border-t border-white/[0.05] w-full max-w-xl justify-center">
+                  {reviewsData.map((review, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveIndex(idx)}
+                      className={`relative w-11 h-11 rounded-full flex items-center justify-center text-white font-medium text-sm transition-all duration-200 overflow-hidden ${
+                        activeIndex === idx 
+                          ? "ring-2 ring-white scale-110 shadow-md z-10" 
+                          : "opacity-50 hover:opacity-90 scale-95 hover:scale-100"
+                      } bg-zinc-800 border border-white/10`}
+                    >
+                      {review.image ? (
+                        <img src={review.image} alt={review.name} className="w-full h-full object-cover object-top" />
+                      ) : (
+                        review.initials
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.section>
+  );
+}
+
+/* ──────────────────────────── MAIN PAGE ──────────────────────────── */
+
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
@@ -42,8 +225,24 @@ export default function LandingPage() {
     Operations: true,
     System: true
   });
+  const [navScrolled, setNavScrolled] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+  const heroImgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const heroContentY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const heroOverlayOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 0.75]);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleScroll = () => setNavScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleGroup = (title: string) => {
     setExpandedGroups(prev => ({
@@ -91,165 +290,56 @@ export default function LandingPage() {
     }
   ];
 
-  const fadeUp: any = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-  };
-
-  const staggerContainer: any = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
-
+  /* ── Mockup content renderer (same logic) ── */
   const renderMockupContent = () => {
     switch (activeTab) {
       case "Dashboard":
         return (
           <>
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Overview</h2>
+              <h2 className="text-lg font-medium text-white tracking-tight">System Overview</h2>
               <div className="flex -space-x-2">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 border-2 border-[#0a0a0a] flex items-center justify-center text-[10px] font-bold text-white">JD</div>
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 border-2 border-[#0a0a0a] flex items-center justify-center text-[10px] font-bold text-white">AS</div>
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-500 to-red-500 border-2 border-[#0a0a0a] flex items-center justify-center text-[10px] font-bold text-white">MK</div>
+                <div className="w-7 h-7 rounded-full bg-zinc-800 border-2 border-[#090b0e] flex items-center justify-center text-[10px] font-mono text-zinc-300">JD</div>
+                <div className="w-7 h-7 rounded-full bg-zinc-700 border-2 border-[#090b0e] flex items-center justify-center text-[10px] font-mono text-zinc-200">AS</div>
+                <div className="w-7 h-7 rounded-full bg-zinc-900 border-2 border-[#090b0e] flex items-center justify-center text-[10px] font-mono text-zinc-400">MK</div>
               </div>
             </div>
             
             <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="h-28 rounded-xl bg-white/[0.02] border border-white/[0.04] p-5 flex flex-col justify-between hover:bg-white/[0.03] transition-colors cursor-pointer">
-                <div className="text-[#888] text-[13px] font-medium">Active Issues</div>
-                <div className="text-3xl font-semibold text-white">124</div>
+              <div className="h-28 rounded-xl bg-white/[0.02] border border-white/[0.05] p-5 flex flex-col justify-between hover:bg-white/[0.04] transition-colors cursor-pointer">
+                <div className="text-zinc-500 text-[12px] font-mono uppercase tracking-wider">Active Incidents</div>
+                <div className="text-3xl font-semibold text-white tracking-tight">0</div>
               </div>
-              <div className="h-28 rounded-xl bg-white/[0.02] border border-white/[0.04] p-5 flex flex-col justify-between hover:bg-white/[0.03] transition-colors cursor-pointer">
-                <div className="text-[#888] text-[13px] font-medium">Resolved (7d)</div>
-                <div className="text-3xl font-semibold text-white">48</div>
+              <div className="h-28 rounded-xl bg-white/[0.02] border border-white/[0.05] p-5 flex flex-col justify-between hover:bg-white/[0.04] transition-colors cursor-pointer">
+                <div className="text-zinc-500 text-[12px] font-mono uppercase tracking-wider">Resolved (7d)</div>
+                <div className="text-3xl font-semibold text-white tracking-tight">48</div>
               </div>
-              <div className="h-28 rounded-xl bg-white/[0.02] border border-white/[0.04] p-5 flex flex-col justify-between hover:bg-white/[0.03] transition-colors cursor-pointer">
-                <div className="text-[#888] text-[13px] font-medium">Uptime</div>
-                <div className="text-3xl font-semibold text-emerald-400">99.9%</div>
+              <div className="h-28 rounded-xl bg-white/[0.02] border border-white/[0.05] p-5 flex flex-col justify-between hover:bg-white/[0.04] transition-colors cursor-pointer">
+                <div className="text-zinc-500 text-[12px] font-mono uppercase tracking-wider">Telemetry Uptime</div>
+                <div className="text-3xl font-semibold text-zinc-200 tracking-tight flex items-center gap-2">
+                  <span>99.98%</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                </div>
               </div>
             </div>
-            <div className="flex-1 rounded-xl border border-white/[0.04] bg-white/[0.01] p-5 flex flex-col">
-                <div className="text-[13px] text-[#888] font-medium mb-4">Velocity (Last 30 Days)</div>
-                <div className="flex-1 border-b border-l border-white/[0.05] relative flex items-end ml-4 mb-2">
+            <div className="flex-1 rounded-xl border border-white/[0.05] bg-white/[0.01] p-5 flex flex-col">
+                <div className="text-[12px] text-zinc-500 font-mono uppercase tracking-wider mb-4">Request Latency (p99 • Last 30 Days)</div>
+                <div className="flex-1 border-b border-l border-white/[0.06] relative flex items-end ml-4 mb-2">
                   <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
                     <defs>
                       <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="0%" stopColor="#a855f7" stopOpacity="0.4"/>
-                        <stop offset="100%" stopColor="#a855f7" stopOpacity="0"/>
+                        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.15"/>
+                        <stop offset="100%" stopColor="#ffffff" stopOpacity="0"/>
                       </linearGradient>
                     </defs>
-                    <path d="M0,80 L15,70 L30,75 L45,45 L60,50 L75,20 L90,25 L100,5" fill="none" stroke="#a855f7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M0,80 L15,70 L30,75 L45,45 L60,50 L75,20 L90,25 L100,5" fill="none" stroke="#e4e4e7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M0,80 L15,70 L30,75 L45,45 L60,50 L75,20 L90,25 L100,5 L100,100 L0,100 Z" fill="url(#chartGradient)" stroke="none" />
                   </svg>
-                  <div className="absolute -bottom-6 left-0 text-[10px] text-[#555]">Oct 1</div>
-                  <div className="absolute -bottom-6 right-0 text-[10px] text-[#555]">Oct 30</div>
-                  <div className="absolute top-0 -left-8 text-[10px] text-[#555]">100</div>
-                  <div className="absolute bottom-0 -left-8 text-[10px] text-[#555]">0</div>
+                  <div className="absolute -bottom-6 left-0 text-[10px] font-mono text-zinc-500">Oct 1</div>
+                  <div className="absolute -bottom-6 right-0 text-[10px] font-mono text-zinc-500">Oct 30</div>
+                  <div className="absolute top-0 -left-8 text-[10px] font-mono text-zinc-500">12ms</div>
+                  <div className="absolute bottom-0 -left-8 text-[10px] font-mono text-zinc-500">0ms</div>
                 </div>
-            </div>
-          </>
-        );
-      case "Kanban":
-        return (
-          <>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Kanban Board</h2>
-            </div>
-            <div className="flex gap-4 h-full">
-              {['Todo', 'In Progress', 'Done'].map(col => (
-                <div key={col} className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 flex flex-col">
-                  <div className="text-[13px] font-medium text-[#888] mb-4 flex items-center justify-between">
-                    {col}
-                    <span className="text-[#555] bg-white/[0.05] px-1.5 py-0.5 rounded text-[10px]">2</span>
-                  </div>
-                  <div className="space-y-3">
-                    {[1, 2].map(i => (
-                      <div key={i} className="bg-[#111] border border-white/[0.06] p-3 rounded-lg hover:border-white/[0.1] transition-colors cursor-pointer">
-                        <div className="text-[#EDEDED] text-[13px] font-medium mb-2">Build {col} Feature</div>
-                        <div className="flex items-center justify-between">
-                           <span className="text-[#666] font-mono text-[10px]">BAP-{100 + i}</span>
-                           <div className="w-4 h-4 rounded-full bg-purple-500/20 flex items-center justify-center text-[8px] text-purple-400">JD</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        );
-      case "Inbox":
-        return (
-          <div className="flex h-full gap-6">
-            <div className="w-1/3 flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-2">
-              <h2 className="text-xl font-semibold text-white tracking-tight mb-4 shrink-0">Inbox</h2>
-              {[1, 2, 3].map(i => (
-                <div key={i} className={`p-4 rounded-xl border transition-colors cursor-pointer shrink-0 ${i===1 ? 'bg-white/[0.05] border-white/[0.1]' : 'bg-transparent border-transparent hover:bg-white/[0.02]'}`}>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold">U{i}</div>
-                    <div className="flex-1">
-                      <div className="text-[13px] text-white font-medium">User {i}</div>
-                      <div className="text-[11px] text-[#666]">2h ago</div>
-                    </div>
-                  </div>
-                  <div className="text-[13px] text-[#888] truncate">Can we review the latest PR?</div>
-                </div>
-              ))}
-            </div>
-            <div className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl flex flex-col overflow-hidden">
-               <div className="p-4 border-b border-white/[0.04] font-medium text-white text-[14px] shrink-0">User 1</div>
-               <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
-                 <div className="self-start bg-[#111] border border-white/[0.05] p-3 rounded-xl rounded-tl-none max-w-[80%] text-[13px] text-[#EDEDED]">
-                   Hey, I just pushed the new UI updates. Can we review the latest PR?
-                 </div>
-                 <div className="self-end bg-purple-600/20 border border-purple-500/30 p-3 rounded-xl rounded-tr-none max-w-[80%] text-[13px] text-white">
-                   Looks great! I will merge it now.
-                 </div>
-               </div>
-               <div className="p-4 border-t border-white/[0.04] shrink-0">
-                 <div className="bg-[#111] border border-white/[0.08] rounded-lg p-2.5 text-[#555] text-[13px]">Reply to User 1...</div>
-               </div>
-            </div>
-          </div>
-        );
-      case "Issues & Bugs":
-        return (
-          <>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Issues</h2>
-              <div className="bg-white text-black px-3 py-1.5 rounded-md text-[13px] font-medium flex items-center gap-2 cursor-pointer hover:bg-zinc-200 transition">
-                 <Plus size={14} /> New Issue
-              </div>
-            </div>
-            <div className="flex-1 bg-[#111] border border-white/[0.05] rounded-xl flex flex-col overflow-hidden">
-               <div className="flex items-center px-4 py-2 border-b border-white/[0.05] text-[11px] font-medium text-[#666] tracking-wider uppercase bg-[#141414]">
-                 <div className="w-20">ID</div>
-                 <div className="flex-1">Title</div>
-                 <div className="w-24">Status</div>
-                 <div className="w-24">Priority</div>
-               </div>
-               <div className="flex flex-col overflow-y-auto custom-scrollbar">
-                 {[
-                   { id: 'BAP-201', title: 'Fix memory leak in dashboard', status: 'In Progress', dot: 'bg-blue-400', prio: 'High' },
-                   { id: 'BAP-202', title: 'Update dependencies for security', status: 'Todo', dot: 'bg-zinc-600', prio: 'Medium' },
-                   { id: 'BAP-203', title: 'Add dark mode toggle', status: 'Done', dot: 'bg-emerald-400', prio: 'Low' },
-                   { id: 'BAP-204', title: 'Resolve API timeout issues', status: 'Todo', dot: 'bg-zinc-600', prio: 'High' },
-                 ].map((issue, i) => (
-                   <div key={i} className="flex items-center px-4 py-3 border-b border-white/[0.03] text-[13px] hover:bg-white/[0.02] cursor-pointer">
-                     <div className="w-20 text-[#888] font-mono text-[12px]">{issue.id}</div>
-                     <div className="flex-1 text-[#EDEDED] font-medium">{issue.title}</div>
-                     <div className="w-24 flex items-center gap-2 text-[#888]">
-                       <div className={`w-2 h-2 rounded-full ${issue.dot}`}></div>
-                       {issue.status}
-                     </div>
-                     <div className="w-24 text-[#666] font-medium">{issue.prio}</div>
-                   </div>
-                 ))}
-               </div>
             </div>
           </>
         );
@@ -257,63 +347,52 @@ export default function LandingPage() {
         return (
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-6 shrink-0">
-              <h2 className="text-xl font-semibold text-white tracking-tight flex items-center gap-2">
-                <Zap size={20} className="text-purple-400" /> AI Copilot
+              <h2 className="text-lg font-medium text-white tracking-tight flex items-center gap-2">
+                <Zap size={16} className="text-zinc-400" /> Copilot Agent
               </h2>
-              <div className="flex items-center gap-2 text-xs font-medium bg-white/[0.05] border border-white/[0.1] px-3 py-1.5 rounded-md">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                Agent Active
+              <div className="flex items-center gap-2 text-xs font-mono bg-white/[0.04] border border-white/[0.08] px-3 py-1.5 rounded-md text-zinc-300">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                Standby • Listening
               </div>
             </div>
-            
-            <div className="flex-1 bg-[#0a0a0a] border border-white/[0.04] rounded-xl flex flex-col overflow-hidden shadow-inner">
-              
-              {/* Chat History Area */}
+            <div className="flex-1 bg-[#07080a] border border-white/[0.05] rounded-xl flex flex-col overflow-hidden">
               <div className="flex-1 p-5 overflow-y-auto custom-scrollbar flex flex-col gap-6">
-                
-                {/* Previous Context */}
-                <div className="flex gap-4 opacity-50">
-                   <div className="w-8 h-8 rounded-full bg-[#222] border border-white/[0.1] flex items-center justify-center text-[#888] shrink-0 text-xs font-bold">JD</div>
-                   <div className="flex-1 bg-[#111] border border-white/[0.05] p-3 rounded-xl rounded-tl-none text-[13px] text-[#888]">
+                <div className="flex gap-4 opacity-60">
+                   <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/[0.08] flex items-center justify-center text-zinc-400 shrink-0 text-xs font-mono">JD</div>
+                   <div className="flex-1 bg-zinc-900/60 border border-white/[0.05] p-3 rounded-xl rounded-tl-none text-[13px] text-zinc-400">
                      Can you check the latency spikes on the payment gateway?
                    </div>
                 </div>
-                
-                <div className="flex gap-4 opacity-50">
-                   <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0">
-                     <Zap size={16} />
+                <div className="flex gap-4 opacity-60">
+                   <div className="w-8 h-8 rounded-full bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-zinc-300 shrink-0">
+                     <Zap size={14} />
                    </div>
-                   <div className="flex-1 bg-[#111] border border-white/[0.05] p-3 rounded-xl rounded-tl-none text-[13px] text-[#888]">
-                     I've analyzed the logs. The spikes are caused by an unindexed query in <code className="text-purple-400/50 font-mono bg-purple-400/10 px-1 py-0.5 rounded">transactions</code> table. I've already created an issue (BAP-198) for the database team.
-                   </div>
-                </div>
-
-                <div className="flex gap-4">
-                   <div className="w-8 h-8 rounded-full bg-[#222] border border-white/[0.1] flex items-center justify-center text-[#EDEDED] shrink-0 text-xs font-bold">JD</div>
-                   <div className="flex-1 bg-[#111] border border-white/[0.05] p-3 rounded-xl rounded-tl-none text-[13px] text-[#EDEDED]">
-                     Awesome. What about the recent commit to <code className="text-purple-400 font-mono bg-purple-400/10 px-1 py-0.5 rounded">auth_service.py</code>?
+                   <div className="flex-1 bg-zinc-900/60 border border-white/[0.05] p-3 rounded-xl rounded-tl-none text-[13px] text-zinc-400">
+                     Analysis complete. High disk-wait on transaction journal write. Query index recommendation applied.
                    </div>
                 </div>
-
-                {/* Latest Interactive AI Message */}
                 <div className="flex gap-4">
-                   <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 shrink-0 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
-                     <Zap size={16} />
+                   <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/[0.08] flex items-center justify-center text-zinc-200 shrink-0 text-xs font-mono">JD</div>
+                   <div className="flex-1 bg-zinc-900/80 border border-white/[0.08] p-3 rounded-xl rounded-tl-none text-[13px] text-zinc-200">
+                     Verify recent commit to <code className="text-zinc-300 font-mono bg-white/[0.06] px-1 py-0.5 rounded">auth_service.py</code>
+                   </div>
+                </div>
+                <div className="flex gap-4">
+                   <div className="w-8 h-8 rounded-full bg-white/[0.08] border border-white/[0.15] flex items-center justify-center text-white shrink-0">
+                     <Zap size={14} />
                    </div>
                    <div className="flex-1 flex flex-col gap-3">
-                     <div className="bg-[#111] border border-purple-500/20 p-4 rounded-xl rounded-tl-none shadow-md">
-                       <div className="text-[13px] text-[#EDEDED] mb-3 leading-relaxed font-medium">
-                         I've analyzed that commit. There is a potential unhandled exception.
+                     <div className="bg-zinc-900/90 border border-white/[0.1] p-4 rounded-xl rounded-tl-none shadow-md">
+                       <div className="text-[13px] text-zinc-200 mb-3 leading-relaxed font-normal">
+                         Unhandled NoneType exception detected on token retrieval:
                        </div>
-                       <div className="bg-[#050505] border border-white/[0.05] p-3 rounded-lg font-mono text-[12px] text-[#888] overflow-x-auto mb-4">
-                         <span className="text-blue-400">def</span> <span className="text-yellow-200">login</span>(user_id):<br/>
+                       <div className="bg-black border border-white/[0.06] p-3 rounded-lg font-mono text-[12px] text-zinc-400 overflow-x-auto mb-4">
+                         <span className="text-zinc-500">def</span> <span className="text-white">login</span>(user_id):<br/>
                          &nbsp;&nbsp;&nbsp;&nbsp;user = db.get(user_id)<br/>
-                         <div className="bg-red-500/10 -mx-3 px-3 py-0.5 border-l-2 border-red-500 mt-1">
-                           &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-red-400">return user.token # user might be None</span>
+                         <div className="bg-rose-500/10 -mx-3 px-3 py-0.5 border-l-2 border-rose-500 mt-1">
+                           &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-rose-400">return user.token # user can be None</span>
                          </div>
                        </div>
-                       
-                       {/* Interactive Buttons */}
                        {copilotState === 'initial' && (
                          <div className="flex flex-wrap gap-2">
                            <button 
@@ -321,37 +400,30 @@ export default function LandingPage() {
                                setCopilotState('generating');
                                setTimeout(() => setCopilotState('fixed'), 1500);
                              }}
-                             className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-[12px] font-medium rounded-md transition-colors flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.3)]"
+                             className="px-3 py-1.5 bg-white text-black text-[12px] font-medium rounded-md hover:bg-zinc-200 transition-colors flex items-center gap-1.5"
                            >
-                             <Wrench size={14} /> Generate Fix
+                             <Wrench size={13} /> Generate Safe Patch
                            </button>
-                           <button className="px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-white text-[12px] font-medium rounded-md transition-colors">
-                             Create Bug Report
-                           </button>
-                           <button className="px-3 py-1.5 bg-transparent hover:bg-white/[0.05] text-[#888] hover:text-white text-[12px] font-medium rounded-md transition-colors">
-                             Ignore
+                           <button className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 text-[12px] font-medium rounded-md transition-colors">
+                             Create Linear Issue
                            </button>
                          </div>
                        )}
-
-                       {/* Loading State */}
                        {copilotState === 'generating' && (
-                         <div className="flex items-center gap-3 text-[13px] text-purple-400 font-medium">
-                           <div className="w-4 h-4 border-2 border-purple-500/30 border-t-purple-400 rounded-full animate-spin"></div>
-                           Generating patch...
+                         <div className="flex items-center gap-3 text-[13px] text-zinc-300 font-mono">
+                           <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                           Synthesizing patch...
                          </div>
                        )}
-
-                       {/* Fixed State */}
                        {copilotState === 'fixed' && (
                          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex flex-col gap-3">
-                           <div className="text-[13px] text-emerald-400 font-medium flex items-center gap-2">
-                             <Check size={14} /> Fix generated successfully
+                           <div className="text-[13px] text-emerald-400 font-mono flex items-center gap-2">
+                             <Check size={14} /> Patch synthesized and verified against test suite
                            </div>
-                           <div className="bg-[#050505] border border-white/[0.05] p-3 rounded-lg font-mono text-[12px] text-[#888] overflow-x-auto">
-                             <div className="text-emerald-400/70 border-l-2 border-emerald-500 px-3 -mx-3 bg-emerald-500/10">
+                           <div className="bg-black border border-white/[0.06] p-3 rounded-lg font-mono text-[12px] text-zinc-400 overflow-x-auto">
+                             <div className="text-emerald-400/90 border-l-2 border-emerald-500 px-3 -mx-3 bg-emerald-500/10">
                                + &nbsp;&nbsp;&nbsp;&nbsp;if not user:<br/>
-                               + &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise AuthError("User not found")<br/>
+                               + &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise AuthError(&quot;User not found&quot;)<br/>
                              </div>
                              &nbsp;&nbsp;&nbsp;&nbsp;return user.token
                            </div>
@@ -360,7 +432,7 @@ export default function LandingPage() {
                                onClick={() => setCopilotState('initial')}
                                className="px-3 py-1.5 bg-white text-black hover:bg-zinc-200 text-[12px] font-medium rounded-md transition-colors flex items-center gap-1.5"
                              >
-                               <GitBranch size={14} /> Create PR
+                               <GitBranch size={13} /> Create Pull Request
                              </button>
                            </div>
                          </motion.div>
@@ -368,224 +440,20 @@ export default function LandingPage() {
                      </div>
                    </div>
                 </div>
-
               </div>
-
-              {/* Chat Input Area */}
-              <div className="p-4 border-t border-white/[0.04] bg-[#0f0f0f] shrink-0">
+              <div className="p-4 border-t border-white/[0.06] bg-[#090b0e] shrink-0">
                 <div className="relative">
                   <input 
                     type="text" 
-                    placeholder="Ask Copilot to analyze code, check logs, or fix issues..." 
-                    className="w-full bg-[#1a1a1a] border border-white/[0.08] text-white rounded-lg py-2.5 pl-4 pr-10 text-[13px] outline-none focus:border-purple-500/50 transition-colors placeholder:text-[#555]"
+                    placeholder="Ask Copilot to analyze telemetry, check memory profiles, or draft fixes..." 
+                    className="w-full bg-black border border-white/[0.08] text-white rounded-lg py-2.5 pl-4 pr-10 text-[13px] outline-none focus:border-white/30 transition-colors placeholder:text-zinc-600 font-normal"
                     readOnly
                   />
-                  <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/[0.05] hover:bg-white/[0.1] rounded-md transition-colors text-[#888] hover:text-white">
+                  <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/[0.05] hover:bg-white/[0.1] rounded-md transition-colors text-zinc-400 hover:text-white">
                     <ArrowRight size={14} />
                   </button>
                 </div>
               </div>
-
-            </div>
-          </div>
-        );
-      case "Teams":
-        return (
-          <>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Teams</h2>
-              <div className="bg-white/[0.05] border border-white/[0.1] text-white px-3 py-1.5 rounded-md text-[13px] font-medium flex items-center gap-2 cursor-pointer hover:bg-white/[0.1] transition">
-                 <Plus size={14} /> New Team
-              </div>
-            </div>
-            <div className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-xl flex flex-col overflow-hidden">
-               <div className="flex items-center px-4 py-2 border-b border-white/[0.04] text-[11px] font-medium text-[#666] tracking-wider uppercase bg-[#111]">
-                 <div className="w-10"></div>
-                 <div className="flex-1">Name</div>
-                 <div className="w-24">Members</div>
-                 <div className="w-24">Access</div>
-               </div>
-               <div className="flex flex-col overflow-y-auto custom-scrollbar">
-                 {[
-                   { name: 'Frontend', icon: 'F', color: 'bg-blue-500/20 text-blue-400', members: 5, access: 'Full' },
-                   { name: 'Backend', icon: 'B', color: 'bg-purple-500/20 text-purple-400', members: 4, access: 'Full' },
-                   { name: 'Design', icon: 'D', color: 'bg-emerald-500/20 text-emerald-400', members: 2, access: 'Read' },
-                 ].map((team, i) => (
-                   <div key={i} className="flex items-center px-4 py-3 border-b border-white/[0.03] text-[13px] hover:bg-white/[0.03] cursor-pointer transition-colors">
-                     <div className="w-10">
-                        <div className={`w-6 h-6 rounded flex items-center justify-center font-bold text-[10px] ${team.color}`}>{team.icon}</div>
-                     </div>
-                     <div className="flex-1 text-[#EDEDED] font-medium">{team.name}</div>
-                     <div className="w-24 text-[#888]">{team.members} users</div>
-                     <div className="w-24 text-[#666] font-mono text-[11px]">{team.access}</div>
-                   </div>
-                 ))}
-               </div>
-            </div>
-          </>
-        );
-      case "Roadmap":
-        return (
-          <>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Roadmap Q4</h2>
-            </div>
-            <div className="flex-1 border-t border-white/[0.05] relative pt-6 overflow-hidden">
-               <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                 <div className="absolute top-0 left-1/4 w-px h-full bg-white/[0.03]"></div>
-                 <div className="absolute top-0 left-2/4 w-px h-full bg-white/[0.03]"></div>
-                 <div className="absolute top-0 left-3/4 w-px h-full bg-white/[0.03]"></div>
-                 <div className="absolute top-0 left-1/4 -translate-x-1/2 -mt-4 text-[10px] text-[#555]">Oct</div>
-                 <div className="absolute top-0 left-2/4 -translate-x-1/2 -mt-4 text-[10px] text-[#555]">Nov</div>
-                 <div className="absolute top-0 left-3/4 -translate-x-1/2 -mt-4 text-[10px] text-[#555]">Dec</div>
-               </div>
-               <div className="space-y-4 relative z-10">
-                 <div className="h-8 ml-[10%] w-[40%] bg-purple-500/20 border border-purple-500/40 rounded-md flex items-center px-3 text-[12px] font-medium text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.1)]">v2.0 Launch</div>
-                 <div className="h-8 ml-[30%] w-[35%] bg-blue-500/20 border border-blue-500/40 rounded-md flex items-center px-3 text-[12px] font-medium text-blue-300">New AI Models</div>
-                 <div className="h-8 ml-[45%] w-[45%] bg-zinc-500/20 border border-zinc-500/40 rounded-md flex items-center px-3 text-[12px] font-medium text-zinc-300">SOC2 Compliance</div>
-               </div>
-            </div>
-          </>
-        );
-      case "Uptime":
-        return (
-          <>
-            <div className="flex items-center justify-between mb-8 shrink-0">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Uptime</h2>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0a0a0a] border border-white/[0.08] text-[#888] rounded-md text-[13px] font-medium">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                All Systems Operational
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-3 gap-4 mb-4 shrink-0">
-              <div className="bg-[#111] border border-white/[0.06] p-4 rounded-xl flex flex-col">
-                 <span className="text-[#888] font-medium text-[10px] mb-2 uppercase tracking-wider">24h Uptime</span>
-                 <div className="text-2xl font-semibold tracking-tight text-[#EDEDED]">100%</div>
-              </div>
-              <div className="bg-[#111] border border-white/[0.06] p-4 rounded-xl flex flex-col">
-                 <span className="text-[#888] font-medium text-[10px] mb-2 uppercase tracking-wider">7d Uptime</span>
-                 <div className="text-2xl font-semibold tracking-tight text-[#EDEDED]">99.9%</div>
-              </div>
-              <div className="bg-[#111] border border-white/[0.06] p-4 rounded-xl flex flex-col">
-                 <span className="text-[#888] font-medium text-[10px] mb-2 uppercase tracking-wider">30d Uptime</span>
-                 <div className="text-2xl font-semibold tracking-tight text-[#EDEDED]">99.9%</div>
-              </div>
-            </div>
-
-            <div className="flex-1 bg-[#111] border border-white/[0.06] p-4 rounded-xl flex flex-col relative overflow-hidden min-h-[120px]">
-               <div className="flex items-center gap-2 mb-2">
-                 <Activity size={14} className="text-[#888]" />
-                 <h2 className="text-[13px] font-medium text-[#EDEDED]">Response Time (24h)</h2>
-               </div>
-               <div className="flex-1 border-b border-l border-white/[0.05] relative flex items-end ml-4 mb-4 mt-2">
-                 <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
-                    <path d="M0,70 L10,65 L20,75 L30,40 L40,60 L50,55 L60,80 L70,30 L80,50 L90,65 L100,60" fill="none" stroke="#555" strokeWidth="1.5" />
-                 </svg>
-                 <div className="absolute -bottom-5 left-0 text-[9px] text-[#555]">24h ago</div>
-                 <div className="absolute -bottom-5 right-0 text-[9px] text-[#555]">Now</div>
-               </div>
-            </div>
-          </>
-        );
-      case "Infrastructure":
-        return (
-          <>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Infrastructure</h2>
-              <div className="flex items-center gap-2 text-[12px] text-[#888]">
-                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { name: 'api-gateway-1', region: 'us-east-1', cpu: '42%', mem: '1.2GB' },
-                { name: 'worker-queue-5', region: 'us-east-1', cpu: '88%', mem: '4.5GB', alert: true },
-                { name: 'db-primary', region: 'eu-west-1', cpu: '12%', mem: '16.0GB' },
-                { name: 'cache-node-2', region: 'eu-west-1', cpu: '5%', mem: '2.1GB' },
-              ].map((server, i) => (
-                <div key={i} className="bg-white/[0.02] border border-white/[0.04] p-4 rounded-xl">
-                   <div className="flex items-center justify-between mb-3">
-                     <div className="flex items-center gap-2">
-                        <Server size={14} className={server.alert ? 'text-amber-400' : 'text-[#888]'} />
-                        <span className="text-[13px] font-medium text-white">{server.name}</span>
-                     </div>
-                     <span className="text-[10px] text-[#555] font-mono">{server.region}</span>
-                   </div>
-                   <div className="flex gap-4">
-                     <div className="flex-1">
-                        <div className="flex justify-between text-[10px] text-[#666] mb-1"><span>CPU</span><span>{server.cpu}</span></div>
-                        <div className="h-1.5 bg-[#111] rounded-full overflow-hidden"><div className={`h-full ${server.alert ? 'bg-amber-400' : 'bg-blue-400'}`} style={{ width: server.cpu }}></div></div>
-                     </div>
-                     <div className="flex-1">
-                        <div className="flex justify-between text-[10px] text-[#666] mb-1"><span>MEM</span><span>{server.mem}</span></div>
-                        <div className="h-1.5 bg-[#111] rounded-full overflow-hidden"><div className="h-full bg-purple-400" style={{ width: '60%' }}></div></div>
-                     </div>
-                   </div>
-                </div>
-              ))}
-            </div>
-          </>
-        );
-      case "Maintenance":
-        return (
-          <>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Maintenance Schedule</h2>
-            </div>
-            <div className="flex-1 space-y-3 overflow-y-auto custom-scrollbar pr-2">
-              {[
-                { title: 'Database Engine Upgrade', date: 'Oct 15, 02:00 UTC', duration: '2 hours', status: 'Upcoming' },
-                { title: 'SSL Certificate Renewal', date: 'Oct 20, 00:00 UTC', duration: '15 mins', status: 'Scheduled' },
-                { title: 'Redis Cache Flush', date: 'Oct 01, 04:00 UTC', duration: '5 mins', status: 'Completed' },
-              ].map((task, i) => (
-                <div key={i} className="bg-[#111] border border-white/[0.05] p-4 rounded-xl flex items-center justify-between">
-                  <div>
-                    <div className="text-[13px] font-medium text-white mb-1">{task.title}</div>
-                    <div className="text-[11px] text-[#666] flex gap-3">
-                       <span>{task.date}</span>
-                       <span>•</span>
-                       <span>{task.duration}</span>
-                    </div>
-                  </div>
-                  <div className={`px-2 py-1 rounded text-[10px] font-medium ${
-                    task.status === 'Completed' ? 'bg-white/[0.05] text-[#888]' : 'bg-blue-500/20 text-blue-400 border border-blue-500/20'
-                  }`}>
-                    {task.status}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        );
-      case "Settings":
-        return (
-          <div className="h-full overflow-y-auto custom-scrollbar pr-4 flex flex-col">
-            <h2 className="text-xl font-semibold text-white tracking-tight mb-8">Settings</h2>
-            <div className="space-y-6">
-               <div className="pb-6 border-b border-white/[0.05]">
-                 <div className="text-[13px] font-medium text-white mb-2">Workspace Name</div>
-                 <input type="text" disabled value="BREXAL Prod" className="w-full bg-[#111] border border-white/[0.05] rounded-lg px-3 py-2 text-[13px] text-[#888] focus:outline-none" />
-               </div>
-               <div className="pb-6 border-b border-white/[0.05]">
-                 <div className="text-[13px] font-medium text-white mb-2">Theme Preferences</div>
-                 <div className="flex gap-3">
-                    <div className="px-4 py-2 rounded-lg border border-white/[0.2] bg-white/[0.05] text-white text-[12px] font-medium cursor-pointer">Dark Mode</div>
-                    <div className="px-4 py-2 rounded-lg border border-white/[0.05] text-[#666] text-[12px] font-medium cursor-pointer hover:bg-white/[0.02]">Light Mode</div>
-                    <div className="px-4 py-2 rounded-lg border border-white/[0.05] text-[#666] text-[12px] font-medium cursor-pointer hover:bg-white/[0.02]">System</div>
-                 </div>
-               </div>
-               <div>
-                 <div className="text-[13px] font-medium text-white mb-4">Notifications</div>
-                 <div className="flex items-center justify-between mb-3">
-                    <span className="text-[13px] text-[#888]">Email Alerts</span>
-                    <div className="w-8 h-4 rounded-full bg-emerald-500 relative"><div className="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full"></div></div>
-                 </div>
-                 <div className="flex items-center justify-between">
-                    <span className="text-[13px] text-[#888]">Slack Integration</span>
-                    <div className="w-8 h-4 rounded-full bg-emerald-500 relative"><div className="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full"></div></div>
-                 </div>
-               </div>
             </div>
           </div>
         );
@@ -604,80 +472,191 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#080808] text-[#EDEDED] font-sans overflow-x-hidden selection:bg-white/20 selection:text-white">
       
-      {/* Navbar */}
-      <nav className="fixed top-0 inset-x-0 h-14 bg-[#080808]/70 backdrop-blur-md border-b border-white/[0.08] z-50 flex items-center justify-between px-6">
-        <div className="flex items-center gap-6">
-          <Logo className="h-4 text-white" />
-          <div className="hidden md:flex items-center gap-4 text-sm text-[#888888] font-medium">
-            <Link href="#features" className="hover:text-white transition-colors">Features</Link>
-            <Link href="#method" className="hover:text-white transition-colors">Method</Link>
-            <Link href="#faq" className="hover:text-white transition-colors">FAQ</Link>
-            <Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link>
+      {/* ═══════════════════ CLEAN TRANSPARENT TOP NAVBAR ═══════════════════ */}
+      <motion.nav
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+        className={`fixed top-0 left-0 right-0 w-full z-50 flex items-center justify-between px-6 sm:px-12 md:px-16 transition-all duration-300 ${
+          navScrolled
+            ? "py-4 bg-black/80 backdrop-blur-md border-b border-white/[0.08]"
+            : "py-6 sm:py-7 bg-transparent border-b border-transparent"
+        }`}
+      >
+        {/* Left Corner: BREXAL Logo */}
+        <Link href="/" className="flex items-center gap-2 group">
+          <Logo className="h-4 sm:h-[18px] text-white tracking-widest transition-opacity group-hover:opacity-80" />
+        </Link>
+
+        {/* Right Corner: Nav links + Login Button */}
+        <div className="flex items-center gap-6 sm:gap-8">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-[13px] font-medium tracking-wide">
+            <Link href="#features" className="text-zinc-400 hover:text-white transition-colors">Features</Link>
+            <Link href="#method" className="text-zinc-400 hover:text-white transition-colors">Method</Link>
+            <Link href="#pricing" className="text-zinc-400 hover:text-white transition-colors">Pricing</Link>
+            <Link href="#faq" className="text-zinc-400 hover:text-white transition-colors">FAQ</Link>
           </div>
-        </div>
-        <div className="flex items-center gap-4 text-sm font-medium">
-          <Link href="/login" className="text-[#888888] hover:text-white transition-colors">Log in</Link>
-          <Link href="/register" className="bg-white text-black px-3 py-1.5 rounded-full hover:bg-zinc-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-            Sign up
+          <Link
+            href="/login"
+            className="bg-white text-black px-4 sm:px-5 py-2 rounded-full text-[13px] font-semibold hover:bg-zinc-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]"
+          >
+            Login
           </Link>
         </div>
-      </nav>
+      </motion.nav>
 
-      <main className="pt-32 pb-24 flex flex-col">
+      {/* ═══════════════════ HERO SECTION ═══════════════════ */}
+      <section ref={heroRef} className="relative h-screen w-full overflow-hidden flex flex-col">
         
-        {/* Hero Section */}
-        <section className="w-full px-6 md:px-12 lg:px-24 flex flex-col items-start text-left relative z-10">
-          
-          {/* Subtle Background Radial Glow */}
-          <div className="absolute top-0 left-0 -translate-x-[10%] w-[800px] h-[400px] bg-purple-600/20 blur-[120px] rounded-[100%] pointer-events-none opacity-50"></div>
+        {/* Background Image with Parallax — eagle sits in center-right of frame */}
+        <motion.div
+          className="absolute inset-0 z-0 select-none pointer-events-none"
+          style={{ y: heroImgY, scale: heroImgScale }}
+        >
+          <img
+            src="/hero-landscape.png?v=2"
+            alt="Eagle soaring over misty mountain ridges at dusk"
+            className="w-full h-full object-cover object-[center_35%]"
+          />
+        </motion.div>
 
-          <motion.div initial="hidden" animate={mounted ? "visible" : "hidden"} variants={staggerContainer} className="relative z-10 flex flex-col items-start">
-            
-            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10 text-xs font-medium text-[#888888] mb-8 hover:bg-white/[0.05] transition-colors cursor-pointer">
-              <span className="flex items-center justify-center w-4 h-4 rounded-full bg-purple-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></span>
-              </span>
-              BREXAL 2.0 is here <ArrowRight size={12} />
-            </motion.div>
-            
-            <motion.h1 variants={fadeUp} className="text-6xl md:text-[80px] leading-[1.05] font-bold tracking-tighter mb-6 bg-gradient-to-br from-white via-white to-[#888888] text-transparent bg-clip-text pr-12 lg:pr-24">
-              The ultimate command center for your software operations.
-            </motion.h1>
-            
-            <motion.p variants={fadeUp} className="text-xl md:text-2xl text-[#888888] max-w-4xl mb-10 font-light tracking-tight">
-              Meet the new standard for modern software teams. Streamline issues, monitor infrastructure, and run your startup with magic.
-            </motion.p>
-            
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 w-full justify-start">
-              <Link href="/register" className="w-full sm:w-auto bg-[#EEEEEE] text-[#000000] px-6 py-3 rounded-full font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)]">
-                Get Started <ArrowRight size={16} />
-              </Link>
-              <Link href="#" className="w-full sm:w-auto bg-transparent border border-white/10 text-white px-6 py-3 rounded-full font-medium hover:bg-white/[0.05] transition-colors flex items-center justify-center gap-2">
-                Press <span className="font-mono text-xs text-[#888888] bg-white/10 px-1.5 py-0.5 rounded ml-1 border border-white/10">C</span>
-              </Link>
-            </motion.div>
+        {/* Overlay system — keeps text crisp up top, lets the eagle + mountains breathe below */}
+        {/* Top: strong fade for navbar + headline legibility */}
+        <div className="absolute inset-x-0 top-0 h-[45%] z-[1] bg-gradient-to-b from-black/90 via-black/60 to-transparent pointer-events-none" />
+        {/* Bottom: seamless blend into page bg */}
+        <div className="absolute inset-x-0 bottom-0 h-48 z-[1] bg-gradient-to-t from-[#080808] to-transparent pointer-events-none" />
+        {/* Scroll darken */}
+        <motion.div
+          className="absolute inset-0 z-[2] bg-[#080808] pointer-events-none"
+          style={{ opacity: heroOverlayOpacity }}
+        />
 
+        {/* ── Content: pinned to the upper third ── */}
+        <motion.div
+          className="relative z-10 flex flex-col items-center text-center px-6 pt-32 sm:pt-36 md:pt-40"
+          style={{ y: heroContentY }}
+        >
+          {/* Headline — short, decisive, no gradient gimmicks */}
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={mounted ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.36, 1], delay: 0.45 }}
+            className="text-[clamp(2.25rem,6vw,5rem)] font-semibold tracking-[-0.04em] leading-[1.08] text-white max-w-3xl"
+          >
+            Ship reliable software, faster.
+          </motion.h1>
+
+          {/* Sub-copy — one sentence, human voice */}
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={mounted ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.36, 1], delay: 0.6 }}
+            className="mt-4 text-[15px] sm:text-[17px] text-zinc-400 max-w-lg leading-relaxed font-normal"
+          >
+            Uptime monitoring, AI root-cause analysis, and team workflows — in one place.
+          </motion.p>
+
+          {/* CTAs — clean, two buttons, no over-design */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={mounted ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.36, 1], delay: 0.75 }}
+            className="mt-8 flex items-center gap-3"
+          >
+            <Link
+              href="/register"
+              className="px-6 py-2.5 rounded-lg bg-white text-[#080808] text-[13px] font-semibold hover:bg-zinc-200 transition-colors"
+            >
+              Get started free
+            </Link>
+            <Link
+              href="#features"
+              className="px-5 py-2.5 rounded-lg border border-white/[0.12] text-[13px] font-medium text-zinc-300 hover:text-white hover:border-white/25 transition-colors"
+            >
+              See how it works
+            </Link>
           </motion.div>
-        </section>
+        </motion.div>
 
-        {/* Mockup Section */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-24 relative perspective-1000">
+        {/* ── Scroll indicator — minimal mouse icon ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={mounted ? { opacity: 1 } : {}}
+          transition={{ delay: 1.6, duration: 0.8 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
+        >
+          <div className="w-[18px] h-[28px] rounded-full border border-white/25 flex justify-center pt-1.5">
+            <motion.div
+              animate={{ y: [0, 6, 0], opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+              className="w-[2px] h-[6px] rounded-full bg-white/70"
+            />
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ═══════════════════ TRUSTED BY BANNER ═══════════════════ */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+        variants={sectionReveal}
+        className="w-full py-16 border-b border-white/[0.06] bg-[#07080a]"
+      >
+        <div className="flex flex-col items-center gap-6 px-6">
+          <p className="text-[11px] text-zinc-500 tracking-[0.25em] uppercase font-mono">Trusted by high-growth engineering teams</p>
+          <div className="flex items-center gap-10 md:gap-16 flex-wrap justify-center">
+            {trustedBy.map((name) => (
+              <span key={name} className="text-zinc-500 text-sm md:text-base font-medium tracking-wide hover:text-zinc-300 transition-colors cursor-default">
+                {name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      <main className="pb-24 flex flex-col">
+        
+        {/* ═══════════════════ APP MOCKUP SECTION ═══════════════════ */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={sectionReveal}
+          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative"
+        >
+          {/* Section heading */}
+          <div className="text-center mb-16">
+            <motion.div variants={itemReveal} className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 mb-6 uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+              Live Workspace Preview
+            </motion.div>
+            <motion.h2 variants={itemReveal} className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">
+              The operational command center.
+            </motion.h2>
+            <motion.p variants={itemReveal} className="text-base sm:text-lg text-zinc-400 font-normal max-w-2xl mx-auto leading-relaxed">
+              Every service, telemetry pulse, and team issue orchestrated in real time with zero configuration.
+            </motion.p>
+          </div>
+
           <motion.div 
-            initial={{ opacity: 0, rotateX: 20, y: 100 }}
-            animate={mounted ? { opacity: 1, rotateX: 0, y: 0 } : {}}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="w-full aspect-[16/10] bg-[#0a0a0a] rounded-2xl border border-white/10 shadow-[0_0_80px_rgba(255,255,255,0.05),_0_-20px_40px_rgba(0,0,0,1)] flex flex-col overflow-hidden relative"
+            initial={{ opacity: 0, rotateX: 10, y: 60 }}
+            whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full aspect-[16/10] bg-[#090b0e] rounded-2xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden relative"
+            style={{ perspective: "1000px" }}
           >
             {/* Mockup Header */}
-            <div className="h-10 w-full border-b border-white/[0.06] bg-[#0c0c0c] flex items-center px-4 justify-between shrink-0">
+            <div className="h-10 w-full border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 justify-between shrink-0">
               <div className="flex gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#333]"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-[#333]"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-[#333]"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
               </div>
-              <div className="flex items-center gap-2 bg-[#141414] px-3 py-1 rounded-md border border-white/[0.04]">
-                <Command size={12} className="text-[#888]" />
-                <span className="text-[#888] text-xs font-mono">BREXAL / {activeTab}</span>
+              <div className="flex items-center gap-2 bg-black/40 px-3 py-1 rounded-md border border-white/[0.06]">
+                <Command size={12} className="text-zinc-500" />
+                <span className="text-zinc-400 text-xs font-mono">BREXAL / {activeTab}</span>
               </div>
               <div></div>
             </div>
@@ -685,7 +664,7 @@ export default function LandingPage() {
             {/* Mockup Body */}
             <div className="flex-1 flex overflow-hidden">
               {/* Sidebar */}
-              <div className="w-56 border-r border-white/[0.06] bg-[#0a0a0a] flex flex-col font-sans overflow-y-auto custom-scrollbar shrink-0">
+              <div className="w-56 border-r border-white/[0.06] bg-[#08090c] flex flex-col font-sans overflow-y-auto custom-scrollbar shrink-0">
                 <nav className="flex-1 px-3 py-4 space-y-4">
                   {navGroups.map((group, idx) => {
                     const isExpanded = expandedGroups[group.title];
@@ -693,9 +672,9 @@ export default function LandingPage() {
                       <div key={idx} className="flex flex-col mb-1">
                         <button 
                           onClick={() => toggleGroup(group.title)}
-                          className="w-full px-2 py-1 flex justify-between items-center text-[#666666] hover:text-[#888888] transition-colors rounded-md"
+                          className="w-full px-2 py-1 flex justify-between items-center text-zinc-500 hover:text-zinc-300 transition-colors rounded-md"
                         >
-                          <span className="text-[10px] font-medium tracking-wider uppercase">{group.title}</span>
+                          <span className="text-[10px] font-mono tracking-wider uppercase text-zinc-500">{group.title}</span>
                           {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                         </button>
                         <div className={`grid transition-all duration-200 ease-in-out ${isExpanded ? "grid-rows-[1fr] opacity-100 mt-0.5" : "grid-rows-[0fr] opacity-0"}`}>
@@ -710,14 +689,12 @@ export default function LandingPage() {
                                   className={`
                                     w-full flex items-center gap-2.5 px-2 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150 whitespace-nowrap overflow-hidden
                                     ${isActive 
-                                      ? "bg-white/[0.06] text-white" 
-                                      : "text-[#888888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}
+                                      ? "bg-white/[0.08] text-white" 
+                                      : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.03]"}
                                   `}
                                 >
-                                  <Icon size={14} className={`shrink-0 ${isActive ? "text-white" : "text-[#666]"}`} />
-                                  <span>
-                                    {item.name}
-                                  </span>
+                                  <Icon size={14} className={`shrink-0 ${isActive ? "text-white" : "text-zinc-600"}`} />
+                                  <span>{item.name}</span>
                                 </button>
                               );
                             })}
@@ -730,7 +707,7 @@ export default function LandingPage() {
               </div>
               
               {/* Main Content Area */}
-              <div className="flex-1 bg-[#080808] font-sans flex flex-col relative overflow-hidden">
+              <div className="flex-1 bg-[#090b0e] font-sans flex flex-col relative overflow-hidden">
                 <AnimatePresence mode="wait">
                   <motion.div 
                     key={activeTab}
@@ -746,100 +723,93 @@ export default function LandingPage() {
               </div>
             </div>
           </motion.div>
-        </section>
+        </motion.section>
 
-        {/* Acronym Section */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10" id="method">
-           <div className="text-center md:text-left mb-16">
-             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10 text-xs font-medium text-[#888888] mb-6">
-               <Zap size={12} className="text-purple-400" /> The DNA of BREXAL
-             </div>
-             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Every letter stands for power.</h2>
-           </div>
+        {/* ═══════════════════ BREXAL ARCHITECTURE SECTION ═══════════════════ */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={stagger}
+          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
+          id="method"
+        >
+          <motion.div variants={sectionReveal} className="text-center md:text-left mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
+              Architecture & Capabilities
+            </div>
+            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">Engineered for absolute resilience.</h2>
+            <p className="text-base sm:text-lg text-zinc-400 max-w-2xl font-normal leading-relaxed">Six foundational telemetry pillars designed to withstand peak production load.</p>
+          </motion.div>
 
-           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-             {/* B */}
-             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
-                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">B</div>
-                <div className="text-purple-400 font-mono text-xs mb-4">01</div>
-                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Bug</h3>
-                <p className="text-[#888] text-sm leading-relaxed relative z-10">Catch issues before they hit production with intelligent tracking.</p>
-             </div>
-             {/* R */}
-             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
-                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">R</div>
-                <div className="text-blue-400 font-mono text-xs mb-4">02</div>
-                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Runtime</h3>
-                <p className="text-[#888] text-sm leading-relaxed relative z-10">Monitor your application execution in real-time with zero latency.</p>
-             </div>
-             {/* E */}
-             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
-                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">E</div>
-                <div className="text-emerald-400 font-mono text-xs mb-4">03</div>
-                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Error</h3>
-                <p className="text-[#888] text-sm leading-relaxed relative z-10">Automated root cause analysis and stack trace isolation.</p>
-             </div>
-             {/* X */}
-             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
-                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">X</div>
-                <div className="text-amber-400 font-mono text-xs mb-4">04</div>
-                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">eXecution</h3>
-                <p className="text-[#888] text-sm leading-relaxed relative z-10">Flawless deployment pipelines and operational performance.</p>
-             </div>
-             {/* A */}
-             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
-                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">A</div>
-                <div className="text-rose-400 font-mono text-xs mb-4">05</div>
-                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Analytics</h3>
-                <p className="text-[#888] text-sm leading-relaxed relative z-10">Deep insights, metrics, and data-driven infrastructure decisions.</p>
-             </div>
-             {/* L */}
-             <div className="relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.05] p-6 hover:bg-white/[0.02] transition-colors group">
-                <div className="absolute -right-4 -bottom-8 text-[120px] font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none">L</div>
-                <div className="text-indigo-400 font-mono text-xs mb-4">06</div>
-                <h3 className="text-2xl font-semibold text-white tracking-tight mb-2">Logic</h3>
-                <p className="text-[#888] text-sm leading-relaxed relative z-10">The AI-powered brain that orchestrates your entire stack.</p>
-             </div>
-           </div>
-        </section>
-
-        {/* Bento Grid Features */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32" id="features">
-          <div className="text-center md:text-left mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Built for speed. Designed for power.</h2>
-            <p className="text-xl text-[#888888] font-light max-w-3xl">Everything you need to build faster, all in one seamlessly integrated platform.</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {[
+              { letter: "B", num: "01", title: "Bug Intelligence", desc: "Automated regression isolation and commit correlation before user impact." },
+              { letter: "R", num: "02", title: "Runtime Telemetry", desc: "Continuous sub-millisecond execution monitoring across services." },
+              { letter: "E", num: "03", title: "Error Diagnostics", desc: "Automated root-cause deduction with pinpoint stack trace analysis." },
+              { letter: "X", num: "04", title: "Execution Pipeline", desc: "Deterministic deployment verification and synthetic health probes." },
+              { letter: "A", num: "05", title: "Analytics Engine", desc: "Deep operational metrics without the bloat of legacy APMs." },
+              { letter: "L", num: "06", title: "Logic & Copilot", desc: "Autonomous AI orchestration that drafts patches for immediate review." },
+            ].map((item, i) => (
+              <motion.div
+                key={item.letter}
+                variants={itemReveal}
+                className="relative overflow-hidden rounded-2xl bg-[#090b0e] border border-white/[0.06] p-6 hover:border-white/15 transition-all group"
+              >
+                <div className="absolute -right-3 -bottom-6 text-[100px] font-mono font-bold text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none select-none">{item.letter}</div>
+                <div className="text-zinc-500 font-mono text-[11px] mb-4 tracking-wider">{item.num} / CORE</div>
+                <h3 className="text-lg md:text-xl font-medium text-white tracking-tight mb-2">{item.title}</h3>
+                <p className="text-zinc-400 text-sm leading-relaxed relative z-10">{item.desc}</p>
+              </motion.div>
+            ))}
           </div>
+        </motion.section>
+
+        {/* ═══════════════════ BENTO GRID FEATURES ═══════════════════ */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={stagger}
+          className="w-full px-6 md:px-12 lg:px-24 mt-36"
+          id="features"
+        >
+          <motion.div variants={sectionReveal} className="text-center md:text-left mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
+              Precision Telemetry
+            </div>
+            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">Engineered for speed and discretion.</h2>
+            <p className="text-base sm:text-lg text-zinc-400 font-normal max-w-2xl leading-relaxed">Integrated telemetry, issue escalation, and developer tooling without performance penalty.</p>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-            
-            {/* Feature 1 - Large */}
-            <div className="md:col-span-4 rounded-2xl bg-[#111] border border-white/10 p-8 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 blur-[80px] rounded-full group-hover:bg-purple-500/20 transition-colors"></div>
+            {/* Feature 1 - Large: Real-time Sync */}
+            <motion.div variants={itemReveal} className="md:col-span-4 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 relative overflow-hidden group hover:border-white/15 transition-all">
               <div className="relative z-10 flex flex-col h-full">
-                <div className="w-10 h-10 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center mb-4">
-                  <Zap size={20} className="text-[#EDEDED]" />
+                <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4">
+                  <Zap size={18} className="text-zinc-200" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Real-time Synchronization</h3>
-                <p className="text-[#888888] mb-8 max-w-sm">Every change syncs instantly across your entire team. No refreshing, no waiting, just pure speed.</p>
+                <h3 className="text-xl font-medium mb-2 text-white">Sub-second State Synchronization</h3>
+                <p className="text-zinc-400 mb-6 max-w-md text-sm leading-relaxed">Every event, status change, and deployment signal propagates across all active peers instantly via low-latency telemetry mesh.</p>
                 
-                {/* Visual */}
-                <div className="flex-1 rounded-xl bg-[#0a0a0a] border border-white/[0.05] mt-auto flex flex-col relative overflow-hidden font-sans">
-                   <div className="absolute top-0 left-0 w-full h-9 border-b border-white/[0.05] bg-[#111] flex items-center px-4 gap-3 text-[11px] font-medium text-[#666] tracking-wider uppercase">
+                {/* Telemetry Task Stream */}
+                <div className="w-full rounded-xl bg-black border border-white/[0.06] mt-auto flex flex-col relative overflow-hidden font-sans">
+                   <div className="h-9 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 text-[11px] font-mono text-zinc-500 tracking-wider uppercase">
                      <div className="w-16">ID</div>
-                     <div className="flex-1">Title</div>
-                     <div className="w-24">Status</div>
+                     <div className="flex-1">Task / Incident</div>
+                     <div className="w-24">State</div>
                    </div>
-                   <div className="pt-9 flex flex-col">
+                   <div className="flex flex-col">
                      {[
-                       { id: 'BAP-123', title: 'Update onboarding flow', status: 'In Progress', color: 'text-blue-400', dot: 'bg-blue-400' },
-                       { id: 'BAP-124', title: 'Fix WebSocket connection drops', status: 'Done', color: 'text-[#888]', dot: 'bg-purple-500' },
-                       { id: 'BAP-125', title: 'Add dark mode toggle', status: 'Todo', color: 'text-zinc-500', dot: 'bg-zinc-600' }
+                       { id: 'SYS-201', title: 'Verify TLS cert auto-renewal trigger', status: 'Active', color: 'text-zinc-300', dot: 'bg-zinc-400' },
+                       { id: 'SYS-202', title: 'Drain worker pod pool on us-east', status: 'Healthy', color: 'text-zinc-400', dot: 'bg-emerald-400' },
+                       { id: 'SYS-203', title: 'Cluster memory headroom rebalance', status: 'Queued', color: 'text-zinc-500', dot: 'bg-zinc-600' }
                      ].map((issue, i) => (
-                       <div key={i} className="flex items-center px-4 py-3 border-b border-white/[0.03] text-[13px] bg-white/[0.01] hover:bg-white/[0.03] transition-colors cursor-pointer">
-                         <div className="w-16 text-[#888] font-mono text-[12px]">{issue.id}</div>
-                         <div className="flex-1 text-[#EDEDED] font-medium truncate pr-4">{issue.title}</div>
-                         <div className={`w-24 ${issue.color} flex items-center gap-2 text-[12px] font-medium`}>
-                           <div className={`w-2 h-2 rounded-full ${issue.dot}`}></div>
+                       <div key={i} className="flex items-center px-4 py-2.5 border-b border-white/[0.03] text-[12px] bg-white/[0.01] hover:bg-white/[0.03] transition-colors cursor-pointer">
+                         <div className="w-16 text-zinc-500 font-mono text-[11px]">{issue.id}</div>
+                         <div className="flex-1 text-zinc-300 font-normal truncate pr-3">{issue.title}</div>
+                         <div className={`w-24 ${issue.color} flex items-center gap-1.5 text-[11px] font-mono`}>
+                           <div className={`w-1.5 h-1.5 rounded-full ${issue.dot}`}></div>
                            {issue.status}
                          </div>
                        </div>
@@ -847,434 +817,403 @@ export default function LandingPage() {
                    </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Feature 2 - Small */}
-            <div className="md:col-span-2 rounded-2xl bg-[#111] border border-white/10 p-8 flex flex-col relative overflow-hidden group">
-              <div className="w-10 h-10 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center mb-4">
-                <Terminal size={20} className="text-[#EDEDED]" />
+            {/* Feature 2 - Command K */}
+            <motion.div variants={itemReveal} className="md:col-span-2 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col relative overflow-hidden group hover:border-white/15 transition-all">
+              <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4">
+                <Terminal size={18} className="text-zinc-200" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Command K</h3>
-              <p className="text-[#888888] mb-8 text-[15px]">Navigate the entire app, take actions, and run commands without your hands ever leaving the keyboard.</p>
-              
-              <div className="mt-auto h-40 rounded-xl bg-[#0a0a0a] border border-white/[0.05] flex flex-col overflow-hidden relative shadow-inner font-sans">
-                 <div className="h-10 border-b border-white/[0.05] flex items-center px-3 gap-2 bg-[#111]">
-                   <span className="text-[#888]">
-                     <Command size={14} />
-                   </span>
-                   <span className="text-[#EDEDED] text-[13px] font-medium">Create issue...</span>
+              <h3 className="text-xl font-medium mb-2 text-white">Command Palette</h3>
+              <p className="text-zinc-400 mb-6 text-sm leading-relaxed">Direct keyboard access to all resources, apps, logs, and services with fuzzy search.</p>
+              <div className="mt-auto h-40 rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden relative font-sans">
+                 <div className="h-10 border-b border-white/[0.06] flex items-center px-3 gap-2 bg-[#0c0e12]">
+                   <span className="text-zinc-500"><Command size={13} /></span>
+                   <span className="text-zinc-300 text-[12px] font-mono">Jump to service...</span>
                  </div>
                  <div className="flex-1 p-2 flex flex-col gap-1">
-                   <div className="px-2 py-1.5 text-[10px] font-bold text-[#555] uppercase tracking-wider">Actions</div>
-                   <div className="px-2 py-1.5 bg-white/[0.06] rounded-md flex items-center justify-between text-[13px]">
-                     <span className="text-white font-medium">Create new issue</span>
-                     <span className="text-[#888] font-mono text-[10px] bg-white/[0.05] px-1.5 py-0.5 rounded">C</span>
+                   <div className="px-2 py-1 text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Quick Actions</div>
+                   <div className="px-2.5 py-1.5 bg-white/[0.06] rounded-md flex items-center justify-between text-[12px]">
+                     <span className="text-white font-normal">Inspect active trace</span>
+                     <span className="text-zinc-400 font-mono text-[10px] bg-white/[0.06] px-1.5 py-0.5 rounded">T</span>
                    </div>
-                   <div className="px-2 py-1.5 text-[#888] flex items-center justify-between text-[13px]">
-                     <span className="font-medium">Search issues</span>
-                     <span className="text-[#666] font-mono text-[10px] bg-white/[0.02] px-1.5 py-0.5 rounded">/</span>
+                   <div className="px-2.5 py-1.5 text-zinc-400 flex items-center justify-between text-[12px]">
+                     <span className="font-normal">Tail gateway logs</span>
+                     <span className="text-zinc-500 font-mono text-[10px] bg-white/[0.03] px-1.5 py-0.5 rounded">L</span>
                    </div>
                  </div>
-                 {/* Fade out bottom */}
-                 <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none"></div>
+                 <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Feature 3 - Small */}
-            <div className="md:col-span-2 rounded-2xl bg-[#111] border border-white/10 p-8 flex flex-col relative overflow-hidden group">
-              <div className="w-10 h-10 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center mb-4">
-                <Lock size={20} className="text-[#EDEDED]" />
+            {/* Feature 3 - RBAC */}
+            <motion.div variants={itemReveal} className="md:col-span-2 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col relative overflow-hidden group hover:border-white/15 transition-all">
+              <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4">
+                <Lock size={18} className="text-zinc-200" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Role-Based Access</h3>
-              <p className="text-[#888888] mb-8 text-[15px]">Granular permissions to ensure the right people have the right access across Workspaces and Apps.</p>
+              <h3 className="text-xl font-medium mb-2 text-white">Granular Access Control</h3>
+              <p className="text-zinc-400 mb-6 text-sm leading-relaxed">Role-based scoping for multi-environment safety across dev, staging, and production.</p>
               
-              <div className="mt-auto rounded-xl bg-[#0a0a0a] border border-white/[0.05] flex flex-col overflow-hidden relative shadow-inner p-2 gap-1 font-sans">
-                 <div className="flex items-center justify-between p-2.5 rounded-lg hover:bg-white/[0.02] border border-transparent hover:border-white/[0.05] transition-colors cursor-pointer">
+              <div className="mt-auto rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden p-2.5 gap-1.5 font-sans">
+                 <div className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.02] transition-colors cursor-pointer">
                    <div className="flex items-center gap-3">
-                     <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-[10px] text-white font-bold">JD</div>
-                     <span className="text-[#EDEDED] text-[14px] font-medium">John Doe</span>
+                     <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] font-mono text-zinc-200">JD</div>
+                     <span className="text-zinc-200 text-[13px] font-medium">John Doe</span>
                    </div>
-                   <span className="text-[#888] bg-white/[0.04] border border-white/[0.02] px-2 py-0.5 rounded-md text-[11px] font-medium">Owner</span>
+                   <span className="text-zinc-400 bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 rounded-md text-[10px] font-mono">Admin</span>
                  </div>
-                 <div className="flex items-center justify-between p-2.5 rounded-lg hover:bg-white/[0.02] border border-transparent hover:border-white/[0.05] transition-colors cursor-pointer">
+                 <div className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.02] transition-colors cursor-pointer">
                    <div className="flex items-center gap-3">
-                     <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-[10px] text-white font-bold">AS</div>
-                     <span className="text-[#EDEDED] text-[14px] font-medium">Alice Smith</span>
+                     <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] font-mono text-zinc-300">AS</div>
+                     <span className="text-zinc-200 text-[13px] font-medium">Alice Smith</span>
                    </div>
-                   <span className="text-[#888] bg-white/[0.04] border border-white/[0.02] px-2 py-0.5 rounded-md text-[11px] font-medium">Member</span>
+                   <span className="text-zinc-500 bg-white/[0.03] border border-white/[0.04] px-2 py-0.5 rounded-md text-[10px] font-mono">Operator</span>
+                 </div>
+                 <div className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.02] transition-colors cursor-pointer">
+                   <div className="flex items-center gap-3">
+                     <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] font-mono text-zinc-400">MK</div>
+                     <span className="text-zinc-300 text-[13px] font-medium">Marcus Kim</span>
+                   </div>
+                   <span className="text-zinc-500 bg-white/[0.03] border border-white/[0.04] px-2 py-0.5 rounded-md text-[10px] font-mono">Auditor</span>
                  </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Feature 4 - Large */}
-            <div className="md:col-span-4 rounded-2xl bg-[#111] border border-white/10 p-8 flex flex-col relative overflow-hidden group">
-              <div className="w-10 h-10 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center mb-4">
-                <GitBranch size={20} className="text-[#EDEDED]" />
+            {/* Feature 4 - AI Copilot */}
+            <motion.div variants={itemReveal} className="md:col-span-4 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col relative overflow-hidden group hover:border-white/15 transition-all">
+              <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4">
+                <GitBranch size={18} className="text-zinc-200" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">AI-Powered Copilot</h3>
-              <p className="text-[#888888] mb-8 max-w-md">Let AI analyze your codebase, predict failures, and automate bug reports before they even happen.</p>
+              <h3 className="text-xl font-medium mb-2 text-white">Root-Cause Deductions</h3>
+              <p className="text-zinc-400 mb-6 max-w-md text-sm leading-relaxed">Automated telemetry analysis matches anomalous stack traces directly to offending Git commits.</p>
               
-              <div className="mt-auto flex-1 rounded-xl bg-[#0a0a0a] border border-white/[0.05] flex flex-col overflow-hidden relative shadow-inner p-5 font-sans min-h-[160px]">
+              <div className="w-full rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden p-5 font-sans mt-auto">
                  <div className="flex gap-3 mb-4">
-                   <div className="w-7 h-7 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/20">
-                     <Zap size={14} />
+                   <div className="w-7 h-7 rounded-full bg-white/[0.08] text-zinc-200 flex items-center justify-center shrink-0 border border-white/10">
+                     <Zap size={13} />
                    </div>
-                   <div className="bg-[#111] border border-white/[0.05] rounded-xl rounded-tl-none p-3.5 text-[14px] text-[#EDEDED] max-w-[85%] leading-relaxed shadow-md font-medium">
-                     I noticed a potential memory leak in <code className="text-purple-400 font-mono text-[12px] bg-purple-400/10 px-1.5 py-0.5 rounded border border-purple-500/20">websocket_handler.py</code>. Would you like me to generate a fix?
+                   <div className="bg-zinc-900 border border-white/[0.06] rounded-xl rounded-tl-none p-3.5 text-[13px] text-zinc-300 max-w-[85%] leading-relaxed font-normal">
+                     Memory leak footprint in <code className="text-zinc-200 font-mono bg-white/[0.06] px-1.5 py-0.5 rounded">websocket_handler.py</code>. Suggested buffer purge patch ready.
                    </div>
                  </div>
                  <div className="flex gap-3 self-end flex-row-reverse">
-                   <div className="w-7 h-7 rounded-full bg-[#222] border border-white/[0.05] text-[#888] flex items-center justify-center shrink-0">
-                     <User size={14} />
+                   <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 text-zinc-400 flex items-center justify-center shrink-0 text-[10px] font-mono">
+                     DEV
                    </div>
-                   <div className="bg-purple-600 border border-purple-500/30 rounded-xl rounded-tr-none p-3.5 text-[14px] text-white max-w-[85%] leading-relaxed shadow-md font-medium">
-                     Yes, please apply the fix and create a PR.
+                   <div className="bg-white text-black rounded-xl rounded-tr-none p-3 text-[13px] max-w-[85%] leading-relaxed font-medium">
+                     Approve patch and run automated staging check.
                    </div>
                  </div>
               </div>
-            </div>
-
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
 
-        {/* 2. Agent Integration & Interactive Terminal */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10" id="agent">
+        {/* ═══════════════════ AGENT INTEGRATION ═══════════════════ */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={sectionReveal}
+          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
+          id="agent"
+        >
           <div className="text-center md:text-left mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">The Invisible Agent.</h2>
-            <p className="text-[#888] text-lg max-w-2xl">Connect your entire stack with our lightweight SDK. Zero configuration, sub-millisecond overhead, and end-to-end encrypted telemetry.</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
+              Deployment & Ingestion
+            </div>
+            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">The Zero-Friction Agent.</h2>
+            <p className="text-zinc-400 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">Connect any Python, Node, or Go service with our lightweight SDK. Sub-millisecond latency with end-to-end telemetry encryption.</p>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-stretch gap-8">
-            
-            {/* Architecture Flow Diagram */}
-            <div className="flex-1 rounded-2xl bg-[#050505] border border-white/10 p-8 flex flex-col justify-center items-center shadow-[0_0_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.05),transparent_70%)]"></div>
-              
-              <div className="flex items-center justify-between w-full max-w-md relative z-10">
-                {/* User App Node */}
+          <div className="flex flex-col lg:flex-row items-stretch gap-6">
+            {/* Architecture Diagram */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="flex-1 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col justify-center items-center relative overflow-hidden"
+            >
+              {/* Subtle architectural ambient background */}
+              <div className="absolute inset-0 pointer-events-none opacity-[0.03] select-none [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+              <div className="absolute w-72 h-72 rounded-full bg-white/[0.02] blur-3xl pointer-events-none" />
+
+              <div className="flex items-center justify-between w-full max-w-md relative z-10 py-8">
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-16 h-16 rounded-2xl bg-[#111] border border-white/20 flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-                    <Server size={24} className="text-[#888]" />
+                  <div className="w-16 h-16 rounded-2xl bg-black border border-white/10 flex items-center justify-center shadow-md">
+                    <Server size={22} className="text-zinc-400" />
                   </div>
-                  <span className="text-xs font-mono text-[#888]">Your App</span>
+                  <span className="text-xs font-mono text-zinc-400">Target Stack</span>
                 </div>
-
-                {/* Animated Data Stream */}
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent relative mx-4">
-                  <motion.div 
-                    animate={{ left: ["0%", "100%"], x: ["0%", "-100%"], opacity: [0, 1, 0] }}
-                    transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-1/2 -translate-y-1/2 w-8 h-1 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)]"
-                  />
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-2 py-1 bg-[#111] border border-white/10 rounded text-[9px] font-mono text-purple-400">
-                    Encrypted Metrics
+                <div className="flex-1 flex items-center justify-center mx-6">
+                  <div className="relative w-full">
+                    <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-zinc-700 via-white/30 to-zinc-700"></div>
+                    <motion.div
+                      animate={{ x: ["0%", "100%"] }}
+                      transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+                      className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                    />
                   </div>
                 </div>
-
-                {/* BREXAL Node */}
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-16 h-16 rounded-2xl bg-black border border-purple-500/50 flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.2)]">
-                    <Zap size={24} className="text-purple-400" />
+                  <div className="w-16 h-16 rounded-2xl bg-black border border-white/15 flex items-center justify-center shadow-md">
+                    <Zap size={22} className="text-white" />
                   </div>
-                  <span className="text-xs font-mono text-white">BREXAL</span>
+                  <span className="text-xs font-mono text-white">BREXAL API</span>
                 </div>
               </div>
-
-              {/* Stats Bar */}
-              <div className="flex gap-8 mt-12 pt-8 border-t border-white/[0.05] w-full justify-center relative z-10">
-                <div className="flex flex-col items-center">
-                  <span className="text-white font-mono font-medium">{'<'} 1ms</span>
-                  <span className="text-[10px] text-[#666] uppercase tracking-widest mt-1">Overhead</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-white font-mono font-medium">10MB</span>
-                  <span className="text-[10px] text-[#666] uppercase tracking-widest mt-1">Memory</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-white font-mono font-medium">AES-256</span>
-                  <span className="text-[10px] text-[#666] uppercase tracking-widest mt-1">Encryption</span>
-                </div>
+              <div className="mt-4 text-center relative z-10">
+                <div className="text-[12px] font-mono text-zinc-500 uppercase tracking-wider">mTLS Encrypted • eBPF Fast • Zero Downtime</div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* 3-Step Interactive Terminal */}
-            <div className="flex-1 flex flex-col md:flex-row rounded-2xl bg-[#050505] border border-white/10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-              
-              {/* Steps Sidebar */}
-              <div className="w-full md:w-48 bg-[#0a0a0a] border-b md:border-b-0 md:border-r border-white/10 p-4 flex flex-col gap-2">
-                {[
-                  { id: 1, title: "Install Agent", desc: "Add via npm" },
-                  { id: 2, title: "Initialize", desc: "Add API Key" },
-                  { id: 3, title: "Watch Magic", desc: "Data starts flowing" }
-                ].map(step => (
-                  <button 
-                    key={step.id}
-                    onClick={() => setActiveTerminalStep(step.id)}
-                    className={`text-left p-3 rounded-xl transition-all duration-200 border ${
-                      activeTerminalStep === step.id 
-                        ? "bg-[#111] border-white/20 shadow-lg" 
-                        : "bg-transparent border-transparent hover:bg-white/[0.02]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className={`flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold ${
-                        activeTerminalStep === step.id ? "bg-purple-500 text-white" : "bg-white/10 text-[#888]"
-                      }`}>
-                        {step.id}
-                      </span>
-                      <span className={`text-sm font-medium ${activeTerminalStep === step.id ? "text-white" : "text-[#888]"}`}>
-                        {step.title}
-                      </span>
-                    </div>
-                    <div className="text-xs text-[#666] pl-7">{step.desc}</div>
-                  </button>
-                ))}
-              </div>
-
-              {/* Terminal Window */}
-              <div className="flex-1 flex flex-col min-h-[300px]">
-                <div className="bg-[#111] px-4 py-3 flex items-center gap-2 border-b border-white/[0.05]">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
-                  <div className="ml-4 text-xs font-mono text-[#666]">terminal</div>
+            {/* Terminal */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              className="flex-1 rounded-2xl bg-[#090b0e] border border-white/[0.06] overflow-hidden flex flex-col"
+            >
+              <div className="h-10 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 shrink-0">
+                <div className="flex gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
                 </div>
-                
-                <div className="p-6 font-mono text-sm flex-1 relative overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    {activeTerminalStep === 1 && (
-                      <motion.div key="step1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                        <div className="flex gap-4 text-[#888]">
-                          <span className="text-purple-400">~</span>
-                          <span className="text-white">npm install @brexal/agent</span>
-                        </div>
-                        <div className="mt-4 text-[#666]">
-                          &gt; fetched 12 packages in 0.4s<br/>
-                          &gt; building... done.<br/>
-                          <br/>
-                          <span className="text-emerald-400">✓ Added 1 package, and audited 12 packages in 1s.</span>
-                        </div>
-                      </motion.div>
-                    )}
-                    {activeTerminalStep === 2 && (
-                      <motion.div key="step2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                        <div className="text-purple-400 mb-2">// index.ts</div>
-                        <div className="text-[#888]">
-                          <span className="text-pink-400">import</span> { '{' } Brexal { '}' } <span className="text-pink-400">from</span> <span className="text-green-300">'@brexal/agent'</span>;
-                        </div>
-                        <br/>
-                        <div className="text-blue-400">Brexal<span className="text-white">.init</span><span className="text-[#888]">({'{'}</span></div>
-                        <div className="pl-4 text-white">apiKey: <span className="text-green-300">process.env.BREXAL_API_KEY</span>,</div>
-                        <div className="pl-4 text-white">environment: <span className="text-green-300">'production'</span>,</div>
-                        <div className="pl-4 text-white">captureLogs: <span className="text-orange-400">true</span></div>
-                        <div className="text-[#888]">{'}'})<span className="text-white">;</span></div>
-                      </motion.div>
-                    )}
-                    {activeTerminalStep === 3 && (
-                      <motion.div key="step3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                        <div className="flex gap-4 text-[#888]">
-                          <span className="text-purple-400">~</span>
-                          <span className="text-white">npm start</span>
-                        </div>
-                        <div className="mt-4 text-[#666]">
-                          &gt; brexal-agent v1.2.0 initialized.<br/>
-                          &gt; environment detected: Node.js / Express<br/>
-                        </div>
-                        <div className="mt-4 text-emerald-400">
-                          ✓ Successfully connected to BREXAL secure gateway.<br/>
-                          ✓ Telemetry streaming started (PID: 48921)<br/>
-                        </div>
-                        <div className="mt-4 text-purple-400 animate-pulse">
-                          Waiting for events...
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                <span className="text-zinc-500 text-[11px] font-mono ml-2">bash — 80x24</span>
               </div>
-
-            </div>
+              <div className="flex-1 p-6 font-mono text-[13px] leading-relaxed bg-black">
+                <div className="text-zinc-400">
+                  <span className="text-zinc-600">$</span> npm install @brexal/sdk
+                </div>
+                <div className="text-zinc-600 mt-1.5">✓ SDK linked (0.2s)</div>
+                <div className="text-zinc-400 mt-4">
+                  <span className="text-zinc-600">$</span> brexal init --auto
+                </div>
+                <div className="mt-2 text-zinc-300">
+                  <span className="text-zinc-500">→</span> Framework detected: <span className="text-white">Next.js 16 (App Router)</span>
+                </div>
+                <div className="mt-1 text-zinc-300">
+                  <span className="text-zinc-500">→</span> Telemetry ingestion: <span className="text-emerald-400">Active</span>
+                </div>
+                <div className="mt-1 text-zinc-300">
+                  <span className="text-zinc-500">→</span> Handshake latency: <span className="text-white">8.4ms</span>
+                </div>
+                <div className="mt-4 text-emerald-400">✓ Ready. All runtime telemetry streaming to BREXAL.</div>
+                <div className="mt-4 inline-block w-2 h-4 bg-white/60 animate-pulse"></div>
+              </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
 
+        {/* ═══════════════════ REVIEWS ═══════════════════ */}
+        <ReviewsSection />
 
-
-        {/* 4. Minimalist FAQ Section */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 relative z-10" id="faq">
+        {/* ═══════════════════ FAQ SECTION ═══════════════════ */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={sectionReveal}
+          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
+          id="faq"
+        >
           <div className="text-center md:text-left mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Frequently asked questions</h2>
-            <p className="text-[#888] text-lg max-w-2xl">Everything you need to know about the product and billing.</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
+              Inquiries & Answers
+            </div>
+            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">Frequently asked questions.</h2>
           </div>
-          <div className="flex flex-col border-t border-white/10">
-            {faqs.map((faq, index) => (
-              <div key={index} className="border-b border-white/10">
-                <button 
-                  onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
-                  className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
+          <div className="max-w-3xl flex flex-col divide-y divide-white/[0.06]">
+            {faqs.map((faq, i) => (
+              <motion.div
+                key={i}
+                variants={itemReveal}
+                className="py-6"
+              >
+                <button
+                  onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                  className="w-full flex items-center justify-between text-left group focus:outline-none"
                 >
-                  <span className={`text-lg font-medium transition-colors ${openFaqIndex === index ? 'text-white' : 'text-[#a1a1aa] group-hover:text-white'}`}>
-                    {faq.q}
-                  </span>
-                  <div className={`ml-4 flex-shrink-0 transition-transform duration-300 ${openFaqIndex === index ? 'rotate-45 text-white' : 'text-[#555] group-hover:text-white'}`}>
-                    <Plus size={20} />
-                  </div>
+                  <span className="text-base sm:text-lg font-normal text-zinc-300 group-hover:text-white transition-colors pr-8">{faq.q}</span>
+                  <motion.div
+                    animate={{ rotate: openFaqIndex === i ? 45 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-8 h-8 rounded-full border border-white/[0.1] flex items-center justify-center shrink-0 group-hover:bg-white/[0.05] transition-colors"
+                  >
+                    <Plus size={14} className="text-zinc-400" />
+                  </motion.div>
                 </button>
                 <AnimatePresence>
-                  {openFaqIndex === index && (
+                  {openFaqIndex === i && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-6 text-[#888] leading-relaxed pr-12">
-                        {faq.a}
-                      </p>
+                      <p className="text-zinc-400 text-sm leading-relaxed mt-4 pr-12 font-normal">{faq.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        {/* 5. Massive Final CTA */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 mb-32 relative z-10">
-          <div className="relative z-10 flex flex-col items-start text-left">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 bg-gradient-to-br from-white via-white to-white/40 text-transparent bg-clip-text">
-              Ready to build unbreakable software?
-            </h2>
-            <p className="text-xl text-[#888] font-light max-w-2xl">
-              Join thousands of engineering teams who sleep better at night knowing BREXAL is watching their stack.
-            </p>
-          </div>
-        </section>
-
-
-        {/* Pricing Section */}
-        <section className="w-full px-6 md:px-12 lg:px-24 mt-32 mb-16 relative" id="pricing">
-          <div className="text-center md:text-left mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Pricing that scales with you.</h2>
-            <p className="text-xl text-[#888888] font-light max-w-3xl">Start for free, upgrade when you need advanced monitoring and AI capabilities.</p>
-          </div>
+        {/* ═══════════════════ PRICING SECTION ═══════════════════ */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={stagger}
+          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
+          id="pricing"
+        >
+          <motion.div variants={sectionReveal} className="text-center md:text-left mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
+              Pricing Plans
+            </div>
+            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">Transparent scale. Zero surprise fees.</h2>
+            <p className="text-base sm:text-lg text-zinc-400 font-normal max-w-2xl leading-relaxed">Start on the free starter tier. Expand as your engineering throughput multiplies.</p>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Starter Plan */}
-            <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-8 flex flex-col hover:border-white/20 transition-colors">
-              <h3 className="text-xl font-semibold mb-2 text-[#EDEDED]">Starter</h3>
-              <p className="text-[#888888] text-[14px] mb-6 min-h-[40px]">Perfect for individuals and small side projects.</p>
+            <motion.div variants={itemReveal} className="rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col hover:border-white/15 transition-all">
+              <h3 className="text-lg font-medium mb-1 text-white">Starter</h3>
+              <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Ideal for independent engineers and early prototypes.</p>
               <div className="mb-8">
-                <span className="text-4xl font-bold text-white">$0</span>
-                <span className="text-[#888888] font-medium"> / month</span>
+                <span className="text-4xl font-semibold text-white tracking-tight">$0</span>
+                <span className="text-zinc-500 font-normal text-sm"> / month</span>
               </div>
               <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8">
-                Start for free
+                Start Free
               </Link>
-              <div className="flex flex-col gap-4 mt-auto">
-                <div className="text-[12px] font-semibold tracking-wider uppercase text-[#666]">Includes</div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> 2 Apps Monitored
-                </div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> 15m Uptime Checks
-                </div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> Email Alerts
-                </div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> 3 Team Members
-                </div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> Basic Issue Tracking
-                </div>
+              <div className="flex flex-col gap-3.5 mt-auto">
+                <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">Tier Capabilities</div>
+                {["2 Monitored Services", "15m Synthetic Probes", "Email & Webhook Alerts", "3 Workspace Seats", "Basic Issue Board"].map(f => (
+                  <div key={f} className="flex items-center gap-2.5 text-[13px] text-zinc-300">
+                    <Check size={14} className="text-zinc-400" /> {f}
+                  </div>
+                ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Pro Plan */}
-            <div className="rounded-2xl bg-[#111] border border-purple-500/30 p-8 flex flex-col relative shadow-[0_0_40px_rgba(168,85,247,0.1)]">
-              <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-purple-500/10 to-transparent pointer-events-none rounded-2xl"></div>
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-500 text-white text-[10px] font-bold tracking-wider uppercase px-3 py-1 rounded-full">
-                Most Popular
+            <motion.div variants={itemReveal} className="rounded-2xl bg-[#0c0e12] border border-white/20 p-8 flex flex-col relative shadow-[0_12px_40px_rgba(0,0,0,0.7)] hover:border-white/30 transition-all">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-mono tracking-wider uppercase px-3.5 py-0.5 rounded-full font-semibold shadow-sm">
+                Most Deployed
               </div>
               <div className="relative z-10 flex flex-col h-full">
-                <h3 className="text-xl font-semibold mb-2 text-[#EDEDED] flex items-center gap-2">Pro Platform <Zap size={16} className="text-purple-400" /></h3>
-                <p className="text-[#888888] text-[14px] mb-6 min-h-[40px]">Base platform fee + per-seat model for growing startups.</p>
+                <h3 className="text-lg font-medium mb-1 text-white">Pro Platform</h3>
+                <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">For high-velocity startups requiring continuous telemetry & root-cause deduction.</p>
                 <div className="mb-8">
-                  <span className="text-4xl font-bold text-white">$49</span>
-                  <span className="text-[#888888] font-medium"> / mo + $10/user</span>
+                  <span className="text-4xl font-semibold text-white tracking-tight">$49</span>
+                  <span className="text-zinc-400 font-normal text-sm"> / mo + $10/seat</span>
                 </div>
-                <Link href="/register" className="w-full bg-white text-black px-4 py-2.5 rounded-full font-medium hover:bg-zinc-200 transition-colors text-center text-sm mb-8 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-                  Upgrade to Pro
+                <Link href="/register" className="w-full bg-white text-black px-4 py-2.5 rounded-full font-medium hover:bg-zinc-200 transition-colors text-center text-sm mb-8 shadow-sm">
+                  Deploy Pro Workspace
                 </Link>
-                <div className="flex flex-col gap-4 mt-auto">
-                  <div className="text-[12px] font-semibold tracking-wider uppercase text-[#EDEDED]">Everything in Starter, plus</div>
-                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
-                    <Check size={16} className="text-purple-400" /> 10 Apps Monitored
-                  </div>
-                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
-                    <Check size={16} className="text-purple-400" /> 50 Uptime Monitors
-                  </div>
-                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
-                    <Check size={16} className="text-purple-400" /> WhatsApp & Slack Alerts
-                  </div>
-                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
-                    <Check size={16} className="text-purple-400" /> AI Copilot & RCA
-                  </div>
-                  <div className="flex items-center gap-3 text-[14px] text-[#EDEDED]">
-                    <Check size={16} className="text-purple-400" /> 30-day Log History
-                  </div>
+                <div className="flex flex-col gap-3.5 mt-auto">
+                  <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-400">Everything in Starter, plus</div>
+                  {["10 Monitored Services", "1m Probing Frequency", "WhatsApp, Slack, Discord Alerts", "Automated Root Cause AI", "30-Day Metric Retention"].map(f => (
+                    <div key={f} className="flex items-center gap-2.5 text-[13px] text-white">
+                      <Check size={14} className="text-white" /> {f}
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Enterprise Plan */}
-            <div className="rounded-2xl bg-[#0a0a0a] border border-white/10 p-8 flex flex-col hover:border-white/20 transition-colors">
-              <h3 className="text-xl font-semibold mb-2 text-[#EDEDED]">Enterprise</h3>
-              <p className="text-[#888888] text-[14px] mb-6 min-h-[40px]">Custom limits, dedicated support, and predictive AI.</p>
+            <motion.div variants={itemReveal} className="rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col hover:border-white/15 transition-all">
+              <h3 className="text-lg font-medium mb-1 text-white">Enterprise</h3>
+              <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Dedicated VPC peering, compliance guarantees, and high-volume workloads.</p>
               <div className="mb-8">
-                <span className="text-4xl font-bold text-white">$299+</span>
-                <span className="text-[#888888] font-medium"> / month</span>
+                <span className="text-4xl font-semibold text-white tracking-tight">$299+</span>
+                <span className="text-zinc-500 font-normal text-sm"> / month</span>
               </div>
               <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8">
-                Contact Sales
+                Inquire With Sales
               </Link>
-              <div className="flex flex-col gap-4 mt-auto">
-                <div className="text-[12px] font-semibold tracking-wider uppercase text-[#666]">Everything in Pro, plus</div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> Predictive AI Failures
-                </div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> 1-year Log History
-                </div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> Single Sign-On (SSO)
-                </div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> 24/7 Priority Support
-                </div>
-                <div className="flex items-center gap-3 text-[14px] text-[#888888]">
-                  <Check size={16} className="text-white" /> Custom SLAs
-                </div>
+              <div className="flex flex-col gap-3.5 mt-auto">
+                <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">Everything in Pro, plus</div>
+                {["Predictive Failure Warnings", "1-Year Full Trace Retention", "SAML SSO & Audit Logs", "24/7 Dedicated SRE Line", "Custom SLA & BAA"].map(f => (
+                  <div key={f} className="flex items-center gap-2.5 text-[13px] text-zinc-300">
+                    <Check size={14} className="text-zinc-400" /> {f}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* ═══════════════════ CTA SECTION (With Mountain Callback) ═══════════════════ */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={sectionReveal}
+          className="w-full px-6 md:px-12 lg:px-24 mt-40"
+        >
+          <div className="relative rounded-3xl bg-[#07080a] border border-white/[0.08] p-12 md:p-24 text-center overflow-hidden">
+            {/* Ambient image background reflection */}
+            <div className="absolute inset-0 pointer-events-none opacity-20 select-none">
+              <img
+                src="/hero-landscape.png?v=2"
+                alt=""
+                className="w-full h-full object-cover object-[center_35%]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#07080a] via-[#07080a]/80 to-[#07080a]" />
+            </div>
+
+            <div className="relative z-10 max-w-2xl mx-auto">
+              <h2 className="text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight mb-6 text-white text-balance">
+                Total visibility starts now.
+              </h2>
+              <p className="text-zinc-400 text-base sm:text-lg mb-10 leading-relaxed font-normal">
+                Join forward-thinking software organizations maintaining high availability with zero alert noise.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  href="/register"
+                  className="w-full sm:w-auto bg-white text-black px-7 py-3 rounded-full font-medium hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 text-[14px]"
+                >
+                  Start Free Workspace <ArrowRight size={15} />
+                </Link>
+                <Link
+                  href="#features"
+                  className="w-full sm:w-auto px-6 py-3 rounded-full border border-white/[0.12] text-zinc-300 hover:text-white hover:border-white/25 transition-colors text-[14px]"
+                >
+                  Explore Documentation
+                </Link>
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
       </main>
 
-      {/* Footer */}
-      <footer className="w-full border-t border-white/[0.08] bg-[#050505] py-8">
-        <div className="w-full px-6 md:px-12 lg:px-24 flex flex-col md:flex-row items-center justify-between gap-4">
-          <Logo className="h-4 text-[#888]" />
-          <div className="flex flex-col items-center gap-1 text-center md:text-left">
-            <p className="text-xs text-[#666]">© {new Date().getFullYear()} BREXAL. All rights reserved.</p>
-            <p className="text-[11px] text-[#555]">A product by <span className="font-medium text-[#888]">Bharti Nexus Technologies</span>.</p>
+      {/* ═══════════════════ FOOTER ═══════════════════ */}
+      <footer className="w-full border-t border-white/[0.06] bg-[#07080a] py-10">
+        <div className="w-full px-6 md:px-12 lg:px-24 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <Logo className="h-3.5 text-zinc-400" />
+            <span className="text-zinc-600 font-mono text-xs">|</span>
+            <span className="text-zinc-500 text-xs font-mono">v2.4 Telemetry Engine</span>
           </div>
-          <div className="flex gap-6 text-sm font-medium text-[#666]">
-            <Link href="#" className="hover:text-white transition-colors">Twitter</Link>
-            <Link href="#" className="hover:text-white transition-colors">GitHub</Link>
-            <Link href="#" className="hover:text-white transition-colors">Discord</Link>
+          <div className="flex flex-col items-center gap-1 text-center md:text-left">
+            <p className="text-xs text-zinc-500">© {new Date().getFullYear()} BREXAL. All rights reserved.</p>
+            <p className="text-[11px] text-zinc-600">A product by <span className="font-medium text-zinc-400">Bharti Nexus Technologies</span>.</p>
+          </div>
+          <div className="flex gap-6 text-xs font-mono text-zinc-500">
+            <Link href="#" className="hover:text-zinc-300 transition-colors">Documentation</Link>
+            <Link href="#" className="hover:text-zinc-300 transition-colors">GitHub</Link>
+            <Link href="#" className="hover:text-zinc-300 transition-colors">Status</Link>
           </div>
         </div>
       </footer>
