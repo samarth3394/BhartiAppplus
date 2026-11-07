@@ -10,7 +10,7 @@ import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent, 
 import { useEffect, useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
 
-/* ──────────────────────────── 3D TILT CARD COMPONENT ──────────────────────────── */
+/* ──────────────────────────── ZERO-OVERHEAD 3D TILT CARD ──────────────────────────── */
 function TiltCard({ 
   children, 
   className = "", 
@@ -21,16 +21,15 @@ function TiltCard({
   glare?: boolean;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseXSpring = useSpring(x, { stiffness: 220, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 220, damping: 20 });
+  const mouseXSpring = useSpring(x, { stiffness: 280, damping: 28 });
+  const mouseYSpring = useSpring(y, { stiffness: 280, damping: 28 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
-
-  const [glarePos, setGlarePos] = useState({ x: 50, y: 50, opacity: 0 });
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -41,23 +40,21 @@ function TiltCard({
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
+    x.set(mouseX / width - 0.5);
+    y.set(mouseY / height - 0.5);
 
-    x.set(xPct);
-    y.set(yPct);
-
-    setGlarePos({
-      x: (mouseX / width) * 100,
-      y: (mouseY / height) * 100,
-      opacity: 0.12
-    });
+    if (glare && glareRef.current) {
+      glareRef.current.style.opacity = "0.15";
+      glareRef.current.style.background = `radial-gradient(circle 260px at ${(mouseX / width) * 100}% ${(mouseY / height) * 100}%, rgba(255,255,255,0.22), transparent 70%)`;
+    }
   };
 
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
-    setGlarePos((prev) => ({ ...prev, opacity: 0 }));
+    if (glare && glareRef.current) {
+      glareRef.current.style.opacity = "0";
+    }
   };
 
   return (
@@ -68,20 +65,17 @@ function TiltCard({
       style={{
         rotateX,
         rotateY,
-        transformStyle: "preserve-3d",
+        transformPerspective: 1000,
       }}
       className={`relative will-change-transform ${className}`}
     >
-      <div style={{ transform: "translateZ(18px)", transformStyle: "preserve-3d" }} className="h-full w-full">
+      <div className="h-full w-full">
         {children}
       </div>
       {glare && (
         <div
-          className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300 overflow-hidden"
-          style={{
-            opacity: glarePos.opacity,
-            background: `radial-gradient(circle 260px at ${glarePos.x}% ${glarePos.y}%, rgba(255,255,255,0.18), transparent 70%)`,
-          }}
+          ref={glareRef}
+          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-200 overflow-hidden"
         />
       )}
     </motion.div>
@@ -353,29 +347,20 @@ export default function LandingPage() {
     target: mockupRef,
     offset: ["start end", "center center"]
   });
-  const mockupRotateX = useTransform(mockupScrollProgress, [0, 1], [26, 0]);
-  const mockupScale = useTransform(mockupScrollProgress, [0, 1], [0.88, 1]);
-  const mockupY = useTransform(mockupScrollProgress, [0, 1], [90, 0]);
+  const mockupRotateX = useTransform(mockupScrollProgress, [0, 1], [8, 0]);
+  const mockupScale = useTransform(mockupScrollProgress, [0, 1], [0.96, 1]);
+  const mockupY = useTransform(mockupScrollProgress, [0, 1], [35, 0]);
 
-  // 2. Sticky 3D Scrollytelling Features
-  const featuresContainerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: featuresProgress } = useScroll({
-    target: featuresContainerRef,
-    offset: ["start start", "end end"]
-  });
+  // 2. Interactive 3D Showcase Stage
   const [activeFeatureStep, setActiveFeatureStep] = useState(0);
 
-  useMotionValueEvent(featuresProgress, "change", (latest) => {
-    if (latest < 0.25) {
-      setActiveFeatureStep(0);
-    } else if (latest < 0.5) {
-      setActiveFeatureStep(1);
-    } else if (latest < 0.75) {
-      setActiveFeatureStep(2);
-    } else {
-      setActiveFeatureStep(3);
-    }
-  });
+  // Auto-advance showcase tab smoothly every 6 seconds unless user selects one
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveFeatureStep(prev => (prev + 1) % 4);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -610,7 +595,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080808] text-[#EDEDED] font-sans overflow-x-hidden selection:bg-white/20 selection:text-white">
+    <div className="min-h-screen bg-[#080808] text-[#EDEDED] font-sans overflow-x-clip selection:bg-white/20 selection:text-white">
       
       {/* ═══════════════════ CLEAN TRANSPARENT TOP NAVBAR ═══════════════════ */}
       <motion.nav
@@ -901,324 +886,322 @@ export default function LandingPage() {
           </div>
         </motion.section>
 
-        {/* ═══════════════════ STICKY 3D SCROLLYTELLING FEATURES ═══════════════════ */}
+        {/* ═══════════════════ INTERACTIVE 3D FEATURE SHOWCASE ═══════════════════ */}
         <section
-          ref={featuresContainerRef}
           id="features"
-          className="relative h-[320vh] w-full"
+          className="w-full px-4 sm:px-8 md:px-12 lg:px-20 mt-36 relative"
         >
-          {/* Sticky Viewport pinned across the 320vh track */}
-          <div className="sticky top-0 h-screen w-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 overflow-hidden bg-[#080808]">
-            {/* Ambient 3D Depth Lights */}
-            <div className="absolute top-1/4 left-1/4 w-[420px] h-[420px] rounded-full bg-white/[0.015] blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] rounded-full bg-white/[0.015] blur-[140px] pointer-events-none" />
-
-            {/* Section Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 z-10 shrink-0">
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Sticky 3D Scrollytelling
-                </div>
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-medium tracking-tight text-white">
-                  Engineered for speed and discretion.
-                </h2>
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 z-10">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Interactive 3D Showcase
               </div>
-              <div className="text-xs font-mono text-zinc-500 hidden md:flex items-center gap-2">
-                <span>SCROLL TO EXPLORE ARCHITECTURE</span>
-                <span className="px-2 py-0.5 rounded bg-white/[0.05] border border-white/10 text-white">
-                  0{activeFeatureStep + 1} / 04
-                </span>
-              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white">
+                Engineered for speed and discretion.
+              </h2>
+              <p className="text-zinc-400 text-sm sm:text-base mt-2 max-w-xl font-normal">
+                Sub-millisecond latency mesh, commit-level root-cause analysis, and autonomous AI remediation in real time.
+              </p>
             </div>
+            <div className="text-xs font-mono text-zinc-500 hidden md:flex items-center gap-2">
+              <span>EXPLORE CAPABILITIES</span>
+              <span className="px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/10 text-white">
+                0{activeFeatureStep + 1} / 04
+              </span>
+            </div>
+          </div>
 
-            {/* 3D Scrollytelling Split Stage */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center flex-1 max-h-[580px] z-10">
-              {/* Left Column: Interactive Step Progress Track (5 cols) */}
-              <div className="lg:col-span-5 flex flex-col justify-center space-y-3">
-                {scrollyFeatures.map((f, idx) => {
-                  const isActive = activeFeatureStep === idx;
-                  return (
-                    <button
-                      key={f.step}
-                      onClick={() => {
-                        if (featuresContainerRef.current) {
-                          const top = featuresContainerRef.current.offsetTop + (idx * featuresContainerRef.current.offsetHeight) / 4;
-                          window.scrollTo({ top, behavior: "smooth" });
-                        }
-                      }}
-                      className={`w-full text-left p-4 sm:p-4.5 rounded-2xl transition-all duration-300 border relative overflow-hidden ${
-                        isActive 
-                          ? "bg-white/[0.06] border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.5)]" 
-                          : "bg-transparent border-transparent hover:bg-white/[0.02] opacity-35 hover:opacity-70"
-                      }`}
-                    >
-                      {isActive && (
-                        <motion.div
-                          layoutId="activeFeatureBar"
-                          className="absolute left-0 top-0 bottom-0 w-1 bg-white"
-                          transition={{ duration: 0.3 }}
-                        />
-                      )}
-                      <div className="flex items-center gap-2 mb-1">
+          {/* 3D Showcase Split Stage */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+            {/* Left Column: Interactive Step Selectors (5 cols) */}
+            <div className="lg:col-span-5 flex flex-col justify-between space-y-3">
+              {scrollyFeatures.map((f, idx) => {
+                const isActive = activeFeatureStep === idx;
+                return (
+                  <button
+                    key={f.step}
+                    onClick={() => setActiveFeatureStep(idx)}
+                    className={`w-full text-left p-4 sm:p-5 rounded-2xl transition-all duration-300 border relative overflow-hidden flex flex-col justify-between ${
+                      isActive 
+                        ? "bg-white/[0.07] border-white/25 shadow-[0_12px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/15" 
+                        : "bg-[#090b0e] border-white/[0.05] hover:border-white/10 opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeFeatureBar"
+                        className="absolute left-0 top-0 bottom-0 w-1 bg-white"
+                        transition={{ duration: 0.25 }}
+                      />
+                    )}
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
                         <span className="text-[10px] font-mono tracking-wider text-zinc-400 uppercase">{f.step} / {f.tag}</span>
+                        {isActive && (
+                          <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            Live Inspection
+                          </span>
+                        )}
                       </div>
-                      <h3 className={`text-base sm:text-lg font-medium transition-colors ${isActive ? "text-white" : "text-zinc-400"}`}>
+                      <h3 className={`text-base sm:text-lg font-medium transition-colors ${isActive ? "text-white" : "text-zinc-300"}`}>
                         {f.title}
                       </h3>
                       {isActive && (
                         <motion.p
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
-                          transition={{ duration: 0.3 }}
-                          className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed mt-1.5 font-normal"
+                          transition={{ duration: 0.25 }}
+                          className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed mt-2 font-normal"
                         >
                           {f.desc}
                         </motion.p>
                       )}
-                      <div className="text-[10px] font-mono text-zinc-500 mt-2 tracking-wide">
-                        {f.stats}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+                    </div>
+                    <div className="text-[10px] font-mono text-zinc-500 mt-3 pt-2 border-t border-white/[0.04]">
+                      {f.stats}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
-              {/* Right Column: 3D Holographic Perspective Stage (7 cols) */}
-              <div className="lg:col-span-7 h-full flex items-center justify-center relative [perspective:1400px]">
-                <div className="relative w-full h-[440px] sm:h-[480px] flex items-center justify-center [transform-style:preserve-3d]">
-                  <AnimatePresence mode="wait">
-                    {activeFeatureStep === 0 && (
-                      <motion.div
-                        key="step-0"
-                        initial={{ opacity: 0, rotateX: 20, z: -80, scale: 0.9 }}
-                        animate={{ opacity: 1, rotateX: 0, z: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotateX: -20, z: 80, scale: 0.9 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="w-full h-full"
-                      >
-                        <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 md:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
-                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                                <Zap size={18} className="text-white" />
-                              </div>
-                              <div>
-                                <div className="text-xs font-mono text-white">Global Telemetry Mesh</div>
-                                <div className="text-[11px] font-mono text-zinc-500">3 Regions Ingestion</div>
-                              </div>
+            {/* Right Column: 3D Holographic Perspective Stage (7 cols) */}
+            <div className="lg:col-span-7 flex items-center justify-center relative [perspective:1400px]">
+              <div className="relative w-full min-h-[460px] h-full flex items-center justify-center">
+                <AnimatePresence mode="wait">
+                  {activeFeatureStep === 0 && (
+                    <motion.div
+                      key="step-0"
+                      initial={{ opacity: 0, y: 15, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -15, scale: 0.96 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="w-full h-full"
+                    >
+                      <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
+                              <Zap size={18} className="text-white" />
                             </div>
-                            <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                              1.4ms P99
+                            <div>
+                              <div className="text-xs font-mono text-white">Global Telemetry Mesh</div>
+                              <div className="text-[11px] font-mono text-zinc-500">3 Edge Regions Ingestion</div>
                             </div>
                           </div>
+                          <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            1.4ms P99
+                          </div>
+                        </div>
 
-                          <div className="grid grid-cols-3 gap-3 my-3">
+                        <div className="grid grid-cols-3 gap-3 my-4">
+                          {[
+                            { region: "US-EAST-1", latency: "1.2ms", load: "24%", status: "Nominal" },
+                            { region: "EU-CENTRAL-1", latency: "1.5ms", load: "31%", status: "Nominal" },
+                            { region: "AP-SOUTH-1", latency: "1.4ms", load: "19%", status: "Nominal" },
+                          ].map(node => (
+                            <div key={node.region} className="p-3 rounded-xl bg-black border border-white/[0.05] flex flex-col">
+                              <span className="text-[10px] font-mono text-zinc-500">{node.region}</span>
+                              <span className="text-sm font-semibold text-white mt-1">{node.latency}</span>
+                              <span className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1 font-mono">
+                                <span className="w-1 h-1 rounded-full bg-emerald-400" />
+                                {node.status}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="w-full rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden font-sans">
+                          <div className="h-8 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 text-[10px] font-mono text-zinc-500 tracking-wider uppercase">
+                            <div className="w-16">ID</div>
+                            <div className="flex-1">Task / Incident</div>
+                            <div className="w-20">State</div>
+                          </div>
+                          <div className="flex flex-col divide-y divide-white/[0.03]">
                             {[
-                              { region: "US-EAST-1", latency: "1.2ms", load: "24%", status: "Nominal" },
-                              { region: "EU-CENTRAL-1", latency: "1.5ms", load: "31%", status: "Nominal" },
-                              { region: "AP-SOUTH-1", latency: "1.4ms", load: "19%", status: "Nominal" },
-                            ].map(node => (
-                              <div key={node.region} className="p-3 rounded-xl bg-black border border-white/[0.05] flex flex-col">
-                                <span className="text-[10px] font-mono text-zinc-500">{node.region}</span>
-                                <span className="text-sm font-semibold text-white mt-1">{node.latency}</span>
-                                <span className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1 font-mono">
-                                  <span className="w-1 h-1 rounded-full bg-emerald-400" />
-                                  {node.status}
-                                </span>
+                              { id: 'SYS-201', title: 'Verify TLS cert auto-renewal trigger', status: 'Active', color: 'text-zinc-300', dot: 'bg-zinc-400' },
+                              { id: 'SYS-202', title: 'Drain worker pod pool on us-east', status: 'Healthy', color: 'text-zinc-400', dot: 'bg-emerald-400' },
+                              { id: 'SYS-203', title: 'Cluster memory headroom rebalance', status: 'Queued', color: 'text-zinc-500', dot: 'bg-zinc-600' }
+                            ].map((issue, i) => (
+                              <div key={i} className="flex items-center px-4 py-2.5 text-[11px] bg-white/[0.01]">
+                                <div className="w-16 text-zinc-500 font-mono text-[10px]">{issue.id}</div>
+                                <div className="flex-1 text-zinc-300 truncate pr-3">{issue.title}</div>
+                                <div className={`w-20 ${issue.color} flex items-center gap-1 text-[10px] font-mono`}>
+                                  <div className={`w-1.5 h-1.5 rounded-full ${issue.dot}`}></div>
+                                  {issue.status}
+                                </div>
                               </div>
                             ))}
                           </div>
+                        </div>
+                      </TiltCard>
+                    </motion.div>
+                  )}
 
-                          <div className="w-full rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden font-sans">
-                            <div className="h-8 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 text-[10px] font-mono text-zinc-500 tracking-wider uppercase">
-                              <div className="w-16">ID</div>
-                              <div className="flex-1">Task / Incident</div>
-                              <div className="w-20">State</div>
+                  {activeFeatureStep === 1 && (
+                    <motion.div
+                      key="step-1"
+                      initial={{ opacity: 0, y: 15, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -15, scale: 0.96 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="w-full h-full"
+                    >
+                      <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
+                              <GitBranch size={18} className="text-white" />
                             </div>
-                            <div className="flex flex-col divide-y divide-white/[0.03]">
-                              {[
-                                { id: 'SYS-201', title: 'Verify TLS cert auto-renewal trigger', status: 'Active', color: 'text-zinc-300', dot: 'bg-zinc-400' },
-                                { id: 'SYS-202', title: 'Drain worker pod pool on us-east', status: 'Healthy', color: 'text-zinc-400', dot: 'bg-emerald-400' },
-                                { id: 'SYS-203', title: 'Cluster memory headroom rebalance', status: 'Queued', color: 'text-zinc-500', dot: 'bg-zinc-600' }
-                              ].map((issue, i) => (
-                                <div key={i} className="flex items-center px-4 py-2 text-[11px] bg-white/[0.01]">
-                                  <div className="w-16 text-zinc-500 font-mono text-[10px]">{issue.id}</div>
-                                  <div className="flex-1 text-zinc-300 truncate pr-3">{issue.title}</div>
-                                  <div className={`w-20 ${issue.color} flex items-center gap-1 text-[10px] font-mono`}>
-                                    <div className={`w-1.5 h-1.5 rounded-full ${issue.dot}`}></div>
-                                    {issue.status}
-                                  </div>
+                            <div>
+                              <div className="text-xs font-mono text-white">Anomalous Commit Correlation</div>
+                              <div className="text-[11px] font-mono text-zinc-500">Git Blame & Stack Trace Engine</div>
+                            </div>
+                          </div>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/10 border border-red-500/20 text-red-400">
+                            Stack Anomaly Detected
+                          </span>
+                        </div>
+
+                        <div className="rounded-xl bg-black border border-white/[0.06] p-4 my-4 font-mono text-[12px] leading-relaxed">
+                          <div className="flex items-center justify-between text-zinc-500 border-b border-white/[0.05] pb-2 mb-2 text-[11px]">
+                            <span>File: src/network/websocket_handler.py</span>
+                            <span className="text-zinc-400">Commit: #8f2a1b9</span>
+                          </div>
+                          <div className="text-zinc-500">142 |  async def handle_connection(ws, client_id):</div>
+                          <div className="text-red-400 bg-red-500/[0.08] px-2 py-0.5 rounded -mx-2">
+                            143 -      connection_buffer.append(await ws.receive_bytes())  # UNBOUNDED
+                          </div>
+                          <div className="text-emerald-400 bg-emerald-500/[0.08] px-2 py-0.5 rounded -mx-2 mt-1">
+                            144 +      await ring_buffer.push_capped(ws, max_bytes=65536)  # FIXED
+                          </div>
+                          <div className="text-zinc-500 mt-2">145 |      await dispatch_to_mesh(client_id)</div>
+                        </div>
+
+                        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center text-[10px] font-mono">SK</div>
+                            <span className="text-zinc-300">Author: Sarah K. (3h ago)</span>
+                          </div>
+                          <span className="text-zinc-400 font-mono text-[11px]">Memory Leak: +42MB/hr</span>
+                        </div>
+                      </TiltCard>
+                    </motion.div>
+                  )}
+
+                  {activeFeatureStep === 2 && (
+                    <motion.div
+                      key="step-2"
+                      initial={{ opacity: 0, y: 15, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -15, scale: 0.96 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="w-full h-full"
+                    >
+                      <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
+                              <Zap size={18} className="text-white" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-mono text-white">AI Copilot Remediation</div>
+                              <div className="text-[11px] font-mono text-zinc-500">Autonomous Patch Generator</div>
+                            </div>
+                          </div>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                            PR Ready
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col gap-3 my-4">
+                          <div className="flex gap-3">
+                            <div className="w-7 h-7 rounded-full bg-white/[0.08] text-white flex items-center justify-center shrink-0 border border-white/10">
+                              <Zap size={13} />
+                            </div>
+                            <div className="bg-zinc-900 border border-white/[0.06] rounded-xl rounded-tl-none p-3.5 text-[12px] text-zinc-300 leading-relaxed font-normal">
+                              Memory leak root-cause isolated in <code className="text-white font-mono bg-white/[0.08] px-1.5 py-0.5 rounded">websocket_handler.py</code>. Suggested ring-buffer purge patch verified against test suite.
+                            </div>
+                          </div>
+                          <div className="flex gap-3 self-end flex-row-reverse">
+                            <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 text-zinc-400 flex items-center justify-center shrink-0 text-[10px] font-mono">
+                              DEV
+                            </div>
+                            <div className="bg-white text-black rounded-xl rounded-tr-none p-3 text-[12px] leading-relaxed font-semibold">
+                              Approve patch and run automated staging check.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-3.5 rounded-xl bg-black border border-white/[0.06] flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                            <span>Staging check: 14/14 tests passing</span>
+                          </div>
+                          <span className="text-[11px] font-mono text-emerald-400">0 Downtime</span>
+                        </div>
+                      </TiltCard>
+                    </motion.div>
+                  )}
+
+                  {activeFeatureStep === 3 && (
+                    <motion.div
+                      key="step-3"
+                      initial={{ opacity: 0, y: 15, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -15, scale: 0.96 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="w-full h-full"
+                    >
+                      <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
+                              <Lock size={18} className="text-white" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-mono text-white">Multi-Region RBAC Scoping</div>
+                              <div className="text-[11px] font-mono text-zinc-500">Zero-Trust Environment Roles</div>
+                            </div>
+                          </div>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] border border-white/10 text-zinc-300">
+                            mTLS Enabled
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col gap-2.5 my-4">
+                          {[
+                            { name: "John Doe", role: "Super Admin", scope: "Production / All Clusters", initials: "JD", badge: "bg-white text-black" },
+                            { name: "Alice Smith", role: "Site Reliability Operator", scope: "Staging & Canary Only", initials: "AS", badge: "bg-white/10 text-zinc-300" },
+                            { name: "Marcus Kim", role: "Security Compliance Auditor", scope: "Read-Only Telemetry", initials: "MK", badge: "bg-white/5 text-zinc-400" },
+                          ].map(user => (
+                            <div key={user.name} className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/[0.05]">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[11px] font-mono text-white">
+                                  {user.initials}
                                 </div>
-                              ))}
-                            </div>
-                          </div>
-                        </TiltCard>
-                      </motion.div>
-                    )}
-
-                    {activeFeatureStep === 1 && (
-                      <motion.div
-                        key="step-1"
-                        initial={{ opacity: 0, rotateX: 20, z: -80, scale: 0.9 }}
-                        animate={{ opacity: 1, rotateX: 0, z: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotateX: -20, z: 80, scale: 0.9 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="w-full h-full"
-                      >
-                        <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 md:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
-                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                                <GitBranch size={18} className="text-white" />
-                              </div>
-                              <div>
-                                <div className="text-xs font-mono text-white">Anomalous Commit Correlation</div>
-                                <div className="text-[11px] font-mono text-zinc-500">Git Blame & Stack Trace Engine</div>
-                              </div>
-                            </div>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/10 border border-red-500/20 text-red-400">
-                              Stack Anomaly Detected
-                            </span>
-                          </div>
-
-                          <div className="rounded-xl bg-black border border-white/[0.06] p-4 my-3 font-mono text-[12px] leading-relaxed">
-                            <div className="flex items-center justify-between text-zinc-500 border-b border-white/[0.05] pb-2 mb-2 text-[11px]">
-                              <span>File: src/network/websocket_handler.py</span>
-                              <span className="text-zinc-400">Commit: #8f2a1b9</span>
-                            </div>
-                            <div className="text-zinc-500">142 |  async def handle_connection(ws, client_id):</div>
-                            <div className="text-red-400 bg-red-500/[0.08] px-2 py-0.5 rounded -mx-2">
-                              143 -      connection_buffer.append(await ws.receive_bytes())  # UNBOUNDED
-                            </div>
-                            <div className="text-emerald-400 bg-emerald-500/[0.08] px-2 py-0.5 rounded -mx-2 mt-1">
-                              144 +      await ring_buffer.push_capped(ws, max_bytes=65536)  # FIXED
-                            </div>
-                            <div className="text-zinc-500 mt-2">145 |      await dispatch_to_mesh(client_id)</div>
-                          </div>
-
-                          <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center text-[10px] font-mono">SK</div>
-                              <span className="text-zinc-300">Author: Sarah K. (3h ago)</span>
-                            </div>
-                            <span className="text-zinc-400 font-mono text-[11px]">Memory Leak: +42MB/hr</span>
-                          </div>
-                        </TiltCard>
-                      </motion.div>
-                    )}
-
-                    {activeFeatureStep === 2 && (
-                      <motion.div
-                        key="step-2"
-                        initial={{ opacity: 0, rotateX: 20, z: -80, scale: 0.9 }}
-                        animate={{ opacity: 1, rotateX: 0, z: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotateX: -20, z: 80, scale: 0.9 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="w-full h-full"
-                      >
-                        <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 md:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
-                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                                <Zap size={18} className="text-white" />
-                              </div>
-                              <div>
-                                <div className="text-xs font-mono text-white">AI Copilot Remediation</div>
-                                <div className="text-[11px] font-mono text-zinc-500">Autonomous Patch Generator</div>
-                              </div>
-                            </div>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                              PR Ready
-                            </span>
-                          </div>
-
-                          <div className="flex flex-col gap-3 my-3">
-                            <div className="flex gap-3">
-                              <div className="w-7 h-7 rounded-full bg-white/[0.08] text-white flex items-center justify-center shrink-0 border border-white/10">
-                                <Zap size={13} />
-                              </div>
-                              <div className="bg-zinc-900 border border-white/[0.06] rounded-xl rounded-tl-none p-3.5 text-[12px] text-zinc-300 leading-relaxed font-normal">
-                                Memory leak root-cause isolated in <code className="text-white font-mono bg-white/[0.08] px-1.5 py-0.5 rounded">websocket_handler.py</code>. Suggested ring-buffer purge patch verified against test suite.
-                              </div>
-                            </div>
-                            <div className="flex gap-3 self-end flex-row-reverse">
-                              <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 text-zinc-400 flex items-center justify-center shrink-0 text-[10px] font-mono">
-                                DEV
-                              </div>
-                              <div className="bg-white text-black rounded-xl rounded-tr-none p-3 text-[12px] leading-relaxed font-semibold">
-                                Approve patch and run automated staging check.
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="p-3 rounded-xl bg-black border border-white/[0.06] flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-                              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                              <span>Staging check: 14/14 tests passing</span>
-                            </div>
-                            <span className="text-[11px] font-mono text-emerald-400">0 Downtime</span>
-                          </div>
-                        </TiltCard>
-                      </motion.div>
-                    )}
-
-                    {activeFeatureStep === 3 && (
-                      <motion.div
-                        key="step-3"
-                        initial={{ opacity: 0, rotateX: 20, z: -80, scale: 0.9 }}
-                        animate={{ opacity: 1, rotateX: 0, z: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotateX: -20, z: 80, scale: 0.9 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="w-full h-full"
-                      >
-                        <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 md:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
-                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                                <Lock size={18} className="text-white" />
-                              </div>
-                              <div>
-                                <div className="text-xs font-mono text-white">Multi-Region RBAC Scoping</div>
-                                <div className="text-[11px] font-mono text-zinc-500">Zero-Trust Environment Roles</div>
-                              </div>
-                            </div>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] border border-white/10 text-zinc-300">
-                              mTLS Enabled
-                            </span>
-                          </div>
-
-                          <div className="flex flex-col gap-2 my-3">
-                            {[
-                              { name: "John Doe", role: "Super Admin", scope: "Production / All Clusters", initials: "JD", badge: "bg-white text-black" },
-                              { name: "Alice Smith", role: "Site Reliability Operator", scope: "Staging & Canary Only", initials: "AS", badge: "bg-white/10 text-zinc-300" },
-                              { name: "Marcus Kim", role: "Security Compliance Auditor", scope: "Read-Only Telemetry", initials: "MK", badge: "bg-white/5 text-zinc-400" },
-                            ].map(user => (
-                              <div key={user.name} className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/[0.05]">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[11px] font-mono text-white">
-                                    {user.initials}
-                                  </div>
-                                  <div>
-                                    <div className="text-xs font-medium text-white">{user.name}</div>
-                                    <div className="text-[10px] text-zinc-500 font-mono">{user.scope}</div>
-                                  </div>
+                                <div>
+                                  <div className="text-xs font-medium text-white">{user.name}</div>
+                                  <div className="text-[10px] text-zinc-500 font-mono">{user.scope}</div>
                                 </div>
-                                <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${user.badge}`}>{user.role}</span>
                               </div>
-                            ))}
-                          </div>
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${user.badge}`}>{user.role}</span>
+                            </div>
+                          ))}
+                        </div>
 
-                          <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-zinc-400">
-                            <span>Cryptographic Session Hash</span>
-                            <span className="text-zinc-500">sha256:4f81...9c2e</span>
-                          </div>
-                        </TiltCard>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                          <span>Cryptographic Session Hash</span>
+                          <span className="text-zinc-500">sha256:4f81...9c2e</span>
+                        </div>
+                      </TiltCard>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </div>
