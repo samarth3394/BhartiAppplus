@@ -6,9 +6,87 @@ import {
   LayoutDashboard, MessageSquare, Users, KanbanSquare, Bug, Map, 
   Activity, Server, Wrench, Settings, ChevronDown, ChevronRight, Plus, Check, MousePointer2
 } from "lucide-react";
-import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
+
+/* ──────────────────────────── 3D TILT CARD COMPONENT ──────────────────────────── */
+function TiltCard({ 
+  children, 
+  className = "", 
+  glare = true 
+}: { 
+  children: React.ReactNode; 
+  className?: string; 
+  glare?: boolean;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 220, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 220, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
+
+  const [glarePos, setGlarePos] = useState({ x: 50, y: 50, opacity: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
+
+    setGlarePos({
+      x: (mouseX / width) * 100,
+      y: (mouseY / height) * 100,
+      opacity: 0.12
+    });
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    setGlarePos((prev) => ({ ...prev, opacity: 0 }));
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      className={`relative will-change-transform ${className}`}
+    >
+      <div style={{ transform: "translateZ(18px)", transformStyle: "preserve-3d" }} className="h-full w-full">
+        {children}
+      </div>
+      {glare && (
+        <div
+          className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300 overflow-hidden"
+          style={{
+            opacity: glarePos.opacity,
+            background: `radial-gradient(circle 260px at ${glarePos.x}% ${glarePos.y}%, rgba(255,255,255,0.18), transparent 70%)`,
+          }}
+        />
+      )}
+    </motion.div>
+  );
+}
 
 /* ──────────────────────────── DATA ──────────────────────────── */
 
@@ -28,6 +106,37 @@ const faqs = [
   {
     q: "How fast is the integration?",
     a: "You can integrate BREXAL in under two minutes. Our SDK automatically detects your framework (Next.js, Python, Go) and instruments the necessary telemetry without manual configuration."
+  }
+];
+
+const scrollyFeatures = [
+  {
+    step: "01",
+    tag: "STATE SYNCHRONIZATION",
+    title: "Sub-second State Synchronization",
+    desc: "Every event, status change, and deployment signal propagates across all active peers instantly via low-latency telemetry mesh.",
+    stats: "1.4ms P99 • 99.999% SLA • eBPF Mesh"
+  },
+  {
+    step: "02",
+    tag: "ROOT-CAUSE DEDUCTION",
+    title: "Pinpoint Anomalous Commit Tracing",
+    desc: "Automated telemetry analysis matches anomalous memory and latency spikes directly to the offending Git commit and author.",
+    stats: "Commit #8f2a1b9 • Memory Footprint: +42MB • Stack Trace Verified"
+  },
+  {
+    step: "03",
+    tag: "AUTONOMOUS COPILOT",
+    title: "AI-Drafted Patch Remediation",
+    desc: "Autonomous AI orchestration diagnoses the offending stack trace, generates an optimal patch, and validates it in staging.",
+    stats: "Auto-PR Generated • Zero Downtime Buffer Purge • Staging Passed"
+  },
+  {
+    step: "04",
+    tag: "ACCESS & SECURITY",
+    title: "Granular Multi-Region Access Control",
+    desc: "Role-based scoping for multi-environment safety across dev, staging, and production with cryptographic mTLS certificates.",
+    stats: "mTLS Handshake Active • 3 Scoped Roles • Instant Audit Revocation"
   }
 ];
 
@@ -232,10 +341,41 @@ export default function LandingPage() {
     target: heroRef,
     offset: ["start start", "end start"]
   });
-  const heroImgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const heroContentY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const heroOverlayOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 0.75]);
+  const heroImgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const heroContentY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
+  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const heroOverlayOpacity = useTransform(scrollYProgress, [0, 0.8], [0, 0.85]);
+
+  // 1. Mockup 3D Viewport Rise
+  const mockupRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: mockupScrollProgress } = useScroll({
+    target: mockupRef,
+    offset: ["start end", "center center"]
+  });
+  const mockupRotateX = useTransform(mockupScrollProgress, [0, 1], [26, 0]);
+  const mockupScale = useTransform(mockupScrollProgress, [0, 1], [0.88, 1]);
+  const mockupY = useTransform(mockupScrollProgress, [0, 1], [90, 0]);
+
+  // 2. Sticky 3D Scrollytelling Features
+  const featuresContainerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: featuresProgress } = useScroll({
+    target: featuresContainerRef,
+    offset: ["start start", "end end"]
+  });
+  const [activeFeatureStep, setActiveFeatureStep] = useState(0);
+
+  useMotionValueEvent(featuresProgress, "change", (latest) => {
+    if (latest < 0.25) {
+      setActiveFeatureStep(0);
+    } else if (latest < 0.5) {
+      setActiveFeatureStep(1);
+    } else if (latest < 0.75) {
+      setActiveFeatureStep(2);
+    } else {
+      setActiveFeatureStep(3);
+    }
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -531,10 +671,10 @@ export default function LandingPage() {
           style={{ opacity: heroOverlayOpacity }}
         />
 
-        {/* ── Content: pinned to the upper third ── */}
+        {/* ── Content: pinned to the upper third with 3D Depth Fade ── */}
         <motion.div
           className="relative z-10 flex flex-col items-center text-center px-6 pt-32 sm:pt-36 md:pt-40"
-          style={{ y: heroContentY }}
+          style={{ y: heroContentY, opacity: heroContentOpacity }}
         >
           {/* Headline — short, decisive, no gradient gimmicks */}
           <motion.h1
@@ -617,35 +757,33 @@ export default function LandingPage() {
 
       <main className="pb-24 flex flex-col">
         
-        {/* ═══════════════════ APP MOCKUP SECTION ═══════════════════ */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          variants={sectionReveal}
-          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative"
+        {/* ═══════════════════ APP MOCKUP SECTION (3D PERSPECTIVE RISE) ═══════════════════ */}
+        <section
+          ref={mockupRef}
+          className="w-full px-4 sm:px-8 md:px-12 lg:px-20 mt-28 sm:mt-36 relative [perspective:1400px]"
         >
           {/* Section heading */}
           <div className="text-center mb-16">
-            <motion.div variants={itemReveal} className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 mb-6 uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 mb-6 uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               Live Workspace Preview
-            </motion.div>
-            <motion.h2 variants={itemReveal} className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">
+            </div>
+            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">
               The operational command center.
-            </motion.h2>
-            <motion.p variants={itemReveal} className="text-base sm:text-lg text-zinc-400 font-normal max-w-2xl mx-auto leading-relaxed">
+            </h2>
+            <p className="text-base sm:text-lg text-zinc-400 font-normal max-w-2xl mx-auto leading-relaxed">
               Every service, telemetry pulse, and team issue orchestrated in real time with zero configuration.
-            </motion.p>
+            </p>
           </div>
 
           <motion.div 
-            initial={{ opacity: 0, rotateX: 10, y: 60 }}
-            whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full aspect-[16/10] bg-[#090b0e] rounded-2xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden relative"
-            style={{ perspective: "1000px" }}
+            style={{
+              rotateX: mockupRotateX,
+              scale: mockupScale,
+              y: mockupY,
+              transformStyle: "preserve-3d"
+            }}
+            className="w-full aspect-[16/10] bg-[#090b0e] rounded-2xl border border-white/[0.08] shadow-[0_30px_100px_rgba(0,0,0,0.9)] flex flex-col overflow-hidden relative will-change-transform"
           >
             {/* Mockup Header */}
             <div className="h-10 w-full border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 justify-between shrink-0">
@@ -723,7 +861,7 @@ export default function LandingPage() {
               </div>
             </div>
           </motion.div>
-        </motion.section>
+        </section>
 
         {/* ═══════════════════ BREXAL ARCHITECTURE SECTION ═══════════════════ */}
         <motion.section
@@ -742,7 +880,7 @@ export default function LandingPage() {
             <p className="text-base sm:text-lg text-zinc-400 max-w-2xl font-normal leading-relaxed">Six foundational telemetry pillars designed to withstand peak production load.</p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 [perspective:1200px]">
             {[
               { letter: "B", num: "01", title: "Bug Intelligence", desc: "Automated regression isolation and commit correlation before user impact." },
               { letter: "R", num: "02", title: "Runtime Telemetry", desc: "Continuous sub-millisecond execution monitoring across services." },
@@ -750,164 +888,341 @@ export default function LandingPage() {
               { letter: "X", num: "04", title: "Execution Pipeline", desc: "Deterministic deployment verification and synthetic health probes." },
               { letter: "A", num: "05", title: "Analytics Engine", desc: "Deep operational metrics without the bloat of legacy APMs." },
               { letter: "L", num: "06", title: "Logic & Copilot", desc: "Autonomous AI orchestration that drafts patches for immediate review." },
-            ].map((item, i) => (
-              <motion.div
-                key={item.letter}
-                variants={itemReveal}
-                className="relative overflow-hidden rounded-2xl bg-[#090b0e] border border-white/[0.06] p-6 hover:border-white/15 transition-all group"
-              >
-                <div className="absolute -right-3 -bottom-6 text-[100px] font-mono font-bold text-white/[0.02] group-hover:text-white/[0.04] transition-colors pointer-events-none select-none">{item.letter}</div>
-                <div className="text-zinc-500 font-mono text-[11px] mb-4 tracking-wider">{item.num} / CORE</div>
-                <h3 className="text-lg md:text-xl font-medium text-white tracking-tight mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed relative z-10">{item.desc}</p>
+            ].map((item) => (
+              <motion.div key={item.letter} variants={itemReveal} className="h-full">
+                <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-6 hover:border-white/20 transition-all group overflow-hidden">
+                  <div className="absolute -right-3 -bottom-6 text-[100px] font-mono font-bold text-white/[0.02] group-hover:text-white/[0.05] transition-colors pointer-events-none select-none">{item.letter}</div>
+                  <div className="text-zinc-500 font-mono text-[11px] mb-4 tracking-wider">{item.num} / CORE</div>
+                  <h3 className="text-lg md:text-xl font-medium text-white tracking-tight mb-2">{item.title}</h3>
+                  <p className="text-zinc-400 text-sm leading-relaxed relative z-10">{item.desc}</p>
+                </TiltCard>
               </motion.div>
             ))}
           </div>
         </motion.section>
 
-        {/* ═══════════════════ BENTO GRID FEATURES ═══════════════════ */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={stagger}
-          className="w-full px-6 md:px-12 lg:px-24 mt-36"
+        {/* ═══════════════════ STICKY 3D SCROLLYTELLING FEATURES ═══════════════════ */}
+        <section
+          ref={featuresContainerRef}
           id="features"
+          className="relative h-[320vh] w-full"
         >
-          <motion.div variants={sectionReveal} className="text-center md:text-left mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
-              Precision Telemetry
+          {/* Sticky Viewport pinned across the 320vh track */}
+          <div className="sticky top-0 h-screen w-full flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-20 overflow-hidden bg-[#080808]">
+            {/* Ambient 3D Depth Lights */}
+            <div className="absolute top-1/4 left-1/4 w-[420px] h-[420px] rounded-full bg-white/[0.015] blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] rounded-full bg-white/[0.015] blur-[140px] pointer-events-none" />
+
+            {/* Section Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 z-10 shrink-0">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Sticky 3D Scrollytelling
+                </div>
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-medium tracking-tight text-white">
+                  Engineered for speed and discretion.
+                </h2>
+              </div>
+              <div className="text-xs font-mono text-zinc-500 hidden md:flex items-center gap-2">
+                <span>SCROLL TO EXPLORE ARCHITECTURE</span>
+                <span className="px-2 py-0.5 rounded bg-white/[0.05] border border-white/10 text-white">
+                  0{activeFeatureStep + 1} / 04
+                </span>
+              </div>
             </div>
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">Engineered for speed and discretion.</h2>
-            <p className="text-base sm:text-lg text-zinc-400 font-normal max-w-2xl leading-relaxed">Integrated telemetry, issue escalation, and developer tooling without performance penalty.</p>
-          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-            {/* Feature 1 - Large: Real-time Sync */}
-            <motion.div variants={itemReveal} className="md:col-span-4 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 relative overflow-hidden group hover:border-white/15 transition-all">
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4">
-                  <Zap size={18} className="text-zinc-200" />
+            {/* 3D Scrollytelling Split Stage */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center flex-1 max-h-[580px] z-10">
+              {/* Left Column: Interactive Step Progress Track (5 cols) */}
+              <div className="lg:col-span-5 flex flex-col justify-center space-y-3">
+                {scrollyFeatures.map((f, idx) => {
+                  const isActive = activeFeatureStep === idx;
+                  return (
+                    <button
+                      key={f.step}
+                      onClick={() => {
+                        if (featuresContainerRef.current) {
+                          const top = featuresContainerRef.current.offsetTop + (idx * featuresContainerRef.current.offsetHeight) / 4;
+                          window.scrollTo({ top, behavior: "smooth" });
+                        }
+                      }}
+                      className={`w-full text-left p-4 sm:p-4.5 rounded-2xl transition-all duration-300 border relative overflow-hidden ${
+                        isActive 
+                          ? "bg-white/[0.06] border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.5)]" 
+                          : "bg-transparent border-transparent hover:bg-white/[0.02] opacity-35 hover:opacity-70"
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeFeatureBar"
+                          className="absolute left-0 top-0 bottom-0 w-1 bg-white"
+                          transition={{ duration: 0.3 }}
+                        />
+                      )}
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-mono tracking-wider text-zinc-400 uppercase">{f.step} / {f.tag}</span>
+                      </div>
+                      <h3 className={`text-base sm:text-lg font-medium transition-colors ${isActive ? "text-white" : "text-zinc-400"}`}>
+                        {f.title}
+                      </h3>
+                      {isActive && (
+                        <motion.p
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          transition={{ duration: 0.3 }}
+                          className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed mt-1.5 font-normal"
+                        >
+                          {f.desc}
+                        </motion.p>
+                      )}
+                      <div className="text-[10px] font-mono text-zinc-500 mt-2 tracking-wide">
+                        {f.stats}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right Column: 3D Holographic Perspective Stage (7 cols) */}
+              <div className="lg:col-span-7 h-full flex items-center justify-center relative [perspective:1400px]">
+                <div className="relative w-full h-[440px] sm:h-[480px] flex items-center justify-center [transform-style:preserve-3d]">
+                  <AnimatePresence mode="wait">
+                    {activeFeatureStep === 0 && (
+                      <motion.div
+                        key="step-0"
+                        initial={{ opacity: 0, rotateX: 20, z: -80, scale: 0.9 }}
+                        animate={{ opacity: 1, rotateX: 0, z: 0, scale: 1 }}
+                        exit={{ opacity: 0, rotateX: -20, z: 80, scale: 0.9 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="w-full h-full"
+                      >
+                        <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 md:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
+                                <Zap size={18} className="text-white" />
+                              </div>
+                              <div>
+                                <div className="text-xs font-mono text-white">Global Telemetry Mesh</div>
+                                <div className="text-[11px] font-mono text-zinc-500">3 Regions Ingestion</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              1.4ms P99
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-3 my-3">
+                            {[
+                              { region: "US-EAST-1", latency: "1.2ms", load: "24%", status: "Nominal" },
+                              { region: "EU-CENTRAL-1", latency: "1.5ms", load: "31%", status: "Nominal" },
+                              { region: "AP-SOUTH-1", latency: "1.4ms", load: "19%", status: "Nominal" },
+                            ].map(node => (
+                              <div key={node.region} className="p-3 rounded-xl bg-black border border-white/[0.05] flex flex-col">
+                                <span className="text-[10px] font-mono text-zinc-500">{node.region}</span>
+                                <span className="text-sm font-semibold text-white mt-1">{node.latency}</span>
+                                <span className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1 font-mono">
+                                  <span className="w-1 h-1 rounded-full bg-emerald-400" />
+                                  {node.status}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="w-full rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden font-sans">
+                            <div className="h-8 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 text-[10px] font-mono text-zinc-500 tracking-wider uppercase">
+                              <div className="w-16">ID</div>
+                              <div className="flex-1">Task / Incident</div>
+                              <div className="w-20">State</div>
+                            </div>
+                            <div className="flex flex-col divide-y divide-white/[0.03]">
+                              {[
+                                { id: 'SYS-201', title: 'Verify TLS cert auto-renewal trigger', status: 'Active', color: 'text-zinc-300', dot: 'bg-zinc-400' },
+                                { id: 'SYS-202', title: 'Drain worker pod pool on us-east', status: 'Healthy', color: 'text-zinc-400', dot: 'bg-emerald-400' },
+                                { id: 'SYS-203', title: 'Cluster memory headroom rebalance', status: 'Queued', color: 'text-zinc-500', dot: 'bg-zinc-600' }
+                              ].map((issue, i) => (
+                                <div key={i} className="flex items-center px-4 py-2 text-[11px] bg-white/[0.01]">
+                                  <div className="w-16 text-zinc-500 font-mono text-[10px]">{issue.id}</div>
+                                  <div className="flex-1 text-zinc-300 truncate pr-3">{issue.title}</div>
+                                  <div className={`w-20 ${issue.color} flex items-center gap-1 text-[10px] font-mono`}>
+                                    <div className={`w-1.5 h-1.5 rounded-full ${issue.dot}`}></div>
+                                    {issue.status}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </TiltCard>
+                      </motion.div>
+                    )}
+
+                    {activeFeatureStep === 1 && (
+                      <motion.div
+                        key="step-1"
+                        initial={{ opacity: 0, rotateX: 20, z: -80, scale: 0.9 }}
+                        animate={{ opacity: 1, rotateX: 0, z: 0, scale: 1 }}
+                        exit={{ opacity: 0, rotateX: -20, z: 80, scale: 0.9 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="w-full h-full"
+                      >
+                        <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 md:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
+                                <GitBranch size={18} className="text-white" />
+                              </div>
+                              <div>
+                                <div className="text-xs font-mono text-white">Anomalous Commit Correlation</div>
+                                <div className="text-[11px] font-mono text-zinc-500">Git Blame & Stack Trace Engine</div>
+                              </div>
+                            </div>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/10 border border-red-500/20 text-red-400">
+                              Stack Anomaly Detected
+                            </span>
+                          </div>
+
+                          <div className="rounded-xl bg-black border border-white/[0.06] p-4 my-3 font-mono text-[12px] leading-relaxed">
+                            <div className="flex items-center justify-between text-zinc-500 border-b border-white/[0.05] pb-2 mb-2 text-[11px]">
+                              <span>File: src/network/websocket_handler.py</span>
+                              <span className="text-zinc-400">Commit: #8f2a1b9</span>
+                            </div>
+                            <div className="text-zinc-500">142 |  async def handle_connection(ws, client_id):</div>
+                            <div className="text-red-400 bg-red-500/[0.08] px-2 py-0.5 rounded -mx-2">
+                              143 -      connection_buffer.append(await ws.receive_bytes())  # UNBOUNDED
+                            </div>
+                            <div className="text-emerald-400 bg-emerald-500/[0.08] px-2 py-0.5 rounded -mx-2 mt-1">
+                              144 +      await ring_buffer.push_capped(ws, max_bytes=65536)  # FIXED
+                            </div>
+                            <div className="text-zinc-500 mt-2">145 |      await dispatch_to_mesh(client_id)</div>
+                          </div>
+
+                          <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center text-[10px] font-mono">SK</div>
+                              <span className="text-zinc-300">Author: Sarah K. (3h ago)</span>
+                            </div>
+                            <span className="text-zinc-400 font-mono text-[11px]">Memory Leak: +42MB/hr</span>
+                          </div>
+                        </TiltCard>
+                      </motion.div>
+                    )}
+
+                    {activeFeatureStep === 2 && (
+                      <motion.div
+                        key="step-2"
+                        initial={{ opacity: 0, rotateX: 20, z: -80, scale: 0.9 }}
+                        animate={{ opacity: 1, rotateX: 0, z: 0, scale: 1 }}
+                        exit={{ opacity: 0, rotateX: -20, z: 80, scale: 0.9 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="w-full h-full"
+                      >
+                        <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 md:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
+                                <Zap size={18} className="text-white" />
+                              </div>
+                              <div>
+                                <div className="text-xs font-mono text-white">AI Copilot Remediation</div>
+                                <div className="text-[11px] font-mono text-zinc-500">Autonomous Patch Generator</div>
+                              </div>
+                            </div>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                              PR Ready
+                            </span>
+                          </div>
+
+                          <div className="flex flex-col gap-3 my-3">
+                            <div className="flex gap-3">
+                              <div className="w-7 h-7 rounded-full bg-white/[0.08] text-white flex items-center justify-center shrink-0 border border-white/10">
+                                <Zap size={13} />
+                              </div>
+                              <div className="bg-zinc-900 border border-white/[0.06] rounded-xl rounded-tl-none p-3.5 text-[12px] text-zinc-300 leading-relaxed font-normal">
+                                Memory leak root-cause isolated in <code className="text-white font-mono bg-white/[0.08] px-1.5 py-0.5 rounded">websocket_handler.py</code>. Suggested ring-buffer purge patch verified against test suite.
+                              </div>
+                            </div>
+                            <div className="flex gap-3 self-end flex-row-reverse">
+                              <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 text-zinc-400 flex items-center justify-center shrink-0 text-[10px] font-mono">
+                                DEV
+                              </div>
+                              <div className="bg-white text-black rounded-xl rounded-tr-none p-3 text-[12px] leading-relaxed font-semibold">
+                                Approve patch and run automated staging check.
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="p-3 rounded-xl bg-black border border-white/[0.06] flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+                              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                              <span>Staging check: 14/14 tests passing</span>
+                            </div>
+                            <span className="text-[11px] font-mono text-emerald-400">0 Downtime</span>
+                          </div>
+                        </TiltCard>
+                      </motion.div>
+                    )}
+
+                    {activeFeatureStep === 3 && (
+                      <motion.div
+                        key="step-3"
+                        initial={{ opacity: 0, rotateX: 20, z: -80, scale: 0.9 }}
+                        animate={{ opacity: 1, rotateX: 0, z: 0, scale: 1 }}
+                        exit={{ opacity: 0, rotateX: -20, z: 80, scale: 0.9 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        className="w-full h-full"
+                      >
+                        <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 md:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
+                                <Lock size={18} className="text-white" />
+                              </div>
+                              <div>
+                                <div className="text-xs font-mono text-white">Multi-Region RBAC Scoping</div>
+                                <div className="text-[11px] font-mono text-zinc-500">Zero-Trust Environment Roles</div>
+                              </div>
+                            </div>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] border border-white/10 text-zinc-300">
+                              mTLS Enabled
+                            </span>
+                          </div>
+
+                          <div className="flex flex-col gap-2 my-3">
+                            {[
+                              { name: "John Doe", role: "Super Admin", scope: "Production / All Clusters", initials: "JD", badge: "bg-white text-black" },
+                              { name: "Alice Smith", role: "Site Reliability Operator", scope: "Staging & Canary Only", initials: "AS", badge: "bg-white/10 text-zinc-300" },
+                              { name: "Marcus Kim", role: "Security Compliance Auditor", scope: "Read-Only Telemetry", initials: "MK", badge: "bg-white/5 text-zinc-400" },
+                            ].map(user => (
+                              <div key={user.name} className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/[0.05]">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[11px] font-mono text-white">
+                                    {user.initials}
+                                  </div>
+                                  <div>
+                                    <div className="text-xs font-medium text-white">{user.name}</div>
+                                    <div className="text-[10px] text-zinc-500 font-mono">{user.scope}</div>
+                                  </div>
+                                </div>
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${user.badge}`}>{user.role}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                            <span>Cryptographic Session Hash</span>
+                            <span className="text-zinc-500">sha256:4f81...9c2e</span>
+                          </div>
+                        </TiltCard>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-                <h3 className="text-xl font-medium mb-2 text-white">Sub-second State Synchronization</h3>
-                <p className="text-zinc-400 mb-6 max-w-md text-sm leading-relaxed">Every event, status change, and deployment signal propagates across all active peers instantly via low-latency telemetry mesh.</p>
-                
-                {/* Telemetry Task Stream */}
-                <div className="w-full rounded-xl bg-black border border-white/[0.06] mt-auto flex flex-col relative overflow-hidden font-sans">
-                   <div className="h-9 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 text-[11px] font-mono text-zinc-500 tracking-wider uppercase">
-                     <div className="w-16">ID</div>
-                     <div className="flex-1">Task / Incident</div>
-                     <div className="w-24">State</div>
-                   </div>
-                   <div className="flex flex-col">
-                     {[
-                       { id: 'SYS-201', title: 'Verify TLS cert auto-renewal trigger', status: 'Active', color: 'text-zinc-300', dot: 'bg-zinc-400' },
-                       { id: 'SYS-202', title: 'Drain worker pod pool on us-east', status: 'Healthy', color: 'text-zinc-400', dot: 'bg-emerald-400' },
-                       { id: 'SYS-203', title: 'Cluster memory headroom rebalance', status: 'Queued', color: 'text-zinc-500', dot: 'bg-zinc-600' }
-                     ].map((issue, i) => (
-                       <div key={i} className="flex items-center px-4 py-2.5 border-b border-white/[0.03] text-[12px] bg-white/[0.01] hover:bg-white/[0.03] transition-colors cursor-pointer">
-                         <div className="w-16 text-zinc-500 font-mono text-[11px]">{issue.id}</div>
-                         <div className="flex-1 text-zinc-300 font-normal truncate pr-3">{issue.title}</div>
-                         <div className={`w-24 ${issue.color} flex items-center gap-1.5 text-[11px] font-mono`}>
-                           <div className={`w-1.5 h-1.5 rounded-full ${issue.dot}`}></div>
-                           {issue.status}
-                         </div>
-                       </div>
-                     ))}
-                   </div>
-                </div>
               </div>
-            </motion.div>
-
-            {/* Feature 2 - Command K */}
-            <motion.div variants={itemReveal} className="md:col-span-2 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col relative overflow-hidden group hover:border-white/15 transition-all">
-              <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4">
-                <Terminal size={18} className="text-zinc-200" />
-              </div>
-              <h3 className="text-xl font-medium mb-2 text-white">Command Palette</h3>
-              <p className="text-zinc-400 mb-6 text-sm leading-relaxed">Direct keyboard access to all resources, apps, logs, and services with fuzzy search.</p>
-              <div className="mt-auto h-40 rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden relative font-sans">
-                 <div className="h-10 border-b border-white/[0.06] flex items-center px-3 gap-2 bg-[#0c0e12]">
-                   <span className="text-zinc-500"><Command size={13} /></span>
-                   <span className="text-zinc-300 text-[12px] font-mono">Jump to service...</span>
-                 </div>
-                 <div className="flex-1 p-2 flex flex-col gap-1">
-                   <div className="px-2 py-1 text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Quick Actions</div>
-                   <div className="px-2.5 py-1.5 bg-white/[0.06] rounded-md flex items-center justify-between text-[12px]">
-                     <span className="text-white font-normal">Inspect active trace</span>
-                     <span className="text-zinc-400 font-mono text-[10px] bg-white/[0.06] px-1.5 py-0.5 rounded">T</span>
-                   </div>
-                   <div className="px-2.5 py-1.5 text-zinc-400 flex items-center justify-between text-[12px]">
-                     <span className="font-normal">Tail gateway logs</span>
-                     <span className="text-zinc-500 font-mono text-[10px] bg-white/[0.03] px-1.5 py-0.5 rounded">L</span>
-                   </div>
-                 </div>
-                 <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
-              </div>
-            </motion.div>
-
-            {/* Feature 3 - RBAC */}
-            <motion.div variants={itemReveal} className="md:col-span-2 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col relative overflow-hidden group hover:border-white/15 transition-all">
-              <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4">
-                <Lock size={18} className="text-zinc-200" />
-              </div>
-              <h3 className="text-xl font-medium mb-2 text-white">Granular Access Control</h3>
-              <p className="text-zinc-400 mb-6 text-sm leading-relaxed">Role-based scoping for multi-environment safety across dev, staging, and production.</p>
-              
-              <div className="mt-auto rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden p-2.5 gap-1.5 font-sans">
-                 <div className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.02] transition-colors cursor-pointer">
-                   <div className="flex items-center gap-3">
-                     <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] font-mono text-zinc-200">JD</div>
-                     <span className="text-zinc-200 text-[13px] font-medium">John Doe</span>
-                   </div>
-                   <span className="text-zinc-400 bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 rounded-md text-[10px] font-mono">Admin</span>
-                 </div>
-                 <div className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.02] transition-colors cursor-pointer">
-                   <div className="flex items-center gap-3">
-                     <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] font-mono text-zinc-300">AS</div>
-                     <span className="text-zinc-200 text-[13px] font-medium">Alice Smith</span>
-                   </div>
-                   <span className="text-zinc-500 bg-white/[0.03] border border-white/[0.04] px-2 py-0.5 rounded-md text-[10px] font-mono">Operator</span>
-                 </div>
-                 <div className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.02] transition-colors cursor-pointer">
-                   <div className="flex items-center gap-3">
-                     <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] font-mono text-zinc-400">MK</div>
-                     <span className="text-zinc-300 text-[13px] font-medium">Marcus Kim</span>
-                   </div>
-                   <span className="text-zinc-500 bg-white/[0.03] border border-white/[0.04] px-2 py-0.5 rounded-md text-[10px] font-mono">Auditor</span>
-                 </div>
-              </div>
-            </motion.div>
-
-            {/* Feature 4 - AI Copilot */}
-            <motion.div variants={itemReveal} className="md:col-span-4 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col relative overflow-hidden group hover:border-white/15 transition-all">
-              <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4">
-                <GitBranch size={18} className="text-zinc-200" />
-              </div>
-              <h3 className="text-xl font-medium mb-2 text-white">Root-Cause Deductions</h3>
-              <p className="text-zinc-400 mb-6 max-w-md text-sm leading-relaxed">Automated telemetry analysis matches anomalous stack traces directly to offending Git commits.</p>
-              
-              <div className="w-full rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden p-5 font-sans mt-auto">
-                 <div className="flex gap-3 mb-4">
-                   <div className="w-7 h-7 rounded-full bg-white/[0.08] text-zinc-200 flex items-center justify-center shrink-0 border border-white/10">
-                     <Zap size={13} />
-                   </div>
-                   <div className="bg-zinc-900 border border-white/[0.06] rounded-xl rounded-tl-none p-3.5 text-[13px] text-zinc-300 max-w-[85%] leading-relaxed font-normal">
-                     Memory leak footprint in <code className="text-zinc-200 font-mono bg-white/[0.06] px-1.5 py-0.5 rounded">websocket_handler.py</code>. Suggested buffer purge patch ready.
-                   </div>
-                 </div>
-                 <div className="flex gap-3 self-end flex-row-reverse">
-                   <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 text-zinc-400 flex items-center justify-center shrink-0 text-[10px] font-mono">
-                     DEV
-                   </div>
-                   <div className="bg-white text-black rounded-xl rounded-tr-none p-3 text-[13px] max-w-[85%] leading-relaxed font-medium">
-                     Approve patch and run automated staging check.
-                   </div>
-                 </div>
-              </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* ═══════════════════ AGENT INTEGRATION ═══════════════════ */}
         <motion.section
@@ -926,46 +1241,48 @@ export default function LandingPage() {
             <p className="text-zinc-400 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">Connect any Python, Node, or Go service with our lightweight SDK. Sub-millisecond latency with end-to-end telemetry encryption.</p>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-stretch gap-6">
+          <div className="flex flex-col lg:flex-row items-stretch gap-6 [perspective:1400px]">
             {/* Architecture Diagram */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1 rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col justify-center items-center relative overflow-hidden"
+              className="flex-1"
             >
-              {/* Subtle architectural ambient background */}
-              <div className="absolute inset-0 pointer-events-none opacity-[0.03] select-none [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
-              <div className="absolute w-72 h-72 rounded-full bg-white/[0.02] blur-3xl pointer-events-none" />
+              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col justify-center items-center relative overflow-hidden">
+                {/* Subtle architectural ambient background */}
+                <div className="absolute inset-0 pointer-events-none opacity-[0.03] select-none [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+                <div className="absolute w-72 h-72 rounded-full bg-white/[0.02] blur-3xl pointer-events-none" />
 
-              <div className="flex items-center justify-between w-full max-w-md relative z-10 py-8">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="w-16 h-16 rounded-2xl bg-black border border-white/10 flex items-center justify-center shadow-md">
-                    <Server size={22} className="text-zinc-400" />
+                <div className="flex items-center justify-between w-full max-w-md relative z-10 py-8">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-16 h-16 rounded-2xl bg-black border border-white/10 flex items-center justify-center shadow-md">
+                      <Server size={22} className="text-zinc-400" />
+                    </div>
+                    <span className="text-xs font-mono text-zinc-400">Target Stack</span>
                   </div>
-                  <span className="text-xs font-mono text-zinc-400">Target Stack</span>
-                </div>
-                <div className="flex-1 flex items-center justify-center mx-6">
-                  <div className="relative w-full">
-                    <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-zinc-700 via-white/30 to-zinc-700"></div>
-                    <motion.div
-                      animate={{ x: ["0%", "100%"] }}
-                      transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
-                      className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-                    />
+                  <div className="flex-1 flex items-center justify-center mx-6">
+                    <div className="relative w-full">
+                      <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-zinc-700 via-white/30 to-zinc-700"></div>
+                      <motion.div
+                        animate={{ x: ["0%", "100%"] }}
+                        transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+                        className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-16 h-16 rounded-2xl bg-black border border-white/15 flex items-center justify-center shadow-md">
+                      <Zap size={22} className="text-white" />
+                    </div>
+                    <span className="text-xs font-mono text-white">BREXAL API</span>
                   </div>
                 </div>
-                <div className="flex flex-col items-center gap-3">
-                  <div className="w-16 h-16 rounded-2xl bg-black border border-white/15 flex items-center justify-center shadow-md">
-                    <Zap size={22} className="text-white" />
-                  </div>
-                  <span className="text-xs font-mono text-white">BREXAL API</span>
+                <div className="mt-4 text-center relative z-10">
+                  <div className="text-[12px] font-mono text-zinc-500 uppercase tracking-wider">mTLS Encrypted • eBPF Fast • Zero Downtime</div>
                 </div>
-              </div>
-              <div className="mt-4 text-center relative z-10">
-                <div className="text-[12px] font-mono text-zinc-500 uppercase tracking-wider">mTLS Encrypted • eBPF Fast • Zero Downtime</div>
-              </div>
+              </TiltCard>
             </motion.div>
 
             {/* Terminal */}
@@ -974,36 +1291,38 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="flex-1 rounded-2xl bg-[#090b0e] border border-white/[0.06] overflow-hidden flex flex-col"
+              className="flex-1"
             >
-              <div className="h-10 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 shrink-0">
-                <div className="flex gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] overflow-hidden flex flex-col">
+                <div className="h-10 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 shrink-0">
+                  <div className="flex gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                  </div>
+                  <span className="text-zinc-500 text-[11px] font-mono ml-2">bash — 80x24</span>
                 </div>
-                <span className="text-zinc-500 text-[11px] font-mono ml-2">bash — 80x24</span>
-              </div>
-              <div className="flex-1 p-6 font-mono text-[13px] leading-relaxed bg-black">
-                <div className="text-zinc-400">
-                  <span className="text-zinc-600">$</span> npm install @brexal/sdk
+                <div className="flex-1 p-6 font-mono text-[13px] leading-relaxed bg-black">
+                  <div className="text-zinc-400">
+                    <span className="text-zinc-600">$</span> npm install @brexal/sdk
+                  </div>
+                  <div className="text-zinc-600 mt-1.5">✓ SDK linked (0.2s)</div>
+                  <div className="text-zinc-400 mt-4">
+                    <span className="text-zinc-600">$</span> brexal init --auto
+                  </div>
+                  <div className="mt-2 text-zinc-300">
+                    <span className="text-zinc-500">→</span> Framework detected: <span className="text-white">Next.js 16 (App Router)</span>
+                  </div>
+                  <div className="mt-1 text-zinc-300">
+                    <span className="text-zinc-500">→</span> Telemetry ingestion: <span className="text-emerald-400">Active</span>
+                  </div>
+                  <div className="mt-1 text-zinc-300">
+                    <span className="text-zinc-500">→</span> Handshake latency: <span className="text-white">8.4ms</span>
+                  </div>
+                  <div className="mt-4 text-emerald-400">✓ Ready. All runtime telemetry streaming to BREXAL.</div>
+                  <div className="mt-4 inline-block w-2 h-4 bg-white/60 animate-pulse"></div>
                 </div>
-                <div className="text-zinc-600 mt-1.5">✓ SDK linked (0.2s)</div>
-                <div className="text-zinc-400 mt-4">
-                  <span className="text-zinc-600">$</span> brexal init --auto
-                </div>
-                <div className="mt-2 text-zinc-300">
-                  <span className="text-zinc-500">→</span> Framework detected: <span className="text-white">Next.js 16 (App Router)</span>
-                </div>
-                <div className="mt-1 text-zinc-300">
-                  <span className="text-zinc-500">→</span> Telemetry ingestion: <span className="text-emerald-400">Active</span>
-                </div>
-                <div className="mt-1 text-zinc-300">
-                  <span className="text-zinc-500">→</span> Handshake latency: <span className="text-white">8.4ms</span>
-                </div>
-                <div className="mt-4 text-emerald-400">✓ Ready. All runtime telemetry streaming to BREXAL.</div>
-                <div className="mt-4 inline-block w-2 h-4 bg-white/60 animate-pulse"></div>
-              </div>
+              </TiltCard>
             </motion.div>
           </div>
         </motion.section>
@@ -1081,73 +1400,79 @@ export default function LandingPage() {
             <p className="text-base sm:text-lg text-zinc-400 font-normal max-w-2xl leading-relaxed">Start on the free starter tier. Expand as your engineering throughput multiplies.</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 [perspective:1200px]">
             {/* Starter Plan */}
-            <motion.div variants={itemReveal} className="rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col hover:border-white/15 transition-all">
-              <h3 className="text-lg font-medium mb-1 text-white">Starter</h3>
-              <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Ideal for independent engineers and early prototypes.</p>
-              <div className="mb-8">
-                <span className="text-4xl font-semibold text-white tracking-tight">$0</span>
-                <span className="text-zinc-500 font-normal text-sm"> / month</span>
-              </div>
-              <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8">
-                Start Free
-              </Link>
-              <div className="flex flex-col gap-3.5 mt-auto">
-                <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">Tier Capabilities</div>
-                {["2 Monitored Services", "15m Synthetic Probes", "Email & Webhook Alerts", "3 Workspace Seats", "Basic Issue Board"].map(f => (
-                  <div key={f} className="flex items-center gap-2.5 text-[13px] text-zinc-300">
-                    <Check size={14} className="text-zinc-400" /> {f}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Pro Plan */}
-            <motion.div variants={itemReveal} className="rounded-2xl bg-[#0c0e12] border border-white/20 p-8 flex flex-col relative shadow-[0_12px_40px_rgba(0,0,0,0.7)] hover:border-white/30 transition-all">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-mono tracking-wider uppercase px-3.5 py-0.5 rounded-full font-semibold shadow-sm">
-                Most Deployed
-              </div>
-              <div className="relative z-10 flex flex-col h-full">
-                <h3 className="text-lg font-medium mb-1 text-white">Pro Platform</h3>
-                <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">For high-velocity startups requiring continuous telemetry & root-cause deduction.</p>
+            <motion.div variants={itemReveal} className="h-full">
+              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col hover:border-white/15 transition-all">
+                <h3 className="text-lg font-medium mb-1 text-white">Starter</h3>
+                <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Ideal for independent engineers and early prototypes.</p>
                 <div className="mb-8">
-                  <span className="text-4xl font-semibold text-white tracking-tight">$49</span>
-                  <span className="text-zinc-400 font-normal text-sm"> / mo + $10/seat</span>
+                  <span className="text-4xl font-semibold text-white tracking-tight">$0</span>
+                  <span className="text-zinc-500 font-normal text-sm"> / month</span>
                 </div>
-                <Link href="/register" className="w-full bg-white text-black px-4 py-2.5 rounded-full font-medium hover:bg-zinc-200 transition-colors text-center text-sm mb-8 shadow-sm">
-                  Deploy Pro Workspace
+                <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8 block">
+                  Start Free
                 </Link>
                 <div className="flex flex-col gap-3.5 mt-auto">
-                  <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-400">Everything in Starter, plus</div>
-                  {["10 Monitored Services", "1m Probing Frequency", "WhatsApp, Slack, Discord Alerts", "Automated Root Cause AI", "30-Day Metric Retention"].map(f => (
-                    <div key={f} className="flex items-center gap-2.5 text-[13px] text-white">
-                      <Check size={14} className="text-white" /> {f}
+                  <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">Tier Capabilities</div>
+                  {["2 Monitored Services", "15m Synthetic Probes", "Email & Webhook Alerts", "3 Workspace Seats", "Basic Issue Board"].map(f => (
+                    <div key={f} className="flex items-center gap-2.5 text-[13px] text-zinc-300">
+                      <Check size={14} className="text-zinc-400" /> {f}
                     </div>
                   ))}
                 </div>
-              </div>
+              </TiltCard>
+            </motion.div>
+
+            {/* Pro Plan */}
+            <motion.div variants={itemReveal} className="h-full">
+              <TiltCard className="h-full rounded-2xl bg-[#0c0e12] border border-white/20 p-8 flex flex-col relative shadow-[0_12px_40px_rgba(0,0,0,0.7)] hover:border-white/30 transition-all">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-mono tracking-wider uppercase px-3.5 py-0.5 rounded-full font-semibold shadow-sm z-20">
+                  Most Deployed
+                </div>
+                <div className="relative z-10 flex flex-col h-full">
+                  <h3 className="text-lg font-medium mb-1 text-white">Pro Platform</h3>
+                  <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">For high-velocity startups requiring continuous telemetry & root-cause deduction.</p>
+                  <div className="mb-8">
+                    <span className="text-4xl font-semibold text-white tracking-tight">$49</span>
+                    <span className="text-zinc-400 font-normal text-sm"> / mo + $10/seat</span>
+                  </div>
+                  <Link href="/register" className="w-full bg-white text-black px-4 py-2.5 rounded-full font-medium hover:bg-zinc-200 transition-colors text-center text-sm mb-8 shadow-sm block">
+                    Deploy Pro Workspace
+                  </Link>
+                  <div className="flex flex-col gap-3.5 mt-auto">
+                    <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-400">Everything in Starter, plus</div>
+                    {["10 Monitored Services", "1m Probing Frequency", "WhatsApp, Slack, Discord Alerts", "Automated Root Cause AI", "30-Day Metric Retention"].map(f => (
+                      <div key={f} className="flex items-center gap-2.5 text-[13px] text-white">
+                        <Check size={14} className="text-white" /> {f}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </TiltCard>
             </motion.div>
 
             {/* Enterprise Plan */}
-            <motion.div variants={itemReveal} className="rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col hover:border-white/15 transition-all">
-              <h3 className="text-lg font-medium mb-1 text-white">Enterprise</h3>
-              <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Dedicated VPC peering, compliance guarantees, and high-volume workloads.</p>
-              <div className="mb-8">
-                <span className="text-4xl font-semibold text-white tracking-tight">$299+</span>
-                <span className="text-zinc-500 font-normal text-sm"> / month</span>
-              </div>
-              <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8">
-                Inquire With Sales
-              </Link>
-              <div className="flex flex-col gap-3.5 mt-auto">
-                <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">Everything in Pro, plus</div>
-                {["Predictive Failure Warnings", "1-Year Full Trace Retention", "SAML SSO & Audit Logs", "24/7 Dedicated SRE Line", "Custom SLA & BAA"].map(f => (
-                  <div key={f} className="flex items-center gap-2.5 text-[13px] text-zinc-300">
-                    <Check size={14} className="text-zinc-400" /> {f}
-                  </div>
-                ))}
-              </div>
+            <motion.div variants={itemReveal} className="h-full">
+              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col hover:border-white/15 transition-all">
+                <h3 className="text-lg font-medium mb-1 text-white">Enterprise</h3>
+                <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Dedicated VPC peering, compliance guarantees, and high-volume workloads.</p>
+                <div className="mb-8">
+                  <span className="text-4xl font-semibold text-white tracking-tight">$299+</span>
+                  <span className="text-zinc-500 font-normal text-sm"> / month</span>
+                </div>
+                <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8 block">
+                  Inquire With Sales
+                </Link>
+                <div className="flex flex-col gap-3.5 mt-auto">
+                  <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">Everything in Pro, plus</div>
+                  {["Predictive Failure Warnings", "1-Year Full Trace Retention", "SAML SSO & Audit Logs", "24/7 Dedicated SRE Line", "Custom SLA & BAA"].map(f => (
+                    <div key={f} className="flex items-center gap-2.5 text-[13px] text-zinc-300">
+                      <Check size={14} className="text-zinc-400" /> {f}
+                    </div>
+                  ))}
+                </div>
+              </TiltCard>
             </motion.div>
           </div>
         </motion.section>
