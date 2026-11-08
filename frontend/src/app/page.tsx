@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Activity,
   AlertTriangle,
   ArrowRight,
   Check,
-  ChevronDown,
   ChevronRight,
   Cpu,
   Database,
@@ -32,7 +31,7 @@ import {
 import { Logo } from "@/components/Logo";
 
 /* ═══════════════════════════════════════════════════════════════
-   TYPES & CONSTANTS
+   TYPES & SAMPLE TELEMETRY
    ═══════════════════════════════════════════════════════════════ */
 
 interface ServiceHealth {
@@ -55,7 +54,7 @@ const SAMPLE_SERVICES: ServiceHealth[] = [
 ];
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 1: MINIMAL ENTERPRISE NAVIGATION
+   SECTION 1: MINIMAL STRIPE-STYLE NAVIGATION
    ═══════════════════════════════════════════════════════════════ */
 function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -72,48 +71,48 @@ function Navigation() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         scrolled
-          ? "bg-[#050505]/85 backdrop-blur-md border-b border-[#202020] py-3.5"
+          ? "bg-white/85 backdrop-blur-md border-b border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] py-3.5"
           : "bg-transparent border-b border-transparent py-5"
       }`}
     >
       <div className="max-w-[1360px] mx-auto px-6 sm:px-10 flex items-center justify-between">
         {/* Brand Mark + Minimal Symbol */}
-        <Link href="/" className="flex items-center gap-3 group focus:outline-none focus:ring-1 focus:ring-[#3985FF]">
-          <div className="w-8 h-8 rounded-lg bg-[#101010] border border-[#202020] flex items-center justify-center text-[#3985FF] group-hover:border-[#3985FF]/50 transition-colors">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <Link href="/" className="flex items-center gap-3 group focus:outline-none">
+          <div className="w-8 h-8 rounded-lg bg-[#0A2540] flex items-center justify-center text-white shadow-sm group-hover:bg-[#635BFF] transition-colors">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2L2 7l10 5 10-5-10-5z" />
               <path d="M2 17l10 5 10-5" />
               <path d="M2 12l10 5 10-5" />
             </svg>
           </div>
           <div className="flex flex-col">
-            <Logo className="h-4 text-[#F5F5F5] group-hover:text-white transition-colors" />
-            <span className="text-[9px] font-mono tracking-widest text-[#929292] uppercase">Bharti Nexus</span>
+            <Logo className="h-4 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
+            <span className="text-[9px] font-mono tracking-widest text-[#627D98] uppercase">Bharti Nexus</span>
           </div>
         </Link>
 
         {/* Center Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-[13px] font-medium text-[#929292]">
-          <Link href="#platform" className="hover:text-[#F5F5F5] transition-colors">Platform</Link>
-          <Link href="#solutions" className="hover:text-[#F5F5F5] transition-colors">Solutions</Link>
-          <Link href="#features" className="hover:text-[#F5F5F5] transition-colors">Features</Link>
-          <Link href="#incident-response" className="hover:text-[#F5F5F5] transition-colors">Incident response</Link>
-          <Link href="#stack" className="hover:text-[#F5F5F5] transition-colors">Stack</Link>
+        <nav className="hidden md:flex items-center gap-8 text-[13.5px] font-semibold text-[#425466]">
+          <Link href="#platform" className="hover:text-[#0A2540] transition-colors">Platform</Link>
+          <Link href="#solutions" className="hover:text-[#0A2540] transition-colors">Solutions</Link>
+          <Link href="#features" className="hover:text-[#0A2540] transition-colors">Features</Link>
+          <Link href="#incident-response" className="hover:text-[#0A2540] transition-colors">Incident response</Link>
+          <Link href="#stack" className="hover:text-[#0A2540] transition-colors">Stack</Link>
         </nav>
 
         {/* Right Action CTAs */}
         <div className="flex items-center gap-4">
           <Link
             href="/login"
-            className="text-[13px] font-medium text-[#929292] hover:text-[#F5F5F5] transition-colors px-2 py-1"
+            className="text-[13.5px] font-semibold text-[#425466] hover:text-[#0A2540] transition-colors px-2 py-1"
           >
             Sign in
           </Link>
           <Link
             href="/register"
-            className="px-4 py-2 rounded-lg bg-[#F5F5F5] text-[#050505] text-[13px] font-semibold hover:bg-white transition-all shadow-[0_1px_2px_rgba(0,0,0,0.5)] focus:outline-none focus:ring-2 focus:ring-[#3985FF]"
+            className="px-4 py-2 rounded-full bg-[#635BFF] text-white text-[13px] font-semibold hover:bg-[#5349e0] transition-all shadow-[0_2px_8px_rgba(99,91,255,0.25)] hover:shadow-[0_4px_16px_rgba(99,91,255,0.35)] focus:outline-none focus:ring-2 focus:ring-[#635BFF]"
           >
-            Request access
+            Start now <span className="ml-0.5">→</span>
           </Link>
         </div>
       </div>
@@ -122,7 +121,7 @@ function Navigation() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 2: ASYMMETRIC HERO COMPOSITION (OPTION 3 TOPOLOGY)
+   SECTION 2: STRIPE-INSPIRED HERO WITH NATURE HORIZON
    ═══════════════════════════════════════════════════════════════ */
 function HeroSection() {
   const [selectedCluster, setSelectedCluster] = useState<"us-east-1" | "eu-central-1" | "ap-south-1">("us-east-1");
@@ -148,116 +147,111 @@ function HeroSection() {
   const active = clusterData[selectedCluster];
 
   return (
-    <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 px-6 sm:px-10 overflow-hidden border-b border-[#202020] bg-[#050505]">
+    <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 px-6 sm:px-10 overflow-hidden bg-white">
       
-      {/* ── Option 3: 3D Topological Wireframe Background Image (Unobstructed) ── */}
+      {/* ── Majestic Nature Landscape Background (Stripe / Apple Aesthetic) ── */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img
-          src="/backgrounds/hero-mesh-contour.jpg"
-          alt="3D Topological Telemetry Mesh"
-          className="w-full h-full object-cover object-right opacity-80 mix-blend-screen scale-100"
+          src="/backgrounds/nature-horizon.jpg"
+          alt="Majestic Alpine Horizon"
+          className="w-full h-full object-cover object-center opacity-70 scale-100"
         />
         
-        {/* Layer 1: Top Fade (Keeps minimal navbar 100% clean and transparent) */}
-        <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#050505] via-[#050505]/70 to-transparent" />
-        
-        {/* Layer 2: Left Text Contrast Backing (Restricted to text side so right 3D art is completely visible) */}
-        <div className="absolute inset-y-0 left-0 w-full lg:w-1/2 bg-gradient-to-r from-[#050505] via-[#050505]/90 to-transparent" />
-        
-        {/* Layer 3: Bottom Fade */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent" />
+        {/* Soft White Gradient Masks for Perfect Readability & Seamless Transitions */}
+        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-white via-white/80 to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-white via-white/90 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white via-white/90 to-transparent" />
       </div>
 
       <div className="relative z-10 max-w-[1360px] mx-auto">
         
-        {/* HERO INTRO GRID: Headline on Left, 3D Mesh Artwork fully revealed on Right */}
+        {/* HERO INTRO GRID: Headline on Left, Atmospheric Horizon breathing on Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[440px] md:min-h-[480px]">
           
           {/* LEFT COLUMN: Editorial Headline & Value (8 cols) */}
           <div className="lg:col-span-8 flex flex-col items-start text-left">
             
-            {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#101010]/90 backdrop-blur-sm border border-[#202020] text-[#3985FF] font-mono text-[11px] font-medium tracking-wider mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#3985FF] animate-pulse" />
-              TOPOLOGICAL OBSERVABILITY • MULTI-REGION MESH
+            {/* Eyebrow Badge in Stripe Indigo */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#635BFF]/10 border border-[#635BFF]/20 text-[#635BFF] font-mono text-[11px] font-semibold tracking-wider mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#635BFF] animate-pulse" />
+              FINANCIAL-GRADE OBSERVABILITY INFRASTRUCTURE
             </div>
 
-            {/* Main Headline (Sentence Case, Balanced) */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-[#F5F5F5] leading-[1.06] mb-6 font-display max-w-3xl">
+            {/* Main Headline (Sentence Case, Balanced, Deep Navy) */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-[#0A2540] leading-[1.05] mb-6 font-display max-w-3xl">
               See the failure before it becomes an incident.
             </h1>
 
             {/* Supporting Description */}
-            <p className="text-lg sm:text-xl text-[#929292] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
+            <p className="text-lg sm:text-xl text-[#425466] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
               Monitor every service, trace every request, and identify the root cause before downtime impacts your users.
             </p>
 
-            {/* Actions */}
+            {/* Stripe-style CTAs */}
             <div className="flex flex-wrap items-center gap-4 mb-8 w-full sm:w-auto">
               <Link
                 href="/register"
-                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#3985FF] text-white text-[14px] font-semibold hover:bg-[#2B75F0] transition-all flex items-center justify-center gap-2 shadow-[0_2px_16px_rgba(57,133,255,0.35)] hover:shadow-[0_4px_24px_rgba(57,133,255,0.5)] focus:ring-2 focus:ring-[#3985FF]"
+                className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#635BFF] text-white text-[14px] font-semibold hover:bg-[#5349e0] transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(99,91,255,0.3)] hover:shadow-[0_6px_20px_rgba(99,91,255,0.4)] focus:ring-2 focus:ring-[#635BFF]"
               >
                 Request early access
                 <ArrowRight size={15} />
               </Link>
               <a
                 href="#platform"
-                className="w-full sm:w-auto px-5 py-3 rounded-lg bg-[#101010]/80 backdrop-blur-sm border border-[#202020] text-[#F5F5F5] text-[14px] font-medium hover:border-[#3985FF]/40 hover:bg-[#151515] transition-colors flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6 py-3 rounded-full bg-white text-[#0A2540] border border-slate-200/90 text-[14px] font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center gap-2"
               >
                 Explore the platform
               </a>
             </div>
 
             {/* Technical Metadata Line */}
-            <div className="pt-5 border-t border-[#202020] w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#929292]">
-              <span className="flex items-center gap-1.5 text-[#36D399]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#36D399] animate-pulse" />
+            <div className="pt-5 border-t border-slate-200/80 w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#627D98]">
+              <span className="flex items-center gap-1.5 text-[#059669] font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
                 Mesh latency: {active.ping}
               </span>
-              <span className="text-[#202020]">/</span>
+              <span className="text-slate-300">/</span>
               <span>Application monitoring</span>
-              <span className="text-[#202020]">/</span>
+              <span className="text-slate-300">/</span>
               <span>Infrastructure intelligence</span>
-              <span className="text-[#202020]">/</span>
+              <span className="text-slate-300">/</span>
               <span>AI incident response</span>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Completely Open & Clear for the 3D Topological Wireframe */}
+          {/* RIGHT COLUMN: Serene Nature Atmospheric Callout Badge */}
           <div className="lg:col-span-4 hidden lg:flex flex-col items-end justify-center pointer-events-none">
-            {/* Minimal Translucent Coordinate Markers that complement the 3D Mesh */}
-            <div className="flex flex-col gap-3 font-mono text-[11px] items-end">
-              <div className="px-3 py-1.5 rounded-md bg-[#0A0A0A]/60 backdrop-blur-md border border-[#202020]/60 text-[#3985FF] flex items-center gap-2 shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3985FF] animate-pulse" />
-                <span>3D CONTOUR MESH // ELEVATION ACTIVE</span>
+            <div className="flex flex-col gap-2 font-mono text-[11px] items-end">
+              <div className="px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 text-[#0A2540] flex items-center gap-2 shadow-sm font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
+                <span>GLOBAL TELEMETRY HORIZON // ACTIVE</span>
               </div>
-              <div className="px-3 py-1 rounded-md bg-[#0A0A0A]/40 backdrop-blur-sm border border-[#202020]/40 text-[#929292] text-[10px]">
-                COORD: 37.7749° N, 122.4194° W
+              <div className="px-3 py-1 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200/50 text-[#627D98] text-[10px]">
+                COORD: 37.7749° N, 122.4194° W • 99.98% SLA
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* ── SHIFTED TELEMETRY CONSOLE: Positioned below hero text so the 3D background art above is 100% visible ── */}
-        <div className="mt-16 md:mt-24 w-full rounded-xl bg-[#0A0A0A]/90 backdrop-blur-md border border-[#202020] p-5 shadow-2xl hover:border-[#3985FF]/30 transition-colors">
+        {/* ── STRIPE-STYLE FLOATING TELEMETRY COCKPIT (Clean White & Soft Shadows) ── */}
+        <div className="mt-16 md:mt-24 w-full rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-7 shadow-[0_20px_50px_-12px_rgba(50,50,93,0.12),0_10px_20px_-8px_rgba(0,0,0,0.06)] hover:border-slate-300 transition-all">
           
           {/* Console Header Bar */}
-          <div className="flex flex-wrap items-center justify-between pb-4 border-b border-[#202020] gap-3">
+          <div className="flex flex-wrap items-center justify-between pb-5 border-b border-slate-100 gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 font-mono text-[12px] text-[#F5F5F5] font-semibold">
-                <Radio size={14} className="text-[#36D399] animate-pulse" />
+              <div className="flex items-center gap-2 font-mono text-[12px] text-[#0A2540] font-bold">
+                <Radio size={14} className="text-[#059669] animate-pulse" />
                 <span>MULTI-REGION TELEMETRY CONSOLE</span>
               </div>
-              <span className="text-[#5E5E5E]">|</span>
-              <div className="flex items-center gap-1 bg-[#101010] p-1 rounded-md border border-[#202020] font-mono text-[11px]">
+              <span className="text-slate-300">|</span>
+              <div className="flex items-center gap-1.5 bg-[#F6F9FC] p-1 rounded-lg border border-slate-200/80 font-mono text-[11px]">
                 {(["us-east-1", "eu-central-1", "ap-south-1"] as const).map((reg) => (
                   <button
                     key={reg}
                     onClick={() => setSelectedCluster(reg)}
-                    className={`px-2.5 py-0.5 rounded transition-colors ${
-                      selectedCluster === reg ? "bg-[#3985FF] text-white font-medium shadow-sm" : "text-[#929292] hover:text-[#F5F5F5]"
+                    className={`px-3 py-1 rounded-md transition-all font-semibold ${
+                      selectedCluster === reg ? "bg-white text-[#0A2540] shadow-sm border border-slate-200/60" : "text-[#425466] hover:text-[#0A2540]"
                     }`}
                   >
                     {reg}
@@ -266,88 +260,88 @@ function HeroSection() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 font-mono text-[10.5px]">
-              <span className="px-2 py-0.5 rounded bg-[#36D399]/10 text-[#36D399] border border-[#36D399]/20 font-semibold">
+            <div className="flex items-center gap-2 font-mono text-[11px]">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#059669]/10 text-[#059669] border border-[#059669]/20 font-semibold">
                 STATUS: {active.status}
               </span>
-              <span className="text-[#5E5E5E]">•</span>
-              <span className="text-[#929292]">ILLUSTRATIVE TELEMETRY</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-[#627D98]">ILLUSTRATIVE TELEMETRY</span>
             </div>
           </div>
 
           {/* 3-Column Panoramic Breakdown */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-5">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-6">
             
-            {/* Col 1: Metrics (4 cols) */}
+            {/* Col 1: Key Metrics (4 cols) */}
             <div className="md:col-span-4 flex flex-col justify-between gap-3">
               <div className="grid grid-cols-3 gap-2">
-                <div className="p-3 rounded-lg bg-[#101010] border border-[#202020]">
-                  <span className="text-[10px] font-mono text-[#929292] block mb-1">P99 LATENCY</span>
-                  <span className="text-lg font-mono font-bold text-[#F5F5F5]">{liveP99}</span>
+                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <span className="text-[10px] font-mono text-[#627D98] block mb-1 uppercase font-semibold">P99 LATENCY</span>
+                  <span className="text-xl font-mono font-bold text-[#0A2540]">{liveP99}</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#101010] border border-[#202020]">
-                  <span className="text-[10px] font-mono text-[#929292] block mb-1">ERROR RATE</span>
-                  <span className="text-lg font-mono font-bold text-[#36D399]">{active.error}</span>
+                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <span className="text-[10px] font-mono text-[#627D98] block mb-1 uppercase font-semibold">ERROR RATE</span>
+                  <span className="text-xl font-mono font-bold text-[#059669]">{active.error}</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#101010] border border-[#202020]">
-                  <span className="text-[10px] font-mono text-[#929292] block mb-1">THROUGHPUT</span>
-                  <span className="text-lg font-mono font-bold text-[#3985FF]">
+                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <span className="text-[10px] font-mono text-[#627D98] block mb-1 uppercase font-semibold">THROUGHPUT</span>
+                  <span className="text-xl font-mono font-bold text-[#635BFF]">
                     {(packetTick / 1000).toFixed(1)}k/s
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] font-mono text-[#929292] p-2.5 rounded-lg bg-[#101010] border border-[#202020]">
-                <span className="flex items-center gap-1.5">
-                  <GitCommit size={13} className="text-[#3985FF]" />
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#425466] p-3 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                <span className="flex items-center gap-1.5 font-medium">
+                  <GitCommit size={13} className="text-[#635BFF]" />
                   v2.4.1 deployed 4m ago
                 </span>
-                <span className="text-[#36D399]">0 canary rollbacks</span>
+                <span className="text-[#059669] font-semibold">0 canary rollbacks</span>
               </div>
             </div>
 
             {/* Col 2: Topology Nodes List (4 cols) */}
-            <div className="md:col-span-4 p-3.5 rounded-lg bg-[#101010] border border-[#202020] flex flex-col justify-between">
-              <div className="flex items-center justify-between text-[11px] font-mono text-[#929292] mb-2">
+            <div className="md:col-span-4 p-4 rounded-xl bg-[#F6F9FC] border border-slate-200/80 flex flex-col justify-between">
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#425466] font-semibold mb-2">
                 <span>TOPOLOGY MESH ELEVATION</span>
-                <span className="text-[10px] text-[#5E5E5E]">6 ACTIVE NODES</span>
+                <span className="text-[10px] text-[#627D98]">6 ACTIVE NODES</span>
               </div>
-              <div className="space-y-1.5 font-mono text-[11.5px]">
-                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#36D399]" />
-                    <span className="text-[#F5F5F5]">api-edge-proxy</span>
+              <div className="space-y-2 font-mono text-[11.5px]">
+                <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-slate-200/80 shadow-xs">
+                  <div className="flex items-center gap-2 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#059669]" />
+                    <span className="text-[#0A2540]">api-edge-proxy</span>
                   </div>
-                  <span className="text-[10.5px] text-[#929292]">{active.ping} • {active.rps}</span>
+                  <span className="text-[10.5px] text-[#627D98]">{active.ping} • {active.rps}</span>
                 </div>
-                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#36D399]" />
-                    <span className="text-[#F5F5F5]">auth-service-v2</span>
+                <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-slate-200/80 shadow-xs">
+                  <div className="flex items-center gap-2 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#059669]" />
+                    <span className="text-[#0A2540]">auth-service-v2</span>
                   </div>
-                  <span className="text-[10.5px] text-[#929292]">3.4ms • 4.2k rps</span>
+                  <span className="text-[10.5px] text-[#627D98]">3.4ms • 4.2k rps</span>
                 </div>
-                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#FF5252]/30">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#F5B942] animate-pulse" />
-                    <span className="text-[#F5F5F5]">payment-worker-pool</span>
+                <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-amber-200 shadow-xs">
+                  <div className="flex items-center gap-2 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    <span className="text-[#0A2540]">payment-worker-pool</span>
                   </div>
-                  <span className="text-[10.5px] text-[#F5B942]">142ms • Degraded</span>
+                  <span className="text-[10.5px] text-amber-600 font-semibold">142ms • Degraded</span>
                 </div>
               </div>
             </div>
 
             {/* Col 3: AI Anomaly Detection Callout (4 cols) */}
-            <div className="md:col-span-4 p-3.5 rounded-lg bg-[#101010] border border-[#9B7BFF]/30 flex flex-col justify-between">
-              <div className="flex items-center gap-2 text-[#9B7BFF] font-mono text-[11px] font-semibold">
+            <div className="md:col-span-4 p-4 rounded-xl bg-[#F6F9FC] border border-[#635BFF]/30 flex flex-col justify-between">
+              <div className="flex items-center gap-2 text-[#635BFF] font-mono text-[11px] font-bold">
                 <Sparkles size={14} />
                 <span>AI ANOMALY DETECTION // MESH</span>
               </div>
-              <div className="my-2 text-[12px] font-mono text-[#F5F5F5] leading-snug">
-                Connection pool saturation on <code className="text-[#3985FF]">postgres-primary</code>
+              <div className="my-2 text-[12.5px] font-mono text-[#0A2540] font-medium leading-snug">
+                Connection pool saturation on <code className="text-[#635BFF] bg-white px-1.5 py-0.5 rounded border border-slate-200">postgres-primary</code>
               </div>
-              <div className="text-[10.5px] text-[#929292] font-mono pt-2 border-t border-[#202020]">
-                Correlated with commit sha:8f2a1b9 (payment retry loop)
+              <div className="text-[10.5px] text-[#627D98] font-mono pt-2 border-t border-slate-200/60">
+                Correlated with commit <span className="font-semibold text-[#0A2540]">sha:8f2a1b9</span> (payment retry loop)
               </div>
             </div>
 
@@ -361,69 +355,69 @@ function HeroSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 3: OPERATIONAL INTELLIGENCE (BENTO GRID)
+   SECTION 3: OPERATIONAL INTELLIGENCE (BENTO GRID - WHITE THEME)
    "Your infrastructure tells a story. Read every signal."
    ═══════════════════════════════════════════════════════════════ */
 function OperationalIntelligenceSection() {
   const [activeTraceStep, setActiveTraceStep] = useState<number>(2);
 
   return (
-    <section id="platform" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#0A0A0A]">
+    <section id="platform" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
       <div className="max-w-[1360px] mx-auto">
         {/* Editorial Section Header */}
         <div className="max-w-2xl mb-16 text-left">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#3985FF] font-mono text-[10.5px] tracking-wider uppercase mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#635BFF]/10 border border-[#635BFF]/20 text-[#635BFF] font-mono text-[11px] font-semibold tracking-wider uppercase mb-4">
             Unified Signal Correlation
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0A2540] leading-tight font-display mb-4">
             Your infrastructure tells a story. Read every signal.
           </h2>
-          <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed">
+          <p className="text-base sm:text-lg text-[#425466] font-normal leading-relaxed">
             Siloed tools blind your engineering team during critical outages. BREXAL continuously synthesizes metrics, distributed traces, system logs, and dependency maps into a single operational narrative.
           </p>
         </div>
 
         {/* Asymmetric Bento Layout (Unequal Dimensions) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           {/* BENTO BLOCK 1: Distributed Trace Waterfall (7 cols) */}
-          <div className="lg:col-span-7 rounded-xl bg-[#101010] border border-[#202020] p-6 flex flex-col justify-between">
+          <div className="lg:col-span-7 rounded-2xl bg-white border border-slate-200/80 p-7 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all">
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-[#202020] mb-4">
-                <div className="flex items-center gap-2">
-                  <Network size={16} className="text-[#3985FF]" />
-                  <span className="font-semibold text-sm text-[#F5F5F5]">Distributed Request Trace</span>
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <div className="flex items-center gap-2.5">
+                  <Network size={18} className="text-[#635BFF]" />
+                  <span className="font-bold text-sm text-[#0A2540]">Distributed Request Trace</span>
                 </div>
-                <span className="font-mono text-[11px] text-[#929292]">trace_id: 8f2a1b9c</span>
+                <span className="font-mono text-[11px] text-[#627D98] bg-[#F6F9FC] px-2 py-0.5 rounded border border-slate-200/60">trace_id: 8f2a1b9c</span>
               </div>
               
-              <p className="text-[13px] text-[#929292] mb-6">
+              <p className="text-[13.5px] text-[#425466] mb-6">
                 Inspect cross-boundary latencies from edge CDN ingress down to low-level PostgreSQL lock acquisitions.
               </p>
 
               {/* Trace Spans Waterfall */}
               <div className="space-y-3 font-mono text-[12px]">
                 {[
-                  { name: "api-gateway (HTTP POST /v1/checkout)", duration: "148ms", spanWidth: "100%", startOffset: "0%", color: "bg-[#3985FF]" },
-                  { name: "auth-verify (JWT validation)", duration: "4.2ms", spanWidth: "8%", startOffset: "2%", color: "bg-[#36D399]" },
-                  { name: "payment-worker (stripe_token_create)", duration: "128ms", spanWidth: "82%", startOffset: "12%", color: "bg-[#F5B942]" },
-                  { name: "db-pool (SELECT * FROM user_balances)", duration: "1.1ms", spanWidth: "3%", startOffset: "94%", color: "bg-[#36D399]" },
+                  { name: "api-gateway (HTTP POST /v1/checkout)", duration: "148ms", spanWidth: "100%", startOffset: "0%", color: "bg-[#635BFF]" },
+                  { name: "auth-verify (JWT validation)", duration: "4.2ms", spanWidth: "8%", startOffset: "2%", color: "bg-[#059669]" },
+                  { name: "payment-worker (stripe_token_create)", duration: "128ms", spanWidth: "82%", startOffset: "12%", color: "bg-amber-500" },
+                  { name: "db-pool (SELECT * FROM user_balances)", duration: "1.1ms", spanWidth: "3%", startOffset: "94%", color: "bg-[#059669]" },
                 ].map((span, idx) => (
                   <div 
                     key={idx}
                     onClick={() => setActiveTraceStep(idx)}
-                    className={`p-2.5 rounded-lg border transition-all cursor-pointer ${
+                    className={`p-3 rounded-xl border transition-all cursor-pointer ${
                       activeTraceStep === idx 
-                        ? "bg-[#151515] border-[#3985FF]/40" 
-                        : "bg-[#0A0A0A] border-[#202020] hover:border-[#2E2E2E]"
+                        ? "bg-[#F6F9FC] border-[#635BFF]/50 shadow-xs" 
+                        : "bg-white border-slate-200/70 hover:border-slate-300"
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[#F5F5F5]">{span.name}</span>
-                      <span className="text-[#929292] font-semibold">{span.duration}</span>
+                    <div className="flex items-center justify-between mb-1.5 font-medium">
+                      <span className="text-[#0A2540]">{span.name}</span>
+                      <span className="text-[#627D98] font-bold">{span.duration}</span>
                     </div>
                     {/* Visual Bar representation */}
-                    <div className="h-1.5 w-full bg-[#202020] rounded-full overflow-hidden relative">
+                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden relative">
                       <div 
                         className={`h-full rounded-full ${span.color}`}
                         style={{ width: span.spanWidth, marginLeft: span.startOffset }}
@@ -434,133 +428,133 @@ function OperationalIntelligenceSection() {
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[#202020] flex items-center justify-between text-[11px] font-mono text-[#929292]">
+            <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-[#627D98]">
               <span>Captured via OpenTelemetry SDK</span>
-              <span className="text-[#36D399]">100% span coverage</span>
+              <span className="text-[#059669] font-semibold">100% span coverage</span>
             </div>
           </div>
 
           {/* BENTO BLOCK 2: High-throughput eBPF Logs (5 cols) */}
-          <div className="lg:col-span-5 rounded-xl bg-[#101010] border border-[#202020] p-6 flex flex-col justify-between">
+          <div className="lg:col-span-5 rounded-2xl bg-white border border-slate-200/80 p-7 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all">
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-[#202020] mb-4">
-                <div className="flex items-center gap-2">
-                  <Terminal size={16} className="text-[#36D399]" />
-                  <span className="font-semibold text-sm text-[#F5F5F5]">Kernel-level eBPF Logs</span>
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <div className="flex items-center gap-2.5">
+                  <Terminal size={18} className="text-[#059669]" />
+                  <span className="font-bold text-sm text-[#0A2540]">Kernel-level eBPF Logs</span>
                 </div>
-                <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-[#36D399]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#36D399] animate-pulse" />
+                <span className="flex items-center gap-1.5 font-mono text-[11px] text-[#059669] font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
                   STREAMING
                 </span>
               </div>
 
-              <p className="text-[13px] text-[#929292] mb-4">
+              <p className="text-[13.5px] text-[#425466] mb-4">
                 Structured logs ingested at the network boundary without application bytecode overhead.
               </p>
 
               {/* Log Window */}
-              <div className="rounded-lg bg-[#050505] border border-[#202020] p-3 font-mono text-[11px] leading-relaxed space-y-2 text-[#929292]">
+              <div className="rounded-xl bg-[#0A2540] border border-slate-800 p-4 font-mono text-[11px] leading-relaxed space-y-2.5 text-slate-300 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <span className="text-[#36D399]">INFO</span>
-                  <span className="text-[#5E5E5E]">18:42:01</span>
-                  <span className="text-[#F5F5F5]">route_dispatch 200 OK 1.4ms</span>
+                  <span className="text-[#00D924] font-bold">INFO</span>
+                  <span className="text-slate-500">18:42:01</span>
+                  <span className="text-white">route_dispatch 200 OK 1.4ms</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#F5B942]">WARN</span>
-                  <span className="text-[#5E5E5E]">18:42:02</span>
-                  <span className="text-[#F5B942]">pool saturation: 48/50 active</span>
+                  <span className="text-amber-400 font-bold">WARN</span>
+                  <span className="text-slate-500">18:42:02</span>
+                  <span className="text-amber-300">pool saturation: 48/50 active</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#FF5252]">CRIT</span>
-                  <span className="text-[#5E5E5E]">18:42:03</span>
-                  <span className="text-[#FF5252]">socket timeout: payment_upstream</span>
+                  <span className="text-red-400 font-bold">CRIT</span>
+                  <span className="text-slate-500">18:42:03</span>
+                  <span className="text-red-300">socket timeout: payment_upstream</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#3985FF]">AUTO</span>
-                  <span className="text-[#5E5E5E]">18:42:04</span>
-                  <span className="text-[#9B7BFF]">mitigation: spawned +2 replicas</span>
+                  <span className="text-[#00D4FF] font-bold">AUTO</span>
+                  <span className="text-slate-500">18:42:04</span>
+                  <span className="text-slate-200">mitigation: spawned +2 replicas</span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[#202020] text-[11px] font-mono text-[#929292] flex items-center justify-between">
-              <span>Ingestion throughput: 42.8k logs/sec</span>
-              <span className="text-[#3985FF]">Zero kernel drops</span>
+            <div className="mt-6 pt-4 border-t border-slate-100 text-[11px] font-mono text-[#627D98] flex items-center justify-between">
+              <span>Throughput: 42.8k logs/sec</span>
+              <span className="text-[#635BFF] font-semibold">Zero kernel drops</span>
             </div>
           </div>
 
           {/* BENTO BLOCK 3: Service Dependency Mesh (5 cols) */}
-          <div className="lg:col-span-5 rounded-xl bg-[#101010] border border-[#202020] p-6 flex flex-col justify-between">
+          <div className="lg:col-span-5 rounded-2xl bg-white border border-slate-200/80 p-7 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all">
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-[#202020] mb-4">
-                <div className="flex items-center gap-2">
-                  <Layers size={16} className="text-[#9B7BFF]" />
-                  <span className="font-semibold text-sm text-[#F5F5F5]">Automated Service Mesh</span>
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <div className="flex items-center gap-2.5">
+                  <Layers size={18} className="text-[#635BFF]" />
+                  <span className="font-bold text-sm text-[#0A2540]">Automated Service Mesh</span>
                 </div>
-                <span className="font-mono text-[11px] text-[#929292]">Live topology</span>
+                <span className="font-mono text-[11px] text-[#627D98]">Live topology</span>
               </div>
-              <p className="text-[13px] text-[#929292] mb-5">
+              <p className="text-[13.5px] text-[#425466] mb-5">
                 Dynamic dependency graphs generated autonomously from live TCP/HTTP traffic flows.
               </p>
 
               {/* Topology Matrix */}
-              <div className="grid grid-cols-2 gap-2 font-mono text-[11px]">
-                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
-                  <span className="text-[#929292] block text-[10px]">INGRESS</span>
-                  <span className="text-[#F5F5F5] font-semibold">Cloudflare → Envoy</span>
-                  <span className="text-[#36D399] block mt-1">✓ mTLS verified</span>
+              <div className="grid grid-cols-2 gap-2.5 font-mono text-[11px]">
+                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <span className="text-[#627D98] block text-[10px] font-semibold">INGRESS</span>
+                  <span className="text-[#0A2540] font-bold">Cloudflare → Envoy</span>
+                  <span className="text-[#059669] block mt-1 font-medium">✓ mTLS verified</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
-                  <span className="text-[#929292] block text-[10px]">DATA LAYER</span>
-                  <span className="text-[#F5F5F5] font-semibold">PostgreSQL Mesh</span>
-                  <span className="text-[#36D399] block mt-1">✓ 0 replication lag</span>
+                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <span className="text-[#627D98] block text-[10px] font-semibold">DATA LAYER</span>
+                  <span className="text-[#0A2540] font-bold">PostgreSQL Mesh</span>
+                  <span className="text-[#059669] block mt-1 font-medium">✓ 0 replication lag</span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[#202020] text-[11px] font-mono text-[#929292]">
+            <div className="mt-6 pt-4 border-t border-slate-100 text-[11px] font-mono text-[#627D98]">
               Graph refreshes every 1,000ms based on socket telemetry
             </div>
           </div>
 
           {/* BENTO BLOCK 4: Deployment Delta Tracker (7 cols) */}
-          <div className="lg:col-span-7 rounded-xl bg-[#101010] border border-[#202020] p-6 flex flex-col justify-between">
+          <div className="lg:col-span-7 rounded-2xl bg-white border border-slate-200/80 p-7 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all">
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-[#202020] mb-4">
-                <div className="flex items-center gap-2">
-                  <GitBranch size={16} className="text-[#36D399]" />
-                  <span className="font-semibold text-sm text-[#F5F5F5]">Deployment & Canary Delta Verification</span>
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <div className="flex items-center gap-2.5">
+                  <GitBranch size={18} className="text-[#059669]" />
+                  <span className="font-bold text-sm text-[#0A2540]">Deployment & Canary Delta Verification</span>
                 </div>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#36D399]/15 text-[#36D399] border border-[#36D399]/30">
+                <span className="px-2.5 py-0.5 rounded-full text-[10.5px] font-mono bg-[#059669]/10 text-[#059669] border border-[#059669]/20 font-semibold">
                   CANARY 100% VERIFIED
                 </span>
               </div>
-              <p className="text-[13px] text-[#929292] mb-5">
+              <p className="text-[13.5px] text-[#425466] mb-5">
                 Automatically measure performance deltas before and after every release commit to block regression spikes.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-[12px]">
-                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
-                  <span className="text-[10px] text-[#929292] block mb-1">LATENCY DELTA</span>
-                  <span className="text-base font-bold text-[#36D399]">-14.2ms</span>
-                  <span className="text-[10px] text-[#5E5E5E] block mt-1">Optimized query cache</span>
+                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <span className="text-[10px] text-[#627D98] block mb-1 font-semibold">LATENCY DELTA</span>
+                  <span className="text-lg font-bold text-[#059669]">-14.2ms</span>
+                  <span className="text-[10px] text-[#627D98] block mt-1">Optimized query cache</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
-                  <span className="text-[10px] text-[#929292] block mb-1">MEMORY FOOTPRINT</span>
-                  <span className="text-base font-bold text-[#F5F5F5]">142MB</span>
-                  <span className="text-[10px] text-[#5E5E5E] block mt-1">Within SLA limits</span>
+                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <span className="text-[10px] text-[#627D98] block mb-1 font-semibold">MEMORY COMMIT</span>
+                  <span className="text-lg font-bold text-[#0A2540]">142MB</span>
+                  <span className="text-[10px] text-[#627D98] block mt-1">Within SLA limits</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
-                  <span className="text-[10px] text-[#929292] block mb-1">STATUS</span>
-                  <span className="text-base font-bold text-[#36D399]">No regression</span>
-                  <span className="text-[10px] text-[#5E5E5E] block mt-1">Full rollout allowed</span>
+                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <span className="text-[10px] text-[#627D98] block mb-1 font-semibold">STATUS</span>
+                  <span className="text-lg font-bold text-[#059669]">No regression</span>
+                  <span className="text-[10px] text-[#627D98] block mt-1">Full rollout allowed</span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[#202020] flex items-center justify-between text-[11px] font-mono text-[#929292]">
-              <span>Commit: #8f2a1b9 verified against 14 staging scenarios</span>
-              <span className="text-[#3985FF]">CI/CD webhook hooked</span>
+            <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-[#627D98]">
+              <span>Commit #8f2a1b9 verified against 14 staging scenarios</span>
+              <span className="text-[#635BFF] font-semibold">CI/CD webhook hooked</span>
             </div>
           </div>
 
@@ -571,51 +565,51 @@ function OperationalIntelligenceSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 4: REAL-TIME OPERATIONAL VISIBILITY
+   SECTION 4: REAL-TIME OPERATIONAL VISIBILITY (STRIPE DATA TABLE)
    "Know what's happening across every layer."
    ═══════════════════════════════════════════════════════════════ */
 function RealTimeVisibilitySection() {
   const [activeTab, setActiveTab] = useState<"services" | "alerts" | "resources">("services");
 
   return (
-    <section id="features" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#050505]">
+    <section id="features" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
       <div className="max-w-[1360px] mx-auto">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="max-w-2xl text-left">
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#3985FF] font-mono text-[10.5px] tracking-wider uppercase mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#635BFF]/10 border border-[#635BFF]/20 text-[#635BFF] font-mono text-[11px] font-semibold tracking-wider uppercase mb-4">
               Real-time telemetry preview
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-3">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0A2540] leading-tight font-display mb-3">
               Know what's happening across every layer.
             </h2>
-            <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed">
+            <p className="text-base sm:text-lg text-[#425466] font-normal leading-relaxed">
               Consolidated operational telemetry covering container clusters, API gateways, database read replicas, and active alert rosters.
             </p>
           </div>
 
-          <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[#101010] border border-[#202020] self-start font-mono text-[12px]">
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#F6F9FC] border border-slate-200/80 self-start font-mono text-[12px]">
             <button
               onClick={() => setActiveTab("services")}
-              className={`px-3 py-1.5 rounded transition-colors ${
-                activeTab === "services" ? "bg-[#3985FF] text-white font-medium" : "text-[#929292] hover:text-[#F5F5F5]"
+              className={`px-3.5 py-1.5 rounded-lg transition-all font-semibold ${
+                activeTab === "services" ? "bg-white text-[#0A2540] shadow-xs border border-slate-200/60" : "text-[#425466] hover:text-[#0A2540]"
               }`}
             >
               Services (6)
             </button>
             <button
               onClick={() => setActiveTab("alerts")}
-              className={`px-3 py-1.5 rounded transition-colors ${
-                activeTab === "alerts" ? "bg-[#3985FF] text-white font-medium" : "text-[#929292] hover:text-[#F5F5F5]"
+              className={`px-3.5 py-1.5 rounded-lg transition-all font-semibold ${
+                activeTab === "alerts" ? "bg-white text-[#0A2540] shadow-xs border border-slate-200/60" : "text-[#425466] hover:text-[#0A2540]"
               }`}
             >
               Latest alerts (2)
             </button>
             <button
               onClick={() => setActiveTab("resources")}
-              className={`px-3 py-1.5 rounded transition-colors ${
-                activeTab === "resources" ? "bg-[#3985FF] text-white font-medium" : "text-[#929292] hover:text-[#F5F5F5]"
+              className={`px-3.5 py-1.5 rounded-lg transition-all font-semibold ${
+                activeTab === "resources" ? "bg-white text-[#0A2540] shadow-xs border border-slate-200/60" : "text-[#425466] hover:text-[#0A2540]"
               }`}
             >
               Infra nodes
@@ -624,24 +618,24 @@ function RealTimeVisibilitySection() {
         </div>
 
         {/* Dashboard Shell */}
-        <div className="rounded-xl bg-[#0A0A0A] border border-[#202020] overflow-hidden shadow-2xl">
+        <div className="rounded-2xl bg-white border border-slate-200/80 overflow-hidden shadow-[0_13px_27px_-5px_rgba(50,50,93,0.06),0_8px_16px_-8px_rgba(0,0,0,0.04)]">
           
           {/* Top Operational Bar */}
-          <div className="px-6 py-4 bg-[#101010] border-b border-[#202020] flex flex-wrap items-center justify-between gap-4">
+          <div className="px-6 py-4 bg-[#F6F9FC] border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3 font-mono text-[12px]">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#36D399]" />
-                <span className="text-[#F5F5F5] font-semibold">Multi-region mesh</span>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#059669]" />
+                <span className="text-[#0A2540] font-bold">Multi-region mesh</span>
               </div>
-              <span className="text-[#5E5E5E]">|</span>
-              <span className="text-[#929292]">Latency p99: 1.4ms</span>
-              <span className="text-[#5E5E5E]">|</span>
-              <span className="text-[#929292]">SLA: 99.98%</span>
+              <span className="text-slate-300">|</span>
+              <span className="text-[#425466]">Latency p99: 1.4ms</span>
+              <span className="text-slate-300">|</span>
+              <span className="text-[#425466]">SLA: 99.98%</span>
             </div>
             
-            <div className="flex items-center gap-2 font-mono text-[10px] text-[#5E5E5E] tracking-wider uppercase">
+            <div className="flex items-center gap-2 font-mono text-[10.5px] text-[#627D98] tracking-wider uppercase">
               <span>ILLUSTRATIVE TELEMETRY</span>
-              <span className="px-1.5 py-0.5 rounded bg-[#202020] text-[#929292]">LIVE SIMULATION</span>
+              <span className="px-2 py-0.5 rounded-full bg-slate-200/80 text-[#0A2540] font-bold">LIVE SIMULATION</span>
             </div>
           </div>
 
@@ -651,49 +645,49 @@ function RealTimeVisibilitySection() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left font-mono text-[12.5px]">
                   <thead>
-                    <tr className="border-b border-[#202020] text-[#929292] text-[11px] tracking-wider uppercase">
-                      <th className="pb-3 font-medium">Service name</th>
-                      <th className="pb-3 font-medium">Layer</th>
-                      <th className="pb-3 font-medium">Status</th>
-                      <th className="pb-3 font-medium text-right">P99 Latency</th>
-                      <th className="pb-3 font-medium text-right">Error %</th>
-                      <th className="pb-3 font-medium text-right">Throughput</th>
-                      <th className="pb-3 font-medium text-right">Checked</th>
+                    <tr className="border-b border-slate-100 text-[#627D98] text-[11px] tracking-wider uppercase font-bold">
+                      <th className="pb-3.5 font-bold">Service name</th>
+                      <th className="pb-3.5 font-bold">Layer</th>
+                      <th className="pb-3.5 font-bold">Status</th>
+                      <th className="pb-3.5 font-bold text-right">P99 Latency</th>
+                      <th className="pb-3.5 font-bold text-right">Error %</th>
+                      <th className="pb-3.5 font-bold text-right">Throughput</th>
+                      <th className="pb-3.5 font-bold text-right">Checked</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#202020]">
+                  <tbody className="divide-y divide-slate-100">
                     {SAMPLE_SERVICES.map((srv, i) => (
-                      <tr key={i} className="hover:bg-[#101010]/60 transition-colors">
-                        <td className="py-3.5 text-[#F5F5F5] font-semibold flex items-center gap-2">
+                      <tr key={i} className="hover:bg-[#F6F9FC]/80 transition-colors">
+                        <td className="py-4 text-[#0A2540] font-bold flex items-center gap-2.5">
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
+                            className={`w-2 h-2 rounded-full ${
                               srv.status === "operational"
-                                ? "bg-[#36D399]"
+                                ? "bg-[#059669]"
                                 : srv.status === "degraded"
-                                ? "bg-[#F5B942] animate-pulse"
-                                : "bg-[#FF5252]"
+                                ? "bg-amber-500 animate-pulse"
+                                : "bg-red-500"
                             }`}
                           />
                           {srv.name}
                         </td>
-                        <td className="py-3.5 text-[#929292] uppercase text-[10px]">{srv.category}</td>
-                        <td className="py-3.5">
+                        <td className="py-4 text-[#627D98] uppercase text-[10.5px] font-semibold">{srv.category}</td>
+                        <td className="py-4">
                           <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
+                            className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold ${
                               srv.status === "operational"
-                                ? "bg-[#36D399]/10 text-[#36D399]"
-                                : "bg-[#F5B942]/10 text-[#F5B942]"
+                                ? "bg-[#059669]/10 text-[#059669]"
+                                : "bg-amber-500/10 text-amber-700"
                             }`}
                           >
                             {srv.status}
                           </span>
                         </td>
-                        <td className="py-3.5 text-right text-[#F5F5F5]">{srv.latency}</td>
-                        <td className={`py-3.5 text-right font-semibold ${srv.errorRate === "0.000%" ? "text-[#929292]" : "text-[#FF5252]"}`}>
+                        <td className="py-4 text-right text-[#0A2540] font-bold">{srv.latency}</td>
+                        <td className={`py-4 text-right font-bold ${srv.errorRate === "0.000%" ? "text-[#627D98]" : "text-red-500"}`}>
                           {srv.errorRate}
                         </td>
-                        <td className="py-3.5 text-right text-[#3985FF]">{srv.rps}</td>
-                        <td className="py-3.5 text-right text-[#5E5E5E]">{srv.checked}</td>
+                        <td className="py-4 text-right text-[#635BFF] font-bold">{srv.rps}</td>
+                        <td className="py-4 text-right text-[#627D98]">{srv.checked}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -703,102 +697,108 @@ function RealTimeVisibilitySection() {
 
             {activeTab === "alerts" && (
               <div className="space-y-3 font-mono text-[12px]">
-                <div className="p-4 rounded-lg bg-[#101010] border border-[#FF5252]/40 flex items-start justify-between">
+                <div className="p-4 rounded-xl bg-red-50/40 border border-red-200/80 flex items-start justify-between">
                   <div className="flex items-start gap-3">
-                    <AlertTriangle size={18} className="text-[#FF5252] shrink-0 mt-0.5" />
+                    <AlertTriangle size={18} className="text-red-500 shrink-0 mt-0.5" />
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[#FF5252] font-semibold">P0 CRITICAL</span>
-                        <span className="text-[#F5F5F5]">Connection pool exhaustion on payment-worker-pool</span>
+                        <span className="text-red-600 font-bold">P0 CRITICAL</span>
+                        <span className="text-[#0A2540] font-bold">Connection pool exhaustion on payment-worker-pool</span>
                       </div>
-                      <p className="text-[#929292] text-[11px] mt-1 font-sans">
+                      <p className="text-[#425466] text-[12px] mt-1 font-sans">
                         Active connections reached 49/50 limit. Request queue latency climbed from 12ms to 142ms.
                       </p>
                     </div>
                   </div>
-                  <span className="text-[11px] text-[#929292]">2m ago</span>
+                  <span className="text-[11px] text-[#627D98]">2m ago</span>
                 </div>
 
-                <div className="p-4 rounded-lg bg-[#101010] border border-[#F5B942]/30 flex items-start justify-between">
+                <div className="p-4 rounded-xl bg-amber-50/40 border border-amber-200/80 flex items-start justify-between">
                   <div className="flex items-start gap-3">
-                    <Activity size={18} className="text-[#F5B942] shrink-0 mt-0.5" />
+                    <Activity size={18} className="text-amber-500 shrink-0 mt-0.5" />
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[#F5B942] font-semibold">P2 WARNING</span>
-                        <span className="text-[#F5F5F5]">Memory headroom threshold reached on node-worker-03</span>
+                        <span className="text-amber-700 font-bold">P2 WARNING</span>
+                        <span className="text-[#0A2540] font-bold">Memory headroom threshold reached on node-worker-03</span>
                       </div>
-                      <p className="text-[#929292] text-[11px] mt-1 font-sans">
+                      <p className="text-[#425466] text-[12px] mt-1 font-sans">
                         Heap usage exceeded 85% of allocated Kubernetes cgroup limit. Auto-scaling pod scheduled.
                       </p>
                     </div>
                   </div>
-                  <span className="text-[11px] text-[#929292]">14m ago</span>
+                  <span className="text-[11px] text-[#627D98]">14m ago</span>
                 </div>
               </div>
             )}
 
             {activeTab === "resources" && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
-                <div className="p-4 rounded-lg bg-[#101010] border border-[#202020]">
-                  <div className="flex items-center justify-between text-[11px] text-[#929292] mb-2">
+                <div className="p-4 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <div className="flex items-center justify-between text-[11px] text-[#627D98] font-bold mb-2">
                     <span>CPU ALLOCATION</span>
-                    <Cpu size={14} className="text-[#3985FF]" />
+                    <Cpu size={14} className="text-[#635BFF]" />
                   </div>
-                  <div className="text-2xl font-bold text-[#F5F5F5]">44.2%</div>
-                  <div className="h-1.5 w-full bg-[#202020] rounded-full overflow-hidden mt-3">
-                    <div className="h-full bg-[#3985FF] rounded-full" style={{ width: "44.2%" }} />
+                  <div className="text-2xl font-bold text-[#0A2540]">44.2%</div>
+                  <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden mt-3">
+                    <div className="h-full bg-[#635BFF] rounded-full" style={{ width: "44.2%" }} />
                   </div>
-                  <span className="text-[10px] text-[#5E5E5E] block mt-2">16 vCPUs active across 3 clusters</span>
+                  <span className="text-[10px] text-[#627D98] block mt-2">16 vCPUs active across 3 clusters</span>
                 </div>
 
-                <div className="p-4 rounded-lg bg-[#101010] border border-[#202020]">
-                  <div className="flex items-center justify-between text-[11px] text-[#929292] mb-2">
+                <div className="p-4 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <div className="flex items-center justify-between text-[11px] text-[#627D98] font-bold mb-2">
                     <span>MEMORY COMMIT</span>
-                    <HardDrive size={14} className="text-[#36D399]" />
+                    <HardDrive size={14} className="text-[#059669]" />
                   </div>
-                  <div className="text-2xl font-bold text-[#F5F5F5]">62.8%</div>
-                  <div className="h-1.5 w-full bg-[#202020] rounded-full overflow-hidden mt-3">
-                    <div className="h-full bg-[#36D399] rounded-full" style={{ width: "62.8%" }} />
+                  <div className="text-2xl font-bold text-[#0A2540]">62.8%</div>
+                  <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden mt-3">
+                    <div className="h-full bg-[#059669] rounded-full" style={{ width: "62.8%" }} />
                   </div>
-                  <span className="text-[10px] text-[#5E5E5E] block mt-2">40.2 GB / 64 GB provisioned</span>
+                  <span className="text-[10px] text-[#627D98] block mt-2">40.2 GB / 64 GB provisioned</span>
                 </div>
 
-                <div className="p-4 rounded-lg bg-[#101010] border border-[#202020]">
-                  <div className="flex items-center justify-between text-[11px] text-[#929292] mb-2">
+                <div className="p-4 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
+                  <div className="flex items-center justify-between text-[11px] text-[#627D98] font-bold mb-2">
                     <span>NETWORK I/O</span>
-                    <Wifi size={14} className="text-[#9B7BFF]" />
+                    <Wifi size={14} className="text-[#00D4FF]" />
                   </div>
-                  <div className="text-2xl font-bold text-[#F5F5F5]">3.4 Gbps</div>
-                  <div className="h-1.5 w-full bg-[#202020] rounded-full overflow-hidden mt-3">
-                    <div className="h-full bg-[#9B7BFF] rounded-full" style={{ width: "34%" }} />
+                  <div className="text-2xl font-bold text-[#0A2540]">3.4 Gbps</div>
+                  <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden mt-3">
+                    <div className="h-full bg-[#00D4FF] rounded-full" style={{ width: "34%" }} />
                   </div>
-                  <span className="text-[10px] text-[#5E5E5E] block mt-2">0 packet drops recorded</span>
+                  <span className="text-[10px] text-[#627D98] block mt-2">0 packet drops recorded</span>
                 </div>
               </div>
             )}
           </div>
 
           {/* Bottom Latency Chart Visual */}
-          <div className="p-6 bg-[#050505] border-t border-[#202020]">
-            <div className="flex items-center justify-between mb-3 font-mono text-[11px] text-[#929292]">
+          <div className="p-6 bg-[#F6F9FC] border-t border-slate-200/80">
+            <div className="flex items-center justify-between mb-3 font-mono text-[11px] text-[#425466] font-semibold">
               <span>API RESPONSE TIME (P99 • MULTI-REGION MESH)</span>
-              <span className="text-[#3985FF]">SAMPLED LAST 30 DAYS</span>
+              <span className="text-[#635BFF] font-bold">SAMPLED LAST 30 DAYS</span>
             </div>
             
-            <div className="h-28 w-full border-b border-l border-[#202020] relative">
+            <div className="h-28 w-full border-b border-l border-slate-200 relative">
               <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                <defs>
+                  <linearGradient id="stripeGrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stopColor="#635BFF" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#635BFF" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
                 <path
                   d="M0,85 L15,80 L30,82 L45,55 L60,62 L75,30 L90,38 L100,18"
                   fill="none"
-                  stroke="#3985FF"
-                  strokeWidth="2"
+                  stroke="#635BFF"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
                 />
               </svg>
-              <div className="absolute top-0 -left-9 text-[10px] font-mono text-[#5E5E5E]">12ms</div>
-              <div className="absolute bottom-0 -left-7 text-[10px] font-mono text-[#5E5E5E]">0ms</div>
-              <div className="absolute -bottom-5 left-0 text-[10px] font-mono text-[#5E5E5E]">Day 1</div>
-              <div className="absolute -bottom-5 right-0 text-[10px] font-mono text-[#5E5E5E]">Day 30</div>
+              <div className="absolute top-0 -left-9 text-[10px] font-mono text-[#627D98]">12ms</div>
+              <div className="absolute bottom-0 -left-7 text-[10px] font-mono text-[#627D98]">0ms</div>
+              <div className="absolute -bottom-5 left-0 text-[10px] font-mono text-[#627D98]">Day 1</div>
+              <div className="absolute -bottom-5 right-0 text-[10px] font-mono text-[#627D98]">Day 30</div>
             </div>
           </div>
         </div>
@@ -808,26 +808,26 @@ function RealTimeVisibilitySection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 5: AI-POWERED INTELLIGENCE
+   SECTION 5: AI-POWERED INTELLIGENCE (WHITE THEME)
    "From detecting anomalies to understanding why."
    ═══════════════════════════════════════════════════════════════ */
 function AiIntelligenceSection() {
   return (
-    <section id="solutions" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#0A0A0A]">
+    <section id="solutions" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
       <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         
         {/* LEFT: Capabilities list & explanation */}
         <div className="lg:col-span-6 flex flex-col text-left">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#9B7BFF] font-mono text-[10.5px] tracking-wider uppercase mb-4 self-start">
-            <Sparkles size={12} />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#635BFF]/10 border border-[#635BFF]/20 text-[#635BFF] font-mono text-[11px] font-semibold tracking-wider uppercase mb-4 self-start">
+            <Sparkles size={13} />
             AI Root Cause Engine
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0A2540] leading-tight font-display mb-6">
             From detecting anomalies to understanding why.
           </h2>
 
-          <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed mb-8">
+          <p className="text-base sm:text-lg text-[#425466] font-normal leading-relaxed mb-8">
             Traditional monitoring alerts you when thresholds fail. BREXAL correlates time-series telemetry with code deployments, identifying the exact commit, database transaction, or external dependency causing the incident.
           </p>
 
@@ -838,71 +838,71 @@ function AiIntelligenceSection() {
               { title: "Predictive maintenance", desc: "Forecasts disk saturation and memory leaks days before customer impact." },
               { title: "Autonomous remediation with approval safeguards", desc: "Suggests tested patch diffs while keeping humans fully in control." },
             ].map((item, idx) => (
-              <div key={idx} className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded bg-[#101010] border border-[#202020] flex items-center justify-center text-[#3985FF] shrink-0 mt-0.5">
-                  <Check size={12} />
+              <div key={idx} className="flex items-start gap-3.5">
+                <div className="w-5 h-5 rounded-full bg-[#059669]/10 text-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                  <Check size={13} strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h4 className="text-[14px] font-semibold text-[#F5F5F5]">{item.title}</h4>
-                  <p className="text-[12.5px] text-[#929292] leading-relaxed mt-0.5">{item.desc}</p>
+                  <h4 className="text-[14.5px] font-bold text-[#0A2540]">{item.title}</h4>
+                  <p className="text-[13px] text-[#425466] leading-relaxed mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* RIGHT: Anomaly to RCA Technical Breakdown */}
+        {/* RIGHT: Anomaly to RCA Technical Breakdown in Stripe White Card */}
         <div className="lg:col-span-6 w-full">
-          <div className="rounded-xl bg-[#101010] border border-[#202020] p-6 shadow-2xl flex flex-col gap-4">
+          <div className="rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-7 shadow-[0_13px_27px_-5px_rgba(50,50,93,0.08),0_8px_16px_-8px_rgba(0,0,0,0.06)] flex flex-col gap-4">
             
             {/* Stage 1: Anomaly Detected */}
-            <div className="p-3.5 rounded-lg bg-[#0A0A0A] border border-[#F5B942]/30 flex items-start gap-3">
-              <span className="w-2 h-2 rounded-full bg-[#F5B942] animate-pulse mt-1 shrink-0" />
-              <div className="flex-1 font-mono text-[11.5px]">
+            <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200 flex items-start gap-3">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse mt-1 shrink-0" />
+              <div className="flex-1 font-mono text-[12px]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[#F5B942] font-semibold">STAGE 1: ANOMALY ISOLATED</span>
-                  <span className="text-[#5E5E5E]">T + 0.4s</span>
+                  <span className="text-amber-700 font-bold">STAGE 1: ANOMALY ISOLATED</span>
+                  <span className="text-[#627D98]">T + 0.4s</span>
                 </div>
-                <p className="text-[#F5F5F5] mt-1 font-sans text-[12.5px]">
-                  Unusual 8x latency jump on <code className="text-[#3985FF] font-mono">/v2/payment/charge</code> endpoint.
+                <p className="text-[#0A2540] mt-1 font-sans text-[13px] font-medium">
+                  Unusual 8x latency jump on <code className="text-[#635BFF] bg-white px-1.5 py-0.5 rounded border border-amber-200">/v2/payment/charge</code> endpoint.
                 </p>
               </div>
             </div>
 
             {/* Stage 2: Correlation with Deployment */}
-            <div className="p-3.5 rounded-lg bg-[#0A0A0A] border border-[#3985FF]/30 flex items-start gap-3">
-              <GitCommit size={15} className="text-[#3985FF] mt-0.5 shrink-0" />
-              <div className="flex-1 font-mono text-[11.5px]">
+            <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-200 flex items-start gap-3">
+              <GitCommit size={16} className="text-[#635BFF] mt-0.5 shrink-0" />
+              <div className="flex-1 font-mono text-[12px]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[#3985FF] font-semibold">STAGE 2: COMMIT CORRELATION</span>
-                  <span className="text-[#5E5E5E]">T + 1.2s</span>
+                  <span className="text-[#635BFF] font-bold">STAGE 2: COMMIT CORRELATION</span>
+                  <span className="text-[#627D98]">T + 1.2s</span>
                 </div>
-                <p className="text-[#F5F5F5] mt-1 font-sans text-[12.5px]">
-                  Deployment <span className="font-mono text-[#3985FF]">#8f2a1b9</span> introduced unbuffered WebSocket reconnect loop.
+                <p className="text-[#0A2540] mt-1 font-sans text-[13px] font-medium">
+                  Deployment <span className="font-mono text-[#635BFF] font-bold">#8f2a1b9</span> introduced unbuffered WebSocket reconnect loop.
                 </p>
               </div>
             </div>
 
             {/* Stage 3: Suggested Remediation vs Executed Action */}
-            <div className="p-4 rounded-lg bg-[#050505] border border-[#202020] flex flex-col gap-3 font-mono text-[11px]">
-              <div className="flex items-center justify-between pb-2 border-b border-[#202020]">
-                <span className="text-[#9B7BFF] font-semibold">STAGE 3: REMEDIATION DIFF</span>
-                <span className="text-[#36D399]">CONFIDENCE: 98.4%</span>
+            <div className="p-5 rounded-xl bg-[#0A2540] text-slate-200 border border-slate-800 flex flex-col gap-3 font-mono text-[11px] shadow-sm">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-700">
+                <span className="text-[#00D4FF] font-bold">STAGE 3: REMEDIATION DIFF</span>
+                <span className="text-[#00D924] font-bold">CONFIDENCE: 98.4%</span>
               </div>
 
-              <div className="text-[#929292] leading-relaxed">
-                <div>142 |  async def handle_connection(ws, client_id):</div>
-                <div className="bg-[#FF5252]/10 text-[#FF5252] px-2 py-0.5 rounded my-0.5">
+              <div className="leading-relaxed font-mono">
+                <div className="text-slate-400">142 |  async def handle_connection(ws, client_id):</div>
+                <div className="bg-red-500/20 text-red-300 px-2 py-1 rounded my-1 border-l-2 border-red-500">
                   -     await ws.send_text(await get_unbounded_stream())
                 </div>
-                <div className="bg-[#36D399]/10 text-[#36D399] px-2 py-0.5 rounded my-0.5">
+                <div className="bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded my-1 border-l-2 border-emerald-500">
                   +     await ws.send_text(await get_bounded_stream(max_buf=512))
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-[#202020] flex items-center justify-between">
-                <span className="text-[10px] text-[#5E5E5E]">Action requires on-call engineer approval</span>
-                <span className="px-2 py-0.5 rounded bg-[#3985FF] text-white text-[10px] font-semibold">
+              <div className="pt-2 border-t border-slate-700 flex items-center justify-between">
+                <span className="text-[10.5px] text-slate-400">Action requires on-call engineer approval</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-[#635BFF] text-white text-[10.5px] font-bold">
                   AUDITED SAFEGUARD
                 </span>
               </div>
@@ -917,7 +917,7 @@ function AiIntelligenceSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 6: COMPLETE OBSERVABILITY STACK
+   SECTION 6: COMPLETE OBSERVABILITY STACK (WHITE CARDS)
    "Every signal. One connected view."
    ═══════════════════════════════════════════════════════════════ */
 function CompleteStackSection() {
@@ -931,42 +931,42 @@ function CompleteStackSection() {
   ];
 
   return (
-    <section id="stack" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#050505]">
+    <section id="stack" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
       <div className="max-w-[1360px] mx-auto">
         
         {/* Section Header */}
         <div className="max-w-2xl mb-16 text-left">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#3985FF] font-mono text-[10.5px] tracking-wider uppercase mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#635BFF]/10 border border-[#635BFF]/20 text-[#635BFF] font-mono text-[11px] font-semibold tracking-wider uppercase mb-4">
             Unified Architecture
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0A2540] leading-tight font-display mb-4">
             Every signal. One connected view.
           </h2>
-          <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed">
+          <p className="text-base sm:text-lg text-[#425466] font-normal leading-relaxed">
             Eliminate fragmented observability silos. BREXAL delivers a single pipeline for telemetry ingestion, correlation, and resolution.
           </p>
         </div>
 
-        {/* Structured Technical Capability Grid (Asymmetric & Diversified) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Structured Technical Capability Grid (Stripe White Style) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {capabilities.map((cap, i) => {
             const Icon = cap.icon;
             return (
               <div
                 key={i}
-                className="p-6 rounded-xl bg-[#0A0A0A] border border-[#202020] hover:border-[#2E2E2E] transition-all flex flex-col justify-between group"
+                className="p-7 rounded-2xl bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-[0_13px_27px_-5px_rgba(50,50,93,0.08),0_8px_16px_-8px_rgba(0,0,0,0.06)] transition-all flex flex-col justify-between group"
               >
                 <div>
-                  <div className="w-9 h-9 rounded-lg bg-[#101010] border border-[#202020] flex items-center justify-center text-[#3985FF] mb-5 group-hover:border-[#3985FF]/40 transition-colors">
-                    <Icon size={18} />
+                  <div className="w-10 h-10 rounded-xl bg-[#F6F9FC] border border-slate-200/80 flex items-center justify-center text-[#635BFF] mb-5 group-hover:bg-[#635BFF] group-hover:text-white transition-all shadow-xs">
+                    <Icon size={19} />
                   </div>
-                  <h3 className="text-lg font-semibold text-[#F5F5F5] mb-2 font-display">{cap.name}</h3>
-                  <p className="text-[13px] text-[#929292] leading-relaxed font-sans">{cap.desc}</p>
+                  <h3 className="text-lg font-bold text-[#0A2540] mb-2 font-display">{cap.name}</h3>
+                  <p className="text-[13.5px] text-[#425466] leading-relaxed font-sans">{cap.desc}</p>
                 </div>
                 
-                <div className="mt-6 pt-4 border-t border-[#202020] flex items-center justify-between text-[11px] font-mono text-[#5E5E5E] group-hover:text-[#929292] transition-colors">
-                  <span>CAPABILITY // 0{i + 1}</span>
-                  <ArrowRight size={13} className="text-[#3985FF] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-[#627D98] group-hover:text-[#0A2540] transition-colors">
+                  <span className="font-semibold">CAPABILITY // 0{i + 1}</span>
+                  <ArrowRight size={14} className="text-[#635BFF] opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
             );
@@ -979,53 +979,53 @@ function CompleteStackSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 7: INCIDENT RESPONSE WORKFLOW
+   SECTION 7: INCIDENT RESPONSE WORKFLOW (STRIPE TIMELINE)
    "Reduce the distance between detection and resolution."
    ═══════════════════════════════════════════════════════════════ */
 function IncidentResponseSection() {
   const steps = [
-    { stage: "01", name: "Detection", time: "00:00", detail: "eBPF probe detects memory leak anomaly on payment-worker-pool.", badge: "P0 CRITICAL", color: "text-[#FF5252]" },
-    { stage: "02", name: "Investigation", time: "+00:12s", detail: "Automated correlation links error burst to commit #8f2a1b9 in staging.", badge: "AUTO-LINKED", color: "text-[#3985FF]" },
-    { stage: "03", name: "Root cause", time: "+00:38s", detail: "Unbounded buffer recursion isolated in websocket_handler.py line 142.", badge: "ISOLATED", color: "text-[#9B7BFF]" },
-    { stage: "04", name: "Remediation", time: "+01:15s", detail: "Suggested patch generated and validated against staging test harness.", badge: "READY", color: "text-[#F5B942]" },
-    { stage: "05", name: "Resolution", time: "+01:45s", detail: "Canary rollout completed with zero dropped customer transactions.", badge: "RESOLVED", color: "text-[#36D399]" },
+    { stage: "01", name: "Detection", time: "00:00", detail: "eBPF probe detects memory leak anomaly on payment-worker-pool.", badge: "P0 CRITICAL", color: "text-red-600 bg-red-50 border-red-200" },
+    { stage: "02", name: "Investigation", time: "+00:12s", detail: "Automated correlation links error burst to commit #8f2a1b9 in staging.", badge: "AUTO-LINKED", color: "text-[#635BFF] bg-blue-50 border-blue-200" },
+    { stage: "03", name: "Root cause", time: "+00:38s", detail: "Unbounded buffer recursion isolated in websocket_handler.py line 142.", badge: "ISOLATED", color: "text-purple-700 bg-purple-50 border-purple-200" },
+    { stage: "04", name: "Remediation", time: "+01:15s", detail: "Suggested patch generated and validated against staging test harness.", badge: "READY", color: "text-amber-700 bg-amber-50 border-amber-200" },
+    { stage: "05", name: "Resolution", time: "+01:45s", detail: "Canary rollout completed with zero dropped customer transactions.", badge: "RESOLVED", color: "text-[#059669] bg-emerald-50 border-emerald-200" },
   ];
 
   return (
-    <section id="incident-response" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#0A0A0A]">
+    <section id="incident-response" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
       <div className="max-w-[1360px] mx-auto">
         
         {/* Section Header */}
         <div className="max-w-2xl mb-16 text-left">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#36D399] font-mono text-[10.5px] tracking-wider uppercase mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#059669]/10 border border-[#059669]/20 text-[#059669] font-mono text-[11px] font-semibold tracking-wider uppercase mb-4">
             Autonomous MTTR Reduction
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0A2540] leading-tight font-display mb-4">
             Reduce the distance between detection and resolution.
           </h2>
-          <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed">
+          <p className="text-base sm:text-lg text-[#425466] font-normal leading-relaxed">
             Every minute of downtime damages user trust. Follow the five-step autonomous incident lifecycle that compresses mean time to recovery from hours to under two minutes.
           </p>
         </div>
 
         {/* 5-Step Connected Timeline */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {steps.map((st, i) => (
             <div
               key={i}
-              className="p-5 rounded-xl bg-[#101010] border border-[#202020] flex flex-col justify-between relative overflow-hidden"
+              className="p-5 rounded-2xl bg-white border border-slate-200/80 flex flex-col justify-between shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-md transition-all relative overflow-hidden"
             >
               <div>
-                <div className="flex items-center justify-between pb-3 border-b border-[#202020] mb-3 font-mono text-[11px]">
-                  <span className="text-[#3985FF] font-bold">{st.stage}</span>
-                  <span className="text-[#929292]">{st.time}</span>
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3 font-mono text-[11.5px]">
+                  <span className="text-[#635BFF] font-bold">{st.stage}</span>
+                  <span className="text-[#627D98]">{st.time}</span>
                 </div>
-                <h4 className="text-base font-semibold text-[#F5F5F5] mb-1 font-display">{st.name}</h4>
-                <p className="text-[12px] text-[#929292] leading-relaxed font-sans">{st.detail}</p>
+                <h4 className="text-base font-bold text-[#0A2540] mb-1 font-display">{st.name}</h4>
+                <p className="text-[12.5px] text-[#425466] leading-relaxed font-sans">{st.detail}</p>
               </div>
 
-              <div className="mt-6 pt-3 border-t border-[#202020]">
-                <span className={`text-[10px] font-mono font-semibold ${st.color}`}>
+              <div className="mt-5 pt-3 border-t border-slate-100">
+                <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${st.color}`}>
                   {st.badge}
                 </span>
               </div>
@@ -1039,38 +1039,38 @@ function IncidentResponseSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 8: MINIMAL ENTERPRISE FINAL CTA
+   SECTION 8: STRIPE-STYLE MINIMAL FINAL CTA
    "Your systems move fast. Your intelligence should move faster."
    ═══════════════════════════════════════════════════════════════ */
 function FinalCtaSection() {
   return (
-    <section className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#050505]">
-      <div className="max-w-[1000px] mx-auto text-center flex flex-col items-center">
+    <section className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
+      <div className="max-w-[960px] mx-auto text-center flex flex-col items-center">
         
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-5">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[#0A2540] leading-tight font-display mb-5">
           Your systems move fast. Your intelligence should move faster.
         </h2>
 
-        <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
+        <p className="text-base sm:text-lg text-[#425466] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
           Bring monitoring, investigation, and incident response into one connected platform built for modern engineering teams.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <Link
             href="/register"
-            className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-[#F5F5F5] text-[#050505] text-[14px] font-semibold hover:bg-white transition-all shadow-md focus:ring-2 focus:ring-[#3985FF]"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#635BFF] text-white text-[14.5px] font-semibold hover:bg-[#5349e0] transition-all shadow-[0_4px_14px_rgba(99,91,255,0.3)] hover:shadow-[0_6px_20px_rgba(99,91,255,0.4)] focus:ring-2 focus:ring-[#635BFF]"
           >
             Request early access
           </Link>
           <Link
             href="/login"
-            className="w-full sm:w-auto px-6 py-3.5 rounded-lg bg-[#101010] border border-[#202020] text-[#F5F5F5] text-[14px] font-medium hover:bg-[#151515] transition-colors"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-white border border-slate-200/90 text-[#0A2540] text-[14.5px] font-semibold hover:bg-slate-50 transition-colors shadow-sm"
           >
             Sign in to console
           </Link>
         </div>
 
-        <span className="font-mono text-[11px] text-[#5E5E5E] mt-6">
+        <span className="font-mono text-[11px] text-[#627D98] mt-7">
           SOC-2 Type II Certified • Zero Telemetry Lock-in • OpenTelemetry Native
         </span>
       </div>
@@ -1079,78 +1079,77 @@ function FinalCtaSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 9: ENTERPRISE FOOTER
-   Bharti Nexus Technologies branding & compliance
+   SECTION 9: STRIPE-GRADE CLEAN FOOTER
    ═══════════════════════════════════════════════════════════════ */
 function EnterpriseFooter() {
   return (
-    <footer className="py-16 px-6 sm:px-10 bg-[#050505] text-[#929292] font-sans">
+    <footer className="py-16 px-6 sm:px-10 bg-[#F6F9FC] text-[#425466] font-sans">
       <div className="max-w-[1360px] mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 pb-16 border-b border-[#202020]">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 pb-16 border-b border-slate-200/80">
           
           {/* Brand Info (Col 1) */}
           <div className="col-span-2 flex flex-col items-start">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-[#101010] border border-[#202020] flex items-center justify-center text-[#3985FF]">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <div className="w-7 h-7 rounded-lg bg-[#0A2540] flex items-center justify-center text-white">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
                   <path d="M12 2L2 7l10 5 10-5-10-5z" />
                   <path d="M2 17l10 5 10-5" />
                   <path d="M2 12l10 5 10-5" />
                 </svg>
               </div>
-              <Logo className="h-4 text-[#F5F5F5]" />
+              <Logo className="h-4 text-[#0A2540]" />
             </div>
-            <p className="text-[13px] text-[#929292] leading-relaxed max-w-sm mb-4">
+            <p className="text-[13px] text-[#425466] leading-relaxed max-w-sm mb-4">
               BREXAL is an AI-powered observability and incident response platform developed by Bharti Nexus Technologies.
             </p>
-            <div className="font-mono text-[11px] text-[#5E5E5E]">
+            <div className="font-mono text-[11px] text-[#627D98]">
               Intelligence, engineered to move.
             </div>
           </div>
 
           {/* Platform Capabilities (Col 2) */}
-          <div className="flex flex-col gap-2.5 text-[13px]">
-            <span className="font-mono text-[11px] font-semibold text-[#F5F5F5] uppercase tracking-wider mb-2">
+          <div className="flex flex-col gap-2.5 text-[13.5px]">
+            <span className="font-mono text-[11px] font-bold text-[#0A2540] uppercase tracking-wider mb-2">
               Platform
             </span>
-            <Link href="#platform" className="hover:text-[#F5F5F5] transition-colors">APM & Metrics</Link>
-            <Link href="#platform" className="hover:text-[#F5F5F5] transition-colors">Infrastructure</Link>
-            <Link href="#platform" className="hover:text-[#F5F5F5] transition-colors">Distributed Tracing</Link>
-            <Link href="#solutions" className="hover:text-[#F5F5F5] transition-colors">AI Copilot</Link>
-            <Link href="#features" className="hover:text-[#F5F5F5] transition-colors">Incident Manager</Link>
+            <Link href="#platform" className="hover:text-[#0A2540] transition-colors">APM & Metrics</Link>
+            <Link href="#platform" className="hover:text-[#0A2540] transition-colors">Infrastructure</Link>
+            <Link href="#platform" className="hover:text-[#0A2540] transition-colors">Distributed Tracing</Link>
+            <Link href="#solutions" className="hover:text-[#0A2540] transition-colors">AI Copilot</Link>
+            <Link href="#features" className="hover:text-[#0A2540] transition-colors">Incident Manager</Link>
           </div>
 
           {/* Solutions (Col 3) */}
-          <div className="flex flex-col gap-2.5 text-[13px]">
-            <span className="font-mono text-[11px] font-semibold text-[#F5F5F5] uppercase tracking-wider mb-2">
+          <div className="flex flex-col gap-2.5 text-[13.5px]">
+            <span className="font-mono text-[11px] font-bold text-[#0A2540] uppercase tracking-wider mb-2">
               Solutions
             </span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">DevOps Teams</span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Site Reliability Engineers</span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Platform Engineering</span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Cloud Migration</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">DevOps Teams</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">Site Reliability Engineers</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">Platform Engineering</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">Cloud Migration</span>
           </div>
 
           {/* Resources & Legal (Col 4) */}
-          <div className="flex flex-col gap-2.5 text-[13px]">
-            <span className="font-mono text-[11px] font-semibold text-[#F5F5F5] uppercase tracking-wider mb-2">
+          <div className="flex flex-col gap-2.5 text-[13.5px]">
+            <span className="font-mono text-[11px] font-bold text-[#0A2540] uppercase tracking-wider mb-2">
               Resources
             </span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Documentation</span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">API Reference</span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Terms of Service</span>
-            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Security & SOC-2</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">Documentation</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">API Reference</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">Terms of Service</span>
+            <span className="hover:text-[#0A2540] transition-colors cursor-pointer">Security & SOC-2</span>
           </div>
         </div>
 
         {/* Bottom Attribution */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-[#5E5E5E] gap-4">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-[#627D98] gap-4">
           <div>
             © {new Date().getFullYear()} Bharti Nexus Technologies. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
-            <span>Server status: Nominal</span>
+            <span className="text-[#059669] font-medium">Server status: Nominal</span>
             <span>•</span>
             <span>Edge latency: 1.4ms</span>
           </div>
@@ -1161,16 +1160,16 @@ function EnterpriseFooter() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MAIN LANDING PAGE EXPORT
+   MAIN LANDING PAGE EXPORT (STRIPE-GRADE WHITE THEME)
    ═══════════════════════════════════════════════════════════════ */
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-[#F5F5F5] selection:bg-[#3985FF]/20 selection:text-white">
+    <div className="min-h-screen bg-white text-[#0A2540] selection:bg-[#635BFF]/15 selection:text-[#635BFF]">
       {/* 1. Minimal Navigation */}
       <Navigation />
 
       <main>
-        {/* 2. Asymmetric Hero */}
+        {/* 2. Stripe-inspired Hero with Nature Horizon */}
         <HeroSection />
 
         {/* 3. Operational Intelligence Bento */}

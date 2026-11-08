@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "BREXAL — Intelligence, engineered to move",
-  description: "AI-powered observability, real-time application monitoring, and automated incident management for engineering teams.",
+  description: "AI-powered observability, real-time application monitoring, and automated incident management for modern engineering teams.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-scroll-behavior="smooth"
       className={`${sora.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#050505] text-[#F5F5F5] font-sans selection:bg-[#3985FF]/25 selection:text-white">
+      <body className="min-h-full flex flex-col bg-white text-[#0A2540] font-sans selection:bg-[#635BFF]/20 selection:text-[#635BFF]">
         {children}
       </body>
     </html>
