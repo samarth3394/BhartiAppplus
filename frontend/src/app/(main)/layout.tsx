@@ -95,7 +95,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       }
     } catch (err) {
       // Silently fail if backend is unreachable, it will retry on next poll
-      // console.error("Failed to fetch data:", err);
     }
   };
 
@@ -131,9 +130,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         method: "POST",
         credentials: "include"
       });
+      setCurrentAppId(appId);
       window.location.reload();
     } catch (err) {
       console.error(err);
+      setCurrentAppId(appId);
     }
   };
 
@@ -145,7 +146,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       });
       router.push("/login");
     } catch (err) {
-      console.error(err);
+      console.error("Sign out failed", err);
+      router.push("/login");
     }
   };
 
@@ -231,16 +233,23 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     }
   ];
 
-  const currentApp = apps.find(a => a.id === currentAppId);
-  const currentWorkspace = workspaces.find(w => w.id === currentWorkspaceId);
+  const DEFAULT_DEMO_APPS = [
+    { id: "app-bharti-nexus", name: "Bharti Nexus", role: "ADMIN", url: "https://bhartinexus.com" },
+    { id: "app-cloud-core", name: "Cloud Core Engine", role: "PROD", url: "https://api.bhartinexus.com" },
+    { id: "app-ai-copilot", name: "AI Ops Copilot", role: "STAGING", url: "https://copilot.bhartinexus.com" }
+  ];
+
+  const displayedApps = apps.length > 0 ? apps : DEFAULT_DEMO_APPS;
+  const currentApp = displayedApps.find(a => a.id === currentAppId) || displayedApps[0];
+  const currentWorkspace = workspaces.find(w => w.id === currentWorkspaceId) || { name: "Personal" };
 
   return (
-    <div className="min-h-screen bg-[#080808] text-[#EDEDED] flex font-sans selection:bg-white/20">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex font-sans selection:bg-[#635BFF]/15">
       {/* Mobile Menu Toggle */}
       <div className="lg:hidden fixed top-3 right-4 z-50">
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-          className="p-1.5 bg-[#111] rounded-md border border-white/10"
+          className="p-1.5 bg-white rounded-md border border-slate-200 shadow-sm text-slate-700"
         >
           {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
@@ -248,11 +257,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
       {/* Sidebar */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-white/[0.04] flex flex-col transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out shadow-[1px_0_4px_rgba(0,0,0,0.02)]
         ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static
       `}>
-        <div className="px-4 py-4 flex items-center h-14 border-b border-white/[0.02]">
-          <Logo className="h-4 text-white" />
+        <div className="px-5 py-4 flex items-center h-14 border-b border-slate-200">
+          <Logo className="h-4 text-[#0A2540]" />
         </div>
         
         <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto no-scrollbar">
@@ -262,9 +271,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               <div key={idx} className="flex flex-col mb-1">
                 <button 
                   onClick={() => toggleGroup(group.title)}
-                  className="w-full px-2 py-1 flex justify-between items-center text-[#666666] hover:text-[#888888] transition-colors rounded-md"
+                  className="w-full px-2 py-1 flex justify-between items-center text-slate-400 hover:text-slate-700 transition-colors rounded-md"
                 >
-                  <span className="text-[10px] font-medium tracking-wider uppercase">{group.title}</span>
+                  <span className="text-[10px] font-bold tracking-wider uppercase text-slate-400">{group.title}</span>
                   {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                 </button>
                 <div className={`grid transition-all duration-200 ease-in-out ${isExpanded ? "grid-rows-[1fr] opacity-100 mt-0.5" : "grid-rows-[0fr] opacity-0"}`}>
@@ -278,13 +287,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                           href={item.href}
                           title={item.name}
                           className={`
-                            flex items-center gap-2.5 px-2 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150 whitespace-nowrap overflow-hidden
+                            flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 whitespace-nowrap overflow-hidden
                             ${isActive 
-                              ? "bg-white/[0.06] text-white" 
-                              : "text-[#888888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}
+                              ? "bg-slate-100 text-[#0F172A] font-semibold shadow-xs" 
+                              : "text-slate-600 hover:text-[#0F172A] hover:bg-slate-50"}
                           `}
                         >
-                          <Icon size={14} className={`shrink-0 ${isActive ? "text-white" : "text-[#666]"}`} />
+                          <Icon size={14} className={`shrink-0 ${isActive ? "text-[#635BFF]" : "text-slate-400"}`} />
                           <span>
                             {item.name}
                           </span>
@@ -298,88 +307,94 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           })}
         </nav>
 
-        <div className="p-3 border-t border-white/[0.04]">
-          <button onClick={handleSignOut} title="Sign out" className="flex w-full items-center gap-2.5 px-2 py-1.5 rounded-md text-[13px] font-medium text-[#888888] hover:text-[#EDEDED] hover:bg-white/[0.03] transition-colors">
-            <LogOut size={14} className="shrink-0 text-[#666]" />
+        {/* User Info & Sign out in Sidebar */}
+        <div className="p-3 border-t border-slate-200 bg-white">
+          <div className="flex items-center gap-2.5 px-2 py-2 mb-1.5 rounded-lg bg-slate-50 border border-slate-100">
+            <div className="w-7 h-7 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[11px] font-bold shadow-xs">
+              N
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-[12px] font-semibold text-[#0F172A] truncate">Bharti Nexus</span>
+              <span className="text-[10px] text-slate-500 font-mono">admin@bhartinexus.com</span>
+            </div>
+          </div>
+          <button onClick={handleSignOut} title="Sign out" className="flex w-full items-center gap-2.5 px-2 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors">
+            <LogOut size={14} className="shrink-0 text-slate-400" />
             <span>Sign out</span>
           </button>
         </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden bg-[#080808]">
+      <main className="flex-1 flex flex-col h-screen overflow-hidden bg-[#F8FAFC]">
         {/* Top Header */}
-        <header className="h-14 border-b border-white/[0.04] bg-[#0a0a0a]/80 backdrop-blur-md flex items-center justify-between px-6 relative z-30">
+        <header className="h-14 border-b border-slate-200 bg-white/95 backdrop-blur-md flex items-center justify-between px-6 relative z-30 shadow-xs">
             
             {/* App Switcher Dropdown */}
             <div className="relative">
               <button 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-1.5 text-[#888888] text-[13px] hover:text-[#EDEDED] transition-colors px-2 py-1 rounded-md hover:bg-white/[0.03]"
+                className="flex items-center gap-1.5 text-slate-600 text-[13px] hover:text-[#0F172A] transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 border border-transparent hover:border-slate-200"
               >
-                {currentWorkspace ? currentWorkspace.name : "Personal"} 
-                <span className="text-[#555]">/</span> 
-                <span className="font-medium text-[#EDEDED]">{currentApp ? currentApp.name : "Select App"}</span>
+                <span className="text-slate-500 font-medium">{currentWorkspace ? currentWorkspace.name : "Personal"}</span>
+                <span className="text-slate-300">/</span> 
+                <span className="font-semibold text-[#0F172A]">{currentApp ? currentApp.name : "Bharti Nexus"}</span>
                 {currentApp && currentApp.role && (
-                  <span className="ml-1 px-1 py-[1px] rounded text-[9px] bg-white/[0.06] text-[#888] border border-white/[0.04] uppercase tracking-wider font-semibold">
+                  <span className="ml-1 px-1.5 py-0.5 rounded text-[9.5px] bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wider font-bold">
                     {currentApp.role}
                   </span>
                 )}
-                <ChevronDown size={12} className="ml-0.5 text-[#555]" />
+                <ChevronDown size={12} className="ml-0.5 text-slate-400" />
               </button>
 
               {isDropdownOpen && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)}></div>
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-[#111111] border border-white/[0.08] rounded-lg shadow-2xl overflow-hidden z-20">
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-20">
                     
                     {/* Workspaces Section */}
-                    <div className="p-1.5 border-b border-white/[0.04]">
-                      <div className="px-2 py-1.5 text-[10px] font-medium text-[#666] tracking-wider flex items-center justify-between">
+                    <div className="p-1.5 border-b border-slate-100">
+                      <div className="px-2.5 py-1.5 text-[10px] font-bold text-slate-400 tracking-wider flex items-center justify-between uppercase">
                         WORKSPACES
-                        <button onClick={() => { setIsDropdownOpen(false); setNewName(""); setShowWorkspaceModal(true); }} className="hover:text-white p-0.5 hover:bg-white/10 rounded"><Plus size={12} /></button>
+                        <button onClick={() => { setIsDropdownOpen(false); setNewName(""); setShowWorkspaceModal(true); }} className="hover:text-[#0F172A] p-0.5 hover:bg-slate-100 rounded"><Plus size={12} /></button>
                       </div>
                       <button
                         onClick={() => switchWorkspace("personal")}
-                        className="w-full text-left px-2 py-1.5 text-[13px] hover:bg-white/[0.04] flex items-center justify-between group transition-colors rounded-md"
+                        className="w-full text-left px-2.5 py-1.5 text-[13px] hover:bg-slate-50 flex items-center justify-between group transition-colors rounded-md"
                       >
-                        <span className="flex items-center gap-2 text-[#EDEDED]"><Folder size={12} className="text-[#666]"/> Personal</span>
-                        {!currentWorkspaceId && <Check size={12} className="text-white" />}
+                        <span className="flex items-center gap-2 text-[#0F172A]"><Folder size={12} className="text-slate-400"/> Personal</span>
+                        {!currentWorkspaceId && <Check size={12} className="text-[#635BFF]" />}
                       </button>
                       {workspaces.map(w => (
                         <button
                           key={w.id}
                           onClick={() => switchWorkspace(w.id)}
-                          className="w-full text-left px-2 py-1.5 text-[13px] hover:bg-white/[0.04] flex items-center justify-between group transition-colors rounded-md"
+                          className="w-full text-left px-2.5 py-1.5 text-[13px] hover:bg-slate-50 flex items-center justify-between group transition-colors rounded-md"
                         >
-                          <span className="flex items-center gap-2 text-[#EDEDED]"><Folder size={12} className="text-[#666]"/> {w.name}</span>
-                          {w.id === currentWorkspaceId && <Check size={12} className="text-white" />}
+                          <span className="flex items-center gap-2 text-[#0F172A]"><Folder size={12} className="text-slate-400"/> {w.name}</span>
+                          {w.id === currentWorkspaceId && <Check size={12} className="text-[#635BFF]" />}
                         </button>
                       ))}
                     </div>
 
                     {/* Apps Section */}
                     <div className="p-1.5">
-                      <div className="px-2 py-1.5 text-[10px] font-medium text-[#666] tracking-wider flex items-center justify-between">
+                      <div className="px-2.5 py-1.5 text-[10px] font-bold text-slate-400 tracking-wider flex items-center justify-between uppercase">
                         APPS IN {currentWorkspace ? currentWorkspace.name.toUpperCase() : "PERSONAL"}
-                        <button onClick={() => { setIsDropdownOpen(false); setNewName(""); setShowAppModal(true); }} className="hover:text-white p-0.5 hover:bg-white/10 rounded"><Plus size={12} /></button>
+                        <button onClick={() => { setIsDropdownOpen(false); setNewName(""); setShowAppModal(true); }} className="hover:text-[#0F172A] p-0.5 hover:bg-slate-100 rounded"><Plus size={12} /></button>
                       </div>
-                      {apps.length === 0 ? (
-                        <div className="px-2 py-2 text-xs text-[#666] text-center">No apps found. Create one!</div>
-                      ) : (
-                        apps.map(app => (
-                          <button
-                            key={app.id}
-                            onClick={() => switchApp(app.id)}
-                            className="w-full text-left px-2 py-1.5 text-[13px] hover:bg-white/[0.04] flex items-center justify-between group transition-colors rounded-md"
-                          >
-                            <span className={`flex items-center gap-2 ${app.id === currentAppId ? 'text-white font-medium' : 'text-[#EDEDED]'}`}>
-                              <Box size={12} className={app.id === currentAppId ? 'text-white' : 'text-[#666]'} /> {app.name}
-                            </span>
-                            {app.id === currentAppId && <Check size={12} className="text-white" />}
-                          </button>
-                        ))
-                      )}
+                      {displayedApps.map(app => (
+                        <button
+                          key={app.id}
+                          onClick={() => { switchApp(app.id); setIsDropdownOpen(false); }}
+                          className={`w-full text-left px-2.5 py-1.5 text-[13px] hover:bg-slate-50 flex items-center justify-between group transition-colors rounded-md ${app.id === (currentApp?.id) ? 'bg-slate-50 font-semibold text-[#0F172A]' : 'text-slate-700'}`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <Box size={13} className={app.id === (currentApp?.id) ? 'text-[#635BFF]' : 'text-slate-400'} /> {app.name}
+                          </span>
+                          {app.id === (currentApp?.id) && <Check size={13} className="text-[#635BFF]" />}
+                        </button>
+                      ))}
                     </div>
 
                   </div>
@@ -387,43 +402,43 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               )}
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
                 {/* Notifications Dropdown */}
                 <div className="relative">
                   <button 
                     onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                    className="w-7 h-7 rounded-full bg-[#1a1a1a] border border-white/[0.08] flex items-center justify-center hover:border-white/[0.2] transition-colors cursor-pointer relative"
+                    className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer relative shadow-xs"
                   >
-                    <Bell size={14} className="text-[#888]" />
+                    <Bell size={15} className="text-slate-600" />
                     {notifications.filter(n => !n.is_read).length > 0 && (
-                      <span className="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full border border-[#080808]"></span>
+                      <span className="absolute top-1 right-1 w-2 h-2 bg-[#635BFF] rounded-full ring-2 ring-white"></span>
                     )}
                   </button>
                   {isNotificationsOpen && (
                     <>
                       <div className="fixed inset-0 z-10" onClick={() => setIsNotificationsOpen(false)}></div>
-                      <div className="absolute top-full right-0 mt-2 w-80 bg-[#111111] border border-white/[0.08] rounded-lg shadow-2xl overflow-hidden z-20 flex flex-col max-h-[400px]">
-                        <div className="p-3 border-b border-white/[0.04] flex justify-between items-center bg-[#0a0a0a]">
-                          <span className="text-xs font-medium text-white">Notifications</span>
+                      <div className="absolute top-full right-0 mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden z-20 flex flex-col max-h-[400px]">
+                        <div className="p-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                          <span className="text-xs font-semibold text-[#0F172A]">Notifications</span>
                           {notifications.some(n => !n.is_read) && (
-                            <button onClick={markAllNotificationsAsRead} className="text-[10px] text-blue-400 hover:text-blue-300">Mark all read</button>
+                            <button onClick={markAllNotificationsAsRead} className="text-[10px] text-[#635BFF] hover:underline font-medium">Mark all read</button>
                           )}
                         </div>
                         <div className="overflow-y-auto flex-1 p-2 space-y-1">
                           {notifications.length === 0 ? (
-                            <div className="p-6 text-center text-xs text-[#666]">No notifications right now</div>
+                            <div className="p-6 text-center text-xs text-slate-500">No notifications right now</div>
                           ) : (
                             notifications.map(notif => (
                               <div 
                                 key={notif.id} 
                                 onClick={() => markNotificationAsRead(notif.id)}
-                                className={`p-3 rounded-md cursor-pointer transition-colors flex gap-3 ${notif.is_read ? 'opacity-50 hover:bg-white/[0.03]' : 'bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.04]'}`}
+                                className={`p-3 rounded-lg cursor-pointer transition-colors flex gap-3 ${notif.is_read ? 'opacity-60 hover:bg-slate-50' : 'bg-slate-50 hover:bg-slate-100/80 border border-slate-200/60'}`}
                               >
-                                {!notif.is_read && <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 mt-1.5"></div>}
+                                {!notif.is_read && <div className="w-1.5 h-1.5 rounded-full bg-[#635BFF] shrink-0 mt-1.5"></div>}
                                 <div className={notif.is_read ? 'ml-4' : ''}>
-                                  <div className="text-[13px] text-white font-medium mb-1 leading-tight">{notif.title}</div>
-                                  <div className="text-[11px] text-[#888] leading-snug">{notif.message}</div>
-                                  <div className="text-[9px] text-[#555] mt-2 font-medium">{new Date(notif.created_at).toLocaleString()}</div>
+                                  <div className="text-[13px] text-[#0F172A] font-semibold mb-1 leading-tight">{notif.title}</div>
+                                  <div className="text-[11px] text-slate-600 leading-snug">{notif.message}</div>
+                                  <div className="text-[9px] text-slate-400 mt-2 font-medium">{new Date(notif.created_at).toLocaleString()}</div>
                                 </div>
                               </div>
                             ))
@@ -434,56 +449,56 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                   )}
                 </div>
 
-                <Link href="/settings" className="w-7 h-7 rounded-full bg-[#1a1a1a] border border-white/[0.08] flex items-center justify-center hover:border-white/[0.2] transition-colors cursor-pointer overflow-hidden">
-                    <User size={14} className="text-[#888]" />
+                <Link href="/settings" className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center hover:border-slate-300 transition-all cursor-pointer overflow-hidden shadow-xs">
+                    <User size={15} className="text-slate-700" />
                 </Link>
             </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto bg-[#080808] p-6 relative">
+        <div className="flex-1 overflow-y-auto bg-[#F8FAFC] p-6 sm:p-8 relative">
           {children}
 
           {/* Premium UI Components */}
           <CommandPalette />
-          <Toaster theme="dark" position="bottom-right" toastOptions={{
+          <Toaster theme="light" position="bottom-right" toastOptions={{
             style: {
-              background: '#111111',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              color: '#EDEDED',
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              color: '#0F172A',
             }
           }} />
 
-          {/* Creation Modals (Linear Style) */}
+          {/* Creation Modals */}
           {showWorkspaceModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-              <div className="bg-[#111111] border border-white/[0.08] rounded-xl w-full max-w-sm p-5 shadow-2xl">
-                <h2 className="text-[15px] font-medium text-white mb-4">Create workspace</h2>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+              <div className="bg-white border border-slate-200 rounded-xl w-full max-w-sm p-5 shadow-2xl">
+                <h2 className="text-[15px] font-semibold text-[#0F172A] mb-4">Create workspace</h2>
                 <input 
                   type="text" 
                   placeholder="Workspace Name"
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 mb-5 outline-none focus:border-white/20 text-sm placeholder:text-[#555]"
+                  className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 mb-5 outline-none focus:border-[#635BFF] text-sm placeholder:text-slate-400"
                   autoFocus
                 />
                 <div className="flex justify-end gap-2">
-                  <button onClick={() => setShowWorkspaceModal(false)} className="px-3 py-1.5 text-[13px] text-[#888] hover:text-white transition">Cancel</button>
-                  <button onClick={createWorkspace} className="px-3 py-1.5 bg-white hover:bg-[#e5e5e5] text-black rounded-md text-[13px] font-medium transition">Create</button>
+                  <button onClick={() => setShowWorkspaceModal(false)} className="px-3 py-1.5 text-[13px] text-slate-600 hover:text-slate-900 transition">Cancel</button>
+                  <button onClick={createWorkspace} className="px-3.5 py-1.5 bg-[#0F172A] hover:bg-slate-800 text-white rounded-lg text-[13px] font-medium transition">Create</button>
                 </div>
               </div>
             </div>
           )}
 
           {showAppModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-              <div className="bg-[#111111] border border-white/[0.08] rounded-xl w-full max-w-sm p-5 shadow-2xl">
-                <h2 className="text-[15px] font-medium text-white mb-4">Create new app</h2>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+              <div className="bg-white border border-slate-200 rounded-xl w-full max-w-sm p-5 shadow-2xl">
+                <h2 className="text-[15px] font-semibold text-[#0F172A] mb-4">Create new app</h2>
                 <input 
                   type="text" 
                   placeholder="App Name"
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 mb-3 outline-none focus:border-white/20 text-sm placeholder:text-[#555]"
+                  className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 mb-3 outline-none focus:border-[#635BFF] text-sm placeholder:text-slate-400"
                   autoFocus
                 />
                 <input 
@@ -491,11 +506,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                   placeholder="URL (Optional)"
                   value={newUrl}
                   onChange={e => setNewUrl(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 mb-5 outline-none focus:border-white/20 text-sm placeholder:text-[#555]"
+                  className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 mb-5 outline-none focus:border-[#635BFF] text-sm placeholder:text-slate-400"
                 />
                 <div className="flex justify-end gap-2">
-                  <button onClick={() => { setShowAppModal(false); setNewUrl(""); }} className="px-3 py-1.5 text-[13px] text-[#888] hover:text-white transition">Cancel</button>
-                  <button onClick={createApp} className="px-3 py-1.5 bg-white hover:bg-[#e5e5e5] text-black rounded-md text-[13px] font-medium transition">Create App</button>
+                  <button onClick={() => { setShowAppModal(false); setNewUrl(""); }} className="px-3 py-1.5 text-[13px] text-slate-600 hover:text-slate-900 transition">Cancel</button>
+                  <button onClick={createApp} className="px-3.5 py-1.5 bg-[#0F172A] hover:bg-slate-800 text-white rounded-lg text-[13px] font-medium transition">Create App</button>
                 </div>
               </div>
             </div>

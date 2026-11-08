@@ -34,7 +34,7 @@ export function CommandPalette() {
         <Command.Dialog 
           open={open} 
           onOpenChange={setOpen}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 pt-[20vh] bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 pt-[20vh] bg-black/40 backdrop-blur-sm"
           label="Global Command Menu"
         >
           <motion.div
@@ -42,66 +42,66 @@ export function CommandPalette() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="w-full max-w-lg bg-black border border-white/[0.12] rounded-xl shadow-2xl overflow-hidden flex flex-col"
+            className="w-full max-w-lg bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden flex flex-col font-sans"
           >
-            <div className="flex items-center border-b border-white/[0.08] px-4">
-              <Search size={18} className="text-[#888] shrink-0" />
+            <div className="flex items-center border-b border-slate-200 px-4">
+              <Search size={18} className="text-slate-400 shrink-0" />
               <Command.Input 
                 autoFocus 
                 placeholder="Type a command or search..." 
-                className="flex-1 bg-transparent border-none text-white px-4 py-4 text-sm outline-none placeholder:text-[#555]"
+                className="flex-1 bg-transparent border-none text-[#0F172A] px-4 py-4 text-sm outline-none placeholder:text-slate-400 font-medium"
               />
-              <div className="text-[10px] text-[#666] border border-white/[0.1] bg-white/[0.05] px-1.5 py-0.5 rounded font-mono">
+              <div className="text-[10px] text-slate-500 border border-slate-200 bg-slate-100 px-1.5 py-0.5 rounded font-mono font-semibold">
                 ESC
               </div>
             </div>
 
             <Command.List className="max-h-[300px] overflow-y-auto p-2 no-scrollbar">
-              <Command.Empty className="py-6 text-center text-sm text-[#888]">
+              <Command.Empty className="py-6 text-center text-sm text-slate-500">
                 No results found.
               </Command.Empty>
 
-              <Command.Group heading={<div className="px-2 py-1.5 text-[10px] font-medium tracking-wider text-[#666] uppercase">Navigation</div>}>
+              <Command.Group heading={<div className="px-2 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Navigation</div>}>
                 <Command.Item 
                   onSelect={() => runCommand(() => router.push("/dashboard"))}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#EDEDED] rounded-lg hover:bg-white/[0.06] cursor-pointer aria-selected:bg-white/[0.06] aria-selected:text-white transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#0F172A] rounded-lg hover:bg-slate-100 cursor-pointer aria-selected:bg-slate-100 font-medium transition-colors"
                 >
-                  <LayoutDashboard size={14} className="text-[#888]" /> Dashboard
+                  <LayoutDashboard size={14} className="text-slate-500" /> Dashboard
                 </Command.Item>
                 <Command.Item 
                   onSelect={() => runCommand(() => router.push("/bugs"))}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#EDEDED] rounded-lg hover:bg-white/[0.06] cursor-pointer aria-selected:bg-white/[0.06] aria-selected:text-white transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#0F172A] rounded-lg hover:bg-slate-100 cursor-pointer aria-selected:bg-slate-100 font-medium transition-colors"
                 >
-                  <Bug size={14} className="text-[#888]" /> Issues & Bugs
+                  <Bug size={14} className="text-slate-500" /> Issues & Bugs
                 </Command.Item>
                 <Command.Item 
                   onSelect={() => runCommand(() => router.push("/uptime"))}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#EDEDED] rounded-lg hover:bg-white/[0.06] cursor-pointer aria-selected:bg-white/[0.06] aria-selected:text-white transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#0F172A] rounded-lg hover:bg-slate-100 cursor-pointer aria-selected:bg-slate-100 font-medium transition-colors"
                 >
-                  <Activity size={14} className="text-[#888]" /> Uptime & Metrics
+                  <Activity size={14} className="text-slate-500" /> Uptime & Metrics
                 </Command.Item>
                 <Command.Item 
                   onSelect={() => runCommand(() => router.push("/infrastructure"))}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#EDEDED] rounded-lg hover:bg-white/[0.06] cursor-pointer aria-selected:bg-white/[0.06] aria-selected:text-white transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#0F172A] rounded-lg hover:bg-slate-100 cursor-pointer aria-selected:bg-slate-100 font-medium transition-colors"
                 >
-                  <Server size={14} className="text-[#888]" /> Infrastructure
+                  <Server size={14} className="text-slate-500" /> Infrastructure
                 </Command.Item>
                 <Command.Item 
                   onSelect={() => runCommand(() => router.push("/teams"))}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#EDEDED] rounded-lg hover:bg-white/[0.06] cursor-pointer aria-selected:bg-white/[0.06] aria-selected:text-white transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#0F172A] rounded-lg hover:bg-slate-100 cursor-pointer aria-selected:bg-slate-100 font-medium transition-colors"
                 >
-                  <Users size={14} className="text-[#888]" /> Teams
+                  <Users size={14} className="text-slate-500" /> Teams
                 </Command.Item>
               </Command.Group>
 
-              <div className="h-px bg-white/[0.04] my-2" />
+              <div className="h-px bg-slate-100 my-2" />
 
-              <Command.Group heading={<div className="px-2 py-1.5 text-[10px] font-medium tracking-wider text-[#666] uppercase">System</div>}>
+              <Command.Group heading={<div className="px-2 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">System</div>}>
                 <Command.Item 
                   onSelect={() => runCommand(() => router.push("/settings"))}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#EDEDED] rounded-lg hover:bg-white/[0.06] cursor-pointer aria-selected:bg-white/[0.06] aria-selected:text-white transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#0F172A] rounded-lg hover:bg-slate-100 cursor-pointer aria-selected:bg-slate-100 font-medium transition-colors"
                 >
-                  <Settings size={14} className="text-[#888]" /> Settings
+                  <Settings size={14} className="text-slate-500" /> Settings
                 </Command.Item>
               </Command.Group>
             </Command.List>
