@@ -51,27 +51,27 @@ export function Stripe3DAnimation() {
       const v = (y + 6) / 12;
       const diagonal = u * 0.6 + (1 - v) * 0.4;
 
-      // Color 1: Electric Cyan (0.0, 0.83, 1.0)
+      // Color 1: Soft Sky Blue / Cyan (0.2, 0.75, 1.0)
       // Color 2: Stripe Royal Indigo (0.39, 0.36, 1.0)
-      // Color 3: Vibrant Hot Coral (1.0, 0.35, 0.52)
-      // Color 4: Warm Sunset Gold (1.0, 0.68, 0.2)
+      // Color 3: Vibrant Hot Coral / Magenta (1.0, 0.32, 0.55)
+      // Color 4: Radiant Golden Amber (1.0, 0.65, 0.18)
       let r = 0, g = 0, b = 0;
 
-      if (diagonal < 0.33) {
-        const t = diagonal / 0.33;
-        r = 0.0 * (1 - t) + 0.39 * t;
-        g = 0.83 * (1 - t) + 0.36 * t;
+      if (diagonal < 0.30) {
+        const t = diagonal / 0.30;
+        r = 0.2 * (1 - t) + 0.39 * t;
+        g = 0.75 * (1 - t) + 0.36 * t;
         b = 1.0;
-      } else if (diagonal < 0.66) {
-        const t = (diagonal - 0.33) / 0.33;
+      } else if (diagonal < 0.65) {
+        const t = (diagonal - 0.30) / 0.35;
         r = 0.39 * (1 - t) + 1.0 * t;
-        g = 0.36 * (1 - t) + 0.35 * t;
-        b = 1.0 * (1 - t) + 0.52 * t;
+        g = 0.36 * (1 - t) + 0.32 * t;
+        b = 1.0 * (1 - t) + 0.55 * t;
       } else {
-        const t = (diagonal - 0.66) / 0.34;
+        const t = (diagonal - 0.65) / 0.35;
         r = 1.0;
-        g = 0.35 * (1 - t) + 0.68 * t;
-        b = 0.52 * (1 - t) + 0.2 * t;
+        g = 0.32 * (1 - t) + 0.68 * t;
+        b = 0.55 * (1 - t) + 0.18 * t;
       }
 
       colors[i * 3] = r;
@@ -95,10 +95,10 @@ export function Stripe3DAnimation() {
     });
 
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.x = -0.55;
-    mesh.rotation.y = 0.25;
-    mesh.rotation.z = -0.32;
-    mesh.position.set(2.8, -0.6, 0);
+    mesh.rotation.x = -0.52;
+    mesh.rotation.y = 0.22;
+    mesh.rotation.z = -0.28;
+    mesh.position.set(2.4, -0.3, 0);
     scene.add(mesh);
 
     // 3. Dynamic Studio Lights
@@ -205,10 +205,10 @@ export function Stripe3DAnimation() {
         style={{ transform: "scale(1.08)" }}
       />
 
-      {/* Protective Soft White Edge Vignettes so typography on the left remains 100% crystal clear */}
-      <div className="absolute inset-y-0 left-0 w-full sm:w-3/5 lg:w-1/2 bg-gradient-to-r from-white via-white/90 to-transparent pointer-events-none" />
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white via-white/80 to-transparent pointer-events-none" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none" />
+      {/* Subtle edge blend so typography on the far left has solid contrast while the ribbon shines behind the right side */}
+      <div className="absolute inset-y-0 left-0 w-24 sm:w-48 bg-gradient-to-r from-white via-white/70 to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/90 via-white/40 to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
     </div>
   );
 }

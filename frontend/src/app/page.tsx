@@ -30,6 +30,8 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Stripe3DAnimation } from "@/components/Stripe3DAnimation";
+import { StripeProductShowcase } from "@/components/StripeProductShowcase";
+import { DarkTelemetryCard } from "@/components/DarkTelemetryCard";
 
 /* ═══════════════════════════════════════════════════════════════
    TYPES & SAMPLE TELEMETRY
@@ -135,38 +137,16 @@ function Navigation() {
    SECTION 2: STRIPE-STYLE HERO WITH FLOATING COLOR MESH ANIMATION
    ═══════════════════════════════════════════════════════════════ */
 function HeroSection() {
-  const [selectedCluster, setSelectedCluster] = useState<"us-east-1" | "eu-central-1" | "ap-south-1">("us-east-1");
-  const [liveP99, setLiveP99] = useState("1.42ms");
-  const [packetTick, setPacketTick] = useState(48210);
-
-  const clusterData = {
-    "us-east-1": { label: "Virginia Core", ping: "0.8ms", p99: "1.42ms", error: "0.001%", rps: "48.2k", status: "HEALTHY" },
-    "eu-central-1": { label: "Frankfurt Mesh", ping: "1.4ms", p99: "1.85ms", error: "0.000%", rps: "31.4k", status: "HEALTHY" },
-    "ap-south-1": { label: "Mumbai Relay", ping: "2.1ms", p99: "3.12ms", error: "0.004%", rps: "19.8k", status: "NOMINAL" },
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const base = selectedCluster === "us-east-1" ? 1.38 : selectedCluster === "eu-central-1" ? 1.80 : 3.05;
-      const jitter = (base + Math.random() * 0.12).toFixed(2);
-      setLiveP99(`${jitter}ms`);
-      setPacketTick((prev) => prev + Math.floor(Math.random() * 18 - 8));
-    }, 2200);
-    return () => clearInterval(interval);
-  }, [selectedCluster]);
-
-  const active = clusterData[selectedCluster];
-
   return (
-    <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 px-6 sm:px-10 overflow-hidden bg-white">
+    <section className="relative pt-32 pb-20 md:pt-44 md:pb-32 px-6 sm:px-10 overflow-hidden bg-white min-h-[580px] md:min-h-[660px] flex items-center">
       
       {/* ── Real 3D WebGL Colored Wave Mesh Animation (Three.js) ── */}
       <Stripe3DAnimation />
 
-      <div className="relative z-10 max-w-[1360px] mx-auto">
+      <div className="relative z-10 max-w-[1360px] mx-auto w-full">
         
         {/* HERO INTRO GRID: Headline & Text with Stripe Typography & Colors */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[440px] md:min-h-[480px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* LEFT COLUMN: Editorial Headline & Value (8 cols) */}
           <div className="lg:col-span-8 flex flex-col items-start text-left">
@@ -197,7 +177,7 @@ function HeroSection() {
                 <ChevronRight size={16} />
               </Link>
               <a
-                href="#platform"
+                href="#telemetry-cockpit"
                 className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/90 text-[#0A2540] border border-slate-200 text-[14px] font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-xs flex items-center justify-center gap-2"
               >
                 Explore the platform
@@ -208,7 +188,7 @@ function HeroSection() {
             <div className="pt-5 border-t border-slate-200/70 w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#627D98]">
               <span className="flex items-center gap-1.5 text-[#059669] font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
-                Mesh latency: {active.ping}
+                Mesh latency: 0.8ms
               </span>
               <span className="text-slate-300">/</span>
               <span>Application monitoring</span>
@@ -224,131 +204,63 @@ function HeroSection() {
             <div className="flex flex-col gap-2 font-mono text-[11px] items-end">
               <div className="px-4 py-2 rounded-full bg-white/85 backdrop-blur-md border border-slate-200/80 text-[#0A2540] flex items-center gap-2 shadow-sm font-semibold">
                 <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse" />
-                <span>REAL-TIME ENGINE // 42.8k OPS/SEC</span>
+                <span>REAL-TIME ENGINE // 48.2k OPS/SEC</span>
               </div>
               <div className="px-3.5 py-1 rounded-full bg-white/70 backdrop-blur-sm border border-slate-200/50 text-[#627D98] text-[10.5px]">
-                Global latency p99: 1.42ms • SLA: 99.98%
+                Global latency p99: 1.43ms • SLA: 99.98%
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* ── STRIPE-STYLE FLOATING TELEMETRY COCKPIT ── */}
-        <div className="mt-16 md:mt-24 w-full rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/80 p-6 sm:p-7 shadow-[0_20px_50px_-12px_rgba(50,50,93,0.12),0_10px_20px_-8px_rgba(0,0,0,0.06)] hover:border-slate-300 transition-all">
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 2.5: LIVE TELEMETRY & SERVICE MESH COCKPIT (SHIFTED CARD)
+   ═══════════════════════════════════════════════════════════════ */
+function TelemetryCockpitSection() {
+  return (
+    <section id="telemetry-cockpit" className="py-20 md:py-28 px-6 sm:px-10 bg-[#F6F9FC] border-y border-slate-200/80">
+      <div className="max-w-[1360px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Console Header Bar */}
-          <div className="flex flex-wrap items-center justify-between pb-5 border-b border-slate-100 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 font-mono text-[12px] text-[#0A2540] font-bold">
-                <Radio size={14} className="text-[#059669] animate-pulse" />
-                <span>MULTI-REGION TELEMETRY CONSOLE</span>
-              </div>
-              <span className="text-slate-300">|</span>
-              <div className="flex items-center gap-1.5 bg-[#F6F9FC] p-1 rounded-lg border border-slate-200/80 font-mono text-[11px]">
-                {(["us-east-1", "eu-central-1", "ap-south-1"] as const).map((reg) => (
-                  <button
-                    key={reg}
-                    onClick={() => setSelectedCluster(reg)}
-                    className={`px-3 py-1 rounded-md transition-all font-semibold ${
-                      selectedCluster === reg ? "bg-white text-[#0A2540] shadow-sm border border-slate-200/60" : "text-[#425466] hover:text-[#0A2540]"
-                    }`}
-                  >
-                    {reg}
-                  </button>
-                ))}
-              </div>
+          {/* Left Editorial Copy */}
+          <div className="lg:col-span-5 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3985FF]/10 border border-[#3985FF]/20 text-[#3985FF] font-mono text-[11px] font-bold tracking-wider uppercase mb-4">
+              Real-Time Mesh Topology
             </div>
-
-            <div className="flex items-center gap-2 font-mono text-[11px]">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#059669]/10 text-[#059669] border border-[#059669]/20 font-semibold">
-                STATUS: {active.status}
-              </span>
-              <span className="text-slate-300">•</span>
-              <span className="text-[#627D98]">ILLUSTRATIVE TELEMETRY</span>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0A2540] font-display mb-5 leading-tight">
+              Know what’s happening across every cluster and node.
+            </h2>
+            <p className="text-base text-[#425466] leading-relaxed mb-6 font-sans">
+              Instant multi-region latency telemetry, p99 distribution tracking, error frequency budgets, and autonomous AI anomaly correlation across distributed microservices.
+            </p>
+            <div className="space-y-3 font-mono text-xs text-[#0A2540]">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-[#36D399]" />
+                <span>Multi-region synthetic ping & latency probes</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-[#36D399]" />
+                <span>Live topology degradation detection & warnings</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-[#9B7BFF]" />
+                <span>Automated git commit correlation via AI Copilot</span>
+              </div>
             </div>
           </div>
 
-          {/* 3-Column Panoramic Breakdown */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-6">
-            
-            {/* Col 1: Key Metrics (4 cols) */}
-            <div className="md:col-span-4 flex flex-col justify-between gap-3">
-              <div className="grid grid-cols-3 gap-2">
-                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
-                  <span className="text-[10px] font-mono text-[#627D98] block mb-1 uppercase font-semibold">P99 LATENCY</span>
-                  <span className="text-xl font-mono font-bold text-[#0A2540]">{liveP99}</span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
-                  <span className="text-[10px] font-mono text-[#627D98] block mb-1 uppercase font-semibold">ERROR RATE</span>
-                  <span className="text-xl font-mono font-bold text-[#059669]">{active.error}</span>
-                </div>
-                <div className="p-3.5 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
-                  <span className="text-[10px] font-mono text-[#627D98] block mb-1 uppercase font-semibold">THROUGHPUT</span>
-                  <span className="text-xl font-mono font-bold text-[#635BFF]">
-                    {(packetTick / 1000).toFixed(1)}k/s
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] font-mono text-[#425466] p-3 rounded-xl bg-[#F6F9FC] border border-slate-200/80">
-                <span className="flex items-center gap-1.5 font-medium">
-                  <GitCommit size={13} className="text-[#635BFF]" />
-                  v2.4.1 deployed 4m ago
-                </span>
-                <span className="text-[#059669] font-semibold">0 canary rollbacks</span>
-              </div>
-            </div>
-
-            {/* Col 2: Topology Nodes List (4 cols) */}
-            <div className="md:col-span-4 p-4 rounded-xl bg-[#F6F9FC] border border-slate-200/80 flex flex-col justify-between">
-              <div className="flex items-center justify-between text-[11px] font-mono text-[#425466] font-semibold mb-2">
-                <span>TOPOLOGY MESH ELEVATION</span>
-                <span className="text-[10px] text-[#627D98]">6 ACTIVE NODES</span>
-              </div>
-              <div className="space-y-2 font-mono text-[11.5px]">
-                <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-slate-200/80 shadow-xs">
-                  <div className="flex items-center gap-2 font-medium">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#059669]" />
-                    <span className="text-[#0A2540]">api-edge-proxy</span>
-                  </div>
-                  <span className="text-[10.5px] text-[#627D98]">{active.ping} • {active.rps}</span>
-                </div>
-                <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-slate-200/80 shadow-xs">
-                  <div className="flex items-center gap-2 font-medium">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#059669]" />
-                    <span className="text-[#0A2540]">auth-service-v2</span>
-                  </div>
-                  <span className="text-[10.5px] text-[#627D98]">3.4ms • 4.2k rps</span>
-                </div>
-                <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white border border-amber-200 shadow-xs">
-                  <div className="flex items-center gap-2 font-medium">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                    <span className="text-[#0A2540]">payment-worker-pool</span>
-                  </div>
-                  <span className="text-[10.5px] text-amber-600 font-semibold">142ms • Degraded</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Col 3: AI Anomaly Detection Callout (4 cols) */}
-            <div className="md:col-span-4 p-4 rounded-xl bg-[#F6F9FC] border border-[#635BFF]/30 flex flex-col justify-between">
-              <div className="flex items-center gap-2 text-[#635BFF] font-mono text-[11px] font-bold">
-                <Sparkles size={14} />
-                <span>AI ANOMALY DETECTION // MESH</span>
-              </div>
-              <div className="my-2 text-[12.5px] font-mono text-[#0A2540] font-medium leading-snug">
-                Connection pool saturation on <code className="text-[#635BFF] bg-white px-1.5 py-0.5 rounded border border-slate-200">postgres-primary</code>
-              </div>
-              <div className="text-[10.5px] text-[#627D98] font-mono pt-2 border-t border-slate-200/60">
-                Correlated with commit <span className="font-semibold text-[#0A2540]">sha:8f2a1b9</span> (payment retry loop)
-              </div>
-            </div>
-
+          {/* Right: The Exact Dark Telemetry Card from Image 1 */}
+          <div className="lg:col-span-7 flex justify-center">
+            <DarkTelemetryCard />
           </div>
 
         </div>
-
       </div>
     </section>
   );
@@ -1169,8 +1081,14 @@ export default function LandingPage() {
       <Navigation />
 
       <main>
-        {/* 2. Stripe-inspired Hero with Nature Horizon */}
+        {/* 2. Stripe-inspired Hero with 3D WebGL Colored Wave Mesh */}
         <HeroSection />
+
+        {/* 2.2. Shifted Live Telemetry & Service Mesh Cockpit (Pixel-perfect Dark Card) */}
+        <TelemetryCockpitSection />
+
+        {/* 2.5. Stripe-Style Modular Product Showcase (Mobile Terminal + Browser + Usage Meter + 30-Day Histogram) */}
+        <StripeProductShowcase />
 
         {/* 3. Operational Intelligence Bento */}
         <OperationalIntelligenceSection />
