@@ -136,35 +136,35 @@ function Navigation() {
    ═══════════════════════════════════════════════════════════════ */
 function HeroSection() {
   return (
-    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 sm:px-10 overflow-hidden bg-white border-b border-slate-100 flex items-center">
+    <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 px-6 sm:px-10 overflow-hidden bg-white border-b border-slate-100 flex items-center">
       
       <div className="relative z-10 max-w-[1360px] mx-auto w-full">
         
-        {/* HERO GRID: Left Editorial Content (7 cols) + Right Clean Video in Empty Space (5 cols) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+        {/* HERO GRID: Left Editorial Content (6 cols) + Right Enlarged Video in Empty Space (6 cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* LEFT COLUMN: Clean Editorial Headline & CTAs (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
+          {/* LEFT COLUMN: Clean Editorial Headline & CTAs (6 cols) */}
+          <div className="lg:col-span-6 flex flex-col items-start text-left z-10">
             
             {/* Live Telemetry Ticker Line */}
-            <div className="text-[12.5px] font-mono text-[#0A2540] font-semibold tracking-tight mb-5 flex items-center gap-2">
+            <div className="text-[12px] font-mono text-[#0A2540] font-semibold tracking-tight mb-4 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse" />
               <span>Global telemetry running on BREXAL:</span>
               <span className="text-[#635BFF] font-bold">99.984201%</span>
             </div>
 
             {/* Main Headline (BREXAL Mission with Stripe-grade typography & accent) */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-bold tracking-[-0.03em] text-[#0A2540] leading-[1.06] mb-6 font-display max-w-2xl">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[62px] font-bold tracking-[-0.03em] text-[#0A2540] leading-[1.06] mb-5 font-display max-w-xl">
               See the failure before it becomes <span className="text-[#635BFF]">an incident.</span>
             </h1>
 
             {/* Supporting Description */}
-            <p className="text-lg sm:text-xl md:text-[21px] text-[#3A5A78] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
+            <p className="text-base sm:text-lg md:text-[20px] text-[#3A5A78] font-normal leading-relaxed max-w-xl mb-7 font-sans">
               Monitor every microservice, trace every distributed request, and identify the root cause with AI before downtime impacts your users or your business.
             </p>
 
             {/* Action CTAs */}
-            <div className="flex flex-wrap items-center gap-4 mb-8 w-full sm:w-auto">
+            <div className="flex flex-wrap items-center gap-4 mb-7 w-full sm:w-auto">
               <Link
                 href="/register"
                 className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#635BFF] text-white text-[14.5px] font-semibold hover:bg-[#5349e0] transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(99,91,255,0.35)] hover:shadow-[0_6px_22px_rgba(99,91,255,0.45)] focus:ring-2 focus:ring-[#635BFF]"
@@ -181,7 +181,7 @@ function HeroSection() {
             </div>
 
             {/* Technical Metadata Line */}
-            <div className="pt-5 border-t border-slate-200/70 w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#627D98]">
+            <div className="pt-4 border-t border-slate-200/70 w-full flex flex-wrap items-center gap-3 text-[11.5px] font-mono text-[#627D98]">
               <span className="flex items-center gap-1.5 text-[#059669] font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
                 Mesh latency: 0.8ms
@@ -195,8 +195,8 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Plain Seamless Video in the Empty Space Beside Text (5 cols) */}
-          <div className="lg:col-span-5 w-full flex items-center justify-center lg:justify-end">
+          {/* RIGHT COLUMN: Enlarged Seamless Video in the Empty Space (6 cols) */}
+          <div className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end">
             <HeroVideoShowcase />
           </div>
 
@@ -212,7 +212,7 @@ function HeroSection() {
    ═══════════════════════════════════════════════════════════════ */
 function TelemetryCockpitSection() {
   return (
-    <section id="telemetry-cockpit" className="py-20 md:py-28 px-6 sm:px-10 bg-[#F6F9FC] border-y border-slate-200/80">
+    <section id="telemetry-cockpit" className="py-14 md:py-18 px-6 sm:px-10 bg-[#F6F9FC] border-y border-slate-200/80">
       <div className="max-w-[1360px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
@@ -262,7 +262,7 @@ function OperationalIntelligenceSection() {
   const [activeTraceStep, setActiveTraceStep] = useState<number>(2);
 
   return (
-    <section id="platform" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
+    <section id="platform" className="py-14 md:py-20 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
       <div className="max-w-[1360px] mx-auto">
         {/* Editorial Section Header */}
         <div className="max-w-2xl mb-16 text-left">
@@ -472,7 +472,7 @@ function RealTimeVisibilitySection() {
   const [activeTab, setActiveTab] = useState<"services" | "alerts" | "resources">("services");
 
   return (
-    <section id="features" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
+    <section id="features" className="py-14 md:py-20 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
       <div className="max-w-[1360px] mx-auto">
         
         {/* Header */}
@@ -713,7 +713,7 @@ function RealTimeVisibilitySection() {
    ═══════════════════════════════════════════════════════════════ */
 function AiIntelligenceSection() {
   return (
-    <section id="solutions" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
+    <section id="solutions" className="py-14 md:py-20 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
       <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         
         {/* LEFT: Capabilities list & explanation */}
@@ -831,7 +831,7 @@ function CompleteStackSection() {
   ];
 
   return (
-    <section id="stack" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
+    <section id="stack" className="py-14 md:py-20 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
       <div className="max-w-[1360px] mx-auto">
         
         {/* Section Header */}
@@ -892,7 +892,7 @@ function IncidentResponseSection() {
   ];
 
   return (
-    <section id="incident-response" className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
+    <section id="incident-response" className="py-14 md:py-20 px-6 sm:px-10 border-b border-slate-200/80 bg-[#F6F9FC]">
       <div className="max-w-[1360px] mx-auto">
         
         {/* Section Header */}
@@ -944,7 +944,7 @@ function IncidentResponseSection() {
    ═══════════════════════════════════════════════════════════════ */
 function FinalCtaSection() {
   return (
-    <section className="py-24 md:py-32 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
+    <section className="py-14 md:py-20 px-6 sm:px-10 border-b border-slate-200/80 bg-white">
       <div className="max-w-[960px] mx-auto text-center flex flex-col items-center">
         
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[#0A2540] leading-tight font-display mb-5">
@@ -983,7 +983,7 @@ function FinalCtaSection() {
    ═══════════════════════════════════════════════════════════════ */
 function EnterpriseFooter() {
   return (
-    <footer className="py-16 px-6 sm:px-10 bg-[#F6F9FC] text-[#425466] font-sans">
+    <footer className="py-12 px-6 sm:px-10 bg-[#F6F9FC] text-[#425466] font-sans">
       <div className="max-w-[1360px] mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 pb-16 border-b border-slate-200/80">
           

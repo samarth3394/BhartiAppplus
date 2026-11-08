@@ -38,7 +38,7 @@ export function StripeProductShowcase() {
   ];
 
   return (
-    <section id="modular-showcase" className="py-20 md:py-32 px-6 sm:px-10 bg-white border-b border-slate-200/80">
+    <section id="modular-showcase" className="py-14 md:py-20 px-6 sm:px-10 bg-white border-b border-slate-200/80">
       <div className="max-w-[1360px] mx-auto">
         
         {/* Section Header */}
