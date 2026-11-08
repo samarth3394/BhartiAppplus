@@ -1077,50 +1077,6 @@ export default function LandingPage() {
           </div>
         </motion.section>
 
-        {/* ═══════════════════ CTA SECTION (With Mountain Callback) ═══════════════════ */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={sectionReveal}
-          className="w-full px-6 md:px-12 lg:px-24 mt-40"
-        >
-          <div className="relative rounded-3xl bg-[#07080a] border border-white/[0.08] p-12 md:p-24 text-center overflow-hidden">
-            {/* Ambient image background reflection */}
-            <div className="absolute inset-0 pointer-events-none opacity-20 select-none">
-              <img
-                src="/hero-landscape.png?v=2"
-                alt=""
-                className="w-full h-full object-cover object-[center_35%]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#07080a] via-[#07080a]/80 to-[#07080a]" />
-            </div>
-
-            <div className="relative z-10 max-w-2xl mx-auto">
-              <h2 className="text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight mb-6 text-white text-balance">
-                Total visibility starts now.
-              </h2>
-              <p className="text-zinc-400 text-base sm:text-lg mb-10 leading-relaxed font-normal">
-                Join forward-thinking software organizations maintaining high availability with zero alert noise.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link
-                  href="/register"
-                  className="w-full sm:w-auto bg-white text-black px-7 py-3 rounded-full font-medium hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 text-[14px]"
-                >
-                  Start Free Workspace <ArrowRight size={15} />
-                </Link>
-                <Link
-                  href="#features"
-                  className="w-full sm:w-auto px-6 py-3 rounded-full border border-white/[0.12] text-zinc-300 hover:text-white hover:border-white/25 transition-colors text-[14px]"
-                >
-                  Explore Documentation
-                </Link>
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
       </main>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
