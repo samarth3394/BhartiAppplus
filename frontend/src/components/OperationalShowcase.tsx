@@ -1,516 +1,389 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
-  Server, GitBranch, Bell, Shield, Cpu,
-  Clock, Check, X, ArrowRight, ChevronDown,
-  Activity, AlertTriangle, Zap, Settings,
-  ExternalLink, Search, RefreshCw
+  LayoutDashboard, Zap, MessageSquare, Users,
+  KanbanSquare, Bug, Map, Activity, Server,
+  Terminal, Wrench, Settings, ChevronDown, ChevronRight,
+  Check, X, AlertTriangle, Search, Play, Pause,
+  Shield, RefreshCw, ArrowRight, GitBranch, Bell,
+  Cpu, HardDrive, Wifi, Sliders, Plus
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════════
    TYPES
    ═══════════════════════════════════════════════════════════════ */
 
-type ViewId = "services" | "deployments" | "alerts" | "incidents" | "infrastructure";
+export type FeatureTab =
+  | "Dashboard"
+  | "AI Copilot"
+  | "Inbox"
+  | "Teams"
+  | "Kanban"
+  | "Issues & Bugs"
+  | "Roadmap"
+  | "Uptime"
+  | "Infrastructure"
+  | "Logs"
+  | "Maintenance"
+  | "Settings";
 
-interface ServiceRow {
-  name: string;
-  status: "operational" | "degraded" | "warning";
-  latency: string;
-  errorRate: string;
-  rps: string;
-  lastCheck: string;
+interface NavItem {
+  name: FeatureTab;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  badge?: string;
+  badgeColor?: string;
 }
 
-interface DeploymentItem {
-  service: string;
-  version: string;
-  env: "production" | "staging" | "canary";
-  status: "success" | "in-progress" | "failed" | "rolled-back";
-  time: string;
-  detail: string;
-  author: string;
-}
-
-interface AlertItem {
-  severity: "critical" | "warning";
+interface NavGroup {
   title: string;
-  service: string;
-  time: string;
-  status: "active" | "investigating" | "resolved";
-  detail: string;
+  items: NavItem[];
 }
 
-interface IncidentEvent {
-  event: string;
-  time: string;
-  completed: boolean;
-}
-
-interface InfraMetric {
-  name: string;
-  value: number;
-  unit: string;
-  color: string;
-  sparkline: number[];
-  peak: string;
-  avg: string;
-}
+const navGroups: NavGroup[] = [
+  {
+    title: "OVERVIEW",
+    items: [
+      { name: "Dashboard", icon: LayoutDashboard },
+      { name: "AI Copilot", icon: Zap, badge: "AI", badgeColor: "bg-[#3978FF]/20 text-[#3978FF]" },
+    ],
+  },
+  {
+    title: "COMMUNICATION",
+    items: [
+      { name: "Inbox", icon: MessageSquare, badge: "4", badgeColor: "bg-[#F05252]/20 text-[#F05252]" },
+      { name: "Teams", icon: Users },
+    ],
+  },
+  {
+    title: "PLANNING",
+    items: [
+      { name: "Kanban", icon: KanbanSquare },
+      { name: "Issues & Bugs", icon: Bug, badge: "2 P0", badgeColor: "bg-[#E8AA42]/20 text-[#E8AA42]" },
+      { name: "Roadmap", icon: Map },
+    ],
+  },
+  {
+    title: "OPERATIONS",
+    items: [
+      { name: "Uptime", icon: Activity, badge: "99.98%", badgeColor: "bg-[#22C78A]/20 text-[#22C78A]" },
+      { name: "Infrastructure", icon: Server },
+      { name: "Logs", icon: Terminal, badge: "Live", badgeColor: "bg-[#3978FF]/20 text-[#3978FF]" },
+      { name: "Maintenance", icon: Wrench },
+    ],
+  },
+  {
+    title: "SYSTEM",
+    items: [
+      { name: "Settings", icon: Settings },
+    ],
+  },
+];
 
 /* ═══════════════════════════════════════════════════════════════
-   DATA CONSTANTS
+   1. DASHBOARD VIEW
    ═══════════════════════════════════════════════════════════════ */
-
-const services: ServiceRow[] = [
-  { name: "API Gateway", status: "operational", latency: "12ms", errorRate: "0.02%", rps: "8,421", lastCheck: "2s ago" },
-  { name: "Authentication Service", status: "operational", latency: "8ms", errorRate: "0.00%", rps: "3,218", lastCheck: "5s ago" },
-  { name: "Payment Service", status: "degraded", latency: "145ms", errorRate: "1.24%", rps: "1,847", lastCheck: "3s ago" },
-  { name: "PostgreSQL", status: "operational", latency: "3ms", errorRate: "0.00%", rps: "12,490", lastCheck: "1s ago" },
-  { name: "Redis Cache", status: "operational", latency: "0.4ms", errorRate: "0.00%", rps: "45,200", lastCheck: "1s ago" },
-  { name: "Background Workers", status: "warning", latency: "—", errorRate: "0.31%", rps: "924", lastCheck: "8s ago" },
-];
-
-const deployments: DeploymentItem[] = [
-  { service: "API Gateway", version: "v3.12.1", env: "production", status: "success", time: "12 min ago", detail: "14 files changed · 847 tests passed · Build 2m 34s", author: "Sarah K." },
-  { service: "Auth Service", version: "v2.8.0", env: "staging", status: "in-progress", time: "2 min ago", detail: "Running integration tests (3/7)", author: "Marcus L." },
-  { service: "Payment Service", version: "v1.45.3", env: "production", status: "failed", time: "1h ago", detail: "Health check timeout after 30s · Auto-rollback initiated", author: "DevOps Bot" },
-  { service: "Background Workers", version: "v4.2.0", env: "production", status: "success", time: "3h ago", detail: "Zero-downtime rolling update · 3 pods replaced", author: "Alice R." },
-  { service: "Redis Cache", version: "v7.2.4", env: "canary", status: "rolled-back", time: "5h ago", detail: "Error rate exceeded 2% threshold · Reverted to v7.2.3", author: "System" },
-];
-
-const alerts: AlertItem[] = [
-  { severity: "critical", title: "High API Latency Detected", service: "API Gateway", time: "2 min ago", status: "active", detail: "p99 latency: 847ms (threshold: 200ms). Affected endpoints: /api/v2/users, /api/v2/orders. Correlated with deployment v3.12.1." },
-  { severity: "warning", title: "CPU Utilization Exceeded 85%", service: "Worker Node 3", time: "8 min ago", status: "investigating", detail: "CPU at 89% for 4 consecutive minutes. Background job queue depth: 2,847. Auto-scaling triggered." },
-  { severity: "critical", title: "Database Connection Pool Exhausted", service: "PostgreSQL", time: "15 min ago", status: "resolved", detail: "Max connections reached (100/100). Idle connections reclaimed. Pool restored to 34/100 active." },
-  { severity: "warning", title: "Elevated HTTP 500 Error Rate", service: "Payment Service", time: "23 min ago", status: "active", detail: "5xx rate at 1.24% (baseline: 0.05%). Root cause: upstream provider intermittent failures." },
-];
-
-const incidentTimeline: IncidentEvent[] = [
-  { event: "Anomaly detected in API Gateway latency", time: "14:23:01 UTC", completed: true },
-  { event: "Incident INC-4892 created automatically", time: "14:23:04 UTC", completed: true },
-  { event: "AI investigation started — analyzing telemetry", time: "14:23:06 UTC", completed: true },
-  { event: "Root cause identified: connection pool saturation", time: "14:23:18 UTC", completed: true },
-  { event: "On-call engineer Sarah K. notified via PagerDuty", time: "14:23:19 UTC", completed: true },
-  { event: "Resolution: pool limit increased, connections drained", time: "14:31:42 UTC", completed: false },
-];
-
-const infraMetrics: InfraMetric[] = [
-  { name: "CPU", value: 67, unit: "%", color: "#3978FF", sparkline: [52, 48, 55, 62, 58, 71, 65, 59, 72, 68, 74, 67], peak: "74%", avg: "62%" },
-  { name: "Memory", value: 74, unit: "%", color: "#A855F7", sparkline: [65, 68, 66, 70, 69, 72, 71, 73, 72, 74, 73, 74], peak: "76%", avg: "70%" },
-  { name: "Disk I/O", value: 42, unit: "%", color: "#22C78A", sparkline: [30, 35, 28, 45, 38, 42, 55, 40, 36, 44, 39, 42], peak: "55%", avg: "39%" },
-  { name: "Network", value: 31, unit: "Mbps", color: "#06B6D4", sparkline: [18, 25, 22, 35, 28, 42, 31, 26, 38, 30, 34, 31], peak: "42", avg: "28" },
-];
-
-const sidebarNav: { id: ViewId; icon: typeof Server; label: string }[] = [
-  { id: "services", icon: Server, label: "Services" },
-  { id: "deployments", icon: GitBranch, label: "Deploys" },
-  { id: "alerts", icon: Bell, label: "Alerts" },
-  { id: "incidents", icon: Shield, label: "Incidents" },
-  { id: "infrastructure", icon: Cpu, label: "Infra" },
-];
-
-const capabilityHighlights: { id: ViewId; icon: typeof Activity; title: string; desc: string }[] = [
-  { id: "services", icon: Activity, title: "Unified Service Health", desc: "Understand the status of every service in real time." },
-  { id: "deployments", icon: GitBranch, title: "Deployment Intelligence", desc: "Track releases, rollbacks and deployment failures." },
-  { id: "alerts", icon: Bell, title: "Intelligent Alerting", desc: "Detect anomalies before they become incidents." },
-  { id: "incidents", icon: Shield, title: "Incident Intelligence", desc: "Understand root causes and accelerate resolution." },
-  { id: "infrastructure", icon: Cpu, title: "Infrastructure Visibility", desc: "Monitor compute, memory, storage and network." },
-];
-
-const TIME_RANGES = ["1h", "6h", "24h", "7d"] as const;
-
-/* ═══════════════════════════════════════════════════════════════
-   HELPER COMPONENTS
-   ═══════════════════════════════════════════════════════════════ */
-
-function StatusDot({ status }: { status: "operational" | "degraded" | "warning" | "critical" | "active" | "resolved" | "investigating" }) {
-  const colors: Record<string, string> = {
-    operational: "bg-[#22C78A]",
-    degraded: "bg-[#E8AA42]",
-    warning: "bg-[#E8AA42]",
-    critical: "bg-[#F05252]",
-    active: "bg-[#F05252]",
-    investigating: "bg-[#E8AA42]",
-    resolved: "bg-[#22C78A]",
-  };
-  const shouldPulse = status === "active" || status === "investigating" || status === "degraded";
-  return (
-    <span className="relative flex h-2 w-2">
-      {shouldPulse && <span className={`absolute inset-0 rounded-full ${colors[status]} opacity-40 animate-ping`} />}
-      <span className={`relative inline-flex rounded-full h-2 w-2 ${colors[status]}`} />
-    </span>
-  );
-}
-
-function Sparkline({ data, color, width = 120, height = 28 }: { data: number[]; color: string; width?: number; height?: number }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = max - min || 1;
-  const pad = 2;
-  const points = data
-    .map((v, i) => {
-      const x = (i / (data.length - 1)) * width;
-      const y = pad + ((max - v) / range) * (height - pad * 2);
-      return `${x},${y}`;
-    })
-    .join(" ");
-
-  const areaPath = `M0,${height} L${points.split(" ").map((p, i) => (i === 0 ? p : `L${p}`)).join(" ")} L${width},${height} Z`
-    .replace("LL", "L");
+function DashboardView({ onNavigate }: { onNavigate: (tab: FeatureTab) => void }) {
+  const [selectedRange, setSelectedRange] = useState("30d");
 
   return (
-    <svg width={width} height={height} className="overflow-visible" aria-hidden="true">
-      <defs>
-        <linearGradient id={`sg-${color.replace("#", "")}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.15" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <polygon points={`0,${height} ${points} ${width},${height}`} fill={`url(#sg-${color.replace("#", "")})`} />
-      <polyline points={points} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function CircularGauge({ value, color, size = 72 }: { value: number; color: string; size?: number }) {
-  const r = (size - 10) / 2;
-  const c = 2 * Math.PI * r;
-  const offset = c - (value / 100) * c;
-  return (
-    <svg width={size} height={size} className="transform -rotate-90">
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#1A1D24" strokeWidth={5} />
-      <circle
-        cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={5}
-        strokeDasharray={c} strokeDashoffset={offset} strokeLinecap="round"
-        style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.22, 1, 0.36, 1)" }}
-      />
-    </svg>
-  );
-}
-
-const statusLabel: Record<string, { text: string; class: string }> = {
-  operational: { text: "Operational", class: "text-[#22C78A]" },
-  degraded: { text: "Degraded", class: "text-[#E8AA42]" },
-  warning: { text: "Warning", class: "text-[#E8AA42]" },
-};
-
-const deployStatusConfig: Record<string, { text: string; color: string; bg: string }> = {
-  success: { text: "Deployed", color: "text-[#22C78A]", bg: "bg-[#22C78A]/10" },
-  "in-progress": { text: "In Progress", color: "text-[#3978FF]", bg: "bg-[#3978FF]/10" },
-  failed: { text: "Failed", color: "text-[#F05252]", bg: "bg-[#F05252]/10" },
-  "rolled-back": { text: "Rolled Back", color: "text-[#E8AA42]", bg: "bg-[#E8AA42]/10" },
-};
-
-const envBadgeClass: Record<string, string> = {
-  production: "border-[#22C78A]/30 text-[#22C78A]",
-  staging: "border-[#3978FF]/30 text-[#3978FF]",
-  canary: "border-[#E8AA42]/30 text-[#E8AA42]",
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   VIEW: SERVICE HEALTH
-   ═══════════════════════════════════════════════════════════════ */
-
-function ServiceHealthView({ hoveredRow, setHoveredRow }: { hoveredRow: number | null; setHoveredRow: (v: number | null) => void }) {
-  return (
-    <div className="flex flex-col gap-0">
-      {/* Table Header */}
-      <div className="grid grid-cols-[1fr_100px_80px_72px_80px_64px] gap-2 px-4 py-2.5 text-[10px] font-mono uppercase tracking-wider text-[#6B7280] border-b border-[#1E222A]">
-        <span>Service</span>
-        <span>Status</span>
-        <span className="text-right">Latency</span>
-        <span className="text-right">Error %</span>
-        <span className="text-right">Req/s</span>
-        <span className="text-right">Checked</span>
-      </div>
-      {/* Service Rows */}
-      {services.map((svc, i) => (
-        <motion.div
-          key={svc.name}
-          initial={{ opacity: 0, x: -6 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: i * 0.04, duration: 0.3 }}
-          onMouseEnter={() => setHoveredRow(i)}
-          onMouseLeave={() => setHoveredRow(null)}
-          className={`grid grid-cols-[1fr_100px_80px_72px_80px_64px] gap-2 px-4 py-3 items-center border-b border-[#1A1D24]/60 cursor-default transition-colors duration-150 ${
-            hoveredRow === i ? "bg-[#151820]" : "bg-transparent"
-          }`}
-        >
-          <div className="flex items-center gap-2.5">
-            <StatusDot status={svc.status} />
-            <span className={`text-[13px] transition-colors ${hoveredRow === i ? "text-[#F5F6F8]" : "text-[#D1D5DB]"}`}>{svc.name}</span>
+    <div className="flex flex-col gap-6 p-6">
+      {/* Executive stats row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          { label: "Active Incidents", val: "0", sub: "Nominal SLA", color: "text-[#22C78A]", dot: "bg-[#22C78A]" },
+          { label: "Resolved (7d)", val: "48", sub: "Auto-mitigated", color: "text-white", dot: "bg-[#3978FF]" },
+          { label: "Telemetry Uptime", val: "99.98%", sub: "P99 1.4ms", color: "text-[#22C78A]", dot: "bg-[#22C78A]" },
+          { label: "Ingestion Throughput", val: "42.8k", sub: "events/sec", color: "text-[#3978FF]", dot: "bg-[#3978FF]" },
+        ].map((item, i) => (
+          <div key={i} className="rounded-xl bg-[#0D0F14] border border-[#1E222A] p-4 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono uppercase text-[#6B7280] tracking-wider">{item.label}</span>
+              <span className={`w-1.5 h-1.5 rounded-full ${item.dot}`} />
+            </div>
+            <div className={`text-2xl font-bold font-mono tracking-tight my-2 ${item.color}`}>{item.val}</div>
+            <div className="text-[10px] font-mono text-[#6B7280]">{item.sub}</div>
           </div>
-          <span className={`text-[11px] font-mono ${statusLabel[svc.status].class}`}>{statusLabel[svc.status].text}</span>
-          <span className={`text-[12px] font-mono text-right ${svc.latency === "—" ? "text-[#6B7280]" : svc.status === "degraded" ? "text-[#E8AA42]" : "text-[#9298A3]"}`}>{svc.latency}</span>
-          <span className={`text-[12px] font-mono text-right ${parseFloat(svc.errorRate) > 0.5 ? "text-[#F05252]" : "text-[#9298A3]"}`}>{svc.errorRate}</span>
-          <span className="text-[12px] font-mono text-right text-[#9298A3]">{svc.rps}</span>
-          <span className="text-[11px] font-mono text-right text-[#6B7280]">{svc.lastCheck}</span>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
+        ))}
+      </div>
 
-/* ═══════════════════════════════════════════════════════════════
-   VIEW: DEPLOYMENTS
-   ═══════════════════════════════════════════════════════════════ */
-
-function DeploymentView({ expandedIdx, setExpandedIdx }: { expandedIdx: number | null; setExpandedIdx: (v: number | null) => void }) {
-  return (
-    <div className="flex flex-col gap-0.5 px-1">
-      {deployments.map((dep, i) => {
-        const cfg = deployStatusConfig[dep.status];
-        const isOpen = expandedIdx === i;
-        return (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -6 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.05, duration: 0.3 }}
-          >
-            <button
-              onClick={() => setExpandedIdx(isOpen ? null : i)}
-              className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors duration-150 group ${isOpen ? "bg-[#151820]" : "hover:bg-[#151820]/60"}`}
-            >
-              {/* Status icon */}
-              <div className={`w-7 h-7 rounded-md ${cfg.bg} flex items-center justify-center shrink-0`}>
-                {dep.status === "success" && <Check size={13} className={cfg.color} />}
-                {dep.status === "in-progress" && <RefreshCw size={13} className={`${cfg.color} animate-spin`} />}
-                {dep.status === "failed" && <X size={13} className={cfg.color} />}
-                {dep.status === "rolled-back" && <RefreshCw size={13} className={cfg.color} />}
-              </div>
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-[13px] text-[#F5F6F8] font-medium truncate">{dep.service}</span>
-                  <span className="text-[11px] font-mono text-[#6B7280]">{dep.version}</span>
-                  <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${envBadgeClass[dep.env]}`}>{dep.env}</span>
-                </div>
-                <div className="text-[11px] text-[#6B7280] mt-0.5">{dep.time} · {dep.author}</div>
-              </div>
-              {/* Status badge */}
-              <span className={`text-[11px] font-mono ${cfg.color} shrink-0`}>{cfg.text}</span>
-              <ChevronDown size={14} className={`text-[#6B7280] transition-transform duration-200 shrink-0 ${isOpen ? "rotate-180" : ""}`} />
-            </button>
-            <AnimatePresence>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="ml-[52px] mr-4 mb-2 px-3 py-2.5 rounded-md bg-[#0D0F14] border border-[#1E222A] text-[11px] font-mono text-[#9298A3] leading-relaxed">
-                    {dep.detail}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   VIEW: ALERTS
-   ═══════════════════════════════════════════════════════════════ */
-
-function AlertView({ expandedIdx, setExpandedIdx }: { expandedIdx: number | null; setExpandedIdx: (v: number | null) => void }) {
-  return (
-    <div className="flex flex-col gap-1 px-1">
-      {alerts.map((alert, i) => {
-        const isOpen = expandedIdx === i;
-        const sevColor = alert.severity === "critical" ? "#F05252" : "#E8AA42";
-        return (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -6 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.05, duration: 0.3 }}
-          >
-            <button
-              onClick={() => setExpandedIdx(isOpen ? null : i)}
-              className={`w-full text-left px-4 py-3 rounded-lg flex items-start gap-3 transition-colors duration-150 ${isOpen ? "bg-[#151820]" : "hover:bg-[#151820]/60"}`}
-            >
-              {/* Severity indicator */}
-              <div className="mt-0.5 shrink-0 flex flex-col items-center gap-1">
-                <AlertTriangle size={14} style={{ color: sevColor }} />
-                <span className="text-[9px] font-mono uppercase font-semibold" style={{ color: sevColor }}>
-                  {alert.severity === "critical" ? "CRIT" : "WARN"}
-                </span>
-              </div>
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="text-[13px] text-[#F5F6F8] font-medium">{alert.title}</div>
-                <div className="flex items-center gap-2 mt-1 text-[11px] text-[#6B7280]">
-                  <span>{alert.service}</span>
-                  <span className="text-[#3A3F4B]">·</span>
-                  <span>{alert.time}</span>
-                  <span className="text-[#3A3F4B]">·</span>
-                  <span className="flex items-center gap-1">
-                    <StatusDot status={alert.status as "active" | "investigating" | "resolved"} />
-                    <span className="capitalize">{alert.status}</span>
-                  </span>
-                </div>
-              </div>
-              <ChevronDown size={14} className={`text-[#6B7280] transition-transform duration-200 mt-1 shrink-0 ${isOpen ? "rotate-180" : ""}`} />
-            </button>
-            <AnimatePresence>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="ml-[44px] mr-4 mb-2 px-3 py-2.5 rounded-md bg-[#0D0F14] border border-[#1E222A] text-[11px] text-[#9298A3] leading-relaxed">
-                    {alert.detail}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   VIEW: INCIDENT TIMELINE
-   ═══════════════════════════════════════════════════════════════ */
-
-function IncidentView({ selectedIdx, setSelectedIdx }: { selectedIdx: number; setSelectedIdx: (v: number) => void }) {
-  return (
-    <div className="px-4">
-      {/* Incident header */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <span className="text-[13px] font-mono text-[#F5F6F8] font-semibold">INC-4892</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#F05252]/10 text-[#F05252] border border-[#F05252]/20">Active</span>
+      {/* Latency interactive chart */}
+      <div className="rounded-xl bg-[#0D0F14] border border-[#1E222A] p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h4 className="text-sm font-semibold text-[#F5F6F8]">Request Latency (p99 • Multi-Region Mesh)</h4>
+            <p className="text-[11px] font-mono text-[#6B7280]">Telemetry sampled across 3 global gateway clusters</p>
+          </div>
+          <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+            {["24h", "7d", "30d", "90d"].map((r) => (
+              <button
+                key={r}
+                onClick={() => setSelectedRange(r)}
+                className={`px-2.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                  selectedRange === r ? "bg-[#3978FF] text-white" : "text-[#6B7280] hover:text-[#9298A3]"
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
         </div>
-        <span className="text-[11px] font-mono text-[#6B7280]">Duration: 8m 41s</span>
+
+        {/* SVG Curve */}
+        <div className="relative h-44 w-full border-b border-l border-[#1E222A] mt-6">
+          <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="dashGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="#3978FF" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#3978FF" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,75 L12,70 L25,72 L38,45 L50,52 L65,22 L80,28 L92,8 L100,12"
+              fill="none"
+              stroke="#3978FF"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M0,75 L12,70 L25,72 L38,45 L50,52 L65,22 L80,28 L92,8 L100,12 L100,100 L0,100 Z"
+              fill="url(#dashGrad)"
+              stroke="none"
+            />
+          </svg>
+          <div className="absolute -bottom-5 left-0 text-[10px] font-mono text-[#6B7280]">Oct 1</div>
+          <div className="absolute -bottom-5 right-0 text-[10px] font-mono text-[#6B7280]">Oct 30</div>
+          <div className="absolute top-0 -left-9 text-[10px] font-mono text-[#6B7280]">12ms</div>
+          <div className="absolute bottom-0 -left-7 text-[10px] font-mono text-[#6B7280]">0ms</div>
+        </div>
       </div>
-      {/* Timeline */}
-      <div className="relative ml-3">
-        {/* Vertical line */}
-        <div className="absolute left-[5px] top-2 bottom-2 w-px bg-[#242831]" />
-        {incidentTimeline.map((evt, i) => {
-          const isSelected = selectedIdx === i;
-          const isLast = i === incidentTimeline.length - 1;
-          return (
-            <motion.button
-              key={i}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.06, duration: 0.3 }}
-              onClick={() => setSelectedIdx(i)}
-              className={`relative flex items-start gap-4 pb-5 w-full text-left group transition-colors ${isLast ? "pb-0" : ""}`}
-            >
-              {/* Dot */}
-              <div className={`relative z-10 w-[11px] h-[11px] rounded-full border-2 shrink-0 mt-0.5 transition-all ${
-                evt.completed
-                  ? isSelected ? "bg-[#22C78A] border-[#22C78A] shadow-[0_0_6px_rgba(34,199,138,0.4)]" : "bg-[#22C78A] border-[#22C78A]"
-                  : "bg-[#08090B] border-[#E8AA42] shadow-[0_0_6px_rgba(232,170,66,0.3)]"
-              }`} />
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className={`text-[12.5px] transition-colors ${isSelected ? "text-[#F5F6F8]" : "text-[#D1D5DB] group-hover:text-[#F5F6F8]"}`}>
-                  {evt.event}
-                </div>
-                <div className="text-[10px] font-mono text-[#6B7280] mt-0.5">{evt.time}</div>
-              </div>
-              {/* Check/In-Progress */}
-              <div className="shrink-0 mt-0.5">
-                {evt.completed ? (
-                  <Check size={13} className="text-[#22C78A]" />
-                ) : (
-                  <div className="w-3 h-3 rounded-full border-2 border-[#E8AA42] border-t-transparent animate-spin" />
-                )}
-              </div>
-            </motion.button>
-          );
-        })}
-      </div>
-      {/* Selected event detail */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={selectedIdx}
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.2 }}
-          className="mt-4 p-3 rounded-lg bg-[#0D0F14] border border-[#1E222A]"
+
+      {/* Quick Access Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+        <button
+          onClick={() => onNavigate("AI Copilot")}
+          className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] hover:border-[#3978FF]/40 text-left transition-all group"
         >
-          <div className="text-[11px] font-mono text-[#6B7280] mb-1">Event Detail</div>
-          <div className="text-[12px] text-[#D1D5DB] leading-relaxed">
-            {incidentTimeline[selectedIdx].event}
-            <span className="text-[#6B7280]"> — {incidentTimeline[selectedIdx].time}</span>
+          <div className="flex items-center gap-2 text-[#3978FF] mb-2 text-xs font-mono">
+            <Zap size={14} /> AI Copilot Recommendation
           </div>
-          {selectedIdx === 3 && (
-            <div className="mt-2 text-[11px] font-mono text-[#3978FF]">
-              Root cause: PostgreSQL connection pool saturation (100/100 max)
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+          <div className="text-[13px] text-white font-medium">Memory leak patch ready</div>
+          <p className="text-[11px] text-[#6B7280] mt-1">Sarah K. commit correlation verified in staging.</p>
+        </button>
+
+        <button
+          onClick={() => onNavigate("Uptime")}
+          className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] hover:border-[#22C78A]/40 text-left transition-all group"
+        >
+          <div className="flex items-center gap-2 text-[#22C78A] mb-2 text-xs font-mono">
+            <Activity size={14} /> Service Health Monitor
+          </div>
+          <div className="text-[13px] text-white font-medium">6 Services Online</div>
+          <p className="text-[11px] text-[#6B7280] mt-1">Payment Service latency degraded to 145ms.</p>
+        </button>
+
+        <button
+          onClick={() => onNavigate("Logs")}
+          className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] hover:border-white/20 text-left transition-all group"
+        >
+          <div className="flex items-center gap-2 text-[#9298A3] mb-2 text-xs font-mono">
+            <Terminal size={14} /> Live Stream
+          </div>
+          <div className="text-[13px] text-white font-medium">eBPF Telemetry Engine</div>
+          <p className="text-[11px] text-[#6B7280] mt-1">Sub-second state synchronization active.</p>
+        </button>
+      </div>
     </div>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   VIEW: INFRASTRUCTURE
+   2. AI COPILOT VIEW
    ═══════════════════════════════════════════════════════════════ */
+function CopilotView() {
+  const [copilotState, setCopilotState] = useState<"initial" | "generating" | "fixed">("initial");
 
-function InfrastructureView() {
+  const runPatch = () => {
+    setCopilotState("generating");
+    setTimeout(() => setCopilotState("fixed"), 1400);
+  };
+
   return (
-    <div className="px-4">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[11px] font-mono uppercase tracking-wider text-[#6B7280]">Cluster: us-east-1</span>
-        <span className="text-[10px] font-mono text-[#6B7280]">4 nodes · 16 cores</span>
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#1E222A]">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-[#3978FF]/15 border border-[#3978FF]/30 flex items-center justify-center text-[#3978FF]">
+            <Zap size={14} />
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold text-white">Autonomous Remediation Copilot</h4>
+            <p className="text-[11px] font-mono text-[#6B7280]">Trained on infrastructure traces, commits & logs</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#22C78A]/10 border border-[#22C78A]/20 text-[#22C78A] text-[10px] font-mono">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#22C78A] animate-pulse" />
+          Live Telemetry Agent
+        </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
-        {infraMetrics.map((metric, i) => (
-          <motion.div
-            key={metric.name}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.06, duration: 0.35 }}
-            className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] hover:border-[#2A2F3A] transition-colors group"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-[#6B7280]">{metric.name}</span>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[18px] font-semibold font-mono text-[#F5F6F8]">{metric.value}</span>
-                <span className="text-[11px] font-mono text-[#6B7280]">{metric.unit}</span>
-              </div>
+
+      <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+        {/* User Prompt */}
+        <div className="flex gap-3">
+          <div className="w-7 h-7 rounded-full bg-[#1E222A] flex items-center justify-center text-[10px] font-mono text-zinc-300 shrink-0">
+            JD
+          </div>
+          <div className="flex-1 bg-[#151820] border border-[#1E222A] p-3.5 rounded-xl rounded-tl-none text-[12.5px] text-[#D1D5DB]">
+            Identify root cause for memory spike on <code className="text-[#3978FF] font-mono">payment_service</code> after deployment #8f2a1b9.
+          </div>
+        </div>
+
+        {/* Copilot Diagnosis */}
+        <div className="flex gap-3">
+          <div className="w-7 h-7 rounded-full bg-[#3978FF]/20 border border-[#3978FF]/40 flex items-center justify-center text-[#3978FF] shrink-0">
+            <Zap size={13} />
+          </div>
+          <div className="flex-1 bg-[#0D0F14] border border-[#1E222A] p-4 rounded-xl rounded-tl-none space-y-3">
+            <div className="text-[12.5px] text-zinc-300 leading-relaxed">
+              Anomaly isolated: Unbounded WebSocket connection buffer detected in commit by <strong>Sarah K. (3h ago)</strong>.
             </div>
-            {/* Gauge + Sparkline row */}
-            <div className="flex items-center gap-3">
-              <div className="shrink-0">
-                <div className="relative">
-                  <CircularGauge value={metric.value} color={metric.color} size={56} />
-                  <div className="absolute inset-0 flex items-center justify-center text-[10px] font-mono font-semibold text-[#9298A3] rotate-90">
-                    {metric.unit === "%" ? `${metric.value}%` : metric.value}
-                  </div>
+
+            {/* Code diff */}
+            <div className="rounded-lg bg-black border border-[#1E222A] p-3 font-mono text-[11.5px] leading-relaxed">
+              <div className="text-[#6B7280] pb-1.5 mb-1.5 border-b border-[#1E222A] flex justify-between text-[10px]">
+                <span>src/network/websocket_handler.py</span>
+                <span>Commit: #8f2a1b9</span>
+              </div>
+              <div className="text-[#6B7280]">142 |  async def handle_connection(ws, client_id):</div>
+              <div className="bg-[#F05252]/10 text-[#F05252] px-2 py-0.5 rounded -mx-1 mt-1">
+                143 -      connection_buffer.append(await ws.receive_bytes())  # UNBOUNDED
+              </div>
+              {copilotState === "fixed" && (
+                <div className="bg-[#22C78A]/10 text-[#22C78A] px-2 py-0.5 rounded -mx-1 mt-1">
+                  144 +      await ring_buffer.push_capped(ws, max_bytes=65536)  # FIXED
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            {copilotState === "initial" && (
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  onClick={runPatch}
+                  className="px-3.5 py-1.5 bg-[#3978FF] text-white text-[12px] font-semibold rounded-lg hover:bg-[#2B63E0] transition-colors flex items-center gap-1.5 shadow-sm"
+                >
+                  <Wrench size={13} /> Synthesize Safe Patch
+                </button>
+                <button
+                  onClick={() => alert("Linear issue generated!")}
+                  className="px-3 py-1.5 bg-[#151820] border border-[#1E222A] text-zinc-300 text-[12px] rounded-lg hover:bg-[#1E222A] transition-colors"
+                >
+                  Create Linear Issue
+                </button>
+              </div>
+            )}
+
+            {copilotState === "generating" && (
+              <div className="flex items-center gap-2 py-2 text-xs font-mono text-[#3978FF]">
+                <RefreshCw size={13} className="animate-spin" /> Synthesizing patch and running dry tests...
+              </div>
+            )}
+
+            {copilotState === "fixed" && (
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center gap-2 text-xs font-mono text-[#22C78A]">
+                  <Check size={14} /> Patch synthesized · 14/14 automated staging checks passed
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => alert("PR #342 created with automated canary verification!")}
+                    className="px-3.5 py-1.5 bg-[#22C78A] text-black text-[12px] font-semibold rounded-lg hover:bg-[#1BA874] transition-colors flex items-center gap-1.5"
+                  >
+                    <GitBranch size={13} /> Create Pull Request #342
+                  </button>
+                  <button
+                    onClick={() => setCopilotState("initial")}
+                    className="px-3 py-1.5 text-xs text-[#6B7280] hover:text-white"
+                  >
+                    Reset
+                  </button>
                 </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <Sparkline data={metric.sparkline} color={metric.color} width={100} height={24} />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. INBOX VIEW
+   ═══════════════════════════════════════════════════════════════ */
+function InboxView() {
+  const [filter, setFilter] = useState<"All" | "Unread" | "Critical">("All");
+  const [items, setItems] = useState([
+    { id: 1, title: "P0 Alert: PostgreSQL connection pool spike", time: "3m ago", unread: true, sev: "critical", detail: "Pool reached 94/100 active connections on cluster db-primary-01." },
+    { id: 2, title: "Deployment v3.12.1 deployed to Production", time: "18m ago", unread: true, sev: "info", detail: "14 commits released by Sarah K. Health checks passed across all 3 regions." },
+    { id: 3, title: "Synthetic canary test passed on EU-Central", time: "1h ago", unread: false, sev: "success", detail: "P99 latency checked at 1.1ms. 0 dropped packets." },
+    { id: 4, title: "Memory headroom warning on worker-node-03", time: "3h ago", unread: false, sev: "warning", detail: "Available heap dropped below 15%. Auto-scaling scheduled." },
+  ]);
+
+  const markAllRead = () => {
+    setItems(items.map(it => ({ ...it, unread: false })));
+  };
+
+  const filtered = items.filter(it => {
+    if (filter === "Unread") return it.unread;
+    if (filter === "Critical") return it.sev === "critical";
+    return true;
+  });
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">Operational Notification Inbox</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">Aggregated telemetry alerts, mentions & releases</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+            {(["All", "Unread", "Critical"] as const).map(f => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-2.5 py-1 rounded text-[10px] font-mono transition-colors ${
+                  filter === f ? "bg-[#242831] text-white" : "text-[#6B7280] hover:text-[#9298A3]"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={markAllRead}
+            className="px-2.5 py-1 text-[11px] font-mono text-[#6B7280] hover:text-white transition-colors"
+          >
+            Mark all read
+          </button>
+        </div>
+      </div>
+
+      <div className="divide-y divide-[#1A1D24] mt-3">
+        {filtered.map(item => (
+          <div key={item.id} className="py-3 px-3 hover:bg-[#151820]/40 rounded-lg transition-colors flex items-start justify-between group">
+            <div className="flex items-start gap-3">
+              <span className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
+                item.sev === "critical" ? "bg-[#F05252]" : item.sev === "warning" ? "bg-[#E8AA42]" : item.sev === "success" ? "bg-[#22C78A]" : "bg-[#3978FF]"
+              } ${item.unread ? "animate-pulse ring-2 ring-white/10" : "opacity-60"}`} />
+              <div>
+                <div className={`text-[13px] ${item.unread ? "text-white font-medium" : "text-[#9298A3]"}`}>{item.title}</div>
+                <div className="text-[11px] text-[#6B7280] mt-0.5 leading-relaxed">{item.detail}</div>
               </div>
             </div>
-            {/* Peak/Avg */}
-            <div className="flex items-center gap-3 mt-3 pt-2 border-t border-[#1A1D24]">
-              <span className="text-[10px] font-mono text-[#6B7280]">Peak: <span className="text-[#9298A3]">{metric.peak}{metric.unit === "Mbps" ? " Mbps" : ""}</span></span>
-              <span className="text-[10px] font-mono text-[#6B7280]">Avg: <span className="text-[#9298A3]">{metric.avg}{metric.unit === "Mbps" ? " Mbps" : ""}</span></span>
-            </div>
-          </motion.div>
+            <span className="text-[10px] font-mono text-[#6B7280] shrink-0 ml-4">{item.time}</span>
+          </div>
         ))}
       </div>
     </div>
@@ -518,48 +391,663 @@ function InfrastructureView() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MAIN EXPORT — OPERATIONAL SHOWCASE
+   4. TEAMS VIEW
    ═══════════════════════════════════════════════════════════════ */
+function TeamsView() {
+  const [activeRotation, setActiveRotation] = useState("current");
 
+  const roster = [
+    { name: "Sarah K.", role: "Lead SRE", shift: "EMEA Primary", onCall: true, tz: "UTC+1", status: "Active" },
+    { name: "Marcus L.", role: "DevOps Engineer", shift: "Americas Primary", onCall: true, tz: "UTC-5", status: "Active" },
+    { name: "Ganesh V.", role: "Data Infrastructure Lead", shift: "APAC Shadow", onCall: false, tz: "UTC+2", status: "Standby" },
+    { name: "Pururaj V.", role: "Platform Architect", shift: "Secondary Escalation", onCall: false, tz: "UTC+5:30", status: "Standby" },
+  ];
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">On-Call Engineering Roster</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">SRE escalation rotation & active duty engineers</p>
+        </div>
+        <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+          <button
+            onClick={() => setActiveRotation("current")}
+            className={`px-2.5 py-1 rounded text-[10px] font-mono ${
+              activeRotation === "current" ? "bg-[#3978FF] text-white" : "text-[#6B7280]"
+            }`}
+          >
+            Current Rotation
+          </button>
+          <button
+            onClick={() => setActiveRotation("next")}
+            className={`px-2.5 py-1 rounded text-[10px] font-mono ${
+              activeRotation === "next" ? "bg-[#3978FF] text-white" : "text-[#6B7280]"
+            }`}
+          >
+            Next Week
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+        {roster.map((m, idx) => (
+          <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#151820] border border-[#242831] flex items-center justify-center font-mono text-sm text-white">
+                {m.name.split(" ").map(n => n[0]).join("")}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[13px] font-medium text-white">{m.name}</span>
+                  {m.onCall && (
+                    <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#22C78A]/15 text-[#22C78A] border border-[#22C78A]/30">
+                      ON-CALL
+                    </span>
+                  )}
+                </div>
+                <div className="text-[11px] text-[#6B7280]">{m.role} • {m.tz}</div>
+                <div className="text-[10px] font-mono text-[#3978FF] mt-0.5">{m.shift}</div>
+              </div>
+            </div>
+            <button
+              onClick={() => alert(`Paged ${m.name} via BREXAL PagerDuty integration!`)}
+              className="px-2.5 py-1 rounded-md bg-[#151820] hover:bg-[#242831] border border-[#242831] text-[11px] font-mono text-[#D1D5DB] transition-colors"
+            >
+              Page
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. KANBAN VIEW
+   ═══════════════════════════════════════════════════════════════ */
+function KanbanView() {
+  const [columns] = useState([
+    {
+      title: "Backlog",
+      tasks: [
+        { id: "TASK-104", title: "Migrate legacy ingress to Envoy eBPF mesh", tag: "Mesh", prio: "P1" },
+        { id: "TASK-105", title: "Automate token rotation on Redis cluster", tag: "Security", prio: "P2" },
+      ],
+    },
+    {
+      title: "In Progress",
+      tasks: [
+        { id: "TASK-102", title: "Cap WebSocket ring buffer in payment worker", tag: "Hotfix", prio: "P0" },
+      ],
+    },
+    {
+      title: "In Review",
+      tasks: [
+        { id: "TASK-098", title: "Implement mutual TLS cert auto-provisioning", tag: "mTLS", prio: "P1" },
+      ],
+    },
+    {
+      title: "Done",
+      tasks: [
+        { id: "TASK-091", title: "Upgrade ClickHouse telemetry cluster to v24.3", tag: "Infra", prio: "P1" },
+      ],
+    },
+  ]);
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">SRE Sprint & Incident Board</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">Live synchronized sprint engineering pipeline</p>
+        </div>
+        <button
+          onClick={() => alert("New task draft created!")}
+          className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#3978FF] text-white text-[11px] font-mono font-medium hover:bg-[#2B63E0] transition-colors"
+        >
+          <Plus size={12} /> New Task
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mt-4 overflow-x-auto">
+        {columns.map((col, idx) => (
+          <div key={idx} className="rounded-xl bg-[#0D0F14] border border-[#1E222A] p-3 flex flex-col">
+            <div className="flex items-center justify-between mb-3 px-1">
+              <span className="text-[11px] font-mono uppercase text-[#6B7280] font-semibold">{col.title}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#151820] text-[#9298A3]">
+                {col.tasks.length}
+              </span>
+            </div>
+            <div className="space-y-2.5 flex-1">
+              {col.tasks.map(t => (
+                <div
+                  key={t.id}
+                  onClick={() => alert(`Inspecting ${t.id}: ${t.title}`)}
+                  className="p-3 rounded-lg bg-[#151820] border border-[#242831] hover:border-[#3978FF]/40 cursor-pointer transition-all shadow-sm"
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-mono text-[#6B7280]">{t.id}</span>
+                    <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${
+                      t.prio === "P0" ? "bg-[#F05252]/15 text-[#F05252]" : "bg-[#3978FF]/15 text-[#3978FF]"
+                    }`}>
+                      {t.prio}
+                    </span>
+                  </div>
+                  <div className="text-[12px] text-white font-medium leading-snug">{t.title}</div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-[#6B7280] bg-black/40 px-1.5 py-0.5 rounded border border-[#242831]">
+                      {t.tag}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. ISSUES & BUGS VIEW
+   ═══════════════════════════════════════════════════════════════ */
+function IssuesView() {
+  const issues = [
+    { id: "BUG-201", title: "WebSocket connection leak under high burst load", commit: "#8f2a1b9", prio: "P0", author: "Sarah K.", impact: "+42MB/hr", status: "In Triage" },
+    { id: "BUG-202", title: "Payment gateway timeout fallback triggers twice", commit: "#e39a2b1", prio: "P1", author: "DevOps Bot", impact: "+120ms P99", status: "Investigating" },
+    { id: "BUG-203", title: "PostgreSQL slow query on /api/v2/audit_trail", commit: "#12c49a0", prio: "P2", author: "Marcus L.", impact: "Query 840ms", status: "Resolved" },
+  ];
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">Anomalous Commit Correlation</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">Correlates latency & memory anomalies directly to offending Git commits</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="px-2 py-0.5 rounded bg-[#F05252]/10 text-[#F05252] border border-[#F05252]/20 text-[10px] font-mono">
+            1 Active Anomaly
+          </span>
+        </div>
+      </div>
+
+      <div className="divide-y divide-[#1E222A] mt-2">
+        {issues.map(iss => (
+          <div key={iss.id} className="py-3.5 px-3 rounded-lg hover:bg-[#151820]/40 transition-colors flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
+                iss.prio === "P0" ? "bg-[#F05252]/15 text-[#F05252] border border-[#F05252]/30" : "bg-[#E8AA42]/15 text-[#E8AA42]"
+              }`}>
+                {iss.prio}
+              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[13px] text-white font-medium">{iss.title}</span>
+                  <span className="text-[11px] font-mono text-[#3978FF]">{iss.commit}</span>
+                </div>
+                <div className="text-[11px] text-[#6B7280] mt-0.5">Author: {iss.author} • Impact: {iss.impact}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-mono text-[#9298A3]">{iss.status}</span>
+              <button
+                onClick={() => alert(`Opening diagnostic diff for ${iss.commit}`)}
+                className="px-2.5 py-1 rounded bg-[#151820] hover:bg-[#242831] border border-[#242831] text-[11px] font-mono text-white transition-colors"
+              >
+                Inspect Diff
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. ROADMAP VIEW
+   ═══════════════════════════════════════════════════════════════ */
+function RoadmapView() {
+  const quarters = [
+    {
+      quarter: "Q1 2026",
+      status: "Shipped",
+      items: [
+        { title: "eBPF Zero-Overhead Telemetry Mesh", progress: 100 },
+        { title: "Sub-millisecond State Synchronization", progress: 100 },
+      ],
+    },
+    {
+      quarter: "Q2 2026",
+      status: "In Progress",
+      items: [
+        { title: "Autonomous Rollback Engine with AI Verification", progress: 85 },
+        { title: "Multi-Cloud VPC Peering & Mutual mTLS 1.3", progress: 60 },
+      ],
+    },
+    {
+      quarter: "Q3 2026",
+      status: "Planned",
+      items: [
+        { title: "Cryptographic Distributed Audit Hash Ledger", progress: 20 },
+        { title: "Global Latency Routing via Anycast Edges", progress: 10 },
+      ],
+    },
+  ];
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">Engineering Architecture Roadmap</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">Quarterly deliverables & telemetry milestones</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        {quarters.map((q, idx) => (
+          <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-mono font-bold text-white">{q.quarter}</span>
+                <span className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                  q.status === "Shipped" ? "bg-[#22C78A]/15 text-[#22C78A]" : q.status === "In Progress" ? "bg-[#3978FF]/15 text-[#3978FF]" : "bg-[#6B7280]/15 text-[#6B7280]"
+                }`}>
+                  {q.status}
+                </span>
+              </div>
+              <div className="space-y-4 mt-4">
+                {q.items.map((it, i) => (
+                  <div key={i} className="space-y-1.5">
+                    <div className="flex justify-between text-[12px] text-zinc-300">
+                      <span>{it.title}</span>
+                      <span className="font-mono text-[#6B7280]">{it.progress}%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-[#151820] rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${it.progress === 100 ? "bg-[#22C78A]" : "bg-[#3978FF]"}`}
+                        style={{ width: `${it.progress}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. UPTIME VIEW (SERVICE HEALTH)
+   ═══════════════════════════════════════════════════════════════ */
+function UptimeView() {
+  const [selectedRegion, setSelectedRegion] = useState("Global");
+  const services = [
+    { name: "API Gateway", status: "Operational", latency: "12ms", errorRate: "0.02%", rps: "8,421", checked: "2s ago" },
+    { name: "Authentication Service", status: "Operational", latency: "8ms", errorRate: "0.00%", rps: "3,218", checked: "5s ago" },
+    { name: "Payment Service", status: "Degraded", latency: "145ms", errorRate: "1.24%", rps: "1,847", checked: "3s ago" },
+    { name: "PostgreSQL Database", status: "Operational", latency: "3ms", errorRate: "0.00%", rps: "12,490", checked: "1s ago" },
+    { name: "Redis Cache Cluster", status: "Operational", latency: "0.4ms", errorRate: "0.00%", rps: "45,200", checked: "1s ago" },
+    { name: "Background Workers", status: "Warning", latency: "—", errorRate: "0.31%", rps: "924", checked: "8s ago" },
+  ];
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">Live Service Health Monitor</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">Real-time probing across 6 core microservices</p>
+        </div>
+        <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+          {["Global", "US-East", "EU-Central", "AP-South"].map(r => (
+            <button
+              key={r}
+              onClick={() => setSelectedRegion(r)}
+              className={`px-2.5 py-1 rounded text-[10px] font-mono transition-colors ${
+                selectedRegion === r ? "bg-[#3978FF] text-white" : "text-[#6B7280] hover:text-[#9298A3]"
+              }`}
+            >
+              {r}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="divide-y divide-[#1E222A] mt-3">
+        <div className="grid grid-cols-[1fr_110px_90px_90px_90px_80px] gap-2 px-3 py-2 text-[10px] font-mono uppercase text-[#6B7280] font-semibold">
+          <span>Service</span>
+          <span>Status</span>
+          <span className="text-right">Latency</span>
+          <span className="text-right">Error %</span>
+          <span className="text-right">Req/s</span>
+          <span className="text-right">Checked</span>
+        </div>
+        {services.map((s, i) => (
+          <div
+            key={i}
+            className="grid grid-cols-[1fr_110px_90px_90px_90px_80px] gap-2 px-3 py-3 items-center hover:bg-[#151820]/40 rounded-lg transition-colors"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className={`w-2 h-2 rounded-full ${
+                s.status === "Operational" ? "bg-[#22C78A]" : "bg-[#E8AA42] animate-ping"
+              }`} />
+              <span className="text-[13px] text-white font-medium">{s.name}</span>
+            </div>
+            <span className={`text-[11px] font-mono ${
+              s.status === "Operational" ? "text-[#22C78A]" : "text-[#E8AA42]"
+            }`}>
+              {s.status}
+            </span>
+            <span className="text-[12px] font-mono text-right text-zinc-300">{s.latency}</span>
+            <span className={`text-[12px] font-mono text-right ${parseFloat(s.errorRate) > 0.5 ? "text-[#F05252]" : "text-zinc-300"}`}>
+              {s.errorRate}
+            </span>
+            <span className="text-[12px] font-mono text-right text-zinc-300">{s.rps}</span>
+            <span className="text-[11px] font-mono text-right text-[#6B7280]">{s.checked}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. INFRASTRUCTURE VIEW
+   ═══════════════════════════════════════════════════════════════ */
+function InfrastructureView() {
+  const [selectedNode, setSelectedNode] = useState("node-01");
+
+  const nodes = [
+    { id: "node-01", cpu: 67, mem: 74, disk: 42, net: 31, status: "Healthy" },
+    { id: "node-02", cpu: 44, mem: 62, disk: 38, net: 28, status: "Healthy" },
+    { id: "node-03", cpu: 89, mem: 88, disk: 55, net: 42, status: "High Load" },
+  ];
+
+  const current = nodes.find(n => n.id === selectedNode) || nodes[0];
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">Cluster Resource Utilization</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">Kubernetes node pool telemetry (16 cores, 64GB RAM)</p>
+        </div>
+        <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+          {nodes.map(n => (
+            <button
+              key={n.id}
+              onClick={() => setSelectedNode(n.id)}
+              className={`px-2.5 py-1 rounded text-[10px] font-mono transition-colors ${
+                selectedNode === n.id ? "bg-[#3978FF] text-white" : "text-[#6B7280] hover:text-[#9298A3]"
+              }`}
+            >
+              {n.id.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+        {[
+          { label: "CPU LOAD", val: `${current.cpu}%`, icon: Cpu, color: "#3978FF", sub: "16 vCPUs active" },
+          { label: "MEMORY", val: `${current.mem}%`, icon: HardDrive, color: "#A855F7", sub: "47.2GB / 64GB" },
+          { label: "DISK I/O", val: `${current.disk}%`, icon: Sliders, color: "#22C78A", sub: "NVMe IOPS: 12.4k" },
+          { label: "NETWORK", val: `${current.net} Mbps`, icon: Wifi, color: "#06B6D4", sub: "0 dropped packets" },
+        ].map((m, idx) => {
+          const Icon = m.icon;
+          return (
+            <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-mono uppercase text-[#6B7280]">{m.label}</span>
+                <Icon size={14} style={{ color: m.color }} />
+              </div>
+              <div className="text-2xl font-bold font-mono text-white my-1">{m.val}</div>
+              <div className="h-1.5 w-full bg-[#151820] rounded-full overflow-hidden mt-2">
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ width: m.val.replace(" Mbps", ""), backgroundColor: m.color }}
+                />
+              </div>
+              <div className="text-[10px] font-mono text-[#6B7280] mt-2">{m.sub}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. LOGS VIEW (LIVE STREAMING)
+   ═══════════════════════════════════════════════════════════════ */
+function LogsView() {
+  const [isPaused, setIsPaused] = useState(false);
+  const [filterLevel, setFilterLevel] = useState("ALL");
+  const [logs, setLogs] = useState([
+    { ts: "14:32:01.214", lvl: "INFO", src: "api-gw", msg: "GET /api/v2/workspaces 200 (1.4ms) [trace_id=8f2a1b9]" },
+    { ts: "14:32:01.842", lvl: "WARN", src: "worker-03", msg: "Heap allocation warning: 89% threshold reached" },
+    { ts: "14:32:02.109", lvl: "INFO", src: "auth-svc", msg: "mTLS handshake verified sha256:4f81...9c2e" },
+    { ts: "14:32:02.491", lvl: "ERROR", src: "payment-svc", msg: "Upstream gateway connection reset by peer (retrying 1/3)" },
+    { ts: "14:32:02.910", lvl: "INFO", src: "mesh-ebpf", msg: "Packets routed: 4,891 pkts/sec without kernel context switches" },
+  ]);
+
+  const addLog = () => {
+    if (isPaused) return;
+    const now = new Date();
+    const ts = now.toTimeString().split(" ")[0] + "." + Math.floor(Math.random() * 900 + 100);
+    const mock = [
+      { ts, lvl: "INFO", src: "api-gw", msg: `GET /api/v2/telemetry 200 (${(Math.random() * 2 + 0.8).toFixed(1)}ms)` },
+      { ts, lvl: "INFO", src: "redis-cache", msg: "Cache hit: key=session_tenant_941 (0.2ms)" },
+      { ts, lvl: "WARN", src: "pg-pool", msg: "Connection pool occupancy: 78/100 connections" },
+    ];
+    setLogs(prev => [...prev.slice(-8), mock[Math.floor(Math.random() * mock.length)]]);
+  };
+
+  useEffect(() => {
+    const t = setInterval(addLog, 2200);
+    return () => clearInterval(t);
+  }, [isPaused]);
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div className="flex items-center gap-2">
+          <h4 className="text-sm font-semibold text-white">Live eBPF Telemetry Log Stream</h4>
+          <span className={`w-2 h-2 rounded-full ${isPaused ? "bg-[#E8AA42]" : "bg-[#22C78A] animate-pulse"}`} />
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+            {["ALL", "INFO", "WARN", "ERROR"].map(l => (
+              <button
+                key={l}
+                onClick={() => setFilterLevel(l)}
+                className={`px-2 py-0.5 rounded text-[10px] font-mono ${
+                  filterLevel === l ? "bg-[#242831] text-white" : "text-[#6B7280]"
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setIsPaused(!isPaused)}
+            className="flex items-center gap-1 px-2.5 py-1 rounded bg-[#151820] border border-[#242831] text-[11px] font-mono text-[#D1D5DB] hover:text-white"
+          >
+            {isPaused ? <Play size={11} /> : <Pause size={11} />} {isPaused ? "Resume" : "Pause"}
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-3 p-4 rounded-xl bg-black border border-[#1E222A] font-mono text-[11.5px] leading-relaxed flex-1 overflow-y-auto space-y-1.5">
+        {logs.map((l, i) => (
+          <div key={i} className="flex items-start gap-2 text-zinc-300">
+            <span className="text-[#6B7280] select-none">{l.ts}</span>
+            <span className={`font-bold select-none ${
+              l.lvl === "ERROR" ? "text-[#F05252]" : l.lvl === "WARN" ? "text-[#E8AA42]" : "text-[#3978FF]"
+            }`}>
+              [{l.lvl}]
+            </span>
+            <span className="text-[#9298A3] select-none">&lt;{l.src}&gt;</span>
+            <span className="text-white flex-1">{l.msg}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. MAINTENANCE VIEW
+   ═══════════════════════════════════════════════════════════════ */
+function MaintenanceView() {
+  const [draining, setDraining] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const startDrain = () => {
+    setDraining(true);
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(interval);
+          setDraining(false);
+          return 100;
+        }
+        return p + 25;
+      });
+    }, 400);
+  };
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">Cluster Maintenance & Zero-Downtime Rollout</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">Rolling update orchestrator with automatic canary verification</p>
+        </div>
+      </div>
+
+      <div className="space-y-4 mt-4">
+        <div className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
+          <div>
+            <div className="text-[13px] text-white font-medium">Pod Pool Drain Simulation</div>
+            <p className="text-[11px] text-[#6B7280]">Gracefully drain connections from Worker Node 03 before host maintenance</p>
+            {draining && (
+              <div className="mt-2 text-xs font-mono text-[#3978FF]">
+                Draining pods: {progress}% complete...
+              </div>
+            )}
+          </div>
+          <button
+            onClick={startDrain}
+            disabled={draining}
+            className="px-3.5 py-1.5 rounded-lg bg-[#3978FF] text-white text-[12px] font-mono font-medium hover:bg-[#2B63E0] transition-colors disabled:opacity-50"
+          >
+            {draining ? "Draining..." : "Simulate Node Drain"}
+          </button>
+        </div>
+
+        <div className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A]">
+          <div className="text-[12px] font-mono uppercase text-[#6B7280] mb-3">Active Canary Rollout</div>
+          <div className="flex items-center justify-between text-xs text-white mb-1.5">
+            <span>Canary Traffic Allocation: v3.12.1</span>
+            <span className="font-mono text-[#22C78A]">25% Traffic Routed</span>
+          </div>
+          <div className="h-2 w-full bg-[#151820] rounded-full overflow-hidden">
+            <div className="h-full bg-[#22C78A] rounded-full" style={{ width: "25%" }} />
+          </div>
+          <div className="mt-3 flex items-center justify-between text-[11px] font-mono text-[#6B7280]">
+            <span>Error threshold: 0.1%</span>
+            <span>Auto-rollback trigger: ARMED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   12. SETTINGS VIEW
+   ═══════════════════════════════════════════════════════════════ */
+function SettingsView() {
+  const [mtls, setMtls] = useState(true);
+  const [ebpf, setEbpf] = useState(true);
+  const [copilotAuto, setCopilotAuto] = useState(true);
+
+  return (
+    <div className="flex flex-col h-full p-6">
+      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+        <div>
+          <h4 className="text-sm font-semibold text-white">Workspace & Security Configuration</h4>
+          <p className="text-[11px] font-mono text-[#6B7280]">Mutual TLS certificates, eBPF telemetry hooks & access tokens</p>
+        </div>
+      </div>
+
+      <div className="space-y-3 mt-4">
+        {[
+          { title: "Mutual TLS (mTLS) Encryption", desc: "Cryptographic peer certificates for all internal service mesh calls", state: mtls, setter: setMtls },
+          { title: "eBPF Low-Level Kernel Hooking", desc: "Sub-millisecond packet introspection without user-space context overhead", state: ebpf, setter: setEbpf },
+          { title: "Autonomous AI Copilot Patch Validation", desc: "Synthesize test-verified PR drafts when anomalous stack traces occur", state: copilotAuto, setter: setCopilotAuto },
+        ].map((s, idx) => (
+          <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
+            <div>
+              <div className="text-[13px] text-white font-medium">{s.title}</div>
+              <div className="text-[11px] text-[#6B7280] mt-0.5">{s.desc}</div>
+            </div>
+            <button
+              onClick={() => s.setter(!s.state)}
+              className={`w-11 h-6 rounded-full transition-colors relative ${s.state ? "bg-[#3978FF]" : "bg-[#242831]"}`}
+            >
+              <div className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${s.state ? "left-6" : "left-1"}`} />
+            </button>
+          </div>
+        ))}
+
+        <div className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
+          <div>
+            <div className="text-[13px] text-white font-medium">Session Certificate Fingerprint</div>
+            <div className="text-[11px] font-mono text-[#3978FF] mt-0.5">sha256:4f81a7b2...9c2ed810 (Verified)</div>
+          </div>
+          <button
+            onClick={() => alert("Certificate rotated successfully!")}
+            className="px-3 py-1.5 rounded-lg bg-[#151820] hover:bg-[#242831] border border-[#242831] text-[11px] font-mono text-white transition-colors"
+          >
+            Rotate Key
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN SHOWCASE COMPONENT
+   ═══════════════════════════════════════════════════════════════ */
 export function OperationalShowcase() {
-  const [activeView, setActiveView] = useState<ViewId>("services");
-  const [timeRange, setTimeRange] = useState<(typeof TIME_RANGES)[number]>("24h");
-  const [hoveredService, setHoveredService] = useState<number | null>(null);
-  const [expandedAlert, setExpandedAlert] = useState<number | null>(null);
-  const [expandedDeploy, setExpandedDeploy] = useState<number | null>(null);
-  const [selectedIncident, setSelectedIncident] = useState(3);
+  const [activeTab, setActiveTab] = useState<FeatureTab>("Dashboard");
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
+    OVERVIEW: true,
+    COMMUNICATION: true,
+    PLANNING: true,
+    OPERATIONS: true,
+    SYSTEM: true,
+  });
 
-  const dashboardRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
 
-  const handleCapabilityClick = useCallback((viewId: ViewId) => {
-    setActiveView(viewId);
-    dashboardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
-
-  const viewTitles: Record<ViewId, string> = {
-    services: "Service Health Monitor",
-    deployments: "Recent Deployments",
-    alerts: "Active Alerts",
-    incidents: "Incident Timeline",
-    infrastructure: "Infrastructure Overview",
+  const toggleGroup = (title: string) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
   };
-
-  const viewSubtitles: Record<ViewId, string> = {
-    services: `${services.length} services monitored`,
-    deployments: `${deployments.length} recent deployments`,
-    alerts: `${alerts.filter(a => a.status === "active").length} active alerts`,
-    incidents: "INC-4892 · Active",
-    infrastructure: "Cluster health metrics",
-  };
-
-  const metricCards = [
-    { label: "Active Services", value: "6", sub: "All regions", color: "#22C78A" },
-    { label: "Active Alerts", value: "4", sub: "2 critical", color: "#F05252" },
-    { label: "Deploys Today", value: "12", sub: "2 failed", color: "#3978FF" },
-    { label: "Uptime (30d)", value: "99.97%", sub: "SLA met", color: "#22C78A" },
-  ];
 
   return (
     <section
@@ -587,195 +1075,150 @@ export function OperationalShowcase() {
         </p>
       </motion.div>
 
-      {/* ──────── Dashboard Frame ──────── */}
+      {/* ──────── Dashboard Frame (Centerpiece) ──────── */}
       <motion.div
-        ref={dashboardRef}
-        initial={{ opacity: 0, y: 40, scale: 0.97 }}
+        initial={{ opacity: 0, y: 40, scale: 0.98 }}
         animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
         transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] as const, delay: 0.15 }}
-        className="w-full max-w-[1200px] mx-auto rounded-xl overflow-hidden border border-[#242831] shadow-[0_40px_120px_rgba(0,0,0,0.8)] bg-[#101216]"
+        className="w-full max-w-[1280px] mx-auto rounded-2xl overflow-hidden border border-[#242831] shadow-[0_40px_120px_rgba(0,0,0,0.85)] bg-[#101216] flex flex-col"
       >
-        {/* ── Browser Chrome ── */}
-        <div className="h-11 border-b border-[#1E222A] bg-[#0D0F14] flex items-center px-4 gap-4 shrink-0">
-          {/* Traffic lights */}
-          <div className="flex gap-1.5 shrink-0">
-            <div className="w-[10px] h-[10px] rounded-full bg-[#F05252]/70" />
-            <div className="w-[10px] h-[10px] rounded-full bg-[#E8AA42]/70" />
-            <div className="w-[10px] h-[10px] rounded-full bg-[#22C78A]/70" />
-          </div>
-          {/* URL bar */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="flex items-center gap-2 bg-[#151820] border border-[#1E222A] rounded-md px-3 py-1 max-w-xs w-full">
-              <Search size={11} className="text-[#6B7280] shrink-0" />
-              <span className="text-[11px] font-mono text-[#6B7280] truncate">brexal.io/operations</span>
+        {/* ── Chrome Header ── */}
+        <div className="h-11 border-b border-[#1E222A] bg-[#0D0F14] flex items-center px-4 justify-between shrink-0">
+          <div className="flex items-center gap-4">
+            {/* Traffic Lights */}
+            <div className="flex gap-1.5">
+              <div className="w-[10px] h-[10px] rounded-full bg-[#F05252]/80" />
+              <div className="w-[10px] h-[10px] rounded-full bg-[#E8AA42]/80" />
+              <div className="w-[10px] h-[10px] rounded-full bg-[#22C78A]/80" />
+            </div>
+            {/* Address Bar */}
+            <div className="hidden sm:flex items-center gap-2 bg-[#151820] border border-[#1E222A] rounded-md px-3 py-1 text-[11px] font-mono text-[#6B7280]">
+              <Search size={11} />
+              <span>brexal.io/workspace/{activeTab.toLowerCase().replace(/\s+/g, "-")}</span>
             </div>
           </div>
-          {/* Right actions */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="relative">
-              <Bell size={14} className="text-[#6B7280]" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#F05252]" />
+
+          {/* Right Header Indicators */}
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#22C78A]/10 border border-[#22C78A]/20 text-[#22C78A] text-[10px] font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22C78A] animate-pulse" />
+              Connected • 1.4ms
+            </span>
+            <div className="w-6 h-6 rounded-full bg-[#242831] border border-[#1E222A] flex items-center justify-center text-[10px] font-mono text-white">
+              JD
             </div>
-            <div className="w-6 h-6 rounded-full bg-[#242831] flex items-center justify-center text-[10px] font-mono text-[#9298A3]">JD</div>
           </div>
         </div>
 
-        {/* ── App Body: Sidebar + Main ── */}
-        <div className="flex min-h-[520px] md:min-h-[560px]">
-          {/* Sidebar — desktop only */}
-          <div className="hidden md:flex w-[52px] border-r border-[#1E222A] bg-[#0D0F14] flex-col items-center py-3 gap-1 shrink-0">
-            {sidebarNav.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeView === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveView(item.id)}
-                  title={item.label}
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-150 relative group ${
-                    isActive
-                      ? "bg-[#3978FF]/10 text-[#3978FF]"
-                      : "text-[#6B7280] hover:text-[#9298A3] hover:bg-[#151820]"
-                  }`}
-                >
-                  {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-r bg-[#3978FF]" />}
-                  <Icon size={16} />
-                  {/* Tooltip */}
-                  <span className="absolute left-full ml-2 px-2 py-1 rounded bg-[#1A1D24] border border-[#242831] text-[10px] font-mono text-[#D1D5DB] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-lg">
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })}
-            <div className="flex-1" />
-            <button className="w-9 h-9 rounded-lg flex items-center justify-center text-[#6B7280] hover:text-[#9298A3] hover:bg-[#151820] transition-all">
-              <Settings size={15} />
-            </button>
-          </div>
-
-          {/* Main Content */}
-          <div className="flex-1 flex flex-col bg-[#101216] overflow-hidden">
-            {/* Content Header — time range + view title */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-[#1E222A] bg-[#101216] shrink-0">
-              <div>
-                <h3 className="text-[14px] font-semibold text-[#F5F6F8]">{viewTitles[activeView]}</h3>
-                <p className="text-[11px] font-mono text-[#6B7280] mt-0.5">{viewSubtitles[activeView]}</p>
-              </div>
-              {/* Time Range Selector */}
-              <div className="flex items-center gap-1 bg-[#0D0F14] border border-[#1E222A] rounded-md p-0.5">
-                {TIME_RANGES.map((tr) => (
-                  <button
-                    key={tr}
-                    onClick={() => setTimeRange(tr)}
-                    className={`px-2.5 py-1 rounded text-[10px] font-mono transition-all duration-150 ${
-                      timeRange === tr
-                        ? "bg-[#242831] text-[#F5F6F8]"
-                        : "text-[#6B7280] hover:text-[#9298A3]"
-                    }`}
-                  >
-                    {tr}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile Tab Bar */}
-            <div className="flex md:hidden items-center gap-1 px-4 py-2 border-b border-[#1E222A] overflow-x-auto">
-              {sidebarNav.map((item) => {
-                const Icon = item.icon;
+        {/* ── Body: Sidebar + Active View ── */}
+        <div className="flex min-h-[580px] md:min-h-[620px]">
+          {/* Sidebar */}
+          <div className="w-56 md:w-60 border-r border-[#1E222A] bg-[#0A0C10] flex flex-col shrink-0 overflow-y-auto custom-scrollbar">
+            <div className="p-3 space-y-4">
+              {navGroups.map((group, gIdx) => {
+                const isExpanded = expandedGroups[group.title];
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveView(item.id)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-mono whitespace-nowrap transition-all shrink-0 ${
-                      activeView === item.id
-                        ? "bg-[#3978FF]/10 text-[#3978FF] border border-[#3978FF]/20"
-                        : "text-[#6B7280] hover:text-[#9298A3]"
-                    }`}
-                  >
-                    <Icon size={12} />
-                    {item.label}
-                  </button>
+                  <div key={gIdx} className="space-y-1">
+                    <button
+                      onClick={() => toggleGroup(group.title)}
+                      className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-mono tracking-wider uppercase text-[#6B7280] hover:text-[#9298A3] transition-colors"
+                    >
+                      <span>{group.title}</span>
+                      {isExpanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+                    </button>
+
+                    {isExpanded && (
+                      <div className="space-y-0.5">
+                        {group.items.map(item => {
+                          const Icon = item.icon;
+                          const isActive = activeTab === item.name;
+                          return (
+                            <button
+                              key={item.name}
+                              onClick={() => setActiveTab(item.name)}
+                              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12.5px] font-medium transition-all ${
+                                isActive
+                                  ? "bg-[#3978FF]/15 text-white font-semibold border border-[#3978FF]/30 shadow-sm"
+                                  : "text-[#9298A3] hover:text-white hover:bg-[#151820]"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5 truncate">
+                                <Icon size={14} className={isActive ? "text-[#3978FF]" : "text-[#6B7280]"} />
+                                <span className="truncate">{item.name}</span>
+                              </div>
+                              {item.badge && (
+                                <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${item.badgeColor || "bg-[#1E222A] text-[#9298A3]"}`}>
+                                  {item.badge}
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
+          </div>
 
-            {/* Metric Cards Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 px-5 py-4 border-b border-[#1E222A]/60">
-              {metricCards.map((card, i) => (
-                <motion.div
-                  key={card.label}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.3 + i * 0.06, duration: 0.4 }}
-                  className="px-3.5 py-3 rounded-lg bg-[#0D0F14] border border-[#1E222A]"
-                >
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-[#6B7280] mb-1.5">{card.label}</div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-[20px] font-semibold font-mono text-[#F5F6F8] tracking-tight">{card.value}</span>
-                  </div>
-                  <div className="text-[10px] font-mono mt-1 flex items-center gap-1">
-                    <span className="w-1 h-1 rounded-full" style={{ backgroundColor: card.color }} />
-                    <span className="text-[#6B7280]">{card.sub}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* View Content Area */}
-            <div className="flex-1 overflow-y-auto py-3" style={{ minHeight: 0 }}>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeView}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {activeView === "services" && (
-                    <ServiceHealthView hoveredRow={hoveredService} setHoveredRow={setHoveredService} />
-                  )}
-                  {activeView === "deployments" && (
-                    <DeploymentView expandedIdx={expandedDeploy} setExpandedIdx={setExpandedDeploy} />
-                  )}
-                  {activeView === "alerts" && (
-                    <AlertView expandedIdx={expandedAlert} setExpandedIdx={setExpandedAlert} />
-                  )}
-                  {activeView === "incidents" && (
-                    <IncidentView selectedIdx={selectedIncident} setSelectedIdx={setSelectedIncident} />
-                  )}
-                  {activeView === "infrastructure" && (
-                    <InfrastructureView />
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </div>
+          {/* Active Feature Stage */}
+          <div className="flex-1 bg-[#101216] flex flex-col overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18 }}
+                className="flex-1 flex flex-col overflow-y-auto custom-scrollbar"
+              >
+                {activeTab === "Dashboard" && <DashboardView onNavigate={setActiveTab} />}
+                {activeTab === "AI Copilot" && <CopilotView />}
+                {activeTab === "Inbox" && <InboxView />}
+                {activeTab === "Teams" && <TeamsView />}
+                {activeTab === "Kanban" && <KanbanView />}
+                {activeTab === "Issues & Bugs" && <IssuesView />}
+                {activeTab === "Roadmap" && <RoadmapView />}
+                {activeTab === "Uptime" && <UptimeView />}
+                {activeTab === "Infrastructure" && <InfrastructureView />}
+                {activeTab === "Logs" && <LogsView />}
+                {activeTab === "Maintenance" && <MaintenanceView />}
+                {activeTab === "Settings" && <SettingsView />}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </motion.div>
 
-      {/* ──────── Capability Highlights ──────── */}
+      {/* ──────── Capability Highlights Under Frame ──────── */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const, delay: 0.4 }}
-        className="w-full max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-5 gap-3 mt-8"
+        className="w-full max-w-[1280px] mx-auto grid grid-cols-2 md:grid-cols-5 gap-3 mt-8"
       >
-        {capabilityHighlights.map((cap) => {
+        {[
+          { tab: "Dashboard" as FeatureTab, icon: LayoutDashboard, title: "Unified Executive View", desc: "System health & SLA latency mesh" },
+          { tab: "AI Copilot" as FeatureTab, icon: Zap, title: "Autonomous Remediation", desc: "Commit-linked patch validation" },
+          { tab: "Uptime" as FeatureTab, icon: Activity, title: "Service Health Monitoring", desc: "Multi-region sub-second probing" },
+          { tab: "Infrastructure" as FeatureTab, icon: Server, title: "Compute & Storage Mesh", desc: "Live eBPF node resource telemetry" },
+          { tab: "Kanban" as FeatureTab, icon: KanbanSquare, title: "Incident Planning Board", desc: "Synchronized engineering workflows" },
+        ].map(cap => {
           const Icon = cap.icon;
-          const isActive = activeView === cap.id;
+          const isActive = activeTab === cap.tab;
           return (
             <button
-              key={cap.id}
-              onClick={() => handleCapabilityClick(cap.id)}
+              key={cap.tab}
+              onClick={() => setActiveTab(cap.tab)}
               className={`text-left p-4 rounded-xl border transition-all duration-200 group ${
                 isActive
-                  ? "bg-[#3978FF]/[0.06] border-[#3978FF]/25"
+                  ? "bg-[#3978FF]/[0.08] border-[#3978FF]/30 shadow-sm"
                   : "bg-[#101216]/60 border-[#242831]/60 hover:border-[#242831] hover:bg-[#101216]"
               }`}
             >
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-3 transition-colors ${
-                isActive ? "bg-[#3978FF]/15 text-[#3978FF]" : "bg-[#151820] text-[#6B7280] group-hover:text-[#9298A3]"
+                isActive ? "bg-[#3978FF]/20 text-[#3978FF]" : "bg-[#151820] text-[#6B7280] group-hover:text-[#9298A3]"
               }`}>
                 <Icon size={16} />
               </div>
@@ -788,7 +1231,7 @@ export function OperationalShowcase() {
         })}
       </motion.div>
 
-      {/* ──────── CTA ──────── */}
+      {/* ──────── CTAs ──────── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -799,7 +1242,7 @@ export function OperationalShowcase() {
           href="/register"
           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#3978FF] text-white text-[13px] font-semibold hover:bg-[#2B63E0] transition-colors shadow-[0_4px_20px_rgba(57,120,255,0.25)]"
         >
-          Explore BREXAL <ArrowRight size={14} />
+          Explore BREXAL Workspace <ArrowRight size={14} />
         </a>
         <a
           href="#features"
@@ -811,4 +1254,3 @@ export function OperationalShowcase() {
     </section>
   );
 }
-
