@@ -122,40 +122,61 @@ function Navigation() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 2: ASYMMETRIC HERO COMPOSITION
+   SECTION 2: ASYMMETRIC HERO COMPOSITION (OPTION 3 TOPOLOGY)
    ═══════════════════════════════════════════════════════════════ */
 function HeroSection() {
+  const [selectedCluster, setSelectedCluster] = useState<"us-east-1" | "eu-central-1" | "ap-south-1">("us-east-1");
   const [liveP99, setLiveP99] = useState("1.42ms");
-  const [packetTick, setPacketTick] = useState(42810);
+  const [packetTick, setPacketTick] = useState(48210);
+
+  const clusterData = {
+    "us-east-1": { label: "Virginia Core", ping: "0.8ms", p99: "1.42ms", error: "0.001%", rps: "48.2k", status: "HEALTHY" },
+    "eu-central-1": { label: "Frankfurt Mesh", ping: "1.4ms", p99: "1.85ms", error: "0.000%", rps: "31.4k", status: "HEALTHY" },
+    "ap-south-1": { label: "Mumbai Relay", ping: "2.1ms", p99: "3.12ms", error: "0.004%", rps: "19.8k", status: "NOMINAL" },
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const jitter = (1.38 + Math.random() * 0.12).toFixed(2);
+      const base = selectedCluster === "us-east-1" ? 1.38 : selectedCluster === "eu-central-1" ? 1.80 : 3.05;
+      const jitter = (base + Math.random() * 0.12).toFixed(2);
       setLiveP99(`${jitter}ms`);
-      setPacketTick((prev) => prev + Math.floor(Math.random() * 14 - 6));
-    }, 2400);
+      setPacketTick((prev) => prev + Math.floor(Math.random() * 18 - 8));
+    }, 2200);
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedCluster]);
+
+  const active = clusterData[selectedCluster];
 
   return (
-    <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 px-6 sm:px-10 overflow-hidden border-b border-[#202020] bg-[#050505]">
-      {/* Background Subtle Mesh Coordinates (Non-distracting) */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: "radial-gradient(#F5F5F5 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      />
+    <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 px-6 sm:px-10 overflow-hidden border-b border-[#202020] bg-[#050505]">
+      
+      {/* ── Option 3: 3D Topological Wireframe Background Image ── */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        <img
+          src="/backgrounds/hero-mesh-contour.jpg"
+          alt="3D Topological Telemetry Mesh"
+          className="w-full h-full object-cover object-right-bottom opacity-45 mix-blend-screen scale-105 transition-transform duration-1000"
+        />
+        
+        {/* Layer 1: Top Fade (Keeps minimal navbar 100% clean and transparent) */}
+        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-[#050505] via-[#050505]/80 to-transparent" />
+        
+        {/* Layer 2: Left Vignette (Guarantees AAA typography contrast for headline and copy) */}
+        <div className="absolute inset-y-0 left-0 w-full lg:w-7/12 bg-gradient-to-r from-[#050505] via-[#050505]/95 to-transparent" />
+        
+        {/* Layer 3: Bottom Fade (Blends seamlessly into Section 3 Bento canvas) */}
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0A0A0A] via-[#050505]/80 to-transparent" />
+      </div>
 
-      <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+      <div className="relative z-10 max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
         
         {/* LEFT COLUMN: Editorial Headline & Value (7 cols) */}
         <div className="lg:col-span-7 flex flex-col items-start text-left">
-          {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#101010] border border-[#202020] text-[#3985FF] font-mono text-[11px] font-medium tracking-wider mb-6">
+          
+          {/* Eyebrow Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#101010]/90 backdrop-blur-sm border border-[#202020] text-[#3985FF] font-mono text-[11px] font-medium tracking-wider mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-[#3985FF] animate-pulse" />
-            AI-POWERED OBSERVABILITY PLATFORM
+            TOPOLOGICAL OBSERVABILITY • MULTI-REGION MESH
           </div>
 
           {/* Main Headline (Sentence Case, Balanced) */}
@@ -163,7 +184,7 @@ function HeroSection() {
             See the failure before it becomes an incident.
           </h1>
 
-          {/* Supporting Description (Pretty line wrapping) */}
+          {/* Supporting Description */}
           <p className="text-lg sm:text-xl text-[#929292] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
             Monitor every service, trace every request, and identify the root cause before downtime impacts your users.
           </p>
@@ -172,22 +193,26 @@ function HeroSection() {
           <div className="flex flex-wrap items-center gap-4 mb-10 w-full sm:w-auto">
             <Link
               href="/register"
-              className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#3985FF] text-white text-[14px] font-semibold hover:bg-[#2B75F0] transition-colors flex items-center justify-center gap-2 shadow-[0_2px_12px_rgba(57,133,255,0.25)] focus:ring-2 focus:ring-[#3985FF]"
+              className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#3985FF] text-white text-[14px] font-semibold hover:bg-[#2B75F0] transition-all flex items-center justify-center gap-2 shadow-[0_2px_16px_rgba(57,133,255,0.35)] hover:shadow-[0_4px_24px_rgba(57,133,255,0.5)] focus:ring-2 focus:ring-[#3985FF]"
             >
               Request early access
               <ArrowRight size={15} />
             </Link>
             <a
               href="#platform"
-              className="w-full sm:w-auto px-5 py-3 rounded-lg bg-[#101010] border border-[#202020] text-[#F5F5F5] text-[14px] font-medium hover:border-[#2E2E2E] hover:bg-[#151515] transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-5 py-3 rounded-lg bg-[#101010]/80 backdrop-blur-sm border border-[#202020] text-[#F5F5F5] text-[14px] font-medium hover:border-[#3985FF]/40 hover:bg-[#151515] transition-colors flex items-center justify-center gap-2"
             >
               Explore the platform
             </a>
           </div>
 
           {/* Technical Metadata Line */}
-          <div className="pt-6 border-t border-[#202020] w-full flex items-center gap-3 text-[12px] font-mono text-[#929292]">
-            <span className="text-[#3985FF]">●</span>
+          <div className="pt-6 border-t border-[#202020] w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#929292]">
+            <span className="flex items-center gap-1.5 text-[#36D399]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#36D399] animate-pulse" />
+              eBPF Mesh: {active.ping}
+            </span>
+            <span className="text-[#202020]">/</span>
             <span>Application monitoring</span>
             <span className="text-[#202020]">/</span>
             <span>Infrastructure intelligence</span>
@@ -196,34 +221,42 @@ function HeroSection() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Realistic Live Telemetry Canvas (5 cols) */}
+        {/* RIGHT COLUMN: Realistic Live Telemetry Canvas sitting over 3D Contours (5 cols) */}
         <div className="lg:col-span-5 relative w-full">
-          <div className="relative rounded-xl bg-[#0A0A0A] border border-[#202020] p-4 sm:p-5 shadow-2xl overflow-hidden flex flex-col gap-4">
+          <div className="relative rounded-xl bg-[#0A0A0A]/85 backdrop-blur-md border border-[#202020] p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.85)] hover:border-[#3985FF]/40 transition-colors flex flex-col gap-4">
             
-            {/* Telemetry Header Bar */}
+            {/* Telemetry Header Bar with Interactive Cluster Tabs */}
             <div className="flex items-center justify-between pb-3 border-b border-[#202020]">
-              <div className="flex items-center gap-2 font-mono text-[11px] text-[#929292]">
-                <Radio size={13} className="text-[#36D399] animate-pulse" />
-                <span className="text-[#F5F5F5] font-semibold">cluster-us-east-1</span>
-                <span className="text-[#5E5E5E]">•</span>
-                <span className="text-[#5E5E5E]">eBPF mesh</span>
+              <div className="flex items-center gap-1.5 bg-[#101010] p-1 rounded-md border border-[#202020] font-mono text-[10.5px]">
+                {(["us-east-1", "eu-central-1", "ap-south-1"] as const).map((reg) => (
+                  <button
+                    key={reg}
+                    onClick={() => setSelectedCluster(reg)}
+                    className={`px-2 py-0.5 rounded transition-colors ${
+                      selectedCluster === reg ? "bg-[#3985FF] text-white font-medium" : "text-[#929292] hover:text-[#F5F5F5]"
+                    }`}
+                  >
+                    {reg}
+                  </button>
+                ))}
               </div>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#36D399]/10 text-[#36D399] border border-[#36D399]/20">
-                HEALTHY
+
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#36D399]/10 text-[#36D399] border border-[#36D399]/20 font-semibold">
+                {active.status}
               </span>
             </div>
 
-            {/* Live Metrics Row */}
+            {/* Live Metrics Row linked to selected cluster */}
             <div className="grid grid-cols-3 gap-2">
-              <div className="p-2.5 rounded-lg bg-[#101010] border border-[#202020]">
+              <div className="p-2.5 rounded-lg bg-[#101010]/90 border border-[#202020]">
                 <span className="text-[10px] font-mono text-[#929292] block mb-1">P99 LATENCY</span>
                 <span className="text-base sm:text-lg font-mono font-bold text-[#F5F5F5]">{liveP99}</span>
               </div>
-              <div className="p-2.5 rounded-lg bg-[#101010] border border-[#202020]">
+              <div className="p-2.5 rounded-lg bg-[#101010]/90 border border-[#202020]">
                 <span className="text-[10px] font-mono text-[#929292] block mb-1">ERROR RATE</span>
-                <span className="text-base sm:text-lg font-mono font-bold text-[#36D399]">0.002%</span>
+                <span className="text-base sm:text-lg font-mono font-bold text-[#36D399]">{active.error}</span>
               </div>
-              <div className="p-2.5 rounded-lg bg-[#101010] border border-[#202020]">
+              <div className="p-2.5 rounded-lg bg-[#101010]/90 border border-[#202020]">
                 <span className="text-[10px] font-mono text-[#929292] block mb-1">THROUGHPUT</span>
                 <span className="text-base sm:text-lg font-mono font-bold text-[#3985FF]">
                   {(packetTick / 1000).toFixed(1)}k/s
@@ -232,9 +265,12 @@ function HeroSection() {
             </div>
 
             {/* Service Dependency Flow Node Graph (Illustrative Topology) */}
-            <div className="p-3.5 rounded-lg bg-[#101010] border border-[#202020] flex flex-col gap-3">
+            <div className="p-3.5 rounded-lg bg-[#101010]/90 border border-[#202020] flex flex-col gap-3">
               <div className="flex items-center justify-between text-[11px] font-mono text-[#929292]">
-                <span>TOPOLOGY MESH</span>
+                <span className="flex items-center gap-1.5">
+                  <Radio size={12} className="text-[#3985FF] animate-pulse" />
+                  TOPOLOGY MESH ELEVATION
+                </span>
                 <span className="text-[10px] text-[#5E5E5E]">6 ACTIVE NODES</span>
               </div>
               
@@ -244,7 +280,7 @@ function HeroSection() {
                     <span className="w-2 h-2 rounded-full bg-[#36D399]" />
                     <span className="text-[#F5F5F5]">api-edge-proxy</span>
                   </div>
-                  <span className="text-[11px] text-[#929292]">1.2ms • 18.4k rps</span>
+                  <span className="text-[11px] text-[#929292]">{active.ping} • {active.rps}</span>
                 </div>
 
                 <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
@@ -265,12 +301,12 @@ function HeroSection() {
               </div>
             </div>
 
-            {/* Live AI Anomaly Callout Box */}
+            {/* Live AI Anomaly Callout Box linked to Mesh */}
             <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#9B7BFF]/30 flex items-start gap-2.5">
               <Sparkles size={15} className="text-[#9B7BFF] shrink-0 mt-0.5" />
               <div className="flex flex-col text-[11.5px] leading-snug">
                 <span className="font-mono text-[#9B7BFF] font-semibold text-[10px] tracking-wider uppercase">
-                  AI Anomaly Detection
+                  AI Anomaly Detection // Mesh Correlation
                 </span>
                 <span className="text-[#F5F5F5] font-mono mt-0.5">
                   Connection pool saturation on <code className="text-[#3985FF]">postgres-primary</code>
