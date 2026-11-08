@@ -29,6 +29,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { StripeGradientMesh } from "@/components/StripeGradientMesh";
 
 /* ═══════════════════════════════════════════════════════════════
    TYPES & SAMPLE TELEMETRY
@@ -54,7 +55,7 @@ const SAMPLE_SERVICES: ServiceHealth[] = [
 ];
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 1: MINIMAL STRIPE-STYLE NAVIGATION
+   SECTION 1: STRIPE-STYLE NAVIGATION
    ═══════════════════════════════════════════════════════════════ */
 function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -71,7 +72,7 @@ function Navigation() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         scrolled
-          ? "bg-white/85 backdrop-blur-md border-b border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] py-3.5"
+          ? "bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] py-3.5"
           : "bg-transparent border-b border-transparent py-5"
       }`}
     >
@@ -91,28 +92,38 @@ function Navigation() {
           </div>
         </Link>
 
-        {/* Center Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-[13.5px] font-semibold text-[#425466]">
-          <Link href="#platform" className="hover:text-[#0A2540] transition-colors">Platform</Link>
-          <Link href="#solutions" className="hover:text-[#0A2540] transition-colors">Solutions</Link>
-          <Link href="#features" className="hover:text-[#0A2540] transition-colors">Features</Link>
-          <Link href="#incident-response" className="hover:text-[#0A2540] transition-colors">Incident response</Link>
-          <Link href="#stack" className="hover:text-[#0A2540] transition-colors">Stack</Link>
+        {/* Center Navigation Links (Stripe Dropdown Style) */}
+        <nav className="hidden md:flex items-center gap-8 text-[14px] font-medium text-[#425466]">
+          <Link href="#platform" className="hover:text-[#0A2540] transition-colors flex items-center gap-1">
+            Products <span className="text-[10px] text-slate-400">⌄</span>
+          </Link>
+          <Link href="#solutions" className="hover:text-[#0A2540] transition-colors flex items-center gap-1">
+            Solutions <span className="text-[10px] text-slate-400">⌄</span>
+          </Link>
+          <Link href="#features" className="hover:text-[#0A2540] transition-colors flex items-center gap-1">
+            Developers <span className="text-[10px] text-slate-400">⌄</span>
+          </Link>
+          <Link href="#stack" className="hover:text-[#0A2540] transition-colors flex items-center gap-1">
+            Resources <span className="text-[10px] text-slate-400">⌄</span>
+          </Link>
+          <Link href="#features" className="hover:text-[#0A2540] transition-colors">
+            Pricing
+          </Link>
         </nav>
 
         {/* Right Action CTAs */}
         <div className="flex items-center gap-4">
           <Link
             href="/login"
-            className="text-[13.5px] font-semibold text-[#425466] hover:text-[#0A2540] transition-colors px-2 py-1"
+            className="text-[14px] font-semibold text-[#425466] hover:text-[#0A2540] transition-colors px-2 py-1"
           >
             Sign in
           </Link>
           <Link
             href="/register"
-            className="px-4 py-2 rounded-full bg-[#635BFF] text-white text-[13px] font-semibold hover:bg-[#5349e0] transition-all shadow-[0_2px_8px_rgba(99,91,255,0.25)] hover:shadow-[0_4px_16px_rgba(99,91,255,0.35)] focus:outline-none focus:ring-2 focus:ring-[#635BFF]"
+            className="px-5 py-2.5 rounded-full bg-[#635BFF] text-white text-[13.5px] font-semibold hover:bg-[#5349e0] transition-all shadow-[0_2px_8px_rgba(99,91,255,0.25)] hover:shadow-[0_4px_16px_rgba(99,91,255,0.35)] focus:outline-none focus:ring-2 focus:ring-[#635BFF] flex items-center gap-1.5"
           >
-            Start now <span className="ml-0.5">→</span>
+            Contact sales <ChevronRight size={14} />
           </Link>
         </div>
       </div>
@@ -121,7 +132,7 @@ function Navigation() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 2: STRIPE-INSPIRED HERO WITH NATURE HORIZON
+   SECTION 2: STRIPE-STYLE HERO WITH FLOATING COLOR MESH ANIMATION
    ═══════════════════════════════════════════════════════════════ */
 function HeroSection() {
   const [selectedCluster, setSelectedCluster] = useState<"us-east-1" | "eu-central-1" | "ap-south-1">("us-east-1");
@@ -149,64 +160,53 @@ function HeroSection() {
   return (
     <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 px-6 sm:px-10 overflow-hidden bg-white">
       
-      {/* ── Majestic Nature Landscape Background (Stripe / Apple Aesthetic) ── */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <img
-          src="/backgrounds/nature-horizon.jpg"
-          alt="Majestic Alpine Horizon"
-          className="w-full h-full object-cover object-center opacity-70 scale-100"
-        />
-        
-        {/* Soft White Gradient Masks for Perfect Readability & Seamless Transitions */}
-        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-white via-white/80 to-transparent" />
-        <div className="absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-white via-white/90 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white via-white/90 to-transparent" />
-      </div>
+      {/* ── Stripe-Style Floating Diagonal Color Wave Animation (NO Static Image) ── */}
+      <StripeGradientMesh />
 
       <div className="relative z-10 max-w-[1360px] mx-auto">
         
-        {/* HERO INTRO GRID: Headline on Left, Atmospheric Horizon breathing on Right */}
+        {/* HERO INTRO GRID: Headline & Text with Stripe Typography & Colors */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[440px] md:min-h-[480px]">
           
           {/* LEFT COLUMN: Editorial Headline & Value (8 cols) */}
           <div className="lg:col-span-8 flex flex-col items-start text-left">
             
-            {/* Eyebrow Badge in Stripe Indigo */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#635BFF]/10 border border-[#635BFF]/20 text-[#635BFF] font-mono text-[11px] font-semibold tracking-wider mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#635BFF] animate-pulse" />
-              FINANCIAL-GRADE OBSERVABILITY INFRASTRUCTURE
+            {/* Live GDP / Telemetry Ticker Line (Exact Stripe style from screenshot) */}
+            <div className="text-[12.5px] font-mono text-[#0A2540] font-semibold tracking-tight mb-5 flex items-center gap-2">
+              <span>Global telemetry running on BREXAL:</span>
+              <span className="text-[#635BFF] font-bold">99.984201%</span>
             </div>
 
-            {/* Main Headline (Sentence Case, Balanced, Deep Navy) */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-[#0A2540] leading-[1.05] mb-6 font-display max-w-3xl">
-              See the failure before it becomes an incident.
+            {/* Main Headline (Matching text color & style from user's screenshot) */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold tracking-[-0.03em] text-[#0A2540] leading-[1.06] mb-6 font-display max-w-3xl">
+              Financial infrastructure to grow <span className="text-[#635BFF]">your revenue.</span>
             </h1>
 
-            {/* Supporting Description */}
-            <p className="text-lg sm:text-xl text-[#425466] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
-              Monitor every service, trace every request, and identify the root cause before downtime impacts your users.
+            {/* Supporting Description (Matching steel blue/slate text color #3A5A78 from screenshot) */}
+            <p className="text-lg sm:text-xl md:text-[21px] text-[#3A5A78] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
+              Accept payments, offer financial services and implement custom revenue models – from your first transaction to your billionth.
             </p>
 
-            {/* Stripe-style CTAs */}
+            {/* Stripe-style Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 mb-8 w-full sm:w-auto">
               <Link
                 href="/register"
-                className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#635BFF] text-white text-[14px] font-semibold hover:bg-[#5349e0] transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(99,91,255,0.3)] hover:shadow-[0_6px_20px_rgba(99,91,255,0.4)] focus:ring-2 focus:ring-[#635BFF]"
+                className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#635BFF] text-white text-[14.5px] font-semibold hover:bg-[#5349e0] transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(99,91,255,0.35)] hover:shadow-[0_6px_22px_rgba(99,91,255,0.45)] focus:ring-2 focus:ring-[#635BFF]"
               >
-                Request early access
-                <ArrowRight size={15} />
+                Request an invite
+                <ChevronRight size={16} />
               </Link>
               <a
                 href="#platform"
-                className="w-full sm:w-auto px-6 py-3 rounded-full bg-white text-[#0A2540] border border-slate-200/90 text-[14px] font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/90 text-[#0A2540] border border-slate-200 text-[14px] font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-xs flex items-center justify-center gap-2"
               >
                 Explore the platform
               </a>
             </div>
 
             {/* Technical Metadata Line */}
-            <div className="pt-5 border-t border-slate-200/80 w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#627D98]">
-              <span className="flex items-center gap-1.5 text-[#059669] font-medium">
+            <div className="pt-5 border-t border-slate-200/70 w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#627D98]">
+              <span className="flex items-center gap-1.5 text-[#059669] font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
                 Mesh latency: {active.ping}
               </span>
@@ -219,23 +219,23 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Serene Nature Atmospheric Callout Badge */}
+          {/* RIGHT COLUMN: Floating Atmospheric Accent */}
           <div className="lg:col-span-4 hidden lg:flex flex-col items-end justify-center pointer-events-none">
             <div className="flex flex-col gap-2 font-mono text-[11px] items-end">
-              <div className="px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 text-[#0A2540] flex items-center gap-2 shadow-sm font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
-                <span>GLOBAL TELEMETRY HORIZON // ACTIVE</span>
+              <div className="px-4 py-2 rounded-full bg-white/85 backdrop-blur-md border border-slate-200/80 text-[#0A2540] flex items-center gap-2 shadow-sm font-semibold">
+                <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse" />
+                <span>REAL-TIME ENGINE // 42.8k OPS/SEC</span>
               </div>
-              <div className="px-3 py-1 rounded-full bg-white/60 backdrop-blur-sm border border-slate-200/50 text-[#627D98] text-[10px]">
-                COORD: 37.7749° N, 122.4194° W • 99.98% SLA
+              <div className="px-3.5 py-1 rounded-full bg-white/70 backdrop-blur-sm border border-slate-200/50 text-[#627D98] text-[10.5px]">
+                Global latency p99: 1.42ms • SLA: 99.98%
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* ── STRIPE-STYLE FLOATING TELEMETRY COCKPIT (Clean White & Soft Shadows) ── */}
-        <div className="mt-16 md:mt-24 w-full rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-7 shadow-[0_20px_50px_-12px_rgba(50,50,93,0.12),0_10px_20px_-8px_rgba(0,0,0,0.06)] hover:border-slate-300 transition-all">
+        {/* ── STRIPE-STYLE FLOATING TELEMETRY COCKPIT ── */}
+        <div className="mt-16 md:mt-24 w-full rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/80 p-6 sm:p-7 shadow-[0_20px_50px_-12px_rgba(50,50,93,0.12),0_10px_20px_-8px_rgba(0,0,0,0.06)] hover:border-slate-300 transition-all">
           
           {/* Console Header Bar */}
           <div className="flex flex-wrap items-center justify-between pb-5 border-b border-slate-100 gap-4">
