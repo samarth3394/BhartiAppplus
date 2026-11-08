@@ -150,183 +150,211 @@ function HeroSection() {
   return (
     <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 px-6 sm:px-10 overflow-hidden border-b border-[#202020] bg-[#050505]">
       
-      {/* ── Option 3: 3D Topological Wireframe Background Image ── */}
+      {/* ── Option 3: 3D Topological Wireframe Background Image (Unobstructed) ── */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img
           src="/backgrounds/hero-mesh-contour.jpg"
           alt="3D Topological Telemetry Mesh"
-          className="w-full h-full object-cover object-right-bottom opacity-45 mix-blend-screen scale-105 transition-transform duration-1000"
+          className="w-full h-full object-cover object-right opacity-80 mix-blend-screen scale-100"
         />
         
         {/* Layer 1: Top Fade (Keeps minimal navbar 100% clean and transparent) */}
-        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-[#050505] via-[#050505]/80 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#050505] via-[#050505]/70 to-transparent" />
         
-        {/* Layer 2: Left Vignette (Guarantees AAA typography contrast for headline and copy) */}
-        <div className="absolute inset-y-0 left-0 w-full lg:w-7/12 bg-gradient-to-r from-[#050505] via-[#050505]/95 to-transparent" />
+        {/* Layer 2: Left Text Contrast Backing (Restricted to text side so right 3D art is completely visible) */}
+        <div className="absolute inset-y-0 left-0 w-full lg:w-1/2 bg-gradient-to-r from-[#050505] via-[#050505]/90 to-transparent" />
         
-        {/* Layer 3: Bottom Fade (Blends seamlessly into Section 3 Bento canvas) */}
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0A0A0A] via-[#050505]/80 to-transparent" />
+        {/* Layer 3: Bottom Fade */}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+      <div className="relative z-10 max-w-[1360px] mx-auto">
         
-        {/* LEFT COLUMN: Editorial Headline & Value (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col items-start text-left">
+        {/* HERO INTRO GRID: Headline on Left, 3D Mesh Artwork fully revealed on Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[440px] md:min-h-[480px]">
           
-          {/* Eyebrow Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#101010]/90 backdrop-blur-sm border border-[#202020] text-[#3985FF] font-mono text-[11px] font-medium tracking-wider mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#3985FF] animate-pulse" />
-            TOPOLOGICAL OBSERVABILITY • MULTI-REGION MESH
+          {/* LEFT COLUMN: Editorial Headline & Value (8 cols) */}
+          <div className="lg:col-span-8 flex flex-col items-start text-left">
+            
+            {/* Eyebrow Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#101010]/90 backdrop-blur-sm border border-[#202020] text-[#3985FF] font-mono text-[11px] font-medium tracking-wider mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#3985FF] animate-pulse" />
+              TOPOLOGICAL OBSERVABILITY • MULTI-REGION MESH
+            </div>
+
+            {/* Main Headline (Sentence Case, Balanced) */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-[#F5F5F5] leading-[1.06] mb-6 font-display max-w-3xl">
+              See the failure before it becomes an incident.
+            </h1>
+
+            {/* Supporting Description */}
+            <p className="text-lg sm:text-xl text-[#929292] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
+              Monitor every service, trace every request, and identify the root cause before downtime impacts your users.
+            </p>
+
+            {/* Actions */}
+            <div className="flex flex-wrap items-center gap-4 mb-8 w-full sm:w-auto">
+              <Link
+                href="/register"
+                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#3985FF] text-white text-[14px] font-semibold hover:bg-[#2B75F0] transition-all flex items-center justify-center gap-2 shadow-[0_2px_16px_rgba(57,133,255,0.35)] hover:shadow-[0_4px_24px_rgba(57,133,255,0.5)] focus:ring-2 focus:ring-[#3985FF]"
+              >
+                Request early access
+                <ArrowRight size={15} />
+              </Link>
+              <a
+                href="#platform"
+                className="w-full sm:w-auto px-5 py-3 rounded-lg bg-[#101010]/80 backdrop-blur-sm border border-[#202020] text-[#F5F5F5] text-[14px] font-medium hover:border-[#3985FF]/40 hover:bg-[#151515] transition-colors flex items-center justify-center gap-2"
+              >
+                Explore the platform
+              </a>
+            </div>
+
+            {/* Technical Metadata Line */}
+            <div className="pt-5 border-t border-[#202020] w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#929292]">
+              <span className="flex items-center gap-1.5 text-[#36D399]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#36D399] animate-pulse" />
+                Mesh latency: {active.ping}
+              </span>
+              <span className="text-[#202020]">/</span>
+              <span>Application monitoring</span>
+              <span className="text-[#202020]">/</span>
+              <span>Infrastructure intelligence</span>
+              <span className="text-[#202020]">/</span>
+              <span>AI incident response</span>
+            </div>
           </div>
 
-          {/* Main Headline (Sentence Case, Balanced) */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-[#F5F5F5] leading-[1.08] mb-6 font-display">
-            See the failure before it becomes an incident.
-          </h1>
-
-          {/* Supporting Description */}
-          <p className="text-lg sm:text-xl text-[#929292] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
-            Monitor every service, trace every request, and identify the root cause before downtime impacts your users.
-          </p>
-
-          {/* Actions */}
-          <div className="flex flex-wrap items-center gap-4 mb-10 w-full sm:w-auto">
-            <Link
-              href="/register"
-              className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#3985FF] text-white text-[14px] font-semibold hover:bg-[#2B75F0] transition-all flex items-center justify-center gap-2 shadow-[0_2px_16px_rgba(57,133,255,0.35)] hover:shadow-[0_4px_24px_rgba(57,133,255,0.5)] focus:ring-2 focus:ring-[#3985FF]"
-            >
-              Request early access
-              <ArrowRight size={15} />
-            </Link>
-            <a
-              href="#platform"
-              className="w-full sm:w-auto px-5 py-3 rounded-lg bg-[#101010]/80 backdrop-blur-sm border border-[#202020] text-[#F5F5F5] text-[14px] font-medium hover:border-[#3985FF]/40 hover:bg-[#151515] transition-colors flex items-center justify-center gap-2"
-            >
-              Explore the platform
-            </a>
+          {/* RIGHT COLUMN: Completely Open & Clear for the 3D Topological Wireframe */}
+          <div className="lg:col-span-4 hidden lg:flex flex-col items-end justify-center pointer-events-none">
+            {/* Minimal Translucent Coordinate Markers that complement the 3D Mesh */}
+            <div className="flex flex-col gap-3 font-mono text-[11px] items-end">
+              <div className="px-3 py-1.5 rounded-md bg-[#0A0A0A]/60 backdrop-blur-md border border-[#202020]/60 text-[#3985FF] flex items-center gap-2 shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3985FF] animate-pulse" />
+                <span>3D CONTOUR MESH // ELEVATION ACTIVE</span>
+              </div>
+              <div className="px-3 py-1 rounded-md bg-[#0A0A0A]/40 backdrop-blur-sm border border-[#202020]/40 text-[#929292] text-[10px]">
+                COORD: 37.7749° N, 122.4194° W
+              </div>
+            </div>
           </div>
 
-          {/* Technical Metadata Line */}
-          <div className="pt-6 border-t border-[#202020] w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#929292]">
-            <span className="flex items-center gap-1.5 text-[#36D399]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#36D399] animate-pulse" />
-              eBPF Mesh: {active.ping}
-            </span>
-            <span className="text-[#202020]">/</span>
-            <span>Application monitoring</span>
-            <span className="text-[#202020]">/</span>
-            <span>Infrastructure intelligence</span>
-            <span className="text-[#202020]">/</span>
-            <span>AI incident response</span>
-          </div>
         </div>
 
-        {/* RIGHT COLUMN: Realistic Live Telemetry Canvas sitting over 3D Contours (5 cols) */}
-        <div className="lg:col-span-5 relative w-full">
-          <div className="relative rounded-xl bg-[#0A0A0A]/85 backdrop-blur-md border border-[#202020] p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.85)] hover:border-[#3985FF]/40 transition-colors flex flex-col gap-4">
-            
-            {/* Telemetry Header Bar with Interactive Cluster Tabs */}
-            <div className="flex items-center justify-between pb-3 border-b border-[#202020]">
-              <div className="flex items-center gap-1.5 bg-[#101010] p-1 rounded-md border border-[#202020] font-mono text-[10.5px]">
+        {/* ── SHIFTED TELEMETRY CONSOLE: Positioned below hero text so the 3D background art above is 100% visible ── */}
+        <div className="mt-16 md:mt-24 w-full rounded-xl bg-[#0A0A0A]/90 backdrop-blur-md border border-[#202020] p-5 shadow-2xl hover:border-[#3985FF]/30 transition-colors">
+          
+          {/* Console Header Bar */}
+          <div className="flex flex-wrap items-center justify-between pb-4 border-b border-[#202020] gap-3">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 font-mono text-[12px] text-[#F5F5F5] font-semibold">
+                <Radio size={14} className="text-[#36D399] animate-pulse" />
+                <span>MULTI-REGION TELEMETRY CONSOLE</span>
+              </div>
+              <span className="text-[#5E5E5E]">|</span>
+              <div className="flex items-center gap-1 bg-[#101010] p-1 rounded-md border border-[#202020] font-mono text-[11px]">
                 {(["us-east-1", "eu-central-1", "ap-south-1"] as const).map((reg) => (
                   <button
                     key={reg}
                     onClick={() => setSelectedCluster(reg)}
-                    className={`px-2 py-0.5 rounded transition-colors ${
-                      selectedCluster === reg ? "bg-[#3985FF] text-white font-medium" : "text-[#929292] hover:text-[#F5F5F5]"
+                    className={`px-2.5 py-0.5 rounded transition-colors ${
+                      selectedCluster === reg ? "bg-[#3985FF] text-white font-medium shadow-sm" : "text-[#929292] hover:text-[#F5F5F5]"
                     }`}
                   >
                     {reg}
                   </button>
                 ))}
               </div>
+            </div>
 
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#36D399]/10 text-[#36D399] border border-[#36D399]/20 font-semibold">
-                {active.status}
+            <div className="flex items-center gap-2 font-mono text-[10.5px]">
+              <span className="px-2 py-0.5 rounded bg-[#36D399]/10 text-[#36D399] border border-[#36D399]/20 font-semibold">
+                STATUS: {active.status}
               </span>
-            </div>
-
-            {/* Live Metrics Row linked to selected cluster */}
-            <div className="grid grid-cols-3 gap-2">
-              <div className="p-2.5 rounded-lg bg-[#101010]/90 border border-[#202020]">
-                <span className="text-[10px] font-mono text-[#929292] block mb-1">P99 LATENCY</span>
-                <span className="text-base sm:text-lg font-mono font-bold text-[#F5F5F5]">{liveP99}</span>
-              </div>
-              <div className="p-2.5 rounded-lg bg-[#101010]/90 border border-[#202020]">
-                <span className="text-[10px] font-mono text-[#929292] block mb-1">ERROR RATE</span>
-                <span className="text-base sm:text-lg font-mono font-bold text-[#36D399]">{active.error}</span>
-              </div>
-              <div className="p-2.5 rounded-lg bg-[#101010]/90 border border-[#202020]">
-                <span className="text-[10px] font-mono text-[#929292] block mb-1">THROUGHPUT</span>
-                <span className="text-base sm:text-lg font-mono font-bold text-[#3985FF]">
-                  {(packetTick / 1000).toFixed(1)}k/s
-                </span>
-              </div>
-            </div>
-
-            {/* Service Dependency Flow Node Graph (Illustrative Topology) */}
-            <div className="p-3.5 rounded-lg bg-[#101010]/90 border border-[#202020] flex flex-col gap-3">
-              <div className="flex items-center justify-between text-[11px] font-mono text-[#929292]">
-                <span className="flex items-center gap-1.5">
-                  <Radio size={12} className="text-[#3985FF] animate-pulse" />
-                  TOPOLOGY MESH ELEVATION
-                </span>
-                <span className="text-[10px] text-[#5E5E5E]">6 ACTIVE NODES</span>
-              </div>
-              
-              <div className="space-y-2 font-mono text-[12px]">
-                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#36D399]" />
-                    <span className="text-[#F5F5F5]">api-edge-proxy</span>
-                  </div>
-                  <span className="text-[11px] text-[#929292]">{active.ping} • {active.rps}</span>
-                </div>
-
-                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#36D399]" />
-                    <span className="text-[#F5F5F5]">auth-service-v2</span>
-                  </div>
-                  <span className="text-[11px] text-[#929292]">3.4ms • 4.2k rps</span>
-                </div>
-
-                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#FF5252]/30">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#F5B942] animate-pulse" />
-                    <span className="text-[#F5F5F5]">payment-worker-pool</span>
-                  </div>
-                  <span className="text-[11px] text-[#F5B942]">142ms • Degraded</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Live AI Anomaly Callout Box linked to Mesh */}
-            <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#9B7BFF]/30 flex items-start gap-2.5">
-              <Sparkles size={15} className="text-[#9B7BFF] shrink-0 mt-0.5" />
-              <div className="flex flex-col text-[11.5px] leading-snug">
-                <span className="font-mono text-[#9B7BFF] font-semibold text-[10px] tracking-wider uppercase">
-                  AI Anomaly Detection // Mesh Correlation
-                </span>
-                <span className="text-[#F5F5F5] font-mono mt-0.5">
-                  Connection pool saturation on <code className="text-[#3985FF]">postgres-primary</code>
-                </span>
-                <span className="text-[10px] text-[#929292] font-mono mt-1">
-                  Correlated with commit sha:8f2a1b9 (payment retry loop)
-                </span>
-              </div>
-            </div>
-
-            {/* Deployment Indicator Footer */}
-            <div className="flex items-center justify-between text-[10px] font-mono text-[#929292] pt-1 border-t border-[#202020]">
-              <span className="flex items-center gap-1.5">
-                <GitCommit size={11} className="text-[#3985FF]" />
-                v2.4.1 deployed 4m ago
-              </span>
-              <span className="text-[#36D399]">0 canary rollbacks</span>
+              <span className="text-[#5E5E5E]">•</span>
+              <span className="text-[#929292]">ILLUSTRATIVE TELEMETRY</span>
             </div>
           </div>
+
+          {/* 3-Column Panoramic Breakdown */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 mt-5">
+            
+            {/* Col 1: Metrics (4 cols) */}
+            <div className="md:col-span-4 flex flex-col justify-between gap-3">
+              <div className="grid grid-cols-3 gap-2">
+                <div className="p-3 rounded-lg bg-[#101010] border border-[#202020]">
+                  <span className="text-[10px] font-mono text-[#929292] block mb-1">P99 LATENCY</span>
+                  <span className="text-lg font-mono font-bold text-[#F5F5F5]">{liveP99}</span>
+                </div>
+                <div className="p-3 rounded-lg bg-[#101010] border border-[#202020]">
+                  <span className="text-[10px] font-mono text-[#929292] block mb-1">ERROR RATE</span>
+                  <span className="text-lg font-mono font-bold text-[#36D399]">{active.error}</span>
+                </div>
+                <div className="p-3 rounded-lg bg-[#101010] border border-[#202020]">
+                  <span className="text-[10px] font-mono text-[#929292] block mb-1">THROUGHPUT</span>
+                  <span className="text-lg font-mono font-bold text-[#3985FF]">
+                    {(packetTick / 1000).toFixed(1)}k/s
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#929292] p-2.5 rounded-lg bg-[#101010] border border-[#202020]">
+                <span className="flex items-center gap-1.5">
+                  <GitCommit size={13} className="text-[#3985FF]" />
+                  v2.4.1 deployed 4m ago
+                </span>
+                <span className="text-[#36D399]">0 canary rollbacks</span>
+              </div>
+            </div>
+
+            {/* Col 2: Topology Nodes List (4 cols) */}
+            <div className="md:col-span-4 p-3.5 rounded-lg bg-[#101010] border border-[#202020] flex flex-col justify-between">
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#929292] mb-2">
+                <span>TOPOLOGY MESH ELEVATION</span>
+                <span className="text-[10px] text-[#5E5E5E]">6 ACTIVE NODES</span>
+              </div>
+              <div className="space-y-1.5 font-mono text-[11.5px]">
+                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#36D399]" />
+                    <span className="text-[#F5F5F5]">api-edge-proxy</span>
+                  </div>
+                  <span className="text-[10.5px] text-[#929292]">{active.ping} • {active.rps}</span>
+                </div>
+                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#36D399]" />
+                    <span className="text-[#F5F5F5]">auth-service-v2</span>
+                  </div>
+                  <span className="text-[10.5px] text-[#929292]">3.4ms • 4.2k rps</span>
+                </div>
+                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#FF5252]/30">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#F5B942] animate-pulse" />
+                    <span className="text-[#F5F5F5]">payment-worker-pool</span>
+                  </div>
+                  <span className="text-[10.5px] text-[#F5B942]">142ms • Degraded</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Col 3: AI Anomaly Detection Callout (4 cols) */}
+            <div className="md:col-span-4 p-3.5 rounded-lg bg-[#101010] border border-[#9B7BFF]/30 flex flex-col justify-between">
+              <div className="flex items-center gap-2 text-[#9B7BFF] font-mono text-[11px] font-semibold">
+                <Sparkles size={14} />
+                <span>AI ANOMALY DETECTION // MESH</span>
+              </div>
+              <div className="my-2 text-[12px] font-mono text-[#F5F5F5] leading-snug">
+                Connection pool saturation on <code className="text-[#3985FF]">postgres-primary</code>
+              </div>
+              <div className="text-[10.5px] text-[#929292] font-mono pt-2 border-t border-[#202020]">
+                Correlated with commit sha:8f2a1b9 (payment retry loop)
+              </div>
+            </div>
+
+          </div>
+
         </div>
+
       </div>
     </section>
   );
