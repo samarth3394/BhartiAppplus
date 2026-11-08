@@ -77,18 +77,11 @@ function Navigation() {
       }`}
     >
       <div className="max-w-[1360px] mx-auto px-6 sm:px-10 flex items-center justify-between">
-        {/* Brand Mark + Minimal Symbol */}
-        <Link href="/" className="flex items-center gap-3 group focus:outline-none">
-          <div className="w-8 h-8 rounded-lg bg-[#0A2540] flex items-center justify-center text-white shadow-sm group-hover:bg-[#635BFF] transition-colors">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-          </div>
+        {/* Brand Mark */}
+        <Link href="/" className="flex items-center gap-2 group focus:outline-none">
           <div className="flex flex-col">
-            <Logo className="h-4 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
-            <span className="text-[9px] font-mono tracking-widest text-[#627D98] uppercase">Bharti Nexus</span>
+            <Logo className="h-4.5 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
+            <span className="text-[9px] font-mono tracking-widest text-[#627D98] uppercase mt-0.5">Bharti Nexus</span>
           </div>
         </Link>
 
@@ -989,15 +982,9 @@ function EnterpriseFooter() {
           
           {/* Brand Info (Col 1) */}
           <div className="col-span-2 flex flex-col items-start">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 rounded-lg bg-[#0A2540] flex items-center justify-center text-white">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
-              </div>
-              <Logo className="h-4 text-[#0A2540]" />
+            <div className="flex flex-col mb-4">
+              <Logo className="h-4.5 text-[#0A2540] mb-1" />
+              <span className="text-[9px] font-mono tracking-widest text-[#627D98] uppercase">Bharti Nexus</span>
             </div>
             <p className="text-[13px] text-[#425466] leading-relaxed max-w-sm mb-4">
               BREXAL is an AI-powered observability and incident response platform developed by Bharti Nexus Technologies.
