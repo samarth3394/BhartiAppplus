@@ -11,6 +11,7 @@ import { useEffect, useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
 import { SplineScene } from "@/components/SplineScene";
 import { SdkTerminal } from "@/components/SdkTerminal";
+import { OperationalShowcase } from "@/components/OperationalShowcase";
 
 /* ──────────────────────────── ZERO-OVERHEAD 3D TILT CARD ──────────────────────────── */
 function TiltCard({ 
@@ -888,6 +889,9 @@ export default function LandingPage() {
             ))}
           </div>
         </motion.section>
+
+        {/* ═══════════════════ OPERATIONAL INTELLIGENCE SHOWCASE ═══════════════════ */}
+        <OperationalShowcase />
 
         {/* ═══════════════════ INTERACTIVE 3D FEATURE SHOWCASE ═══════════════════ */}
         <section
