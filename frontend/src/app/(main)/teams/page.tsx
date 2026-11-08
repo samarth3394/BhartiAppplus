@@ -160,21 +160,51 @@ export default function TeamsPage() {
         fetch("http://localhost:5000/api/teams/activity", { credentials: "include" })
       ]);
 
+      let combinedMembers = [...DEFAULT_MEMBERS];
       if (membersRes.ok) {
         const mData = await membersRes.json();
         if (mData.members && mData.members.length > 0) {
-          // Merge avatar_url if available
-          setMembers(mData.members);
+          const serverUser = mData.members[0];
+          // Update the owner with real logged in user's email/name while retaining the profile image!
+          combinedMembers = [
+            {
+              id: serverUser.id || "mem-owner",
+              user: {
+                full_name: serverUser.user?.full_name || "Samarth Choudhar",
+                email: serverUser.user?.email || "samarthchoudhar@gmail.com",
+                avatar_url: serverUser.user?.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+              },
+              role: serverUser.role || "admin",
+              title: "Founder & Lead Architect",
+              is_owner: true,
+              is_pending: false,
+              online: true
+            },
+            ...DEFAULT_MEMBERS.slice(1)
+          ];
         }
       }
+      setMembers(combinedMembers);
+
+      let combinedActivities = [...DEFAULT_ACTIVITIES];
       if (activitiesRes.ok) {
         const aData = await activitiesRes.json();
         if (aData.activities && aData.activities.length > 0) {
-          setActivities(aData.activities);
+          const serverActs = aData.activities.map((act: any) => ({
+            ...act,
+            user: {
+              full_name: act.user_name || act.user?.full_name || "Samarth Choudhar",
+              avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+            }
+          }));
+          combinedActivities = [...serverActs, ...DEFAULT_ACTIVITIES];
         }
       }
+      setActivities(combinedActivities);
     } catch (err) {
-      // Keep rich default state
+      // Keep rich default state with all members
+      setMembers(DEFAULT_MEMBERS);
+      setActivities(DEFAULT_ACTIVITIES);
     } finally {
       setLoading(false);
     }
@@ -313,65 +343,66 @@ export default function TeamsPage() {
             </div>
             
             <div className="divide-y divide-slate-100">
-              {members.map((member) => (
-                <div key={member.id} className="p-4 flex items-center justify-between hover:bg-slate-50/80 transition-colors group">
-                  <div className="flex items-center gap-3.5">
-                    <div className="relative">
-                      {member.user.avatar_url ? (
+              {members.map((member) => {
+                const avatarSrc = member.user?.avatar_url || (
+                  member.is_owner 
+                    ? "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" 
+                    : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
+                );
+                return (
+                  <div key={member.id} className="p-4 flex items-center justify-between hover:bg-slate-50/80 transition-colors group">
+                    <div className="flex items-center gap-3.5">
+                      <div className="relative">
                         <img 
-                          src={member.user.avatar_url} 
-                          alt={member.user.full_name} 
+                          src={avatarSrc} 
+                          alt={member.user?.full_name || ""} 
                           className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-xs" 
                         />
-                      ) : (
-                        <div className="w-10 h-10 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[12px] font-bold uppercase shadow-xs">
-                          {member.user.full_name?.charAt(0) || member.user.email.charAt(0)}
+                        {/* Online/Offline Status Dot */}
+                        <div 
+                          className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
+                            member.is_owner || member.online
+                              ? 'bg-emerald-500 ring-1 ring-emerald-500/20' 
+                              : 'bg-slate-300'
+                          }`}
+                          title={member.is_owner || member.online ? "Online" : "Offline"}
+                        ></div>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-[13.5px] text-[#0F172A]">
+                            {member.user?.full_name || member.user?.email}
+                          </h3>
+                          {member.is_owner && <span className="text-[9.5px] bg-[#0F172A] text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Owner</span>}
+                          {member.is_pending && <span className="text-[9.5px] bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1"><Clock size={10} /> Pending</span>}
                         </div>
-                      )}
-                      {/* Online/Offline Status Dot */}
-                      <div 
-                        className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
-                          member.is_owner || member.online
-                            ? 'bg-emerald-500 ring-1 ring-emerald-500/20' 
-                            : 'bg-slate-300'
-                        }`}
-                        title={member.is_owner || member.online ? "Online" : "Offline"}
-                      ></div>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-[13.5px] text-[#0F172A]">
-                          {member.user.full_name || member.user.email}
-                        </h3>
-                        {member.is_owner && <span className="text-[9.5px] bg-[#0F172A] text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Owner</span>}
-                        {member.is_pending && <span className="text-[9.5px] bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1"><Clock size={10} /> Pending</span>}
-                      </div>
-                      <div className="flex items-center gap-2 mt-0.5 text-[11.5px]">
-                        {member.title && (
-                          <span className="text-slate-600 font-semibold">{member.title} •</span>
-                        )}
-                        <span className="text-slate-400 font-medium">{member.user.email}</span>
+                        <div className="flex items-center gap-2 mt-0.5 text-[11.5px]">
+                          {member.title && (
+                            <span className="text-slate-600 font-semibold">{member.title} •</span>
+                          )}
+                          <span className="text-slate-400 font-medium">{member.user?.email}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold border uppercase tracking-wider ${getRoleBadge(member.role)}`}>
-                      {member.role.replace("_", " ")}
-                    </span>
                     
-                    {!member.is_owner && (
-                      <button 
-                        onClick={() => removeMember(member.id)}
-                        className="text-slate-400 opacity-0 group-hover:opacity-100 hover:text-red-600 transition-all p-1 rounded"
-                        title="Remove member"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    )}
+                    <div className="flex items-center gap-4">
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold border uppercase tracking-wider ${getRoleBadge(member.role)}`}>
+                        {member.role.replace("_", " ")}
+                      </span>
+                      
+                      {!member.is_owner && (
+                        <button 
+                          onClick={() => removeMember(member.id)}
+                          className="text-slate-400 opacity-0 group-hover:opacity-100 hover:text-red-600 transition-all p-1 rounded"
+                          title="Remove member"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -388,28 +419,24 @@ export default function TeamsPage() {
             {activities.length === 0 ? (
               <div className="text-center text-slate-400 text-[13px] py-12">No recent activity.</div>
             ) : (
-              activities.map((activity, index) => (
-                <div key={activity.id} className="flex items-start gap-3 relative pl-1">
-                  {activity.user?.avatar_url ? (
+              activities.map((activity, index) => {
+                const actAvatar = activity.user?.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80";
+                return (
+                  <div key={activity.id} className="flex items-start gap-3 relative pl-1">
                     <img 
-                      src={activity.user.avatar_url} 
-                      alt={activity.user.full_name} 
+                      src={actAvatar} 
+                      alt="" 
                       className="w-7 h-7 rounded-full object-cover border border-slate-200 shrink-0 mt-0.5 shadow-xs" 
                     />
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 shadow-xs">
-                      {activity.user ? activity.user.full_name?.charAt(0) : 'S'}
+                    <div className="flex-1">
+                      <p className="text-[12.5px] text-[#0F172A] font-semibold leading-snug">{activity.action}</p>
+                      <p className="text-[10.5px] text-slate-400 mt-0.5 font-mono">
+                        {activity.user ? activity.user.full_name : 'System'} • {new Date(activity.created_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                      </p>
                     </div>
-                  )}
-                  
-                  <div className="flex-1">
-                    <p className="text-[12.5px] text-[#0F172A] font-semibold leading-snug">{activity.action}</p>
-                    <p className="text-[10.5px] text-slate-400 mt-0.5 font-mono">
-                      {activity.user ? activity.user.full_name : 'System'} • {new Date(activity.created_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                    </p>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
