@@ -29,7 +29,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
-import { StripeGradientMesh } from "@/components/StripeGradientMesh";
+import { Stripe3DAnimation } from "@/components/Stripe3DAnimation";
 
 /* ═══════════════════════════════════════════════════════════════
    TYPES & SAMPLE TELEMETRY
@@ -160,8 +160,8 @@ function HeroSection() {
   return (
     <section className="relative pt-32 pb-24 md:pt-40 md:pb-36 px-6 sm:px-10 overflow-hidden bg-white">
       
-      {/* ── Stripe-Style Floating Diagonal Color Wave Animation (NO Static Image) ── */}
-      <StripeGradientMesh />
+      {/* ── Real 3D WebGL Colored Wave Mesh Animation (Three.js) ── */}
+      <Stripe3DAnimation />
 
       <div className="relative z-10 max-w-[1360px] mx-auto">
         
