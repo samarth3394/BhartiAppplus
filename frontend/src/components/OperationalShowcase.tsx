@@ -231,9 +231,11 @@ function CopilotView() {
       <div className="flex-1 overflow-y-auto space-y-4 pr-1">
         {/* User Prompt */}
         <div className="flex gap-3">
-          <div className="w-7 h-7 rounded-full bg-[#1E222A] flex items-center justify-center text-[10px] font-mono text-zinc-300 shrink-0">
-            JD
-          </div>
+          <img
+            src="/avatars/john-doe.jpg"
+            alt="John Doe"
+            className="w-7 h-7 rounded-full object-cover border border-[#1E222A] shrink-0"
+          />
           <div className="flex-1 bg-[#151820] border border-[#1E222A] p-3.5 rounded-xl rounded-tl-none text-[12.5px] text-[#D1D5DB]">
             Identify root cause for memory spike on <code className="text-[#3978FF] font-mono">payment_service</code> after deployment #8f2a1b9.
           </div>
@@ -246,7 +248,11 @@ function CopilotView() {
           </div>
           <div className="flex-1 bg-[#0D0F14] border border-[#1E222A] p-4 rounded-xl rounded-tl-none space-y-3">
             <div className="text-[12.5px] text-zinc-300 leading-relaxed">
-              Anomaly isolated: Unbounded WebSocket connection buffer detected in commit by <strong>Sarah K. (3h ago)</strong>.
+              Anomaly isolated: Unbounded WebSocket connection buffer detected in commit by{" "}
+              <span className="inline-flex items-center gap-1.5 font-semibold text-white">
+                <img src="/avatars/sarah-k.jpg" alt="Sarah K." className="w-4 h-4 rounded-full object-cover inline" />
+                Sarah K. (3h ago)
+              </span>.
             </div>
 
             {/* Code diff */}
@@ -397,10 +403,10 @@ function TeamsView() {
   const [activeRotation, setActiveRotation] = useState("current");
 
   const roster = [
-    { name: "Sarah K.", role: "Lead SRE", shift: "EMEA Primary", onCall: true, tz: "UTC+1", status: "Active" },
-    { name: "Marcus L.", role: "DevOps Engineer", shift: "Americas Primary", onCall: true, tz: "UTC-5", status: "Active" },
-    { name: "Ganesh V.", role: "Data Infrastructure Lead", shift: "APAC Shadow", onCall: false, tz: "UTC+2", status: "Standby" },
-    { name: "Pururaj V.", role: "Platform Architect", shift: "Secondary Escalation", onCall: false, tz: "UTC+5:30", status: "Standby" },
+    { name: "Sarah K.", role: "Lead SRE", shift: "EMEA Primary", onCall: true, tz: "UTC+1", status: "Active", avatar: "/avatars/sarah-k.jpg" },
+    { name: "Marcus L.", role: "DevOps Engineer", shift: "Americas Primary", onCall: true, tz: "UTC-5", status: "Active", avatar: "/avatars/marcus-l.jpg" },
+    { name: "Ganesh V.", role: "Data Infrastructure Lead", shift: "APAC Shadow", onCall: false, tz: "UTC+2", status: "Standby", avatar: "/founders/ganesh-dada.png" },
+    { name: "Pururaj V.", role: "Platform Architect", shift: "Secondary Escalation", onCall: false, tz: "UTC+5:30", status: "Standby", avatar: "/founders/puru-varpe.jpeg" },
   ];
 
   return (
@@ -434,9 +440,11 @@ function TeamsView() {
         {roster.map((m, idx) => (
           <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#151820] border border-[#242831] flex items-center justify-center font-mono text-sm text-white">
-                {m.name.split(" ").map(n => n[0]).join("")}
-              </div>
+              <img
+                src={m.avatar}
+                alt={m.name}
+                className="w-11 h-11 rounded-full object-cover object-top border border-[#242831] shrink-0 shadow-sm"
+              />
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-[13px] font-medium text-white">{m.name}</span>
@@ -555,9 +563,9 @@ function KanbanView() {
    ═══════════════════════════════════════════════════════════════ */
 function IssuesView() {
   const issues = [
-    { id: "BUG-201", title: "WebSocket connection leak under high burst load", commit: "#8f2a1b9", prio: "P0", author: "Sarah K.", impact: "+42MB/hr", status: "In Triage" },
-    { id: "BUG-202", title: "Payment gateway timeout fallback triggers twice", commit: "#e39a2b1", prio: "P1", author: "DevOps Bot", impact: "+120ms P99", status: "Investigating" },
-    { id: "BUG-203", title: "PostgreSQL slow query on /api/v2/audit_trail", commit: "#12c49a0", prio: "P2", author: "Marcus L.", impact: "Query 840ms", status: "Resolved" },
+    { id: "BUG-201", title: "WebSocket connection leak under high burst load", commit: "#8f2a1b9", prio: "P0", author: "Sarah K.", avatar: "/avatars/sarah-k.jpg", impact: "+42MB/hr", status: "In Triage" },
+    { id: "BUG-202", title: "Payment gateway timeout fallback triggers twice", commit: "#e39a2b1", prio: "P1", author: "Marcus L.", avatar: "/avatars/marcus-l.jpg", impact: "+120ms P99", status: "Investigating" },
+    { id: "BUG-203", title: "PostgreSQL slow query on /api/v2/audit_trail", commit: "#12c49a0", prio: "P2", author: "Marcus L.", avatar: "/avatars/marcus-l.jpg", impact: "Query 840ms", status: "Resolved" },
   ];
 
   return (
@@ -588,7 +596,10 @@ function IssuesView() {
                   <span className="text-[13px] text-white font-medium">{iss.title}</span>
                   <span className="text-[11px] font-mono text-[#3978FF]">{iss.commit}</span>
                 </div>
-                <div className="text-[11px] text-[#6B7280] mt-0.5">Author: {iss.author} • Impact: {iss.impact}</div>
+                <div className="text-[11px] text-[#6B7280] mt-1 flex items-center gap-1.5">
+                  <img src={iss.avatar} alt={iss.author} className="w-3.5 h-3.5 rounded-full object-cover inline" />
+                  <span>Author: {iss.author} • Impact: {iss.impact}</span>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -1104,9 +1115,11 @@ export function OperationalShowcase() {
               <span className="w-1.5 h-1.5 rounded-full bg-[#22C78A] animate-pulse" />
               Connected • 1.4ms
             </span>
-            <div className="w-6 h-6 rounded-full bg-[#242831] border border-[#1E222A] flex items-center justify-center text-[10px] font-mono text-white">
-              JD
-            </div>
+            <img
+              src="/avatars/john-doe.jpg"
+              alt="John Doe"
+              className="w-6 h-6 rounded-full object-cover border border-[#1E222A]"
+            />
           </div>
         </div>
 

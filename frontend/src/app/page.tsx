@@ -739,8 +739,12 @@ export default function LandingPage() {
                         </div>
 
                         <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center text-[10px] font-mono">SK</div>
+                          <div className="flex items-center gap-2.5">
+                            <img
+                              src="/avatars/sarah-k.jpg"
+                              alt="Sarah K."
+                              className="w-6 h-6 rounded-full object-cover border border-white/20"
+                            />
                             <span className="text-zinc-300">Author: Sarah K. (3h ago)</span>
                           </div>
                           <span className="text-zinc-400 font-mono text-[11px]">Memory Leak: +42MB/hr</span>
@@ -831,15 +835,17 @@ export default function LandingPage() {
 
                         <div className="flex flex-col gap-2.5 my-4">
                           {[
-                            { name: "John Doe", role: "Super Admin", scope: "Production / All Clusters", initials: "JD", badge: "bg-white text-black" },
-                            { name: "Alice Smith", role: "Site Reliability Operator", scope: "Staging & Canary Only", initials: "AS", badge: "bg-white/10 text-zinc-300" },
-                            { name: "Marcus Kim", role: "Security Compliance Auditor", scope: "Read-Only Telemetry", initials: "MK", badge: "bg-white/5 text-zinc-400" },
+                            { name: "John Doe", role: "Super Admin", scope: "Production / All Clusters", avatar: "/avatars/john-doe.jpg", badge: "bg-white text-black" },
+                            { name: "Alice Smith", role: "Site Reliability Operator", scope: "Staging & Canary Only", avatar: "/avatars/alice-s.jpg", badge: "bg-white/10 text-zinc-300" },
+                            { name: "Marcus Kim", role: "Security Compliance Auditor", scope: "Read-Only Telemetry", avatar: "/avatars/marcus-l.jpg", badge: "bg-white/5 text-zinc-400" },
                           ].map(user => (
                             <div key={user.name} className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/[0.05]">
                               <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[11px] font-mono text-white">
-                                  {user.initials}
-                                </div>
+                                <img
+                                  src={user.avatar}
+                                  alt={user.name}
+                                  className="w-8 h-8 rounded-full object-cover border border-white/20"
+                                />
                                 <div>
                                   <div className="text-xs font-medium text-white">{user.name}</div>
                                   <div className="text-[10px] text-zinc-500 font-mono">{user.scope}</div>
