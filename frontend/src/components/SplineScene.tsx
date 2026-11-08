@@ -80,6 +80,7 @@ export function SplineScene({
     <div
       ref={containerRef}
       className={`relative w-full h-full min-h-[380px] rounded-2xl overflow-hidden bg-black/60 border border-white/[0.08] flex items-center justify-center ${className}`}
+      style={{ contain: "strict", isolation: "isolate" }}
     >
       {/* 3D Canvas */}
       <canvas
@@ -130,3 +131,4 @@ export function SplineScene({
     </div>
   );
 }
+

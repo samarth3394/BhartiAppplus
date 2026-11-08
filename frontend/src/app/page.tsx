@@ -10,6 +10,7 @@ import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent, 
 import { useEffect, useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
 import { SplineScene } from "@/components/SplineScene";
+import { SdkTerminal } from "@/components/SdkTerminal";
 
 /* ──────────────────────────── ZERO-OVERHEAD 3D TILT CARD ──────────────────────────── */
 function TiltCard({ 
@@ -189,7 +190,7 @@ const sectionReveal = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as const }
   }
 };
 
@@ -205,7 +206,7 @@ const itemReveal = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }
   }
 };
 
@@ -747,6 +748,7 @@ export default function LandingPage() {
         <section
           ref={mockupRef}
           className="w-full px-4 sm:px-8 md:px-12 lg:px-20 mt-28 sm:mt-36 relative [perspective:1400px]"
+          style={{ isolation: "isolate", zIndex: 10 }}
         >
           {/* Section heading */}
           <div className="text-center mb-16">
@@ -891,6 +893,7 @@ export default function LandingPage() {
         <section
           id="features"
           className="w-full px-4 sm:px-8 md:px-12 lg:px-20 mt-36 relative"
+          style={{ isolation: "isolate", zIndex: 10 }}
         >
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 z-10">
@@ -1215,6 +1218,7 @@ export default function LandingPage() {
           viewport={{ once: true, amount: 0.15 }}
           variants={sectionReveal}
           className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
+          style={{ isolation: "isolate" }}
           id="agent"
         >
           <div className="text-center md:text-left mb-16">
@@ -1225,7 +1229,7 @@ export default function LandingPage() {
             <p className="text-zinc-400 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">Connect any Python, Node, or Go service with our lightweight SDK. Sub-millisecond latency with end-to-end telemetry encryption.</p>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-stretch gap-6 [perspective:1400px]">
+          <div className="flex flex-col lg:flex-row items-stretch gap-6" style={{ perspective: "1400px" }}>
             {/* Interactive 3D Spline Hardware Node */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -1233,6 +1237,7 @@ export default function LandingPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="flex-1 min-h-[420px]"
+              style={{ isolation: "isolate", zIndex: 1 }}
             >
               <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-6 flex flex-col justify-between relative overflow-hidden">
                 <div className="flex items-center justify-between z-10 mb-3">
@@ -1257,44 +1262,15 @@ export default function LandingPage() {
               </TiltCard>
             </motion.div>
 
-            {/* Terminal */}
+            {/* Interactive SDK Terminal */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="flex-1"
+              className="flex-1 min-h-[420px]"
             >
-              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] overflow-hidden flex flex-col">
-                <div className="h-10 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 shrink-0">
-                  <div className="flex gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-white/10"></div>
-                  </div>
-                  <span className="text-zinc-500 text-[11px] font-mono ml-2">bash — 80x24</span>
-                </div>
-                <div className="flex-1 p-6 font-mono text-[13px] leading-relaxed bg-black">
-                  <div className="text-zinc-400">
-                    <span className="text-zinc-600">$</span> npm install @brexal/sdk
-                  </div>
-                  <div className="text-zinc-600 mt-1.5">✓ SDK linked (0.2s)</div>
-                  <div className="text-zinc-400 mt-4">
-                    <span className="text-zinc-600">$</span> brexal init --auto
-                  </div>
-                  <div className="mt-2 text-zinc-300">
-                    <span className="text-zinc-500">→</span> Framework detected: <span className="text-white">Next.js 16 (App Router)</span>
-                  </div>
-                  <div className="mt-1 text-zinc-300">
-                    <span className="text-zinc-500">→</span> Telemetry ingestion: <span className="text-emerald-400">Active</span>
-                  </div>
-                  <div className="mt-1 text-zinc-300">
-                    <span className="text-zinc-500">→</span> Handshake latency: <span className="text-white">8.4ms</span>
-                  </div>
-                  <div className="mt-4 text-emerald-400">✓ Ready. All runtime telemetry streaming to BREXAL.</div>
-                  <div className="mt-4 inline-block w-2 h-4 bg-white/60 animate-pulse"></div>
-                </div>
-              </TiltCard>
+              <SdkTerminal />
             </motion.div>
           </div>
         </motion.section>
