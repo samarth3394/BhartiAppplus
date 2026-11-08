@@ -136,70 +136,65 @@ function Navigation() {
    ═══════════════════════════════════════════════════════════════ */
 function HeroSection() {
   return (
-    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 sm:px-10 overflow-hidden bg-white border-b border-slate-100 flex items-center">
+    <section className="relative pt-36 pb-24 md:pt-48 md:pb-36 px-6 sm:px-10 overflow-hidden bg-white border-b border-slate-100 min-h-[660px] md:min-h-[760px] flex items-center">
       
+      {/* ── PANORAMIC SEAMLESS VIDEO (Human hand emerges from behind text on the left) ── */}
+      <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
+        <HeroVideoShowcase />
+      </div>
+
       <div className="relative z-10 max-w-[1360px] mx-auto w-full">
         
-        {/* HERO GRID: Left Editorial Content + Right Video Showcase */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        {/* Left Editorial Content layered in front of the emerging human hand */}
+        <div className="max-w-2xl lg:max-w-3xl flex flex-col items-start text-left">
           
-          {/* LEFT COLUMN: Editorial Headline & Value (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
-            
-            {/* Live Telemetry Ticker Line */}
-            <div className="text-[12.5px] font-mono text-[#0A2540] font-semibold tracking-tight mb-5 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse" />
-              <span>Global telemetry running on BREXAL:</span>
-              <span className="text-[#635BFF] font-bold">99.984201%</span>
-            </div>
-
-            {/* Main Headline (BREXAL Mission with Stripe-grade typography & accent) */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[66px] font-bold tracking-[-0.03em] text-[#0A2540] leading-[1.06] mb-6 font-display max-w-2xl">
-              See the failure before it becomes <span className="text-[#635BFF]">an incident.</span>
-            </h1>
-
-            {/* Supporting Description */}
-            <p className="text-lg sm:text-xl md:text-[21px] text-[#3A5A78] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
-              Monitor every microservice, trace every distributed request, and identify the root cause with AI before downtime impacts your users or your business.
-            </p>
-
-            {/* Action CTAs */}
-            <div className="flex flex-wrap items-center gap-4 mb-8 w-full sm:w-auto">
-              <Link
-                href="/register"
-                className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#635BFF] text-white text-[14.5px] font-semibold hover:bg-[#5349e0] transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(99,91,255,0.35)] hover:shadow-[0_6px_22px_rgba(99,91,255,0.45)] focus:ring-2 focus:ring-[#635BFF]"
-              >
-                Request early access
-                <ChevronRight size={16} />
-              </Link>
-              <a
-                href="#modular-showcase"
-                className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/90 text-[#0A2540] border border-slate-200 text-[14px] font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-xs flex items-center justify-center gap-2"
-              >
-                Explore the platform
-              </a>
-            </div>
-
-            {/* Technical Metadata Line */}
-            <div className="pt-5 border-t border-slate-200/70 w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#627D98]">
-              <span className="flex items-center gap-1.5 text-[#059669] font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
-                Mesh latency: 0.8ms
-              </span>
-              <span className="text-slate-300">/</span>
-              <span>Application monitoring</span>
-              <span className="text-slate-300">/</span>
-              <span>Infrastructure intelligence</span>
-              <span className="text-slate-300">/</span>
-              <span>AI incident response</span>
-            </div>
+          {/* Live Telemetry Ticker Line */}
+          <div className="text-[12.5px] font-mono text-[#0A2540] font-semibold tracking-tight mb-5 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse" />
+            <span>Global telemetry running on BREXAL:</span>
+            <span className="text-[#635BFF] font-bold">99.984201%</span>
           </div>
 
-          {/* RIGHT COLUMN: Video Showcase (5 cols) */}
-          <div className="lg:col-span-5 w-full flex items-center justify-center">
-            <HeroVideoShowcase />
+          {/* Main Headline (BREXAL Mission with Stripe-grade typography & accent) */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold tracking-[-0.035em] text-[#0A2540] leading-[1.05] mb-6 font-display">
+            See the failure before it becomes <span className="text-[#635BFF]">an incident.</span>
+          </h1>
+
+          {/* Supporting Description */}
+          <p className="text-lg sm:text-xl md:text-[21px] text-[#3A5A78] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
+            Monitor every microservice, trace every distributed request, and identify the root cause with AI before downtime impacts your users or your business.
+          </p>
+
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center gap-4 mb-8 w-full sm:w-auto">
+            <Link
+              href="/register"
+              className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#635BFF] text-white text-[14.5px] font-semibold hover:bg-[#5349e0] transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(99,91,255,0.35)] hover:shadow-[0_6px_22px_rgba(99,91,255,0.45)] focus:ring-2 focus:ring-[#635BFF]"
+            >
+              Request early access
+              <ChevronRight size={16} />
+            </Link>
+            <a
+              href="#modular-showcase"
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/90 text-[#0A2540] border border-slate-200 text-[14px] font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-xs flex items-center justify-center gap-2"
+            >
+              Explore the platform
+            </a>
           </div>
 
+          {/* Technical Metadata Line */}
+          <div className="pt-5 border-t border-slate-200/70 w-full flex flex-wrap items-center gap-3 text-[12px] font-mono text-[#627D98]">
+            <span className="flex items-center gap-1.5 text-[#059669] font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
+              Mesh latency: 0.8ms
+            </span>
+            <span className="text-slate-300">/</span>
+            <span>Application monitoring</span>
+            <span className="text-slate-300">/</span>
+            <span>Infrastructure intelligence</span>
+            <span className="text-slate-300">/</span>
+            <span>AI incident response</span>
+          </div>
         </div>
 
       </div>
