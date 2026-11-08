@@ -6,8 +6,8 @@ import {
   LayoutDashboard, Zap, MessageSquare, Users,
   KanbanSquare, Bug, Map, Activity, Server,
   Terminal, Wrench, Settings, ChevronDown, ChevronRight,
-  Check, X, AlertTriangle, Search, Play, Pause,
-  Shield, RefreshCw, ArrowRight, GitBranch, Bell,
+  Check, Search, Play, Pause,
+  RefreshCw, ArrowRight, GitBranch,
   Cpu, HardDrive, Wifi, Sliders, Plus
 } from "lucide-react";
 
@@ -97,7 +97,7 @@ function DashboardView({ onNavigate }: { onNavigate: (tab: FeatureTab) => void }
           { label: "Telemetry Uptime", val: "99.98%", sub: "P99 1.4ms", color: "text-[#22C78A]", dot: "bg-[#22C78A]" },
           { label: "Ingestion Throughput", val: "42.8k", sub: "events/sec", color: "text-[#3978FF]", dot: "bg-[#3978FF]" },
         ].map((item, i) => (
-          <div key={i} className="rounded-xl bg-[#0D0F14] border border-[#1E222A] p-4 flex flex-col justify-between">
+          <div key={i} className="rounded-xl bg-black border border-white/[0.08] p-4 flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono uppercase text-[#6B7280] tracking-wider">{item.label}</span>
               <span className={`w-1.5 h-1.5 rounded-full ${item.dot}`} />
@@ -109,13 +109,13 @@ function DashboardView({ onNavigate }: { onNavigate: (tab: FeatureTab) => void }
       </div>
 
       {/* Latency interactive chart */}
-      <div className="rounded-xl bg-[#0D0F14] border border-[#1E222A] p-5">
+      <div className="rounded-xl bg-black border border-white/[0.08] p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h4 className="text-sm font-semibold text-[#F5F6F8]">Request Latency (p99 • Multi-Region Mesh)</h4>
             <p className="text-[11px] font-mono text-[#6B7280]">Telemetry sampled across 3 global gateway clusters</p>
           </div>
-          <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+          <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-lg border border-white/[0.08]">
             {["24h", "7d", "30d", "90d"].map((r) => (
               <button
                 key={r}
@@ -131,7 +131,7 @@ function DashboardView({ onNavigate }: { onNavigate: (tab: FeatureTab) => void }
         </div>
 
         {/* SVG Curve */}
-        <div className="relative h-44 w-full border-b border-l border-[#1E222A] mt-6">
+        <div className="relative h-44 w-full border-b border-l border-white/[0.08] mt-6">
           <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
             <defs>
               <linearGradient id="dashGrad" x1="0" x2="0" y1="0" y2="1">
@@ -164,7 +164,7 @@ function DashboardView({ onNavigate }: { onNavigate: (tab: FeatureTab) => void }
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
         <button
           onClick={() => onNavigate("AI Copilot")}
-          className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] hover:border-[#3978FF]/40 text-left transition-all group"
+          className="p-4 rounded-xl bg-black border border-white/[0.08] hover:border-[#3978FF]/40 text-left transition-all group"
         >
           <div className="flex items-center gap-2 text-[#3978FF] mb-2 text-xs font-mono">
             <Zap size={14} /> AI Copilot Recommendation
@@ -175,7 +175,7 @@ function DashboardView({ onNavigate }: { onNavigate: (tab: FeatureTab) => void }
 
         <button
           onClick={() => onNavigate("Uptime")}
-          className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] hover:border-[#22C78A]/40 text-left transition-all group"
+          className="p-4 rounded-xl bg-black border border-white/[0.08] hover:border-[#22C78A]/40 text-left transition-all group"
         >
           <div className="flex items-center gap-2 text-[#22C78A] mb-2 text-xs font-mono">
             <Activity size={14} /> Service Health Monitor
@@ -186,7 +186,7 @@ function DashboardView({ onNavigate }: { onNavigate: (tab: FeatureTab) => void }
 
         <button
           onClick={() => onNavigate("Logs")}
-          className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] hover:border-white/20 text-left transition-all group"
+          className="p-4 rounded-xl bg-black border border-white/[0.08] hover:border-white/20 text-left transition-all group"
         >
           <div className="flex items-center gap-2 text-[#9298A3] mb-2 text-xs font-mono">
             <Terminal size={14} /> Live Stream
@@ -212,7 +212,7 @@ function CopilotView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/[0.08]">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-[#3978FF]/15 border border-[#3978FF]/30 flex items-center justify-center text-[#3978FF]">
             <Zap size={14} />
@@ -234,9 +234,9 @@ function CopilotView() {
           <img
             src="/avatars/john-doe.jpg"
             alt="John Doe"
-            className="w-7 h-7 rounded-full object-cover border border-[#1E222A] shrink-0"
+            className="w-7 h-7 rounded-full object-cover border border-white/[0.08] shrink-0"
           />
-          <div className="flex-1 bg-[#151820] border border-[#1E222A] p-3.5 rounded-xl rounded-tl-none text-[12.5px] text-[#D1D5DB]">
+          <div className="flex-1 bg-white/[0.04] border border-white/[0.08] p-3.5 rounded-xl rounded-tl-none text-[12.5px] text-[#D1D5DB]">
             Identify root cause for memory spike on <code className="text-[#3978FF] font-mono">payment_service</code> after deployment #8f2a1b9.
           </div>
         </div>
@@ -246,7 +246,7 @@ function CopilotView() {
           <div className="w-7 h-7 rounded-full bg-[#3978FF]/20 border border-[#3978FF]/40 flex items-center justify-center text-[#3978FF] shrink-0">
             <Zap size={13} />
           </div>
-          <div className="flex-1 bg-[#0D0F14] border border-[#1E222A] p-4 rounded-xl rounded-tl-none space-y-3">
+          <div className="flex-1 bg-black border border-white/[0.08] p-4 rounded-xl rounded-tl-none space-y-3">
             <div className="text-[12.5px] text-zinc-300 leading-relaxed">
               Anomaly isolated: Unbounded WebSocket connection buffer detected in commit by{" "}
               <span className="inline-flex items-center gap-1.5 font-semibold text-white">
@@ -256,8 +256,8 @@ function CopilotView() {
             </div>
 
             {/* Code diff */}
-            <div className="rounded-lg bg-black border border-[#1E222A] p-3 font-mono text-[11.5px] leading-relaxed">
-              <div className="text-[#6B7280] pb-1.5 mb-1.5 border-b border-[#1E222A] flex justify-between text-[10px]">
+            <div className="rounded-lg bg-black border border-white/[0.08] p-3 font-mono text-[11.5px] leading-relaxed">
+              <div className="text-[#6B7280] pb-1.5 mb-1.5 border-b border-white/[0.08] flex justify-between text-[10px]">
                 <span>src/network/websocket_handler.py</span>
                 <span>Commit: #8f2a1b9</span>
               </div>
@@ -283,7 +283,7 @@ function CopilotView() {
                 </button>
                 <button
                   onClick={() => alert("Linear issue generated!")}
-                  className="px-3 py-1.5 bg-[#151820] border border-[#1E222A] text-zinc-300 text-[12px] rounded-lg hover:bg-[#1E222A] transition-colors"
+                  className="px-3 py-1.5 bg-white/[0.04] border border-white/[0.08] text-zinc-300 text-[12px] rounded-lg hover:bg-white/[0.08] transition-colors"
                 >
                   Create Linear Issue
                 </button>
@@ -348,19 +348,19 @@ function InboxView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">Operational Notification Inbox</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">Aggregated telemetry alerts, mentions & releases</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+          <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-lg border border-white/[0.08]">
             {(["All", "Unread", "Critical"] as const).map(f => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`px-2.5 py-1 rounded text-[10px] font-mono transition-colors ${
-                  filter === f ? "bg-[#242831] text-white" : "text-[#6B7280] hover:text-[#9298A3]"
+                  filter === f ? "bg-white/[0.1] text-white" : "text-[#6B7280] hover:text-[#9298A3]"
                 }`}
               >
                 {f}
@@ -378,7 +378,7 @@ function InboxView() {
 
       <div className="divide-y divide-[#1A1D24] mt-3">
         {filtered.map(item => (
-          <div key={item.id} className="py-3 px-3 hover:bg-[#151820]/40 rounded-lg transition-colors flex items-start justify-between group">
+          <div key={item.id} className="py-3 px-3 hover:bg-white/[0.04] rounded-lg transition-colors flex items-start justify-between group">
             <div className="flex items-start gap-3">
               <span className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
                 item.sev === "critical" ? "bg-[#F05252]" : item.sev === "warning" ? "bg-[#E8AA42]" : item.sev === "success" ? "bg-[#22C78A]" : "bg-[#3978FF]"
@@ -411,12 +411,12 @@ function TeamsView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">On-Call Engineering Roster</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">SRE escalation rotation & active duty engineers</p>
         </div>
-        <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+        <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-lg border border-white/[0.08]">
           <button
             onClick={() => setActiveRotation("current")}
             className={`px-2.5 py-1 rounded text-[10px] font-mono ${
@@ -438,12 +438,12 @@ function TeamsView() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
         {roster.map((m, idx) => (
-          <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
+          <div key={idx} className="p-4 rounded-xl bg-black border border-white/[0.08] flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img
                 src={m.avatar}
                 alt={m.name}
-                className="w-11 h-11 rounded-full object-cover object-top border border-[#242831] shrink-0 shadow-sm"
+                className="w-11 h-11 rounded-full object-cover object-top border border-white/[0.08] shrink-0 shadow-sm"
               />
               <div>
                 <div className="flex items-center gap-2">
@@ -460,7 +460,7 @@ function TeamsView() {
             </div>
             <button
               onClick={() => alert(`Paged ${m.name} via BREXAL PagerDuty integration!`)}
-              className="px-2.5 py-1 rounded-md bg-[#151820] hover:bg-[#242831] border border-[#242831] text-[11px] font-mono text-[#D1D5DB] transition-colors"
+              className="px-2.5 py-1 rounded-md bg-white/[0.04] hover:bg-white/[0.1] border border-white/[0.08] text-[11px] font-mono text-[#D1D5DB] transition-colors"
             >
               Page
             </button>
@@ -505,7 +505,7 @@ function KanbanView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">SRE Sprint & Incident Board</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">Live synchronized sprint engineering pipeline</p>
@@ -520,10 +520,10 @@ function KanbanView() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mt-4 overflow-x-auto">
         {columns.map((col, idx) => (
-          <div key={idx} className="rounded-xl bg-[#0D0F14] border border-[#1E222A] p-3 flex flex-col">
+          <div key={idx} className="rounded-xl bg-black border border-white/[0.08] p-3 flex flex-col">
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-[11px] font-mono uppercase text-[#6B7280] font-semibold">{col.title}</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#151820] text-[#9298A3]">
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04] text-[#9298A3]">
                 {col.tasks.length}
               </span>
             </div>
@@ -532,7 +532,7 @@ function KanbanView() {
                 <div
                   key={t.id}
                   onClick={() => alert(`Inspecting ${t.id}: ${t.title}`)}
-                  className="p-3 rounded-lg bg-[#151820] border border-[#242831] hover:border-[#3978FF]/40 cursor-pointer transition-all shadow-sm"
+                  className="p-3 rounded-lg bg-white/[0.04] border border-white/[0.08] hover:border-[#3978FF]/40 cursor-pointer transition-all shadow-sm"
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[10px] font-mono text-[#6B7280]">{t.id}</span>
@@ -544,7 +544,7 @@ function KanbanView() {
                   </div>
                   <div className="text-[12px] text-white font-medium leading-snug">{t.title}</div>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-[#6B7280] bg-black/40 px-1.5 py-0.5 rounded border border-[#242831]">
+                    <span className="text-[9px] font-mono text-[#6B7280] bg-black/40 px-1.5 py-0.5 rounded border border-white/[0.08]">
                       {t.tag}
                     </span>
                   </div>
@@ -570,7 +570,7 @@ function IssuesView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">Anomalous Commit Correlation</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">Correlates latency & memory anomalies directly to offending Git commits</p>
@@ -582,9 +582,9 @@ function IssuesView() {
         </div>
       </div>
 
-      <div className="divide-y divide-[#1E222A] mt-2">
+      <div className="divide-y divide-white/[0.08] mt-2">
         {issues.map(iss => (
-          <div key={iss.id} className="py-3.5 px-3 rounded-lg hover:bg-[#151820]/40 transition-colors flex items-center justify-between">
+          <div key={iss.id} className="py-3.5 px-3 rounded-lg hover:bg-white/[0.04] transition-colors flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
                 iss.prio === "P0" ? "bg-[#F05252]/15 text-[#F05252] border border-[#F05252]/30" : "bg-[#E8AA42]/15 text-[#E8AA42]"
@@ -606,7 +606,7 @@ function IssuesView() {
               <span className="text-[11px] font-mono text-[#9298A3]">{iss.status}</span>
               <button
                 onClick={() => alert(`Opening diagnostic diff for ${iss.commit}`)}
-                className="px-2.5 py-1 rounded bg-[#151820] hover:bg-[#242831] border border-[#242831] text-[11px] font-mono text-white transition-colors"
+                className="px-2.5 py-1 rounded bg-white/[0.04] hover:bg-white/[0.1] border border-white/[0.08] text-[11px] font-mono text-white transition-colors"
               >
                 Inspect Diff
               </button>
@@ -651,7 +651,7 @@ function RoadmapView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">Engineering Architecture Roadmap</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">Quarterly deliverables & telemetry milestones</p>
@@ -660,7 +660,7 @@ function RoadmapView() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         {quarters.map((q, idx) => (
-          <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex flex-col justify-between">
+          <div key={idx} className="p-4 rounded-xl bg-black border border-white/[0.08] flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-mono font-bold text-white">{q.quarter}</span>
@@ -677,7 +677,7 @@ function RoadmapView() {
                       <span>{it.title}</span>
                       <span className="font-mono text-[#6B7280]">{it.progress}%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-[#151820] rounded-full overflow-hidden">
+                    <div className="h-1.5 w-full bg-white/[0.04] rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${it.progress === 100 ? "bg-[#22C78A]" : "bg-[#3978FF]"}`}
                         style={{ width: `${it.progress}%` }}
@@ -710,12 +710,12 @@ function UptimeView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">Live Service Health Monitor</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">Real-time probing across 6 core microservices</p>
         </div>
-        <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+        <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-lg border border-white/[0.08]">
           {["Global", "US-East", "EU-Central", "AP-South"].map(r => (
             <button
               key={r}
@@ -730,7 +730,7 @@ function UptimeView() {
         </div>
       </div>
 
-      <div className="divide-y divide-[#1E222A] mt-3">
+      <div className="divide-y divide-white/[0.08] mt-3">
         <div className="grid grid-cols-[1fr_110px_90px_90px_90px_80px] gap-2 px-3 py-2 text-[10px] font-mono uppercase text-[#6B7280] font-semibold">
           <span>Service</span>
           <span>Status</span>
@@ -742,7 +742,7 @@ function UptimeView() {
         {services.map((s, i) => (
           <div
             key={i}
-            className="grid grid-cols-[1fr_110px_90px_90px_90px_80px] gap-2 px-3 py-3 items-center hover:bg-[#151820]/40 rounded-lg transition-colors"
+            className="grid grid-cols-[1fr_110px_90px_90px_90px_80px] gap-2 px-3 py-3 items-center hover:bg-white/[0.04] rounded-lg transition-colors"
           >
             <div className="flex items-center gap-2.5">
               <span className={`w-2 h-2 rounded-full ${
@@ -784,12 +784,12 @@ function InfrastructureView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">Cluster Resource Utilization</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">Kubernetes node pool telemetry (16 cores, 64GB RAM)</p>
         </div>
-        <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+        <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-lg border border-white/[0.08]">
           {nodes.map(n => (
             <button
               key={n.id}
@@ -813,13 +813,13 @@ function InfrastructureView() {
         ].map((m, idx) => {
           const Icon = m.icon;
           return (
-            <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex flex-col justify-between">
+            <div key={idx} className="p-4 rounded-xl bg-black border border-white/[0.08] flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] font-mono uppercase text-[#6B7280]">{m.label}</span>
                 <Icon size={14} style={{ color: m.color }} />
               </div>
               <div className="text-2xl font-bold font-mono text-white my-1">{m.val}</div>
-              <div className="h-1.5 w-full bg-[#151820] rounded-full overflow-hidden mt-2">
+              <div className="h-1.5 w-full bg-white/[0.04] rounded-full overflow-hidden mt-2">
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{ width: m.val.replace(" Mbps", ""), backgroundColor: m.color }}
@@ -867,19 +867,19 @@ function LogsView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div className="flex items-center gap-2">
           <h4 className="text-sm font-semibold text-white">Live eBPF Telemetry Log Stream</h4>
           <span className={`w-2 h-2 rounded-full ${isPaused ? "bg-[#E8AA42]" : "bg-[#22C78A] animate-pulse"}`} />
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-[#151820] p-1 rounded-lg border border-[#1E222A]">
+          <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-lg border border-white/[0.08]">
             {["ALL", "INFO", "WARN", "ERROR"].map(l => (
               <button
                 key={l}
                 onClick={() => setFilterLevel(l)}
                 className={`px-2 py-0.5 rounded text-[10px] font-mono ${
-                  filterLevel === l ? "bg-[#242831] text-white" : "text-[#6B7280]"
+                  filterLevel === l ? "bg-white/[0.1] text-white" : "text-[#6B7280]"
                 }`}
               >
                 {l}
@@ -888,14 +888,14 @@ function LogsView() {
           </div>
           <button
             onClick={() => setIsPaused(!isPaused)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded bg-[#151820] border border-[#242831] text-[11px] font-mono text-[#D1D5DB] hover:text-white"
+            className="flex items-center gap-1 px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono text-[#D1D5DB] hover:text-white"
           >
             {isPaused ? <Play size={11} /> : <Pause size={11} />} {isPaused ? "Resume" : "Pause"}
           </button>
         </div>
       </div>
 
-      <div className="mt-3 p-4 rounded-xl bg-black border border-[#1E222A] font-mono text-[11.5px] leading-relaxed flex-1 overflow-y-auto space-y-1.5">
+      <div className="mt-3 p-4 rounded-xl bg-black border border-white/[0.08] font-mono text-[11.5px] leading-relaxed flex-1 overflow-y-auto space-y-1.5">
         {logs.map((l, i) => (
           <div key={i} className="flex items-start gap-2 text-zinc-300">
             <span className="text-[#6B7280] select-none">{l.ts}</span>
@@ -937,7 +937,7 @@ function MaintenanceView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">Cluster Maintenance & Zero-Downtime Rollout</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">Rolling update orchestrator with automatic canary verification</p>
@@ -945,7 +945,7 @@ function MaintenanceView() {
       </div>
 
       <div className="space-y-4 mt-4">
-        <div className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-black border border-white/[0.08] flex items-center justify-between">
           <div>
             <div className="text-[13px] text-white font-medium">Pod Pool Drain Simulation</div>
             <p className="text-[11px] text-[#6B7280]">Gracefully drain connections from Worker Node 03 before host maintenance</p>
@@ -964,13 +964,13 @@ function MaintenanceView() {
           </button>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A]">
+        <div className="p-4 rounded-xl bg-black border border-white/[0.08]">
           <div className="text-[12px] font-mono uppercase text-[#6B7280] mb-3">Active Canary Rollout</div>
           <div className="flex items-center justify-between text-xs text-white mb-1.5">
             <span>Canary Traffic Allocation: v3.12.1</span>
             <span className="font-mono text-[#22C78A]">25% Traffic Routed</span>
           </div>
-          <div className="h-2 w-full bg-[#151820] rounded-full overflow-hidden">
+          <div className="h-2 w-full bg-white/[0.04] rounded-full overflow-hidden">
             <div className="h-full bg-[#22C78A] rounded-full" style={{ width: "25%" }} />
           </div>
           <div className="mt-3 flex items-center justify-between text-[11px] font-mono text-[#6B7280]">
@@ -993,7 +993,7 @@ function SettingsView() {
 
   return (
     <div className="flex flex-col h-full p-6">
-      <div className="flex items-center justify-between pb-4 border-b border-[#1E222A]">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div>
           <h4 className="text-sm font-semibold text-white">Workspace & Security Configuration</h4>
           <p className="text-[11px] font-mono text-[#6B7280]">Mutual TLS certificates, eBPF telemetry hooks & access tokens</p>
@@ -1006,28 +1006,28 @@ function SettingsView() {
           { title: "eBPF Low-Level Kernel Hooking", desc: "Sub-millisecond packet introspection without user-space context overhead", state: ebpf, setter: setEbpf },
           { title: "Autonomous AI Copilot Patch Validation", desc: "Synthesize test-verified PR drafts when anomalous stack traces occur", state: copilotAuto, setter: setCopilotAuto },
         ].map((s, idx) => (
-          <div key={idx} className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
+          <div key={idx} className="p-4 rounded-xl bg-black border border-white/[0.08] flex items-center justify-between">
             <div>
               <div className="text-[13px] text-white font-medium">{s.title}</div>
               <div className="text-[11px] text-[#6B7280] mt-0.5">{s.desc}</div>
             </div>
             <button
               onClick={() => s.setter(!s.state)}
-              className={`w-11 h-6 rounded-full transition-colors relative ${s.state ? "bg-[#3978FF]" : "bg-[#242831]"}`}
+              className={`w-11 h-6 rounded-full transition-colors relative ${s.state ? "bg-[#3978FF]" : "bg-white/[0.1]"}`}
             >
               <div className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${s.state ? "left-6" : "left-1"}`} />
             </button>
           </div>
         ))}
 
-        <div className="p-4 rounded-xl bg-[#0D0F14] border border-[#1E222A] flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-black border border-white/[0.08] flex items-center justify-between">
           <div>
             <div className="text-[13px] text-white font-medium">Session Certificate Fingerprint</div>
             <div className="text-[11px] font-mono text-[#3978FF] mt-0.5">sha256:4f81a7b2...9c2ed810 (Verified)</div>
           </div>
           <button
             onClick={() => alert("Certificate rotated successfully!")}
-            className="px-3 py-1.5 rounded-lg bg-[#151820] hover:bg-[#242831] border border-[#242831] text-[11px] font-mono text-white transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] border border-white/[0.08] text-[11px] font-mono text-white transition-colors"
           >
             Rotate Key
           </button>
@@ -1091,10 +1091,10 @@ export function OperationalShowcase() {
         initial={{ opacity: 0, y: 40, scale: 0.98 }}
         animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
         transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] as const, delay: 0.15 }}
-        className="w-full max-w-[1280px] mx-auto rounded-2xl overflow-hidden border border-[#242831] shadow-[0_40px_120px_rgba(0,0,0,0.85)] bg-[#101216] flex flex-col"
+        className="w-full max-w-[1280px] mx-auto rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_40px_120px_rgba(0,0,0,0.85)] bg-black flex flex-col"
       >
         {/* ── Chrome Header ── */}
-        <div className="h-11 border-b border-[#1E222A] bg-[#0D0F14] flex items-center px-4 justify-between shrink-0">
+        <div className="h-11 border-b border-white/[0.08] bg-black flex items-center px-4 justify-between shrink-0">
           <div className="flex items-center gap-4">
             {/* Traffic Lights */}
             <div className="flex gap-1.5">
@@ -1103,7 +1103,7 @@ export function OperationalShowcase() {
               <div className="w-[10px] h-[10px] rounded-full bg-[#22C78A]/80" />
             </div>
             {/* Address Bar */}
-            <div className="hidden sm:flex items-center gap-2 bg-[#151820] border border-[#1E222A] rounded-md px-3 py-1 text-[11px] font-mono text-[#6B7280]">
+            <div className="hidden sm:flex items-center gap-2 bg-white/[0.04] border border-white/[0.08] rounded-md px-3 py-1 text-[11px] font-mono text-[#6B7280]">
               <Search size={11} />
               <span>brexal.io/workspace/{activeTab.toLowerCase().replace(/\s+/g, "-")}</span>
             </div>
@@ -1118,7 +1118,7 @@ export function OperationalShowcase() {
             <img
               src="/avatars/john-doe.jpg"
               alt="John Doe"
-              className="w-6 h-6 rounded-full object-cover border border-[#1E222A]"
+              className="w-6 h-6 rounded-full object-cover border border-white/[0.08]"
             />
           </div>
         </div>
@@ -1126,7 +1126,7 @@ export function OperationalShowcase() {
         {/* ── Body: Sidebar + Active View ── */}
         <div className="flex min-h-[580px] md:min-h-[620px]">
           {/* Sidebar */}
-          <div className="w-56 md:w-60 border-r border-[#1E222A] bg-[#0A0C10] flex flex-col shrink-0 overflow-y-auto custom-scrollbar">
+          <div className="w-56 md:w-60 border-r border-white/[0.08] bg-black flex flex-col shrink-0 overflow-y-auto custom-scrollbar">
             <div className="p-3 space-y-4">
               {navGroups.map((group, gIdx) => {
                 const isExpanded = expandedGroups[group.title];
@@ -1152,7 +1152,7 @@ export function OperationalShowcase() {
                               className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12.5px] font-medium transition-all ${
                                 isActive
                                   ? "bg-[#3978FF]/15 text-white font-semibold border border-[#3978FF]/30 shadow-sm"
-                                  : "text-[#9298A3] hover:text-white hover:bg-[#151820]"
+                                  : "text-[#9298A3] hover:text-white hover:bg-white/[0.06]"
                               }`}
                             >
                               <div className="flex items-center gap-2.5 truncate">
@@ -1160,7 +1160,7 @@ export function OperationalShowcase() {
                                 <span className="truncate">{item.name}</span>
                               </div>
                               {item.badge && (
-                                <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${item.badgeColor || "bg-[#1E222A] text-[#9298A3]"}`}>
+                                <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${item.badgeColor || "bg-white/[0.08] text-[#9298A3]"}`}>
                                   {item.badge}
                                 </span>
                               )}
@@ -1176,7 +1176,7 @@ export function OperationalShowcase() {
           </div>
 
           {/* Active Feature Stage */}
-          <div className="flex-1 bg-[#101216] flex flex-col overflow-hidden">
+          <div className="flex-1 bg-black flex flex-col overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -1227,11 +1227,11 @@ export function OperationalShowcase() {
               className={`text-left p-4 rounded-xl border transition-all duration-200 group ${
                 isActive
                   ? "bg-[#3978FF]/[0.08] border-[#3978FF]/30 shadow-sm"
-                  : "bg-[#101216]/60 border-[#242831]/60 hover:border-[#242831] hover:bg-[#101216]"
+                  : "bg-black border border-white/[0.08] hover:border-white/20 hover:bg-white/[0.03]"
               }`}
             >
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-3 transition-colors ${
-                isActive ? "bg-[#3978FF]/20 text-[#3978FF]" : "bg-[#151820] text-[#6B7280] group-hover:text-[#9298A3]"
+                isActive ? "bg-[#3978FF]/20 text-[#3978FF]" : "bg-white/[0.04] text-[#6B7280] group-hover:text-[#9298A3]"
               }`}>
                 <Icon size={16} />
               </div>
@@ -1259,7 +1259,7 @@ export function OperationalShowcase() {
         </a>
         <a
           href="#features"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[#242831] text-[#9298A3] text-[13px] font-medium hover:text-[#F5F6F8] hover:border-[#3A3F4B] transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/[0.08] text-[#9298A3] text-[13px] font-medium hover:text-[#F5F6F8] hover:border-white/20 transition-colors"
         >
           See How It Works
         </a>

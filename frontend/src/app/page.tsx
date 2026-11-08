@@ -353,7 +353,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#080808] text-[#EDEDED] font-sans overflow-x-clip selection:bg-white/20 selection:text-white">
+    <div className="min-h-screen bg-black text-[#EDEDED] font-sans overflow-x-clip selection:bg-white/20 selection:text-white">
       
       {/* ═══════════════════ CLEAN TRANSPARENT TOP NAVBAR ═══════════════════ */}
       <motion.nav
@@ -362,7 +362,7 @@ export default function LandingPage() {
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         className={`fixed top-0 left-0 right-0 w-full z-50 flex items-center justify-between px-6 sm:px-12 md:px-16 transition-all duration-300 ${
           navScrolled
-            ? "py-4 bg-black/80 backdrop-blur-md border-b border-white/[0.08]"
+            ? "py-4 bg-black/90 backdrop-blur-md border-b border-white/[0.08]"
             : "py-6 sm:py-7 bg-transparent border-b border-transparent"
         }`}
       >
@@ -405,12 +405,12 @@ export default function LandingPage() {
 
         {/* Overlay system — keeps text crisp up top, lets the eagle + mountains breathe below */}
         {/* Top: strong fade for navbar + headline legibility */}
-        <div className="absolute inset-x-0 top-0 h-[45%] z-[1] bg-gradient-to-b from-black/90 via-black/60 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-[45%] z-[1] bg-gradient-to-b from-black/95 via-black/70 to-transparent pointer-events-none" />
         {/* Bottom: seamless blend into page bg */}
-        <div className="absolute inset-x-0 bottom-0 h-48 z-[1] bg-gradient-to-t from-[#080808] to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-48 z-[1] bg-gradient-to-t from-black to-transparent pointer-events-none" />
         {/* Scroll darken */}
         <motion.div
-          className="absolute inset-0 z-[2] bg-[#080808] pointer-events-none"
+          className="absolute inset-0 z-[2] bg-black pointer-events-none"
           style={{ opacity: heroOverlayOpacity }}
         />
 
@@ -448,7 +448,7 @@ export default function LandingPage() {
           >
             <Link
               href="/register"
-              className="px-6 py-2.5 rounded-lg bg-white text-[#080808] text-[13px] font-semibold hover:bg-zinc-200 transition-colors"
+              className="px-6 py-2.5 rounded-lg bg-white text-black text-[13px] font-semibold hover:bg-zinc-200 transition-colors"
             >
               Get started free
             </Link>
@@ -484,7 +484,7 @@ export default function LandingPage() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.5 }}
         variants={sectionReveal}
-        className="w-full py-16 border-b border-white/[0.06] bg-[#07080a]"
+        className="w-full py-16 border-b border-white/[0.06] bg-black"
       >
         <div className="flex flex-col items-center gap-6 px-6">
           <p className="text-[11px] text-zinc-500 tracking-[0.25em] uppercase font-mono">Trusted by high-growth engineering teams</p>
@@ -527,7 +527,7 @@ export default function LandingPage() {
               { letter: "L", num: "06", title: "Logic & Copilot", desc: "Autonomous AI orchestration that drafts patches for immediate review." },
             ].map((item) => (
               <motion.div key={item.letter} variants={itemReveal} className="h-full">
-                <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-6 hover:border-white/20 transition-all group overflow-hidden">
+                <TiltCard className="h-full rounded-2xl bg-black border border-white/[0.08] p-6 hover:border-white/25 transition-all group overflow-hidden">
                   <div className="absolute -right-3 -bottom-6 text-[100px] font-mono font-bold text-white/[0.02] group-hover:text-white/[0.05] transition-colors pointer-events-none select-none">{item.letter}</div>
                   <div className="text-zinc-500 font-mono text-[11px] mb-4 tracking-wider">{item.num} / CORE</div>
                   <h3 className="text-lg md:text-xl font-medium text-white tracking-tight mb-2">{item.title}</h3>
@@ -582,7 +582,7 @@ export default function LandingPage() {
                     className={`w-full text-left p-4 sm:p-5 rounded-2xl transition-all duration-300 border relative overflow-hidden flex flex-col justify-between ${
                       isActive 
                         ? "bg-white/[0.07] border-white/25 shadow-[0_12px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/15" 
-                        : "bg-[#090b0e] border-white/[0.05] hover:border-white/10 opacity-60 hover:opacity-100"
+                        : "bg-black border-white/[0.08] hover:border-white/20 opacity-70 hover:opacity-100"
                     }`}
                   >
                     {isActive && (
@@ -637,7 +637,7 @@ export default function LandingPage() {
                       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       className="w-full h-full"
                     >
-                      <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                      <TiltCard className="w-full h-full rounded-2xl bg-black border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
                         <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
@@ -672,7 +672,7 @@ export default function LandingPage() {
                         </div>
 
                         <div className="w-full rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden font-sans">
-                          <div className="h-8 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 text-[10px] font-mono text-zinc-500 tracking-wider uppercase">
+                          <div className="h-8 border-b border-white/[0.06] bg-black flex items-center px-4 gap-3 text-[10px] font-mono text-zinc-500 tracking-wider uppercase">
                             <div className="w-16">ID</div>
                             <div className="flex-1">Task / Incident</div>
                             <div className="w-20">State</div>
@@ -707,7 +707,7 @@ export default function LandingPage() {
                       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       className="w-full h-full"
                     >
-                      <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                      <TiltCard className="w-full h-full rounded-2xl bg-black border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
                         <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
@@ -762,7 +762,7 @@ export default function LandingPage() {
                       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       className="w-full h-full"
                     >
-                      <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                      <TiltCard className="w-full h-full rounded-2xl bg-black border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
                         <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
@@ -783,12 +783,12 @@ export default function LandingPage() {
                             <div className="w-7 h-7 rounded-full bg-white/[0.08] text-white flex items-center justify-center shrink-0 border border-white/10">
                               <Zap size={13} />
                             </div>
-                            <div className="bg-zinc-900 border border-white/[0.06] rounded-xl rounded-tl-none p-3.5 text-[12px] text-zinc-300 leading-relaxed font-normal">
+                            <div className="bg-black border border-white/[0.08] rounded-xl rounded-tl-none p-3.5 text-[12px] text-zinc-300 leading-relaxed font-normal">
                               Memory leak root-cause isolated in <code className="text-white font-mono bg-white/[0.08] px-1.5 py-0.5 rounded">websocket_handler.py</code>. Suggested ring-buffer purge patch verified against test suite.
                             </div>
                           </div>
                           <div className="flex gap-3 self-end flex-row-reverse">
-                            <div className="w-7 h-7 rounded-full bg-zinc-800 border border-white/10 text-zinc-400 flex items-center justify-center shrink-0 text-[10px] font-mono">
+                            <div className="w-7 h-7 rounded-full bg-black border border-white/20 text-zinc-400 flex items-center justify-center shrink-0 text-[10px] font-mono">
                               DEV
                             </div>
                             <div className="bg-white text-black rounded-xl rounded-tr-none p-3 text-[12px] leading-relaxed font-semibold">
@@ -817,7 +817,7 @@ export default function LandingPage() {
                       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       className="w-full h-full"
                     >
-                      <TiltCard className="w-full h-full rounded-2xl bg-[#090b0e] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
+                      <TiltCard className="w-full h-full rounded-2xl bg-black border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
                         <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
@@ -897,7 +897,7 @@ export default function LandingPage() {
               className="flex-1 min-h-[420px]"
               style={{ isolation: "isolate", zIndex: 1 }}
             >
-              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-6 flex flex-col justify-between relative overflow-hidden">
+              <TiltCard className="h-full rounded-2xl bg-black border border-white/[0.08] p-6 flex flex-col justify-between relative overflow-hidden">
                 <div className="flex items-center justify-between z-10 mb-3">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -1009,7 +1009,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 [perspective:1200px]">
             {/* Starter Plan */}
             <motion.div variants={itemReveal} className="h-full">
-              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col hover:border-white/15 transition-all">
+              <TiltCard className="h-full rounded-2xl bg-black border border-white/[0.08] p-8 flex flex-col hover:border-white/20 transition-all">
                 <h3 className="text-lg font-medium mb-1 text-white">Starter</h3>
                 <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Ideal for independent engineers and early prototypes.</p>
                 <div className="mb-8">
@@ -1032,7 +1032,7 @@ export default function LandingPage() {
 
             {/* Pro Plan */}
             <motion.div variants={itemReveal} className="h-full">
-              <TiltCard className="h-full rounded-2xl bg-[#0c0e12] border border-white/20 p-8 flex flex-col relative shadow-[0_12px_40px_rgba(0,0,0,0.7)] hover:border-white/30 transition-all">
+              <TiltCard className="h-full rounded-2xl bg-black border border-white/25 p-8 flex flex-col relative shadow-[0_12px_40px_rgba(0,0,0,0.9)] hover:border-white/40 transition-all">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-mono tracking-wider uppercase px-3.5 py-0.5 rounded-full font-semibold shadow-sm z-20">
                   Most Deployed
                 </div>
@@ -1060,7 +1060,7 @@ export default function LandingPage() {
 
             {/* Enterprise Plan */}
             <motion.div variants={itemReveal} className="h-full">
-              <TiltCard className="h-full rounded-2xl bg-[#090b0e] border border-white/[0.06] p-8 flex flex-col hover:border-white/15 transition-all">
+              <TiltCard className="h-full rounded-2xl bg-black border border-white/[0.08] p-8 flex flex-col hover:border-white/20 transition-all">
                 <h3 className="text-lg font-medium mb-1 text-white">Enterprise</h3>
                 <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Dedicated VPC peering, compliance guarantees, and high-volume workloads.</p>
                 <div className="mb-8">
@@ -1086,7 +1086,7 @@ export default function LandingPage() {
       </main>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="w-full border-t border-white/[0.06] bg-[#07080a] py-10">
+      <footer className="w-full border-t border-white/[0.08] bg-black py-10">
         <div className="w-full px-6 md:px-12 lg:px-24 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <Logo className="h-3.5 text-zinc-400" />

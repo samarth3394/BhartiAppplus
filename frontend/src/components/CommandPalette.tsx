@@ -42,7 +42,7 @@ export function CommandPalette() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="w-full max-w-lg bg-[#111111] border border-white/[0.08] rounded-xl shadow-2xl overflow-hidden flex flex-col"
+            className="w-full max-w-lg bg-black border border-white/[0.12] rounded-xl shadow-2xl overflow-hidden flex flex-col"
           >
             <div className="flex items-center border-b border-white/[0.08] px-4">
               <Search size={18} className="text-[#888] shrink-0" />

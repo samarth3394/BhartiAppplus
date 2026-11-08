@@ -142,9 +142,9 @@ export function SdkTerminal() {
   }, []);
 
   return (
-    <div className="h-full flex flex-col rounded-2xl bg-[#090b0e] border border-white/[0.06] overflow-hidden">
+    <div className="h-full flex flex-col rounded-2xl bg-black border border-white/[0.08] overflow-hidden">
       {/* Terminal Header */}
-      <div className="h-10 border-b border-white/[0.06] bg-[#0c0e12] flex items-center px-4 gap-3 shrink-0">
+      <div className="h-10 border-b border-white/[0.06] bg-black flex items-center px-4 gap-3 shrink-0">
         {/* Traffic Lights */}
         <div className="flex gap-1.5 shrink-0">
           <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
@@ -229,7 +229,7 @@ export function SdkTerminal() {
       </div>
 
       {/* Footer — Run Ingestion Test */}
-      <div className="border-t border-white/[0.06] bg-[#0c0e12] px-4 py-3 flex items-center justify-between gap-3 shrink-0">
+      <div className="border-t border-white/[0.08] bg-black px-4 py-3 flex items-center justify-between gap-3 shrink-0">
         <div className="text-[11px] font-mono text-zinc-500">
           {testComplete
             ? "→ Ingestion rate: 3,840 events/sec  •  Pipeline active"
