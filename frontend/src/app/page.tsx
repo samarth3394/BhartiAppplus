@@ -1,1109 +1,1135 @@
 "use client";
 
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { 
-  ArrowRight, Command, Zap, Layers, Lock, GitBranch, Terminal, User,
-  LayoutDashboard, MessageSquare, Users, KanbanSquare, Bug, Map, 
-  Activity, Server, Wrench, Settings, ChevronDown, ChevronRight, Plus, Check, MousePointer2
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import {
+  Activity,
+  AlertTriangle,
+  ArrowRight,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Cpu,
+  Database,
+  ExternalLink,
+  GitBranch,
+  GitCommit,
+  HardDrive,
+  Layers,
+  Network,
+  Radio,
+  RefreshCw,
+  Search,
+  Server,
+  Shield,
+  Sliders,
+  Sparkles,
+  Terminal,
+  Wifi,
+  Zap,
 } from "lucide-react";
-import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
-import { SplineScene } from "@/components/SplineScene";
-import { SdkTerminal } from "@/components/SdkTerminal";
-import { OperationalShowcase } from "@/components/OperationalShowcase";
 
-/* ──────────────────────────── ZERO-OVERHEAD 3D TILT CARD ──────────────────────────── */
-function TiltCard({ 
-  children, 
-  className = "", 
-  glare = true 
-}: { 
-  children: React.ReactNode; 
-  className?: string; 
-  glare?: boolean;
-}) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const glareRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+/* ═══════════════════════════════════════════════════════════════
+   TYPES & CONSTANTS
+   ═══════════════════════════════════════════════════════════════ */
 
-  const mouseXSpring = useSpring(x, { stiffness: 280, damping: 28 });
-  const mouseYSpring = useSpring(y, { stiffness: 280, damping: 28 });
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    x.set(mouseX / width - 0.5);
-    y.set(mouseY / height - 0.5);
-
-    if (glare && glareRef.current) {
-      glareRef.current.style.opacity = "0.15";
-      glareRef.current.style.background = `radial-gradient(circle 260px at ${(mouseX / width) * 100}% ${(mouseY / height) * 100}%, rgba(255,255,255,0.22), transparent 70%)`;
-    }
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-    if (glare && glareRef.current) {
-      glareRef.current.style.opacity = "0";
-    }
-  };
-
-  return (
-    <motion.div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX,
-        rotateY,
-        transformPerspective: 1000,
-      }}
-      className={`relative will-change-transform ${className}`}
-    >
-      <div className="h-full w-full">
-        {children}
-      </div>
-      {glare && (
-        <div
-          ref={glareRef}
-          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-200 overflow-hidden"
-        />
-      )}
-    </motion.div>
-  );
+interface ServiceHealth {
+  name: string;
+  category: "gateway" | "compute" | "data" | "cache";
+  status: "operational" | "degraded" | "warning";
+  latency: string;
+  errorRate: string;
+  rps: string;
+  checked: string;
 }
 
-/* ──────────────────────────── DATA ──────────────────────────── */
-
-const faqs = [
-  {
-    q: "How does the AI prediction work?",
-    a: "BREXAL uses historical log data and anomaly detection models to identify patterns that typically precede system failures, alerting you before an outage occurs."
-  },
-  {
-    q: "Can I self-host BREXAL?",
-    a: "Currently, BREXAL is a fully managed cloud solution. We provide dedicated VPC peering and single-tenant architecture for Enterprise customers who require strict data compliance."
-  },
-  {
-    q: "Do you have a free tier?",
-    a: "Yes, our Starter plan is completely free forever. It includes 3 team members, 2 apps, and basic uptime monitoring with no credit card required."
-  },
-  {
-    q: "How fast is the integration?",
-    a: "You can integrate BREXAL in under two minutes. Our SDK automatically detects your framework (Next.js, Python, Go) and instruments the necessary telemetry without manual configuration."
-  }
+const SAMPLE_SERVICES: ServiceHealth[] = [
+  { name: "api-gateway-edge", category: "gateway", status: "operational", latency: "1.2ms", errorRate: "0.001%", rps: "18.4k", checked: "1s ago" },
+  { name: "auth-session-v2", category: "compute", status: "operational", latency: "3.4ms", errorRate: "0.000%", rps: "4.2k", checked: "2s ago" },
+  { name: "payment-worker-pool", category: "compute", status: "degraded", latency: "142ms", errorRate: "1.18%", rps: "1.8k", checked: "Just now" },
+  { name: "postgres-primary-mesh", category: "data", status: "operational", latency: "0.8ms", errorRate: "0.000%", rps: "12.9k", checked: "1s ago" },
+  { name: "redis-cluster-cache", category: "cache", status: "operational", latency: "0.3ms", errorRate: "0.000%", rps: "48.2k", checked: "1s ago" },
+  { name: "event-stream-consumer", category: "compute", status: "operational", latency: "5.1ms", errorRate: "0.004%", rps: "9.3k", checked: "3s ago" },
 ];
 
-const scrollyFeatures = [
-  {
-    step: "01",
-    tag: "STATE SYNCHRONIZATION",
-    title: "Sub-second State Synchronization",
-    desc: "Every event, status change, and deployment signal propagates across all active peers instantly via low-latency telemetry mesh.",
-    stats: "1.4ms P99 • 99.999% SLA • eBPF Mesh"
-  },
-  {
-    step: "02",
-    tag: "ROOT-CAUSE DEDUCTION",
-    title: "Pinpoint Anomalous Commit Tracing",
-    desc: "Automated telemetry analysis matches anomalous memory and latency spikes directly to the offending Git commit and author.",
-    stats: "Commit #8f2a1b9 • Memory Footprint: +42MB • Stack Trace Verified"
-  },
-  {
-    step: "03",
-    tag: "AUTONOMOUS COPILOT",
-    title: "AI-Drafted Patch Remediation",
-    desc: "Autonomous AI orchestration diagnoses the offending stack trace, generates an optimal patch, and validates it in staging.",
-    stats: "Auto-PR Generated • Zero Downtime Buffer Purge • Staging Passed"
-  },
-  {
-    step: "04",
-    tag: "ACCESS & SECURITY",
-    title: "Granular Multi-Region Access Control",
-    desc: "Role-based scoping for multi-environment safety across dev, staging, and production with cryptographic mTLS certificates.",
-    stats: "mTLS Handshake Active • 3 Scoped Roles • Instant Audit Revocation"
-  }
-];
-
-const reviewsData = [
-  {
-    quote: "BREXAL has completely transformed how we monitor our infrastructure. The zero-configuration setup and the sub-millisecond overhead mean we get enterprise-grade observability without sacrificing any performance. The AI Copilot caught three critical memory leaks before they even reached production.",
-    name: "Ganesh Vanave",
-    title: "Founder of Next Career Steps & Data Engineer in Germany",
-    initials: "GV",
-    gradient: "from-indigo-500 to-purple-600",
-    image: "/founders/ganesh-dada.png"
-  },
-  {
-    quote: "As a founder, I need to know my application is stable 24/7. BREXAL gives us that peace of mind. The automated root cause analysis is like having an extra senior engineer on the team who never sleeps. It's an absolute game-changer for modern startups.",
-    name: "Dhanaji Choudhar",
-    title: "Founder of Polivate Technologies",
-    initials: "DC",
-    gradient: "from-emerald-500 to-teal-600",
-    image: "/founders/dhanaji-choudhar.jpeg"
-  },
-  {
-    quote: "We migrated from Datadog to BREXAL, and the difference is night and day. The interface is breathtakingly fast, and the telemetry streaming is flawless. The way it ties issues directly to commits using AI has cut our debugging time in half.",
-    name: "Pururaj Varpe",
-    title: "Founder and CTO, Xpersify",
-    initials: "PV",
-    gradient: "from-blue-500 to-cyan-600",
-    image: "/founders/puru-varpe.jpeg"
-  },
-  {
-    quote: "From a financial and operational perspective, BREXAL is incredibly cost-effective. We get end-to-end encryption, predictive AI failure warnings, and a gorgeous dashboard that the whole team actually loves using. It's the best investment we've made in our tech stack.",
-    name: "Kunal Tambe",
-    title: "Founder and CFO of Xpersify",
-    initials: "KT",
-    gradient: "from-orange-500 to-red-600",
-    image: "/founders/kunal-tambe.jpeg"
-  },
-  {
-    quote: "We built BREXAL at Bharti Nexus Technologies to solve our own observability nightmares. Now, it's the very foundation that keeps our entire ecosystem running flawlessly. We designed it for engineers who refuse to compromise on speed and precision.",
-    name: "Samarth Choudhar",
-    title: "Founder and CTO of Bharti Nexus Technologies",
-    initials: "SC",
-    gradient: "from-purple-500 to-indigo-600",
-    image: "/founders/samarth-choudhar.png"
-  }
-];
-
-const trustedBy = [
-  "Next Career Steps", "Polivate Technologies", "Xpersify", "Bharti Nexus"
-];
-
-/* ──────────────────────────── ANIMATIONS ──────────────────────────── */
-
-const sectionReveal = {
-  hidden: { opacity: 0, y: 60 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as const }
-  }
-};
-
-const stagger = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.08 }
-  }
-};
-
-const itemReveal = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }
-  }
-};
-
-/* ──────────────────────────── REVIEWS SECTION ──────────────────────────── */
-
-function ReviewsSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  return (
-    <motion.section
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={sectionReveal}
-      className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
-      id="reviews"
-    >
-      <div className="flex flex-col border-y border-white/[0.08]">
-        <button 
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full py-8 md:py-12 flex flex-col md:flex-row items-start md:items-center justify-between text-left group focus:outline-none"
-        >
-          <div>
-            <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 mb-2">Executive Perspectives</div>
-            <h2 className="text-2xl md:text-4xl font-medium tracking-tight mb-2 text-white group-hover:text-zinc-200 transition-colors">Trusted by engineering leaders worldwide.</h2>
-            <p className="text-zinc-400 text-sm md:text-base max-w-2xl font-normal">Real-world production feedback from CTOs and engineering directors running mission-critical workloads.</p>
-          </div>
-          <div className="mt-6 md:mt-0 ml-0 md:ml-8 flex items-center justify-center w-10 h-10 rounded-full border border-white/[0.1] group-hover:bg-white/[0.05] transition-all flex-shrink-0">
-            <motion.div animate={{ rotate: isExpanded ? 45 : 0 }} transition={{ duration: 0.2 }}>
-              <Plus size={18} className={isExpanded ? "text-white" : "text-zinc-400"} />
-            </motion.div>
-          </div>
-        </button>
-
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden"
-            >
-              <div className="py-16 flex flex-col items-center border-t border-white/[0.06]">
-                <div className="relative w-full max-w-4xl min-h-[260px] md:min-h-[220px] flex items-center justify-center text-center">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeIndex}
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -15 }}
-                      transition={{ duration: 0.35 }}
-                      className="flex flex-col items-center justify-center"
-                    >
-                      <h3 className="text-xl md:text-2xl lg:text-3xl font-normal leading-relaxed tracking-tight text-zinc-200 mb-8 max-w-3xl">
-                        &ldquo;{reviewsData[activeIndex].quote}&rdquo;
-                      </h3>
-                      <div className="flex flex-col items-center gap-3">
-                        {reviewsData[activeIndex].image ? (
-                          <img 
-                            src={reviewsData[activeIndex].image} 
-                            alt={reviewsData[activeIndex].name} 
-                            className="w-14 h-14 rounded-full object-cover object-top border border-white/15 shadow-md"
-                          />
-                        ) : (
-                          <div className="w-14 h-14 rounded-full flex items-center justify-center text-white font-mono text-base bg-zinc-800 border border-white/10 shadow-md">
-                            {reviewsData[activeIndex].initials}
-                          </div>
-                        )}
-                        <div className="flex flex-col items-center">
-                          <div className="font-medium text-white text-base">{reviewsData[activeIndex].name}</div>
-                          <div className="text-zinc-500 text-xs md:text-sm mt-0.5">{reviewsData[activeIndex].title}</div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-
-                {/* Avatars */}
-                <div className="flex items-center gap-4 mt-12 pt-6 border-t border-white/[0.05] w-full max-w-xl justify-center">
-                  {reviewsData.map((review, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveIndex(idx)}
-                      className={`relative w-11 h-11 rounded-full flex items-center justify-center text-white font-medium text-sm transition-all duration-200 overflow-hidden ${
-                        activeIndex === idx 
-                          ? "ring-2 ring-white scale-110 shadow-md z-10" 
-                          : "opacity-50 hover:opacity-90 scale-95 hover:scale-100"
-                      } bg-zinc-800 border border-white/10`}
-                    >
-                      {review.image ? (
-                        <img src={review.image} alt={review.name} className="w-full h-full object-cover object-top" />
-                      ) : (
-                        review.initials
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.section>
-  );
-}
-
-/* ──────────────────────────── MAIN PAGE ──────────────────────────── */
-
-export default function LandingPage() {
-  const [mounted, setMounted] = useState(false);
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const [navScrolled, setNavScrolled] = useState(false);
-
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-  const heroImgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-  const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
-  const heroContentY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
-  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const heroOverlayOpacity = useTransform(scrollYProgress, [0, 0.8], [0, 0.85]);
-
-  // Interactive 3D Showcase Stage
-  const [activeFeatureStep, setActiveFeatureStep] = useState(0);
-
-  // Auto-advance showcase tab smoothly every 6 seconds unless user selects one
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveFeatureStep(prev => (prev + 1) % 4);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 1: MINIMAL ENTERPRISE NAVIGATION
+   ═══════════════════════════════════════════════════════════════ */
+function Navigation() {
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const handleScroll = () => setNavScrolled(window.scrollY > 80);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-[#EDEDED] font-sans overflow-x-clip selection:bg-white/20 selection:text-white">
-      
-      {/* ═══════════════════ CLEAN TRANSPARENT TOP NAVBAR ═══════════════════ */}
-      <motion.nav
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        className={`fixed top-0 left-0 right-0 w-full z-50 flex items-center justify-between px-6 sm:px-12 md:px-16 transition-all duration-300 ${
-          navScrolled
-            ? "py-4 bg-black/90 backdrop-blur-md border-b border-white/[0.08]"
-            : "py-6 sm:py-7 bg-transparent border-b border-transparent"
-        }`}
-      >
-        {/* Left Corner: BREXAL Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <Logo className="h-4 sm:h-[18px] text-white tracking-widest transition-opacity group-hover:opacity-80" />
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+        scrolled
+          ? "bg-[#050505]/85 backdrop-blur-md border-b border-[#202020] py-3.5"
+          : "bg-transparent border-b border-transparent py-5"
+      }`}
+    >
+      <div className="max-w-[1360px] mx-auto px-6 sm:px-10 flex items-center justify-between">
+        {/* Brand Mark + Minimal Symbol */}
+        <Link href="/" className="flex items-center gap-3 group focus:outline-none focus:ring-1 focus:ring-[#3985FF]">
+          <div className="w-8 h-8 rounded-lg bg-[#101010] border border-[#202020] flex items-center justify-center text-[#3985FF] group-hover:border-[#3985FF]/50 transition-colors">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <div className="flex flex-col">
+            <Logo className="h-4 text-[#F5F5F5] group-hover:text-white transition-colors" />
+            <span className="text-[9px] font-mono tracking-widest text-[#929292] uppercase">Bharti Nexus</span>
+          </div>
         </Link>
 
-        {/* Right Corner: Nav links + Login Button */}
-        <div className="flex items-center gap-6 sm:gap-8">
-          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-[13px] font-medium tracking-wide">
-            <Link href="#features" className="text-zinc-400 hover:text-white transition-colors">Features</Link>
-            <Link href="#method" className="text-zinc-400 hover:text-white transition-colors">Method</Link>
-            <Link href="#pricing" className="text-zinc-400 hover:text-white transition-colors">Pricing</Link>
-            <Link href="#faq" className="text-zinc-400 hover:text-white transition-colors">FAQ</Link>
-          </div>
+        {/* Center Navigation Links */}
+        <nav className="hidden md:flex items-center gap-8 text-[13px] font-medium text-[#929292]">
+          <Link href="#platform" className="hover:text-[#F5F5F5] transition-colors">Platform</Link>
+          <Link href="#solutions" className="hover:text-[#F5F5F5] transition-colors">Solutions</Link>
+          <Link href="#features" className="hover:text-[#F5F5F5] transition-colors">Features</Link>
+          <Link href="#incident-response" className="hover:text-[#F5F5F5] transition-colors">Incident response</Link>
+          <Link href="#stack" className="hover:text-[#F5F5F5] transition-colors">Stack</Link>
+        </nav>
+
+        {/* Right Action CTAs */}
+        <div className="flex items-center gap-4">
           <Link
             href="/login"
-            className="bg-white text-black px-4 sm:px-5 py-2 rounded-full text-[13px] font-semibold hover:bg-zinc-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]"
+            className="text-[13px] font-medium text-[#929292] hover:text-[#F5F5F5] transition-colors px-2 py-1"
           >
-            Login
+            Sign in
+          </Link>
+          <Link
+            href="/register"
+            className="px-4 py-2 rounded-lg bg-[#F5F5F5] text-[#050505] text-[13px] font-semibold hover:bg-white transition-all shadow-[0_1px_2px_rgba(0,0,0,0.5)] focus:outline-none focus:ring-2 focus:ring-[#3985FF]"
+          >
+            Request access
           </Link>
         </div>
-      </motion.nav>
+      </div>
+    </header>
+  );
+}
 
-      {/* ═══════════════════ HERO SECTION ═══════════════════ */}
-      <section ref={heroRef} className="relative h-screen w-full overflow-hidden flex flex-col">
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 2: ASYMMETRIC HERO COMPOSITION
+   ═══════════════════════════════════════════════════════════════ */
+function HeroSection() {
+  const [liveP99, setLiveP99] = useState("1.42ms");
+  const [packetTick, setPacketTick] = useState(42810);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const jitter = (1.38 + Math.random() * 0.12).toFixed(2);
+      setLiveP99(`${jitter}ms`);
+      setPacketTick((prev) => prev + Math.floor(Math.random() * 14 - 6));
+    }, 2400);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 px-6 sm:px-10 overflow-hidden border-b border-[#202020] bg-[#050505]">
+      {/* Background Subtle Mesh Coordinates (Non-distracting) */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: "radial-gradient(#F5F5F5 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+
+      <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
         
-        {/* Background Image with Parallax — eagle sits in center-right of frame */}
-        <motion.div
-          className="absolute inset-0 z-0 select-none pointer-events-none"
-          style={{ y: heroImgY, scale: heroImgScale }}
-        >
-          <img
-            src="/hero-landscape.png?v=2"
-            alt="Eagle soaring over misty mountain ridges at dusk"
-            className="w-full h-full object-cover object-[center_35%]"
-          />
-        </motion.div>
+        {/* LEFT COLUMN: Editorial Headline & Value (7 cols) */}
+        <div className="lg:col-span-7 flex flex-col items-start text-left">
+          {/* Eyebrow */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#101010] border border-[#202020] text-[#3985FF] font-mono text-[11px] font-medium tracking-wider mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3985FF] animate-pulse" />
+            AI-POWERED OBSERVABILITY PLATFORM
+          </div>
 
-        {/* Overlay system — keeps text crisp up top, lets the eagle + mountains breathe below */}
-        {/* Top: strong fade for navbar + headline legibility */}
-        <div className="absolute inset-x-0 top-0 h-[45%] z-[1] bg-gradient-to-b from-black/95 via-black/70 to-transparent pointer-events-none" />
-        {/* Bottom: seamless blend into page bg */}
-        <div className="absolute inset-x-0 bottom-0 h-48 z-[1] bg-gradient-to-t from-black to-transparent pointer-events-none" />
-        {/* Scroll darken */}
-        <motion.div
-          className="absolute inset-0 z-[2] bg-black pointer-events-none"
-          style={{ opacity: heroOverlayOpacity }}
-        />
+          {/* Main Headline (Sentence Case, Balanced) */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-[#F5F5F5] leading-[1.08] mb-6 font-display">
+            See the failure before it becomes an incident.
+          </h1>
 
-        {/* ── Content: pinned to the upper third with 3D Depth Fade ── */}
-        <motion.div
-          className="relative z-10 flex flex-col items-center text-center px-6 pt-32 sm:pt-36 md:pt-40"
-          style={{ y: heroContentY, opacity: heroContentOpacity }}
-        >
-          {/* Headline — short, decisive, no gradient gimmicks */}
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={mounted ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.36, 1], delay: 0.45 }}
-            className="text-[clamp(2.25rem,6vw,5rem)] font-semibold tracking-[-0.04em] leading-[1.08] text-white max-w-3xl"
-          >
-            Ship reliable software, faster.
-          </motion.h1>
+          {/* Supporting Description (Pretty line wrapping) */}
+          <p className="text-lg sm:text-xl text-[#929292] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
+            Monitor every service, trace every request, and identify the root cause before downtime impacts your users.
+          </p>
 
-          {/* Sub-copy — one sentence, human voice */}
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={mounted ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.36, 1], delay: 0.6 }}
-            className="mt-4 text-[15px] sm:text-[17px] text-zinc-400 max-w-lg leading-relaxed font-normal"
-          >
-            Uptime monitoring, AI root-cause analysis, and team workflows — in one place.
-          </motion.p>
-
-          {/* CTAs — clean, two buttons, no over-design */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={mounted ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.36, 1], delay: 0.75 }}
-            className="mt-8 flex items-center gap-3"
-          >
+          {/* Actions */}
+          <div className="flex flex-wrap items-center gap-4 mb-10 w-full sm:w-auto">
             <Link
               href="/register"
-              className="px-6 py-2.5 rounded-lg bg-white text-black text-[13px] font-semibold hover:bg-zinc-200 transition-colors"
+              className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#3985FF] text-white text-[14px] font-semibold hover:bg-[#2B75F0] transition-colors flex items-center justify-center gap-2 shadow-[0_2px_12px_rgba(57,133,255,0.25)] focus:ring-2 focus:ring-[#3985FF]"
             >
-              Get started free
+              Request early access
+              <ArrowRight size={15} />
             </Link>
-            <Link
-              href="#features"
-              className="px-5 py-2.5 rounded-lg border border-white/[0.12] text-[13px] font-medium text-zinc-300 hover:text-white hover:border-white/25 transition-colors"
+            <a
+              href="#platform"
+              className="w-full sm:w-auto px-5 py-3 rounded-lg bg-[#101010] border border-[#202020] text-[#F5F5F5] text-[14px] font-medium hover:border-[#2E2E2E] hover:bg-[#151515] transition-colors flex items-center justify-center gap-2"
             >
-              See how it works
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* ── Scroll indicator — minimal mouse icon ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={mounted ? { opacity: 1 } : {}}
-          transition={{ delay: 1.6, duration: 0.8 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
-        >
-          <div className="w-[18px] h-[28px] rounded-full border border-white/25 flex justify-center pt-1.5">
-            <motion.div
-              animate={{ y: [0, 6, 0], opacity: [1, 0.3, 1] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-              className="w-[2px] h-[6px] rounded-full bg-white/70"
-            />
+              Explore the platform
+            </a>
           </div>
-        </motion.div>
-      </section>
 
-      {/* ═══════════════════ TRUSTED BY BANNER ═══════════════════ */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
-        variants={sectionReveal}
-        className="w-full py-16 border-b border-white/[0.06] bg-black"
-      >
-        <div className="flex flex-col items-center gap-6 px-6">
-          <p className="text-[11px] text-zinc-500 tracking-[0.25em] uppercase font-mono">Trusted by high-growth engineering teams</p>
-          <div className="flex items-center gap-10 md:gap-16 flex-wrap justify-center">
-            {trustedBy.map((name) => (
-              <span key={name} className="text-zinc-500 text-sm md:text-base font-medium tracking-wide hover:text-zinc-300 transition-colors cursor-default">
-                {name}
-              </span>
-            ))}
+          {/* Technical Metadata Line */}
+          <div className="pt-6 border-t border-[#202020] w-full flex items-center gap-3 text-[12px] font-mono text-[#929292]">
+            <span className="text-[#3985FF]">●</span>
+            <span>Application monitoring</span>
+            <span className="text-[#202020]">/</span>
+            <span>Infrastructure intelligence</span>
+            <span className="text-[#202020]">/</span>
+            <span>AI incident response</span>
           </div>
         </div>
-      </motion.section>
 
-      <main className="pb-24 flex flex-col">
-        
-        {/* ═══════════════════ BREXAL ARCHITECTURE SECTION ═══════════════════ */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          variants={stagger}
-          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
-          id="method"
-        >
-          <motion.div variants={sectionReveal} className="text-center md:text-left mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
-              Architecture & Capabilities
-            </div>
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">Engineered for absolute resilience.</h2>
-            <p className="text-base sm:text-lg text-zinc-400 max-w-2xl font-normal leading-relaxed">Six foundational telemetry pillars designed to withstand peak production load.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 [perspective:1200px]">
-            {[
-              { letter: "B", num: "01", title: "Bug Intelligence", desc: "Automated regression isolation and commit correlation before user impact." },
-              { letter: "R", num: "02", title: "Runtime Telemetry", desc: "Continuous sub-millisecond execution monitoring across services." },
-              { letter: "E", num: "03", title: "Error Diagnostics", desc: "Automated root-cause deduction with pinpoint stack trace analysis." },
-              { letter: "X", num: "04", title: "Execution Pipeline", desc: "Deterministic deployment verification and synthetic health probes." },
-              { letter: "A", num: "05", title: "Analytics Engine", desc: "Deep operational metrics without the bloat of legacy APMs." },
-              { letter: "L", num: "06", title: "Logic & Copilot", desc: "Autonomous AI orchestration that drafts patches for immediate review." },
-            ].map((item) => (
-              <motion.div key={item.letter} variants={itemReveal} className="h-full">
-                <TiltCard className="h-full rounded-2xl bg-black border border-white/[0.08] p-6 hover:border-white/25 transition-all group overflow-hidden">
-                  <div className="absolute -right-3 -bottom-6 text-[100px] font-mono font-bold text-white/[0.02] group-hover:text-white/[0.05] transition-colors pointer-events-none select-none">{item.letter}</div>
-                  <div className="text-zinc-500 font-mono text-[11px] mb-4 tracking-wider">{item.num} / CORE</div>
-                  <h3 className="text-lg md:text-xl font-medium text-white tracking-tight mb-2">{item.title}</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed relative z-10">{item.desc}</p>
-                </TiltCard>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* ═══════════════════ OPERATIONAL INTELLIGENCE SHOWCASE ═══════════════════ */}
-        <OperationalShowcase />
-
-        {/* ═══════════════════ INTERACTIVE 3D FEATURE SHOWCASE ═══════════════════ */}
-        <section
-          id="features"
-          className="w-full px-4 sm:px-8 md:px-12 lg:px-20 mt-36 relative"
-          style={{ isolation: "isolate", zIndex: 10 }}
-        >
-          {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 z-10">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Interactive 3D Showcase
+        {/* RIGHT COLUMN: Realistic Live Telemetry Canvas (5 cols) */}
+        <div className="lg:col-span-5 relative w-full">
+          <div className="relative rounded-xl bg-[#0A0A0A] border border-[#202020] p-4 sm:p-5 shadow-2xl overflow-hidden flex flex-col gap-4">
+            
+            {/* Telemetry Header Bar */}
+            <div className="flex items-center justify-between pb-3 border-b border-[#202020]">
+              <div className="flex items-center gap-2 font-mono text-[11px] text-[#929292]">
+                <Radio size={13} className="text-[#36D399] animate-pulse" />
+                <span className="text-[#F5F5F5] font-semibold">cluster-us-east-1</span>
+                <span className="text-[#5E5E5E]">•</span>
+                <span className="text-[#5E5E5E]">eBPF mesh</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white">
-                Engineered for speed and discretion.
-              </h2>
-              <p className="text-zinc-400 text-sm sm:text-base mt-2 max-w-xl font-normal">
-                Sub-millisecond latency mesh, commit-level root-cause analysis, and autonomous AI remediation in real time.
-              </p>
-            </div>
-            <div className="text-xs font-mono text-zinc-500 hidden md:flex items-center gap-2">
-              <span>EXPLORE CAPABILITIES</span>
-              <span className="px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/10 text-white">
-                0{activeFeatureStep + 1} / 04
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#36D399]/10 text-[#36D399] border border-[#36D399]/20">
+                HEALTHY
               </span>
             </div>
-          </div>
 
-          {/* 3D Showcase Split Stage */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
-            {/* Left Column: Interactive Step Selectors (5 cols) */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-3">
-              {scrollyFeatures.map((f, idx) => {
-                const isActive = activeFeatureStep === idx;
-                return (
-                  <button
-                    key={f.step}
-                    onClick={() => setActiveFeatureStep(idx)}
-                    className={`w-full text-left p-4 sm:p-5 rounded-2xl transition-all duration-300 border relative overflow-hidden flex flex-col justify-between ${
-                      isActive 
-                        ? "bg-white/[0.07] border-white/25 shadow-[0_12px_40px_rgba(0,0,0,0.6)] ring-1 ring-white/15" 
-                        : "bg-black border-white/[0.08] hover:border-white/20 opacity-70 hover:opacity-100"
+            {/* Live Metrics Row */}
+            <div className="grid grid-cols-3 gap-2">
+              <div className="p-2.5 rounded-lg bg-[#101010] border border-[#202020]">
+                <span className="text-[10px] font-mono text-[#929292] block mb-1">P99 LATENCY</span>
+                <span className="text-base sm:text-lg font-mono font-bold text-[#F5F5F5]">{liveP99}</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-[#101010] border border-[#202020]">
+                <span className="text-[10px] font-mono text-[#929292] block mb-1">ERROR RATE</span>
+                <span className="text-base sm:text-lg font-mono font-bold text-[#36D399]">0.002%</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-[#101010] border border-[#202020]">
+                <span className="text-[10px] font-mono text-[#929292] block mb-1">THROUGHPUT</span>
+                <span className="text-base sm:text-lg font-mono font-bold text-[#3985FF]">
+                  {(packetTick / 1000).toFixed(1)}k/s
+                </span>
+              </div>
+            </div>
+
+            {/* Service Dependency Flow Node Graph (Illustrative Topology) */}
+            <div className="p-3.5 rounded-lg bg-[#101010] border border-[#202020] flex flex-col gap-3">
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#929292]">
+                <span>TOPOLOGY MESH</span>
+                <span className="text-[10px] text-[#5E5E5E]">6 ACTIVE NODES</span>
+              </div>
+              
+              <div className="space-y-2 font-mono text-[12px]">
+                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#36D399]" />
+                    <span className="text-[#F5F5F5]">api-edge-proxy</span>
+                  </div>
+                  <span className="text-[11px] text-[#929292]">1.2ms • 18.4k rps</span>
+                </div>
+
+                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#202020]">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#36D399]" />
+                    <span className="text-[#F5F5F5]">auth-service-v2</span>
+                  </div>
+                  <span className="text-[11px] text-[#929292]">3.4ms • 4.2k rps</span>
+                </div>
+
+                <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#0A0A0A] border border-[#FF5252]/30">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#F5B942] animate-pulse" />
+                    <span className="text-[#F5F5F5]">payment-worker-pool</span>
+                  </div>
+                  <span className="text-[11px] text-[#F5B942]">142ms • Degraded</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Live AI Anomaly Callout Box */}
+            <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#9B7BFF]/30 flex items-start gap-2.5">
+              <Sparkles size={15} className="text-[#9B7BFF] shrink-0 mt-0.5" />
+              <div className="flex flex-col text-[11.5px] leading-snug">
+                <span className="font-mono text-[#9B7BFF] font-semibold text-[10px] tracking-wider uppercase">
+                  AI Anomaly Detection
+                </span>
+                <span className="text-[#F5F5F5] font-mono mt-0.5">
+                  Connection pool saturation on <code className="text-[#3985FF]">postgres-primary</code>
+                </span>
+                <span className="text-[10px] text-[#929292] font-mono mt-1">
+                  Correlated with commit sha:8f2a1b9 (payment retry loop)
+                </span>
+              </div>
+            </div>
+
+            {/* Deployment Indicator Footer */}
+            <div className="flex items-center justify-between text-[10px] font-mono text-[#929292] pt-1 border-t border-[#202020]">
+              <span className="flex items-center gap-1.5">
+                <GitCommit size={11} className="text-[#3985FF]" />
+                v2.4.1 deployed 4m ago
+              </span>
+              <span className="text-[#36D399]">0 canary rollbacks</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 3: OPERATIONAL INTELLIGENCE (BENTO GRID)
+   "Your infrastructure tells a story. Read every signal."
+   ═══════════════════════════════════════════════════════════════ */
+function OperationalIntelligenceSection() {
+  const [activeTraceStep, setActiveTraceStep] = useState<number>(2);
+
+  return (
+    <section id="platform" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#0A0A0A]">
+      <div className="max-w-[1360px] mx-auto">
+        {/* Editorial Section Header */}
+        <div className="max-w-2xl mb-16 text-left">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#3985FF] font-mono text-[10.5px] tracking-wider uppercase mb-4">
+            Unified Signal Correlation
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-4">
+            Your infrastructure tells a story. Read every signal.
+          </h2>
+          <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed">
+            Siloed tools blind your engineering team during critical outages. BREXAL continuously synthesizes metrics, distributed traces, system logs, and dependency maps into a single operational narrative.
+          </p>
+        </div>
+
+        {/* Asymmetric Bento Layout (Unequal Dimensions) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          {/* BENTO BLOCK 1: Distributed Trace Waterfall (7 cols) */}
+          <div className="lg:col-span-7 rounded-xl bg-[#101010] border border-[#202020] p-6 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-4 border-b border-[#202020] mb-4">
+                <div className="flex items-center gap-2">
+                  <Network size={16} className="text-[#3985FF]" />
+                  <span className="font-semibold text-sm text-[#F5F5F5]">Distributed Request Trace</span>
+                </div>
+                <span className="font-mono text-[11px] text-[#929292]">trace_id: 8f2a1b9c</span>
+              </div>
+              
+              <p className="text-[13px] text-[#929292] mb-6">
+                Inspect cross-boundary latencies from edge CDN ingress down to low-level PostgreSQL lock acquisitions.
+              </p>
+
+              {/* Trace Spans Waterfall */}
+              <div className="space-y-3 font-mono text-[12px]">
+                {[
+                  { name: "api-gateway (HTTP POST /v1/checkout)", duration: "148ms", spanWidth: "100%", startOffset: "0%", color: "bg-[#3985FF]" },
+                  { name: "auth-verify (JWT validation)", duration: "4.2ms", spanWidth: "8%", startOffset: "2%", color: "bg-[#36D399]" },
+                  { name: "payment-worker (stripe_token_create)", duration: "128ms", spanWidth: "82%", startOffset: "12%", color: "bg-[#F5B942]" },
+                  { name: "db-pool (SELECT * FROM user_balances)", duration: "1.1ms", spanWidth: "3%", startOffset: "94%", color: "bg-[#36D399]" },
+                ].map((span, idx) => (
+                  <div 
+                    key={idx}
+                    onClick={() => setActiveTraceStep(idx)}
+                    className={`p-2.5 rounded-lg border transition-all cursor-pointer ${
+                      activeTraceStep === idx 
+                        ? "bg-[#151515] border-[#3985FF]/40" 
+                        : "bg-[#0A0A0A] border-[#202020] hover:border-[#2E2E2E]"
                     }`}
                   >
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeFeatureBar"
-                        className="absolute left-0 top-0 bottom-0 w-1 bg-white"
-                        transition={{ duration: 0.25 }}
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[#F5F5F5]">{span.name}</span>
+                      <span className="text-[#929292] font-semibold">{span.duration}</span>
+                    </div>
+                    {/* Visual Bar representation */}
+                    <div className="h-1.5 w-full bg-[#202020] rounded-full overflow-hidden relative">
+                      <div 
+                        className={`h-full rounded-full ${span.color}`}
+                        style={{ width: span.spanWidth, marginLeft: span.startOffset }}
                       />
-                    )}
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-mono tracking-wider text-zinc-400 uppercase">{f.step} / {f.tag}</span>
-                        {isActive && (
-                          <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                            Live Inspection
-                          </span>
-                        )}
-                      </div>
-                      <h3 className={`text-base sm:text-lg font-medium transition-colors ${isActive ? "text-white" : "text-zinc-300"}`}>
-                        {f.title}
-                      </h3>
-                      {isActive && (
-                        <motion.p
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          transition={{ duration: 0.25 }}
-                          className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed mt-2 font-normal"
-                        >
-                          {f.desc}
-                        </motion.p>
-                      )}
                     </div>
-                    <div className="text-[10px] font-mono text-zinc-500 mt-3 pt-2 border-t border-white/[0.04]">
-                      {f.stats}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Right Column: 3D Holographic Perspective Stage (7 cols) */}
-            <div className="lg:col-span-7 flex items-center justify-center relative [perspective:1400px]">
-              <div className="relative w-full min-h-[460px] h-full flex items-center justify-center">
-                <AnimatePresence mode="wait">
-                  {activeFeatureStep === 0 && (
-                    <motion.div
-                      key="step-0"
-                      initial={{ opacity: 0, y: 15, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -15, scale: 0.96 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                      className="w-full h-full"
-                    >
-                      <TiltCard className="w-full h-full rounded-2xl bg-black border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
-                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                              <Zap size={18} className="text-white" />
-                            </div>
-                            <div>
-                              <div className="text-xs font-mono text-white">Global Telemetry Mesh</div>
-                              <div className="text-[11px] font-mono text-zinc-500">3 Edge Regions Ingestion</div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                            1.4ms P99
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-3 my-4">
-                          {[
-                            { region: "US-EAST-1", latency: "1.2ms", load: "24%", status: "Nominal" },
-                            { region: "EU-CENTRAL-1", latency: "1.5ms", load: "31%", status: "Nominal" },
-                            { region: "AP-SOUTH-1", latency: "1.4ms", load: "19%", status: "Nominal" },
-                          ].map(node => (
-                            <div key={node.region} className="p-3 rounded-xl bg-black border border-white/[0.05] flex flex-col">
-                              <span className="text-[10px] font-mono text-zinc-500">{node.region}</span>
-                              <span className="text-sm font-semibold text-white mt-1">{node.latency}</span>
-                              <span className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1 font-mono">
-                                <span className="w-1 h-1 rounded-full bg-emerald-400" />
-                                {node.status}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="w-full rounded-xl bg-black border border-white/[0.06] flex flex-col overflow-hidden font-sans">
-                          <div className="h-8 border-b border-white/[0.06] bg-black flex items-center px-4 gap-3 text-[10px] font-mono text-zinc-500 tracking-wider uppercase">
-                            <div className="w-16">ID</div>
-                            <div className="flex-1">Task / Incident</div>
-                            <div className="w-20">State</div>
-                          </div>
-                          <div className="flex flex-col divide-y divide-white/[0.03]">
-                            {[
-                              { id: 'SYS-201', title: 'Verify TLS cert auto-renewal trigger', status: 'Active', color: 'text-zinc-300', dot: 'bg-zinc-400' },
-                              { id: 'SYS-202', title: 'Drain worker pod pool on us-east', status: 'Healthy', color: 'text-zinc-400', dot: 'bg-emerald-400' },
-                              { id: 'SYS-203', title: 'Cluster memory headroom rebalance', status: 'Queued', color: 'text-zinc-500', dot: 'bg-zinc-600' }
-                            ].map((issue, i) => (
-                              <div key={i} className="flex items-center px-4 py-2.5 text-[11px] bg-white/[0.01]">
-                                <div className="w-16 text-zinc-500 font-mono text-[10px]">{issue.id}</div>
-                                <div className="flex-1 text-zinc-300 truncate pr-3">{issue.title}</div>
-                                <div className={`w-20 ${issue.color} flex items-center gap-1 text-[10px] font-mono`}>
-                                  <div className={`w-1.5 h-1.5 rounded-full ${issue.dot}`}></div>
-                                  {issue.status}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </TiltCard>
-                    </motion.div>
-                  )}
-
-                  {activeFeatureStep === 1 && (
-                    <motion.div
-                      key="step-1"
-                      initial={{ opacity: 0, y: 15, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -15, scale: 0.96 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                      className="w-full h-full"
-                    >
-                      <TiltCard className="w-full h-full rounded-2xl bg-black border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
-                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                              <GitBranch size={18} className="text-white" />
-                            </div>
-                            <div>
-                              <div className="text-xs font-mono text-white">Anomalous Commit Correlation</div>
-                              <div className="text-[11px] font-mono text-zinc-500">Git Blame & Stack Trace Engine</div>
-                            </div>
-                          </div>
-                          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-red-500/10 border border-red-500/20 text-red-400">
-                            Stack Anomaly Detected
-                          </span>
-                        </div>
-
-                        <div className="rounded-xl bg-black border border-white/[0.06] p-4 my-4 font-mono text-[12px] leading-relaxed">
-                          <div className="flex items-center justify-between text-zinc-500 border-b border-white/[0.05] pb-2 mb-2 text-[11px]">
-                            <span>File: src/network/websocket_handler.py</span>
-                            <span className="text-zinc-400">Commit: #8f2a1b9</span>
-                          </div>
-                          <div className="text-zinc-500">142 |  async def handle_connection(ws, client_id):</div>
-                          <div className="text-red-400 bg-red-500/[0.08] px-2 py-0.5 rounded -mx-2">
-                            143 -      connection_buffer.append(await ws.receive_bytes())  # UNBOUNDED
-                          </div>
-                          <div className="text-emerald-400 bg-emerald-500/[0.08] px-2 py-0.5 rounded -mx-2 mt-1">
-                            144 +      await ring_buffer.push_capped(ws, max_bytes=65536)  # FIXED
-                          </div>
-                          <div className="text-zinc-500 mt-2">145 |      await dispatch_to_mesh(client_id)</div>
-                        </div>
-
-                        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-2.5">
-                            <img
-                              src="/avatars/sarah-k.jpg"
-                              alt="Sarah K."
-                              className="w-6 h-6 rounded-full object-cover border border-white/20"
-                            />
-                            <span className="text-zinc-300">Author: Sarah K. (3h ago)</span>
-                          </div>
-                          <span className="text-zinc-400 font-mono text-[11px]">Memory Leak: +42MB/hr</span>
-                        </div>
-                      </TiltCard>
-                    </motion.div>
-                  )}
-
-                  {activeFeatureStep === 2 && (
-                    <motion.div
-                      key="step-2"
-                      initial={{ opacity: 0, y: 15, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -15, scale: 0.96 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                      className="w-full h-full"
-                    >
-                      <TiltCard className="w-full h-full rounded-2xl bg-black border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
-                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                              <Zap size={18} className="text-white" />
-                            </div>
-                            <div>
-                              <div className="text-xs font-mono text-white">AI Copilot Remediation</div>
-                              <div className="text-[11px] font-mono text-zinc-500">Autonomous Patch Generator</div>
-                            </div>
-                          </div>
-                          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                            PR Ready
-                          </span>
-                        </div>
-
-                        <div className="flex flex-col gap-3 my-4">
-                          <div className="flex gap-3">
-                            <div className="w-7 h-7 rounded-full bg-white/[0.08] text-white flex items-center justify-center shrink-0 border border-white/10">
-                              <Zap size={13} />
-                            </div>
-                            <div className="bg-black border border-white/[0.08] rounded-xl rounded-tl-none p-3.5 text-[12px] text-zinc-300 leading-relaxed font-normal">
-                              Memory leak root-cause isolated in <code className="text-white font-mono bg-white/[0.08] px-1.5 py-0.5 rounded">websocket_handler.py</code>. Suggested ring-buffer purge patch verified against test suite.
-                            </div>
-                          </div>
-                          <div className="flex gap-3 self-end flex-row-reverse">
-                            <div className="w-7 h-7 rounded-full bg-black border border-white/20 text-zinc-400 flex items-center justify-center shrink-0 text-[10px] font-mono">
-                              DEV
-                            </div>
-                            <div className="bg-white text-black rounded-xl rounded-tr-none p-3 text-[12px] leading-relaxed font-semibold">
-                              Approve patch and run automated staging check.
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-3.5 rounded-xl bg-black border border-white/[0.06] flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                            <span>Staging check: 14/14 tests passing</span>
-                          </div>
-                          <span className="text-[11px] font-mono text-emerald-400">0 Downtime</span>
-                        </div>
-                      </TiltCard>
-                    </motion.div>
-                  )}
-
-                  {activeFeatureStep === 3 && (
-                    <motion.div
-                      key="step-3"
-                      initial={{ opacity: 0, y: 15, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -15, scale: 0.96 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                      className="w-full h-full"
-                    >
-                      <TiltCard className="w-full h-full rounded-2xl bg-black border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
-                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                              <Lock size={18} className="text-white" />
-                            </div>
-                            <div>
-                              <div className="text-xs font-mono text-white">Multi-Region RBAC Scoping</div>
-                              <div className="text-[11px] font-mono text-zinc-500">Zero-Trust Environment Roles</div>
-                            </div>
-                          </div>
-                          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] border border-white/10 text-zinc-300">
-                            mTLS Enabled
-                          </span>
-                        </div>
-
-                        <div className="flex flex-col gap-2.5 my-4">
-                          {[
-                            { name: "John Doe", role: "Super Admin", scope: "Production / All Clusters", avatar: "/avatars/john-doe.jpg", badge: "bg-white text-black" },
-                            { name: "Alice Smith", role: "Site Reliability Operator", scope: "Staging & Canary Only", avatar: "/avatars/alice-s.jpg", badge: "bg-white/10 text-zinc-300" },
-                            { name: "Marcus Kim", role: "Security Compliance Auditor", scope: "Read-Only Telemetry", avatar: "/avatars/marcus-l.jpg", badge: "bg-white/5 text-zinc-400" },
-                          ].map(user => (
-                            <div key={user.name} className="flex items-center justify-between p-3 rounded-xl bg-black border border-white/[0.05]">
-                              <div className="flex items-center gap-3">
-                                <img
-                                  src={user.avatar}
-                                  alt={user.name}
-                                  className="w-8 h-8 rounded-full object-cover border border-white/20"
-                                />
-                                <div>
-                                  <div className="text-xs font-medium text-white">{user.name}</div>
-                                  <div className="text-[10px] text-zinc-500 font-mono">{user.scope}</div>
-                                </div>
-                              </div>
-                              <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${user.badge}`}>{user.role}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-zinc-400">
-                          <span>Cryptographic Session Hash</span>
-                          <span className="text-zinc-500">sha256:4f81...9c2e</span>
-                        </div>
-                      </TiltCard>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* ═══════════════════ AGENT INTEGRATION ═══════════════════ */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          variants={sectionReveal}
-          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
-          style={{ isolation: "isolate" }}
-          id="agent"
-        >
-          <div className="text-center md:text-left mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
-              Deployment & Ingestion
+            <div className="mt-6 pt-4 border-t border-[#202020] flex items-center justify-between text-[11px] font-mono text-[#929292]">
+              <span>Captured via OpenTelemetry SDK</span>
+              <span className="text-[#36D399]">100% span coverage</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">The Zero-Friction Agent.</h2>
-            <p className="text-zinc-400 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">Connect any Python, Node, or Go service with our lightweight SDK. Sub-millisecond latency with end-to-end telemetry encryption.</p>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-stretch gap-6" style={{ perspective: "1400px" }}>
-            {/* Interactive 3D Spline Hardware Node */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1 min-h-[420px]"
-              style={{ isolation: "isolate", zIndex: 1 }}
+          {/* BENTO BLOCK 2: High-throughput eBPF Logs (5 cols) */}
+          <div className="lg:col-span-5 rounded-xl bg-[#101010] border border-[#202020] p-6 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-4 border-b border-[#202020] mb-4">
+                <div className="flex items-center gap-2">
+                  <Terminal size={16} className="text-[#36D399]" />
+                  <span className="font-semibold text-sm text-[#F5F5F5]">Kernel-level eBPF Logs</span>
+                </div>
+                <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-[#36D399]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#36D399] animate-pulse" />
+                  STREAMING
+                </span>
+              </div>
+
+              <p className="text-[13px] text-[#929292] mb-4">
+                Structured logs ingested at the network boundary without application bytecode overhead.
+              </p>
+
+              {/* Log Window */}
+              <div className="rounded-lg bg-[#050505] border border-[#202020] p-3 font-mono text-[11px] leading-relaxed space-y-2 text-[#929292]">
+                <div className="flex items-center gap-2">
+                  <span className="text-[#36D399]">INFO</span>
+                  <span className="text-[#5E5E5E]">18:42:01</span>
+                  <span className="text-[#F5F5F5]">route_dispatch 200 OK 1.4ms</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#F5B942]">WARN</span>
+                  <span className="text-[#5E5E5E]">18:42:02</span>
+                  <span className="text-[#F5B942]">pool saturation: 48/50 active</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#FF5252]">CRIT</span>
+                  <span className="text-[#5E5E5E]">18:42:03</span>
+                  <span className="text-[#FF5252]">socket timeout: payment_upstream</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#3985FF]">AUTO</span>
+                  <span className="text-[#5E5E5E]">18:42:04</span>
+                  <span className="text-[#9B7BFF]">mitigation: spawned +2 replicas</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-[#202020] text-[11px] font-mono text-[#929292] flex items-center justify-between">
+              <span>Ingestion throughput: 42.8k logs/sec</span>
+              <span className="text-[#3985FF]">Zero kernel drops</span>
+            </div>
+          </div>
+
+          {/* BENTO BLOCK 3: Service Dependency Mesh (5 cols) */}
+          <div className="lg:col-span-5 rounded-xl bg-[#101010] border border-[#202020] p-6 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-4 border-b border-[#202020] mb-4">
+                <div className="flex items-center gap-2">
+                  <Layers size={16} className="text-[#9B7BFF]" />
+                  <span className="font-semibold text-sm text-[#F5F5F5]">Automated Service Mesh</span>
+                </div>
+                <span className="font-mono text-[11px] text-[#929292]">Live topology</span>
+              </div>
+              <p className="text-[13px] text-[#929292] mb-5">
+                Dynamic dependency graphs generated autonomously from live TCP/HTTP traffic flows.
+              </p>
+
+              {/* Topology Matrix */}
+              <div className="grid grid-cols-2 gap-2 font-mono text-[11px]">
+                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
+                  <span className="text-[#929292] block text-[10px]">INGRESS</span>
+                  <span className="text-[#F5F5F5] font-semibold">Cloudflare → Envoy</span>
+                  <span className="text-[#36D399] block mt-1">✓ mTLS verified</span>
+                </div>
+                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
+                  <span className="text-[#929292] block text-[10px]">DATA LAYER</span>
+                  <span className="text-[#F5F5F5] font-semibold">PostgreSQL Mesh</span>
+                  <span className="text-[#36D399] block mt-1">✓ 0 replication lag</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-[#202020] text-[11px] font-mono text-[#929292]">
+              Graph refreshes every 1,000ms based on socket telemetry
+            </div>
+          </div>
+
+          {/* BENTO BLOCK 4: Deployment Delta Tracker (7 cols) */}
+          <div className="lg:col-span-7 rounded-xl bg-[#101010] border border-[#202020] p-6 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-4 border-b border-[#202020] mb-4">
+                <div className="flex items-center gap-2">
+                  <GitBranch size={16} className="text-[#36D399]" />
+                  <span className="font-semibold text-sm text-[#F5F5F5]">Deployment & Canary Delta Verification</span>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#36D399]/15 text-[#36D399] border border-[#36D399]/30">
+                  CANARY 100% VERIFIED
+                </span>
+              </div>
+              <p className="text-[13px] text-[#929292] mb-5">
+                Automatically measure performance deltas before and after every release commit to block regression spikes.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-[12px]">
+                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
+                  <span className="text-[10px] text-[#929292] block mb-1">LATENCY DELTA</span>
+                  <span className="text-base font-bold text-[#36D399]">-14.2ms</span>
+                  <span className="text-[10px] text-[#5E5E5E] block mt-1">Optimized query cache</span>
+                </div>
+                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
+                  <span className="text-[10px] text-[#929292] block mb-1">MEMORY FOOTPRINT</span>
+                  <span className="text-base font-bold text-[#F5F5F5]">142MB</span>
+                  <span className="text-[10px] text-[#5E5E5E] block mt-1">Within SLA limits</span>
+                </div>
+                <div className="p-3 rounded-lg bg-[#0A0A0A] border border-[#202020]">
+                  <span className="text-[10px] text-[#929292] block mb-1">STATUS</span>
+                  <span className="text-base font-bold text-[#36D399]">No regression</span>
+                  <span className="text-[10px] text-[#5E5E5E] block mt-1">Full rollout allowed</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-[#202020] flex items-center justify-between text-[11px] font-mono text-[#929292]">
+              <span>Commit: #8f2a1b9 verified against 14 staging scenarios</span>
+              <span className="text-[#3985FF]">CI/CD webhook hooked</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 4: REAL-TIME OPERATIONAL VISIBILITY
+   "Know what's happening across every layer."
+   ═══════════════════════════════════════════════════════════════ */
+function RealTimeVisibilitySection() {
+  const [activeTab, setActiveTab] = useState<"services" | "alerts" | "resources">("services");
+
+  return (
+    <section id="features" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#050505]">
+      <div className="max-w-[1360px] mx-auto">
+        
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="max-w-2xl text-left">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#3985FF] font-mono text-[10.5px] tracking-wider uppercase mb-4">
+              Real-time telemetry preview
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-3">
+              Know what's happening across every layer.
+            </h2>
+            <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed">
+              Consolidated operational telemetry covering container clusters, API gateways, database read replicas, and active alert rosters.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[#101010] border border-[#202020] self-start font-mono text-[12px]">
+            <button
+              onClick={() => setActiveTab("services")}
+              className={`px-3 py-1.5 rounded transition-colors ${
+                activeTab === "services" ? "bg-[#3985FF] text-white font-medium" : "text-[#929292] hover:text-[#F5F5F5]"
+              }`}
             >
-              <TiltCard className="h-full rounded-2xl bg-black border border-white/[0.08] p-6 flex flex-col justify-between relative overflow-hidden">
-                <div className="flex items-center justify-between z-10 mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-mono text-white">Interactive 3D Hardware Core</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider bg-white/[0.04] px-2 py-0.5 rounded border border-white/[0.06]">
-                    Spline 3D Scene
-                  </span>
-                </div>
-                
-                <div className="flex-1 w-full relative min-h-[280px]">
-                  <SplineScene />
-                </div>
-
-                <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-zinc-500 z-10">
-                  <span>mTLS Encrypted</span>
-                  <span>eBPF Telemetry</span>
-                  <span className="text-emerald-400">Zero Downtime</span>
-                </div>
-              </TiltCard>
-            </motion.div>
-
-            {/* Interactive SDK Terminal */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="flex-1 min-h-[420px]"
+              Services (6)
+            </button>
+            <button
+              onClick={() => setActiveTab("alerts")}
+              className={`px-3 py-1.5 rounded transition-colors ${
+                activeTab === "alerts" ? "bg-[#3985FF] text-white font-medium" : "text-[#929292] hover:text-[#F5F5F5]"
+              }`}
             >
-              <SdkTerminal />
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* ═══════════════════ REVIEWS ═══════════════════ */}
-        <ReviewsSection />
-
-        {/* ═══════════════════ FAQ SECTION ═══════════════════ */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={sectionReveal}
-          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
-          id="faq"
-        >
-          <div className="text-center md:text-left mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
-              Inquiries & Answers
-            </div>
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">Frequently asked questions.</h2>
-          </div>
-          <div className="max-w-3xl flex flex-col divide-y divide-white/[0.06]">
-            {faqs.map((faq, i) => (
-              <motion.div
-                key={i}
-                variants={itemReveal}
-                className="py-6"
-              >
-                <button
-                  onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
-                  className="w-full flex items-center justify-between text-left group focus:outline-none"
-                >
-                  <span className="text-base sm:text-lg font-normal text-zinc-300 group-hover:text-white transition-colors pr-8">{faq.q}</span>
-                  <motion.div
-                    animate={{ rotate: openFaqIndex === i ? 45 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-8 h-8 rounded-full border border-white/[0.1] flex items-center justify-center shrink-0 group-hover:bg-white/[0.05] transition-colors"
-                  >
-                    <Plus size={14} className="text-zinc-400" />
-                  </motion.div>
-                </button>
-                <AnimatePresence>
-                  {openFaqIndex === i && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <p className="text-zinc-400 text-sm leading-relaxed mt-4 pr-12 font-normal">{faq.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* ═══════════════════ PRICING SECTION ═══════════════════ */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={stagger}
-          className="w-full px-6 md:px-12 lg:px-24 mt-36 relative z-10"
-          id="pricing"
-        >
-          <motion.div variants={sectionReveal} className="text-center md:text-left mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono tracking-wider text-zinc-400 uppercase mb-6">
-              Pricing Plans
-            </div>
-            <h2 className="text-3xl md:text-5xl font-medium tracking-tight mb-4 text-white">Transparent scale. Zero surprise fees.</h2>
-            <p className="text-base sm:text-lg text-zinc-400 font-normal max-w-2xl leading-relaxed">Start on the free starter tier. Expand as your engineering throughput multiplies.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 [perspective:1200px]">
-            {/* Starter Plan */}
-            <motion.div variants={itemReveal} className="h-full">
-              <TiltCard className="h-full rounded-2xl bg-black border border-white/[0.08] p-8 flex flex-col hover:border-white/20 transition-all">
-                <h3 className="text-lg font-medium mb-1 text-white">Starter</h3>
-                <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Ideal for independent engineers and early prototypes.</p>
-                <div className="mb-8">
-                  <span className="text-4xl font-semibold text-white tracking-tight">$0</span>
-                  <span className="text-zinc-500 font-normal text-sm"> / month</span>
-                </div>
-                <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8 block">
-                  Start Free
-                </Link>
-                <div className="flex flex-col gap-3.5 mt-auto">
-                  <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">Tier Capabilities</div>
-                  {["2 Monitored Services", "15m Synthetic Probes", "Email & Webhook Alerts", "3 Workspace Seats", "Basic Issue Board"].map(f => (
-                    <div key={f} className="flex items-center gap-2.5 text-[13px] text-zinc-300">
-                      <Check size={14} className="text-zinc-400" /> {f}
-                    </div>
-                  ))}
-                </div>
-              </TiltCard>
-            </motion.div>
-
-            {/* Pro Plan */}
-            <motion.div variants={itemReveal} className="h-full">
-              <TiltCard className="h-full rounded-2xl bg-black border border-white/25 p-8 flex flex-col relative shadow-[0_12px_40px_rgba(0,0,0,0.9)] hover:border-white/40 transition-all">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-mono tracking-wider uppercase px-3.5 py-0.5 rounded-full font-semibold shadow-sm z-20">
-                  Most Deployed
-                </div>
-                <div className="relative z-10 flex flex-col h-full">
-                  <h3 className="text-lg font-medium mb-1 text-white">Pro Platform</h3>
-                  <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">For high-velocity startups requiring continuous telemetry & root-cause deduction.</p>
-                  <div className="mb-8">
-                    <span className="text-4xl font-semibold text-white tracking-tight">$49</span>
-                    <span className="text-zinc-400 font-normal text-sm"> / mo + $10/seat</span>
-                  </div>
-                  <Link href="/register" className="w-full bg-white text-black px-4 py-2.5 rounded-full font-medium hover:bg-zinc-200 transition-colors text-center text-sm mb-8 shadow-sm block">
-                    Deploy Pro Workspace
-                  </Link>
-                  <div className="flex flex-col gap-3.5 mt-auto">
-                    <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-400">Everything in Starter, plus</div>
-                    {["10 Monitored Services", "1m Probing Frequency", "WhatsApp, Slack, Discord Alerts", "Automated Root Cause AI", "30-Day Metric Retention"].map(f => (
-                      <div key={f} className="flex items-center gap-2.5 text-[13px] text-white">
-                        <Check size={14} className="text-white" /> {f}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </TiltCard>
-            </motion.div>
-
-            {/* Enterprise Plan */}
-            <motion.div variants={itemReveal} className="h-full">
-              <TiltCard className="h-full rounded-2xl bg-black border border-white/[0.08] p-8 flex flex-col hover:border-white/20 transition-all">
-                <h3 className="text-lg font-medium mb-1 text-white">Enterprise</h3>
-                <p className="text-zinc-400 text-[13px] mb-6 min-h-[36px]">Dedicated VPC peering, compliance guarantees, and high-volume workloads.</p>
-                <div className="mb-8">
-                  <span className="text-4xl font-semibold text-white tracking-tight">$299+</span>
-                  <span className="text-zinc-500 font-normal text-sm"> / month</span>
-                </div>
-                <Link href="/register" className="w-full bg-white/[0.05] border border-white/10 text-white px-4 py-2.5 rounded-full font-medium hover:bg-white/[0.1] transition-colors text-center text-sm mb-8 block">
-                  Inquire With Sales
-                </Link>
-                <div className="flex flex-col gap-3.5 mt-auto">
-                  <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">Everything in Pro, plus</div>
-                  {["Predictive Failure Warnings", "1-Year Full Trace Retention", "SAML SSO & Audit Logs", "24/7 Dedicated SRE Line", "Custom SLA & BAA"].map(f => (
-                    <div key={f} className="flex items-center gap-2.5 text-[13px] text-zinc-300">
-                      <Check size={14} className="text-zinc-400" /> {f}
-                    </div>
-                  ))}
-                </div>
-              </TiltCard>
-            </motion.div>
-          </div>
-        </motion.section>
-
-      </main>
-
-      {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="w-full border-t border-white/[0.08] bg-black py-10">
-        <div className="w-full px-6 md:px-12 lg:px-24 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <Logo className="h-3.5 text-zinc-400" />
-            <span className="text-zinc-600 font-mono text-xs">|</span>
-            <span className="text-zinc-500 text-xs font-mono">v2.4 Telemetry Engine</span>
-          </div>
-          <div className="flex flex-col items-center gap-1 text-center md:text-left">
-            <p className="text-xs text-zinc-500">© {new Date().getFullYear()} BREXAL. All rights reserved.</p>
-            <p className="text-[11px] text-zinc-600">A product by <span className="font-medium text-zinc-400">Bharti Nexus Technologies</span>.</p>
-          </div>
-          <div className="flex gap-6 text-xs font-mono text-zinc-500">
-            <Link href="#" className="hover:text-zinc-300 transition-colors">Documentation</Link>
-            <Link href="#" className="hover:text-zinc-300 transition-colors">GitHub</Link>
-            <Link href="#" className="hover:text-zinc-300 transition-colors">Status</Link>
+              Latest alerts (2)
+            </button>
+            <button
+              onClick={() => setActiveTab("resources")}
+              className={`px-3 py-1.5 rounded transition-colors ${
+                activeTab === "resources" ? "bg-[#3985FF] text-white font-medium" : "text-[#929292] hover:text-[#F5F5F5]"
+              }`}
+            >
+              Infra nodes
+            </button>
           </div>
         </div>
-      </footer>
+
+        {/* Dashboard Shell */}
+        <div className="rounded-xl bg-[#0A0A0A] border border-[#202020] overflow-hidden shadow-2xl">
+          
+          {/* Top Operational Bar */}
+          <div className="px-6 py-4 bg-[#101010] border-b border-[#202020] flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3 font-mono text-[12px]">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#36D399]" />
+                <span className="text-[#F5F5F5] font-semibold">Multi-region mesh</span>
+              </div>
+              <span className="text-[#5E5E5E]">|</span>
+              <span className="text-[#929292]">Latency p99: 1.4ms</span>
+              <span className="text-[#5E5E5E]">|</span>
+              <span className="text-[#929292]">SLA: 99.98%</span>
+            </div>
+            
+            <div className="flex items-center gap-2 font-mono text-[10px] text-[#5E5E5E] tracking-wider uppercase">
+              <span>ILLUSTRATIVE TELEMETRY</span>
+              <span className="px-1.5 py-0.5 rounded bg-[#202020] text-[#929292]">LIVE SIMULATION</span>
+            </div>
+          </div>
+
+          {/* Conditional Views based on Tab */}
+          <div className="p-6">
+            {activeTab === "services" && (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left font-mono text-[12.5px]">
+                  <thead>
+                    <tr className="border-b border-[#202020] text-[#929292] text-[11px] tracking-wider uppercase">
+                      <th className="pb-3 font-medium">Service name</th>
+                      <th className="pb-3 font-medium">Layer</th>
+                      <th className="pb-3 font-medium">Status</th>
+                      <th className="pb-3 font-medium text-right">P99 Latency</th>
+                      <th className="pb-3 font-medium text-right">Error %</th>
+                      <th className="pb-3 font-medium text-right">Throughput</th>
+                      <th className="pb-3 font-medium text-right">Checked</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#202020]">
+                    {SAMPLE_SERVICES.map((srv, i) => (
+                      <tr key={i} className="hover:bg-[#101010]/60 transition-colors">
+                        <td className="py-3.5 text-[#F5F5F5] font-semibold flex items-center gap-2">
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              srv.status === "operational"
+                                ? "bg-[#36D399]"
+                                : srv.status === "degraded"
+                                ? "bg-[#F5B942] animate-pulse"
+                                : "bg-[#FF5252]"
+                            }`}
+                          />
+                          {srv.name}
+                        </td>
+                        <td className="py-3.5 text-[#929292] uppercase text-[10px]">{srv.category}</td>
+                        <td className="py-3.5">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
+                              srv.status === "operational"
+                                ? "bg-[#36D399]/10 text-[#36D399]"
+                                : "bg-[#F5B942]/10 text-[#F5B942]"
+                            }`}
+                          >
+                            {srv.status}
+                          </span>
+                        </td>
+                        <td className="py-3.5 text-right text-[#F5F5F5]">{srv.latency}</td>
+                        <td className={`py-3.5 text-right font-semibold ${srv.errorRate === "0.000%" ? "text-[#929292]" : "text-[#FF5252]"}`}>
+                          {srv.errorRate}
+                        </td>
+                        <td className="py-3.5 text-right text-[#3985FF]">{srv.rps}</td>
+                        <td className="py-3.5 text-right text-[#5E5E5E]">{srv.checked}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {activeTab === "alerts" && (
+              <div className="space-y-3 font-mono text-[12px]">
+                <div className="p-4 rounded-lg bg-[#101010] border border-[#FF5252]/40 flex items-start justify-between">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle size={18} className="text-[#FF5252] shrink-0 mt-0.5" />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[#FF5252] font-semibold">P0 CRITICAL</span>
+                        <span className="text-[#F5F5F5]">Connection pool exhaustion on payment-worker-pool</span>
+                      </div>
+                      <p className="text-[#929292] text-[11px] mt-1 font-sans">
+                        Active connections reached 49/50 limit. Request queue latency climbed from 12ms to 142ms.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[11px] text-[#929292]">2m ago</span>
+                </div>
+
+                <div className="p-4 rounded-lg bg-[#101010] border border-[#F5B942]/30 flex items-start justify-between">
+                  <div className="flex items-start gap-3">
+                    <Activity size={18} className="text-[#F5B942] shrink-0 mt-0.5" />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[#F5B942] font-semibold">P2 WARNING</span>
+                        <span className="text-[#F5F5F5]">Memory headroom threshold reached on node-worker-03</span>
+                      </div>
+                      <p className="text-[#929292] text-[11px] mt-1 font-sans">
+                        Heap usage exceeded 85% of allocated Kubernetes cgroup limit. Auto-scaling pod scheduled.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[11px] text-[#929292]">14m ago</span>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "resources" && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
+                <div className="p-4 rounded-lg bg-[#101010] border border-[#202020]">
+                  <div className="flex items-center justify-between text-[11px] text-[#929292] mb-2">
+                    <span>CPU ALLOCATION</span>
+                    <Cpu size={14} className="text-[#3985FF]" />
+                  </div>
+                  <div className="text-2xl font-bold text-[#F5F5F5]">44.2%</div>
+                  <div className="h-1.5 w-full bg-[#202020] rounded-full overflow-hidden mt-3">
+                    <div className="h-full bg-[#3985FF] rounded-full" style={{ width: "44.2%" }} />
+                  </div>
+                  <span className="text-[10px] text-[#5E5E5E] block mt-2">16 vCPUs active across 3 clusters</span>
+                </div>
+
+                <div className="p-4 rounded-lg bg-[#101010] border border-[#202020]">
+                  <div className="flex items-center justify-between text-[11px] text-[#929292] mb-2">
+                    <span>MEMORY COMMIT</span>
+                    <HardDrive size={14} className="text-[#36D399]" />
+                  </div>
+                  <div className="text-2xl font-bold text-[#F5F5F5]">62.8%</div>
+                  <div className="h-1.5 w-full bg-[#202020] rounded-full overflow-hidden mt-3">
+                    <div className="h-full bg-[#36D399] rounded-full" style={{ width: "62.8%" }} />
+                  </div>
+                  <span className="text-[10px] text-[#5E5E5E] block mt-2">40.2 GB / 64 GB provisioned</span>
+                </div>
+
+                <div className="p-4 rounded-lg bg-[#101010] border border-[#202020]">
+                  <div className="flex items-center justify-between text-[11px] text-[#929292] mb-2">
+                    <span>NETWORK I/O</span>
+                    <Wifi size={14} className="text-[#9B7BFF]" />
+                  </div>
+                  <div className="text-2xl font-bold text-[#F5F5F5]">3.4 Gbps</div>
+                  <div className="h-1.5 w-full bg-[#202020] rounded-full overflow-hidden mt-3">
+                    <div className="h-full bg-[#9B7BFF] rounded-full" style={{ width: "34%" }} />
+                  </div>
+                  <span className="text-[10px] text-[#5E5E5E] block mt-2">0 packet drops recorded</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Bottom Latency Chart Visual */}
+          <div className="p-6 bg-[#050505] border-t border-[#202020]">
+            <div className="flex items-center justify-between mb-3 font-mono text-[11px] text-[#929292]">
+              <span>API RESPONSE TIME (P99 • MULTI-REGION MESH)</span>
+              <span className="text-[#3985FF]">SAMPLED LAST 30 DAYS</span>
+            </div>
+            
+            <div className="h-28 w-full border-b border-l border-[#202020] relative">
+              <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                <path
+                  d="M0,85 L15,80 L30,82 L45,55 L60,62 L75,30 L90,38 L100,18"
+                  fill="none"
+                  stroke="#3985FF"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute top-0 -left-9 text-[10px] font-mono text-[#5E5E5E]">12ms</div>
+              <div className="absolute bottom-0 -left-7 text-[10px] font-mono text-[#5E5E5E]">0ms</div>
+              <div className="absolute -bottom-5 left-0 text-[10px] font-mono text-[#5E5E5E]">Day 1</div>
+              <div className="absolute -bottom-5 right-0 text-[10px] font-mono text-[#5E5E5E]">Day 30</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 5: AI-POWERED INTELLIGENCE
+   "From detecting anomalies to understanding why."
+   ═══════════════════════════════════════════════════════════════ */
+function AiIntelligenceSection() {
+  return (
+    <section id="solutions" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#0A0A0A]">
+      <div className="max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        
+        {/* LEFT: Capabilities list & explanation */}
+        <div className="lg:col-span-6 flex flex-col text-left">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#9B7BFF] font-mono text-[10.5px] tracking-wider uppercase mb-4 self-start">
+            <Sparkles size={12} />
+            AI Root Cause Engine
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-6">
+            From detecting anomalies to understanding why.
+          </h2>
+
+          <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed mb-8">
+            Traditional monitoring alerts you when thresholds fail. BREXAL correlates time-series telemetry with code deployments, identifying the exact commit, database transaction, or external dependency causing the incident.
+          </p>
+
+          <div className="space-y-4 font-sans">
+            {[
+              { title: "AI anomaly detection", desc: "Learns seasonal traffic baselines without manual alert threshold tuning." },
+              { title: "Automated root cause analysis", desc: "Traces error spikes to the underlying commit hash or database lock." },
+              { title: "Predictive maintenance", desc: "Forecasts disk saturation and memory leaks days before customer impact." },
+              { title: "Autonomous remediation with approval safeguards", desc: "Suggests tested patch diffs while keeping humans fully in control." },
+            ].map((item, idx) => (
+              <div key={idx} className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded bg-[#101010] border border-[#202020] flex items-center justify-center text-[#3985FF] shrink-0 mt-0.5">
+                  <Check size={12} />
+                </div>
+                <div>
+                  <h4 className="text-[14px] font-semibold text-[#F5F5F5]">{item.title}</h4>
+                  <p className="text-[12.5px] text-[#929292] leading-relaxed mt-0.5">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT: Anomaly to RCA Technical Breakdown */}
+        <div className="lg:col-span-6 w-full">
+          <div className="rounded-xl bg-[#101010] border border-[#202020] p-6 shadow-2xl flex flex-col gap-4">
+            
+            {/* Stage 1: Anomaly Detected */}
+            <div className="p-3.5 rounded-lg bg-[#0A0A0A] border border-[#F5B942]/30 flex items-start gap-3">
+              <span className="w-2 h-2 rounded-full bg-[#F5B942] animate-pulse mt-1 shrink-0" />
+              <div className="flex-1 font-mono text-[11.5px]">
+                <div className="flex items-center justify-between">
+                  <span className="text-[#F5B942] font-semibold">STAGE 1: ANOMALY ISOLATED</span>
+                  <span className="text-[#5E5E5E]">T + 0.4s</span>
+                </div>
+                <p className="text-[#F5F5F5] mt-1 font-sans text-[12.5px]">
+                  Unusual 8x latency jump on <code className="text-[#3985FF] font-mono">/v2/payment/charge</code> endpoint.
+                </p>
+              </div>
+            </div>
+
+            {/* Stage 2: Correlation with Deployment */}
+            <div className="p-3.5 rounded-lg bg-[#0A0A0A] border border-[#3985FF]/30 flex items-start gap-3">
+              <GitCommit size={15} className="text-[#3985FF] mt-0.5 shrink-0" />
+              <div className="flex-1 font-mono text-[11.5px]">
+                <div className="flex items-center justify-between">
+                  <span className="text-[#3985FF] font-semibold">STAGE 2: COMMIT CORRELATION</span>
+                  <span className="text-[#5E5E5E]">T + 1.2s</span>
+                </div>
+                <p className="text-[#F5F5F5] mt-1 font-sans text-[12.5px]">
+                  Deployment <span className="font-mono text-[#3985FF]">#8f2a1b9</span> introduced unbuffered WebSocket reconnect loop.
+                </p>
+              </div>
+            </div>
+
+            {/* Stage 3: Suggested Remediation vs Executed Action */}
+            <div className="p-4 rounded-lg bg-[#050505] border border-[#202020] flex flex-col gap-3 font-mono text-[11px]">
+              <div className="flex items-center justify-between pb-2 border-b border-[#202020]">
+                <span className="text-[#9B7BFF] font-semibold">STAGE 3: REMEDIATION DIFF</span>
+                <span className="text-[#36D399]">CONFIDENCE: 98.4%</span>
+              </div>
+
+              <div className="text-[#929292] leading-relaxed">
+                <div>142 |  async def handle_connection(ws, client_id):</div>
+                <div className="bg-[#FF5252]/10 text-[#FF5252] px-2 py-0.5 rounded my-0.5">
+                  -     await ws.send_text(await get_unbounded_stream())
+                </div>
+                <div className="bg-[#36D399]/10 text-[#36D399] px-2 py-0.5 rounded my-0.5">
+                  +     await ws.send_text(await get_bounded_stream(max_buf=512))
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-[#202020] flex items-center justify-between">
+                <span className="text-[10px] text-[#5E5E5E]">Action requires on-call engineer approval</span>
+                <span className="px-2 py-0.5 rounded bg-[#3985FF] text-white text-[10px] font-semibold">
+                  AUDITED SAFEGUARD
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 6: COMPLETE OBSERVABILITY STACK
+   "Every signal. One connected view."
+   ═══════════════════════════════════════════════════════════════ */
+function CompleteStackSection() {
+  const capabilities = [
+    { name: "Application Performance Monitoring", desc: "Code-level profiling, P99 request latency, and automated garbage-collection analysis.", icon: Activity },
+    { name: "Infrastructure Monitoring", desc: "Kubernetes pod resource allocation, host-level CPU/memory, and bare-metal disk IOPS.", icon: Server },
+    { name: "Centralized Log Management", desc: "High-throughput log indexing without per-gigabyte penalization or indexing delays.", icon: Terminal },
+    { name: "Distributed Tracing", desc: "End-to-end request tracing across multi-cloud clusters and heterogeneous microservices.", icon: Network },
+    { name: "Cloud & Container Telemetry", desc: "Native integrations for Docker, AWS ECS, Google Cloud GKE, and Azure Kubernetes.", icon: Layers },
+    { name: "Automated Dependency Mapping", desc: "Zero-configuration topological graphs derived directly from kernel socket inspection.", icon: Radio },
+  ];
+
+  return (
+    <section id="stack" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#050505]">
+      <div className="max-w-[1360px] mx-auto">
+        
+        {/* Section Header */}
+        <div className="max-w-2xl mb-16 text-left">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#3985FF] font-mono text-[10.5px] tracking-wider uppercase mb-4">
+            Unified Architecture
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-4">
+            Every signal. One connected view.
+          </h2>
+          <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed">
+            Eliminate fragmented observability silos. BREXAL delivers a single pipeline for telemetry ingestion, correlation, and resolution.
+          </p>
+        </div>
+
+        {/* Structured Technical Capability Grid (Asymmetric & Diversified) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {capabilities.map((cap, i) => {
+            const Icon = cap.icon;
+            return (
+              <div
+                key={i}
+                className="p-6 rounded-xl bg-[#0A0A0A] border border-[#202020] hover:border-[#2E2E2E] transition-all flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="w-9 h-9 rounded-lg bg-[#101010] border border-[#202020] flex items-center justify-center text-[#3985FF] mb-5 group-hover:border-[#3985FF]/40 transition-colors">
+                    <Icon size={18} />
+                  </div>
+                  <h3 className="text-lg font-semibold text-[#F5F5F5] mb-2 font-display">{cap.name}</h3>
+                  <p className="text-[13px] text-[#929292] leading-relaxed font-sans">{cap.desc}</p>
+                </div>
+                
+                <div className="mt-6 pt-4 border-t border-[#202020] flex items-center justify-between text-[11px] font-mono text-[#5E5E5E] group-hover:text-[#929292] transition-colors">
+                  <span>CAPABILITY // 0{i + 1}</span>
+                  <ArrowRight size={13} className="text-[#3985FF] opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 7: INCIDENT RESPONSE WORKFLOW
+   "Reduce the distance between detection and resolution."
+   ═══════════════════════════════════════════════════════════════ */
+function IncidentResponseSection() {
+  const steps = [
+    { stage: "01", name: "Detection", time: "00:00", detail: "eBPF probe detects memory leak anomaly on payment-worker-pool.", badge: "P0 CRITICAL", color: "text-[#FF5252]" },
+    { stage: "02", name: "Investigation", time: "+00:12s", detail: "Automated correlation links error burst to commit #8f2a1b9 in staging.", badge: "AUTO-LINKED", color: "text-[#3985FF]" },
+    { stage: "03", name: "Root cause", time: "+00:38s", detail: "Unbounded buffer recursion isolated in websocket_handler.py line 142.", badge: "ISOLATED", color: "text-[#9B7BFF]" },
+    { stage: "04", name: "Remediation", time: "+01:15s", detail: "Suggested patch generated and validated against staging test harness.", badge: "READY", color: "text-[#F5B942]" },
+    { stage: "05", name: "Resolution", time: "+01:45s", detail: "Canary rollout completed with zero dropped customer transactions.", badge: "RESOLVED", color: "text-[#36D399]" },
+  ];
+
+  return (
+    <section id="incident-response" className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#0A0A0A]">
+      <div className="max-w-[1360px] mx-auto">
+        
+        {/* Section Header */}
+        <div className="max-w-2xl mb-16 text-left">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#101010] border border-[#202020] text-[#36D399] font-mono text-[10.5px] tracking-wider uppercase mb-4">
+            Autonomous MTTR Reduction
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-4">
+            Reduce the distance between detection and resolution.
+          </h2>
+          <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed">
+            Every minute of downtime damages user trust. Follow the five-step autonomous incident lifecycle that compresses mean time to recovery from hours to under two minutes.
+          </p>
+        </div>
+
+        {/* 5-Step Connected Timeline */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+          {steps.map((st, i) => (
+            <div
+              key={i}
+              className="p-5 rounded-xl bg-[#101010] border border-[#202020] flex flex-col justify-between relative overflow-hidden"
+            >
+              <div>
+                <div className="flex items-center justify-between pb-3 border-b border-[#202020] mb-3 font-mono text-[11px]">
+                  <span className="text-[#3985FF] font-bold">{st.stage}</span>
+                  <span className="text-[#929292]">{st.time}</span>
+                </div>
+                <h4 className="text-base font-semibold text-[#F5F5F5] mb-1 font-display">{st.name}</h4>
+                <p className="text-[12px] text-[#929292] leading-relaxed font-sans">{st.detail}</p>
+              </div>
+
+              <div className="mt-6 pt-3 border-t border-[#202020]">
+                <span className={`text-[10px] font-mono font-semibold ${st.color}`}>
+                  {st.badge}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 8: MINIMAL ENTERPRISE FINAL CTA
+   "Your systems move fast. Your intelligence should move faster."
+   ═══════════════════════════════════════════════════════════════ */
+function FinalCtaSection() {
+  return (
+    <section className="py-24 md:py-32 px-6 sm:px-10 border-b border-[#202020] bg-[#050505]">
+      <div className="max-w-[1000px] mx-auto text-center flex flex-col items-center">
+        
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#F5F5F5] leading-tight font-display mb-5">
+          Your systems move fast. Your intelligence should move faster.
+        </h2>
+
+        <p className="text-base sm:text-lg text-[#929292] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
+          Bring monitoring, investigation, and incident response into one connected platform built for modern engineering teams.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <Link
+            href="/register"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-[#F5F5F5] text-[#050505] text-[14px] font-semibold hover:bg-white transition-all shadow-md focus:ring-2 focus:ring-[#3985FF]"
+          >
+            Request early access
+          </Link>
+          <Link
+            href="/login"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-lg bg-[#101010] border border-[#202020] text-[#F5F5F5] text-[14px] font-medium hover:bg-[#151515] transition-colors"
+          >
+            Sign in to console
+          </Link>
+        </div>
+
+        <span className="font-mono text-[11px] text-[#5E5E5E] mt-6">
+          SOC-2 Type II Certified • Zero Telemetry Lock-in • OpenTelemetry Native
+        </span>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 9: ENTERPRISE FOOTER
+   Bharti Nexus Technologies branding & compliance
+   ═══════════════════════════════════════════════════════════════ */
+function EnterpriseFooter() {
+  return (
+    <footer className="py-16 px-6 sm:px-10 bg-[#050505] text-[#929292] font-sans">
+      <div className="max-w-[1360px] mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 pb-16 border-b border-[#202020]">
+          
+          {/* Brand Info (Col 1) */}
+          <div className="col-span-2 flex flex-col items-start">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-7 h-7 rounded-lg bg-[#101010] border border-[#202020] flex items-center justify-center text-[#3985FF]">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+              </div>
+              <Logo className="h-4 text-[#F5F5F5]" />
+            </div>
+            <p className="text-[13px] text-[#929292] leading-relaxed max-w-sm mb-4">
+              BREXAL is an AI-powered observability and incident response platform developed by Bharti Nexus Technologies.
+            </p>
+            <div className="font-mono text-[11px] text-[#5E5E5E]">
+              Intelligence, engineered to move.
+            </div>
+          </div>
+
+          {/* Platform Capabilities (Col 2) */}
+          <div className="flex flex-col gap-2.5 text-[13px]">
+            <span className="font-mono text-[11px] font-semibold text-[#F5F5F5] uppercase tracking-wider mb-2">
+              Platform
+            </span>
+            <Link href="#platform" className="hover:text-[#F5F5F5] transition-colors">APM & Metrics</Link>
+            <Link href="#platform" className="hover:text-[#F5F5F5] transition-colors">Infrastructure</Link>
+            <Link href="#platform" className="hover:text-[#F5F5F5] transition-colors">Distributed Tracing</Link>
+            <Link href="#solutions" className="hover:text-[#F5F5F5] transition-colors">AI Copilot</Link>
+            <Link href="#features" className="hover:text-[#F5F5F5] transition-colors">Incident Manager</Link>
+          </div>
+
+          {/* Solutions (Col 3) */}
+          <div className="flex flex-col gap-2.5 text-[13px]">
+            <span className="font-mono text-[11px] font-semibold text-[#F5F5F5] uppercase tracking-wider mb-2">
+              Solutions
+            </span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">DevOps Teams</span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Site Reliability Engineers</span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Platform Engineering</span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Cloud Migration</span>
+          </div>
+
+          {/* Resources & Legal (Col 4) */}
+          <div className="flex flex-col gap-2.5 text-[13px]">
+            <span className="font-mono text-[11px] font-semibold text-[#F5F5F5] uppercase tracking-wider mb-2">
+              Resources
+            </span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Documentation</span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">API Reference</span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Terms of Service</span>
+            <span className="hover:text-[#F5F5F5] transition-colors cursor-pointer">Security & SOC-2</span>
+          </div>
+        </div>
+
+        {/* Bottom Attribution */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-[#5E5E5E] gap-4">
+          <div>
+            © {new Date().getFullYear()} Bharti Nexus Technologies. All rights reserved.
+          </div>
+          <div className="flex items-center gap-4">
+            <span>Server status: Nominal</span>
+            <span>•</span>
+            <span>Edge latency: 1.4ms</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN LANDING PAGE EXPORT
+   ═══════════════════════════════════════════════════════════════ */
+export default function LandingPage() {
+  return (
+    <div className="min-h-screen bg-[#050505] text-[#F5F5F5] selection:bg-[#3985FF]/20 selection:text-white">
+      {/* 1. Minimal Navigation */}
+      <Navigation />
+
+      <main>
+        {/* 2. Asymmetric Hero */}
+        <HeroSection />
+
+        {/* 3. Operational Intelligence Bento */}
+        <OperationalIntelligenceSection />
+
+        {/* 4. Real-time Visibility Dashboard Preview */}
+        <RealTimeVisibilitySection />
+
+        {/* 5. AI-Powered Intelligence */}
+        <AiIntelligenceSection />
+
+        {/* 6. Complete Observability Stack */}
+        <CompleteStackSection />
+
+        {/* 7. Incident Response Workflow */}
+        <IncidentResponseSection />
+
+        {/* 8. Final CTA */}
+        <FinalCtaSection />
+      </main>
+
+      {/* 9. Enterprise Footer */}
+      <EnterpriseFooter />
     </div>
   );
 }
