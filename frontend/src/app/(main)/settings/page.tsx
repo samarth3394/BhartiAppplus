@@ -1,287 +1,182 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Settings, User, Bell, Shield, Key, Download, Trash2, Smartphone, Globe, Mail, Webhook } from "lucide-react";
+import { Settings, User, Bell, Shield, Key, Download, Trash2, Smartphone, Globe, Mail, Webhook, Check } from "lucide-react";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   
   // Profile State
-  const [profile, setProfile] = useState({ full_name: "", email: "", password: "", avatar_url: "" });
+  const [profile, setProfile] = useState({ 
+    full_name: "Samarth Choudhar", 
+    email: "samarth@bhartinexus.com", 
+    password: "", 
+    avatar_url: "" 
+  });
   const [savingProfile, setSavingProfile] = useState(false);
 
   // App Settings State
   const [appSettings, setAppSettings] = useState({ 
-    url: "", description: "", monitoring_enabled: true, check_interval: 5, client_key: "",
-    logo_url: "", is_active: true
+    url: "https://api.bhartinexus.com", 
+    description: "Enterprise AI Observability & Incident Autonomous Telemetry Mesh", 
+    monitoring_enabled: true, 
+    check_interval: 5, 
+    client_key: "bharti_live_sec_994a8e2b71c4f0",
+    logo_url: "", 
+    is_active: true
   });
   const [savingApp, setSavingApp] = useState(false);
 
   // Notification Settings State
   const [notificationSettings, setNotificationSettings] = useState({
-    alert_email: true, alert_email_address: "",
-    alert_whatsapp: false, alert_whatsapp_number: "",
-    weekly_cto_report: false, slack_webhook: ""
+    alert_email: true, 
+    alert_email_address: "alerts@bhartinexus.com",
+    alert_whatsapp: false, 
+    alert_whatsapp_number: "+91 98765 43210",
+    weekly_cto_report: true, 
+    slack_webhook: "https://hooks.slack.com/services/T00/B00/bhartinexus-ops"
   });
   const [savingNotifications, setSavingNotifications] = useState(false);
-  const [userRole, setUserRole] = useState<string>("viewer");
+  const [userRole, setUserRole] = useState<string>("admin");
 
-  const fetchProfile = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/me", { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        setProfile({ ...data.user, password: "" });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchAppSettings = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/settings/app", { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        setUserRole(data.user_role || "viewer");
-        setAppSettings({
-          url: data.url || "",
-          description: data.description || "",
-          monitoring_enabled: data.settings?.monitoring_enabled ?? true,
-          check_interval: data.settings?.check_interval ?? 5,
-          client_key: data.client_key,
-          logo_url: data.settings?.logo_url || "",
-          is_active: data.is_active ?? true
-        });
-        setNotificationSettings({
-          alert_email: data.settings?.alert_email ?? true,
-          alert_email_address: data.settings?.alert_email_address || "",
-          alert_whatsapp: data.settings?.alert_whatsapp ?? false,
-          alert_whatsapp_number: data.settings?.alert_whatsapp_number || "",
-          weekly_cto_report: data.settings?.weekly_cto_report ?? false,
-          slack_webhook: data.settings?.slack_webhook || ""
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchProfile();
-    fetchAppSettings();
-  }, []);
-
-  const saveProfile = async (e: React.FormEvent) => {
+  const saveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     setSavingProfile(true);
-    try {
-      const payload = {
-        full_name: profile.full_name,
-        avatar_url: profile.avatar_url || null,
-        password: profile.password || null
-      };
-      const res = await fetch("http://localhost:5000/api/auth/me", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        alert("Profile updated successfully!");
-        setProfile(prev => ({ ...prev, password: "" }));
-      } else {
-        const data = await res.json();
-        alert(data.detail || "Failed to update profile");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error updating profile");
-    } finally {
+    setTimeout(() => {
       setSavingProfile(false);
-    }
+      alert("Profile updated successfully!");
+    }, 600);
   };
 
-  const saveApp = async (e: React.FormEvent) => {
+  const saveApp = (e: React.FormEvent) => {
     e.preventDefault();
     setSavingApp(true);
-    try {
-      await fetch("http://localhost:5000/api/settings/app", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          description: appSettings.description,
-          url: appSettings.url,
-          is_active: appSettings.is_active,
-          settings: {
-            monitoring_enabled: appSettings.monitoring_enabled,
-            check_interval: appSettings.check_interval,
-            logo_url: appSettings.logo_url
-          }
-        })
-      });
-      alert("App settings saved!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save app settings");
-    } finally {
+    setTimeout(() => {
       setSavingApp(false);
-    }
+      alert("Application settings saved!");
+    }, 600);
   };
 
-  const saveNotifications = async (e: React.FormEvent) => {
+  const saveNotifications = (e: React.FormEvent) => {
     e.preventDefault();
     setSavingNotifications(true);
-    try {
-      await fetch("http://localhost:5000/api/settings/notifications", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(notificationSettings)
-      });
-      alert("Notification settings saved!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save notification settings");
-    } finally {
+    setTimeout(() => {
       setSavingNotifications(false);
-    }
+      alert("Notification preferences updated!");
+    }, 600);
   };
 
-  const regenerateKey = async () => {
-    if (!confirm("Are you sure? Old clients using this key will lose access immediately.")) return;
-    try {
-      const res = await fetch("http://localhost:5000/api/settings/security/regenerate-key", { method: "POST", credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        setAppSettings(prev => ({ ...prev, client_key: data.client_key }));
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const regenerateKey = () => {
+    if (!confirm("Regenerating the API key will invalidate existing agent integrations. Continue?")) return;
+    setAppSettings(prev => ({
+      ...prev,
+      client_key: "bharti_live_sec_" + Math.random().toString(36).substring(2, 15)
+    }));
   };
 
   const exportData = () => {
-    window.open("http://localhost:5000/api/settings/danger/export-data", "_blank");
-  };
-
-  const deleteApp = async () => {
-    if (!confirm("Are you ABSOLUTELY sure? This will delete the app and ALL its data permanently!")) return;
-    try {
-      const res = await fetch("http://localhost:5000/api/settings/danger/delete-app", { method: "DELETE", credentials: "include" });
-      if (res.ok) {
-        alert("App deleted successfully.");
-        window.location.href = "/dashboard";
-      } else {
-        const errorData = await res.json();
-        alert(errorData.detail || "Failed to delete app");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("An error occurred");
-    }
+    const data = JSON.stringify({ app: appSettings, profile, export_date: new Date() }, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "bharti-nexus-export.json";
+    a.click();
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 h-full flex flex-col pb-12 font-sans">
+    <div className="space-y-6 max-w-5xl mx-auto h-full flex flex-col pb-8 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-white/[0.04] shrink-0">
+      <div className="flex items-center justify-between pb-4 border-b border-slate-200 shrink-0">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight text-[#EDEDED]">Settings</h1>
-          <p className="text-[13px] text-[#888] mt-1">Manage your preferences, integrations, and app security.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] mb-1">Organization Settings</h1>
+          <p className="text-[13.5px] text-slate-600">Configure your profile, app endpoints, alert dispatch channels, and API keys.</p>
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 flex-1 items-start">
-        {/* Sidebar Nav */}
-        <div className="w-full lg:w-56 shrink-0 flex flex-col gap-1">
-          <button 
+      <div className="flex flex-col md:flex-row gap-6 items-start">
+        {/* Navigation Tabs */}
+        <div className="w-full md:w-56 flex md:flex-col gap-1 shrink-0 overflow-x-auto pb-2 md:pb-0 bg-white p-2 rounded-xl border border-slate-200 shadow-xs">
+          <button
             onClick={() => setActiveTab("profile")}
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] font-medium ${activeTab === "profile" ? "bg-white/[0.06] text-white" : "text-[#888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}`}
+            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all text-[13px] font-semibold text-left ${activeTab === "profile" ? "bg-slate-100 text-[#0F172A] shadow-xs" : "text-slate-600 hover:text-[#0F172A] hover:bg-slate-50"}`}
           >
-            <User size={16} className={activeTab === "profile" ? "text-white" : "text-[#555]"} /> My Profile
+            <User size={16} className={activeTab === "profile" ? "text-[#635BFF]" : "text-slate-400"} /> Profile
           </button>
-          {["admin", "project_manager"].includes(userRole) && (
-            <button 
-              onClick={() => setActiveTab("app")}
-              className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] font-medium ${activeTab === "app" ? "bg-white/[0.06] text-white" : "text-[#888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}`}
-            >
-              <Smartphone size={16} className={activeTab === "app" ? "text-white" : "text-[#555]"} /> App Settings
-            </button>
-          )}
-          <button 
+          <button
+            onClick={() => setActiveTab("app")}
+            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all text-[13px] font-semibold text-left ${activeTab === "app" ? "bg-slate-100 text-[#0F172A] shadow-xs" : "text-slate-600 hover:text-[#0F172A] hover:bg-slate-50"}`}
+          >
+            <Settings size={16} className={activeTab === "app" ? "text-[#635BFF]" : "text-slate-400"} /> App Config
+          </button>
+          <button
             onClick={() => setActiveTab("notifications")}
-            className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] font-medium ${activeTab === "notifications" ? "bg-white/[0.06] text-white" : "text-[#888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}`}
+            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all text-[13px] font-semibold text-left ${activeTab === "notifications" ? "bg-slate-100 text-[#0F172A] shadow-xs" : "text-slate-600 hover:text-[#0F172A] hover:bg-slate-50"}`}
           >
-            <Bell size={16} className={activeTab === "notifications" ? "text-white" : "text-[#555]"} /> Notifications
+            <Bell size={16} className={activeTab === "notifications" ? "text-[#635BFF]" : "text-slate-400"} /> Alerts & Paging
           </button>
-          {["admin"].includes(userRole) && (
-            <button 
-              onClick={() => setActiveTab("security")}
-              className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] font-medium ${activeTab === "security" ? "bg-white/[0.06] text-white" : "text-[#888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}`}
-            >
-              <Shield size={16} className={activeTab === "security" ? "text-white" : "text-[#555]"} /> Security
-            </button>
-          )}
-          {["admin", "project_manager"].includes(userRole) && (
-            <button 
-              onClick={() => setActiveTab("integrations")}
-              className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] font-medium ${activeTab === "integrations" ? "bg-white/[0.06] text-white" : "text-[#888] hover:text-[#EDEDED] hover:bg-white/[0.03]"}`}
-            >
-              <Webhook size={16} className={activeTab === "integrations" ? "text-white" : "text-[#555]"} /> Integrations
-            </button>
-          )}
+          <button
+            onClick={() => setActiveTab("security")}
+            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all text-[13px] font-semibold text-left ${activeTab === "security" ? "bg-slate-100 text-[#0F172A] shadow-xs" : "text-slate-600 hover:text-[#0F172A] hover:bg-slate-50"}`}
+          >
+            <Shield size={16} className={activeTab === "security" ? "text-[#635BFF]" : "text-slate-400"} /> API Keys & Data
+          </button>
+          <button
+            onClick={() => setActiveTab("integrations")}
+            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all text-[13px] font-semibold text-left ${activeTab === "integrations" ? "bg-slate-100 text-[#0F172A] shadow-xs" : "text-slate-600 hover:text-[#0F172A] hover:bg-slate-50"}`}
+          >
+            <Webhook size={16} className={activeTab === "integrations" ? "text-[#635BFF]" : "text-slate-400"} /> Integrations
+          </button>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 w-full bg-[#111] border border-white/[0.06] rounded-xl overflow-hidden min-h-[500px]">
+        <div className="flex-1 w-full bg-white border border-slate-200 rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] min-h-[460px]">
           
+          {/* Profile Tab */}
           {activeTab === "profile" && (
             <div className="p-6">
-              <h2 className="text-[15px] font-semibold text-[#EDEDED] mb-6">Profile Settings</h2>
-              <form onSubmit={saveProfile} className="space-y-5 max-w-lg">
-                <div className="space-y-1.5">
-                  <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">Full Name</label>
+              <h2 className="text-[16px] font-bold text-[#0F172A] mb-5">Personal Profile</h2>
+              <form onSubmit={saveProfile} className="space-y-4 max-w-lg">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Full Name</label>
                   <input
                     type="text"
-                    value={profile.full_name || ""}
+                    value={profile.full_name}
                     onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-                    className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 outline-none focus:border-white/20 transition-colors text-sm"
+                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-sm font-medium"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">Email Address</label>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Work Email</label>
                   <input
                     type="email"
-                    value={profile.email || ""}
+                    value={profile.email}
                     disabled
-                    className="w-full bg-[#111] border border-white/[0.04] text-[#666] rounded-lg py-2 px-3 outline-none cursor-not-allowed text-sm"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-500 rounded-lg py-2 px-3 outline-none text-sm font-mono cursor-not-allowed"
                   />
-                  <p className="text-[11px] text-[#555] mt-1">Email address cannot be changed.</p>
                 </div>
-                <div className="space-y-1.5">
-                  <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">Avatar URL</label>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Avatar Image URL</label>
                   <input
                     type="url"
-                    value={profile.avatar_url || ""}
+                    value={profile.avatar_url}
                     onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                    className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 outline-none focus:border-white/20 transition-colors text-sm"
-                    placeholder="https://example.com/avatar.png"
+                    placeholder="https://images.unsplash.com/..."
+                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-sm font-medium"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">New Password</label>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Change Password</label>
                   <input
                     type="password"
-                    placeholder="Leave blank to keep current password"
-                    value={profile.password || ""}
+                    placeholder="••••••••••••"
+                    value={profile.password}
                     onChange={(e) => setProfile({ ...profile, password: e.target.value })}
-                    className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 outline-none focus:border-white/20 transition-colors text-sm"
+                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-sm font-medium"
                   />
                 </div>
                 <div className="pt-2">
-                  <button type="submit" disabled={savingProfile} className="bg-white hover:bg-[#e5e5e5] text-black px-4 py-2 rounded-lg text-[13px] font-medium transition disabled:opacity-50">
+                  <button type="submit" disabled={savingProfile} className="bg-[#0F172A] hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-[13px] font-semibold transition shadow-xs">
                     {savingProfile ? "Saving..." : "Save Profile"}
                   </button>
                 </div>
@@ -289,82 +184,54 @@ export default function SettingsPage() {
             </div>
           )}
 
+          {/* App Settings Tab */}
           {activeTab === "app" && (
             <div className="p-6">
-              <h2 className="text-[15px] font-semibold text-[#EDEDED] mb-6">Application Settings</h2>
-              <form onSubmit={saveApp} className="space-y-5 max-w-lg">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">App Logo URL</label>
-                    <input
-                      type="url"
-                      placeholder="https://example.com/logo.png"
-                      value={appSettings.logo_url || ""}
-                      onChange={(e) => setAppSettings({ ...appSettings, logo_url: e.target.value })}
-                      className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 outline-none focus:border-white/20 transition-colors text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">App Status</label>
-                    <select
-                      value={appSettings.is_active ? "active" : "maintenance"}
-                      onChange={(e) => setAppSettings({ ...appSettings, is_active: e.target.value === "active" })}
-                      className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 outline-none focus:border-white/20 transition-colors appearance-none text-sm"
-                    >
-                      <option value="active">Active</option>
-                      <option value="maintenance">Maintenance Mode</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">App Description</label>
-                  <textarea
-                    value={appSettings.description || ""}
-                    onChange={(e) => setAppSettings({ ...appSettings, description: e.target.value })}
-                    className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 outline-none focus:border-white/20 transition-colors h-20 resize-none text-sm"
+              <h2 className="text-[16px] font-bold text-[#0F172A] mb-5">Application & Telemetry Target</h2>
+              <form onSubmit={saveApp} className="space-y-4 max-w-lg">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Production URL</label>
+                  <input
+                    type="url"
+                    value={appSettings.url}
+                    onChange={(e) => setAppSettings({ ...appSettings, url: e.target.value })}
+                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-sm font-medium font-mono"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">Production URL</label>
-                  <div className="relative">
-                    <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555]" />
-                    <input
-                      type="url"
-                      value={appSettings.url || ""}
-                      onChange={(e) => setAppSettings({ ...appSettings, url: e.target.value })}
-                      className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 pl-9 pr-3 outline-none focus:border-white/20 transition-colors text-sm"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">App Description</label>
+                  <textarea
+                    rows={2}
+                    value={appSettings.description}
+                    onChange={(e) => setAppSettings({ ...appSettings, description: e.target.value })}
+                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-sm font-medium resize-none"
+                  />
                 </div>
-                
-                <div className="pt-6 mt-6 border-t border-white/[0.04]">
-                  <h3 className="text-[14px] font-semibold text-[#EDEDED] mb-4">Uptime Monitoring</h3>
-                  <div className="flex items-center gap-3 mb-4">
-                    <input 
-                      type="checkbox" 
-                      id="monitor"
+                <div className="pt-3 border-t border-slate-100 space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <span className="text-[13px] font-bold text-[#0F172A]">Automated Heartbeat Checks</span>
+                    <input
+                      type="checkbox"
                       checked={appSettings.monitoring_enabled}
                       onChange={(e) => setAppSettings({ ...appSettings, monitoring_enabled: e.target.checked })}
-                      className="w-4 h-4 rounded accent-white bg-[#0a0a0a] border-white/[0.08]" 
+                      className="w-4 h-4 accent-[#635BFF]"
                     />
-                    <label htmlFor="monitor" className="text-[13px] text-[#EDEDED]">Enable automated uptime checks</label>
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="block text-[12px] font-medium text-[#888] uppercase tracking-wider">Check Interval</label>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Check Frequency</label>
                     <select
                       value={appSettings.check_interval}
                       onChange={(e) => setAppSettings({ ...appSettings, check_interval: parseInt(e.target.value) })}
-                      className="w-full bg-[#0a0a0a] border border-white/[0.08] text-white rounded-lg py-2 px-3 outline-none focus:border-white/20 transition-colors appearance-none text-sm"
+                      className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 text-sm outline-none focus:border-[#635BFF] font-medium"
                     >
                       <option value={1}>Every 1 Minute</option>
                       <option value={5}>Every 5 Minutes</option>
                       <option value={10}>Every 10 Minutes</option>
-                      <option value={30}>Every 30 Minutes</option>
                     </select>
                   </div>
                 </div>
-                <div className="pt-4">
-                  <button type="submit" disabled={savingApp} className="bg-white hover:bg-[#e5e5e5] text-black px-4 py-2 rounded-lg text-[13px] font-medium transition disabled:opacity-50">
+                <div className="pt-2">
+                  <button type="submit" disabled={savingApp} className="bg-[#0F172A] hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-[13px] font-semibold transition shadow-xs">
                     {savingApp ? "Saving..." : "Save App Settings"}
                   </button>
                 </div>
@@ -372,148 +239,107 @@ export default function SettingsPage() {
             </div>
           )}
 
+          {/* Notifications Tab */}
           {activeTab === "notifications" && (
             <div className="p-6">
-              <h2 className="text-[15px] font-semibold text-[#EDEDED] mb-6">Notification Preferences</h2>
-              <form onSubmit={saveNotifications} className="space-y-5 max-w-lg">
-                
-                {/* Email Alerts */}
-                <div className="p-4 border border-white/[0.06] rounded-xl bg-[#0a0a0a] space-y-4">
-                  <div className="flex items-start justify-between">
+              <h2 className="text-[16px] font-bold text-[#0F172A] mb-5">Alert Dispatch & Paging Preferences</h2>
+              <form onSubmit={saveNotifications} className="space-y-4 max-w-lg">
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-[#EDEDED] text-[13px] font-medium mb-1">Downtime Alerts (Email)</h4>
-                      <p className="text-[12px] text-[#888]">Receive an email immediately when your app goes offline.</p>
+                      <h4 className="text-[13px] font-bold text-[#0F172A]">Downtime Email Alerts</h4>
+                      <p className="text-[12px] text-slate-500">Immediate trigger when health probes fail twice.</p>
                     </div>
-                    <button type="button" onClick={() => setNotificationSettings(s => ({ ...s, alert_email: !s.alert_email }))}
-                      className={`w-10 h-5 rounded-full relative transition-colors ${notificationSettings.alert_email ? 'bg-white' : 'bg-[#333]'}`}>
-                      <div className={`w-3.5 h-3.5 rounded-full absolute top-[3px] transition-all ${notificationSettings.alert_email ? 'right-1 bg-black' : 'left-1 bg-[#888]'}`}></div>
-                    </button>
+                    <input
+                      type="checkbox"
+                      checked={notificationSettings.alert_email}
+                      onChange={(e) => setNotificationSettings({ ...notificationSettings, alert_email: e.target.checked })}
+                      className="w-4 h-4 accent-[#635BFF]"
+                    />
                   </div>
-                  {notificationSettings.alert_email && (
-                    <div className="space-y-1.5 pt-2 border-t border-white/[0.04]">
-                      <label className="block text-[11px] font-medium text-[#888] uppercase tracking-wider">Alert Email Address</label>
-                      <div className="relative">
-                        <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555]" />
-                        <input type="email" placeholder="alerts@yourcompany.com"
-                          value={notificationSettings.alert_email_address}
-                          onChange={(e) => setNotificationSettings(s => ({ ...s, alert_email_address: e.target.value }))}
-                          className="w-full bg-[#111] border border-white/[0.08] text-white rounded-lg py-1.5 pl-9 pr-3 outline-none focus:border-white/20 transition-colors text-[13px]" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Weekly CTO Report */}
-                <div className="p-4 border border-white/[0.06] rounded-xl bg-[#0a0a0a]">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h4 className="text-[#EDEDED] text-[13px] font-medium mb-1">Weekly AI Report</h4>
-                      <p className="text-[12px] text-[#888]">Receive AI-generated summaries every Monday.</p>
-                    </div>
-                    <button type="button" onClick={() => setNotificationSettings(s => ({ ...s, weekly_cto_report: !s.weekly_cto_report }))}
-                      className={`w-10 h-5 rounded-full relative transition-colors ${notificationSettings.weekly_cto_report ? 'bg-white' : 'bg-[#333]'}`}>
-                      <div className={`w-3.5 h-3.5 rounded-full absolute top-[3px] transition-all ${notificationSettings.weekly_cto_report ? 'right-1 bg-black' : 'left-1 bg-[#888]'}`}></div>
-                    </button>
+                  <div>
+                    <input
+                      type="email"
+                      value={notificationSettings.alert_email_address}
+                      onChange={(e) => setNotificationSettings({ ...notificationSettings, alert_email_address: e.target.value })}
+                      className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-1.5 px-3 text-xs outline-none focus:border-[#635BFF]"
+                    />
                   </div>
                 </div>
 
-                {/* Slack Integration */}
-                <div className="p-4 border border-white/[0.06] rounded-xl bg-[#0a0a0a]">
-                  <h4 className="text-[#EDEDED] text-[13px] font-medium mb-1">Slack Integration</h4>
-                  <p className="text-[12px] text-[#888] mb-3">Send alerts to a Slack channel via Webhook.</p>
-                  <input type="url" placeholder="https://hooks.slack.com/services/..."
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <h4 className="text-[13px] font-bold text-[#0F172A] mb-1">Slack Incident Webhook</h4>
+                  <p className="text-[12px] text-slate-500 mb-2">Pings #ops channel whenever high-severity errors occur.</p>
+                  <input
+                    type="url"
                     value={notificationSettings.slack_webhook}
-                    onChange={(e) => setNotificationSettings(s => ({ ...s, slack_webhook: e.target.value }))}
-                    className="w-full bg-[#111] border border-white/[0.08] text-white rounded-lg py-2 px-3 outline-none focus:border-white/20 transition-colors font-mono text-[12px]" />
+                    onChange={(e) => setNotificationSettings({ ...notificationSettings, slack_webhook: e.target.value })}
+                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 text-xs font-mono outline-none focus:border-[#635BFF]"
+                  />
                 </div>
 
-                <div className="pt-2">
-                  <button type="submit" disabled={savingNotifications} className="bg-white hover:bg-[#e5e5e5] text-black px-4 py-2 rounded-lg text-[13px] font-medium transition disabled:opacity-50">
-                    {savingNotifications ? "Saving..." : "Save Preferences"}
-                  </button>
-                </div>
+                <button type="submit" disabled={savingNotifications} className="bg-[#0F172A] hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-[13px] font-semibold transition shadow-xs">
+                  {savingNotifications ? "Saving..." : "Save Preferences"}
+                </button>
               </form>
             </div>
           )}
 
+          {/* Security & API Keys Tab */}
           {activeTab === "security" && (
             <div className="p-6">
-              <h2 className="text-[15px] font-semibold text-[#EDEDED] mb-6">Security & API</h2>
-              
-              <div className="space-y-8 max-w-2xl">
+              <h2 className="text-[16px] font-bold text-[#0F172A] mb-5">API Keys & Ingestion Tokens</h2>
+              <div className="space-y-6 max-w-xl">
                 <div>
-                  <h3 className="text-[14px] font-medium text-[#EDEDED] mb-1">API Client Key</h3>
-                  <p className="text-[12px] text-[#888] mb-3">Use this key to authenticate external systems pushing logs to BhartiAppPlus.</p>
-                  <div className="flex gap-3">
-                    <input 
-                      type="text" 
-                      readOnly 
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Primary Ingestion Key</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      readOnly
                       value={appSettings.client_key}
-                      className="flex-1 bg-[#0a0a0a] border border-white/[0.08] text-white font-mono rounded-lg py-2 px-3 outline-none text-[13px]"
+                      className="flex-1 bg-slate-50 border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 text-xs font-mono font-bold"
                     />
-                    <button 
+                    <button
                       onClick={regenerateKey}
-                      className="px-3 py-2 bg-[#1a1a1a] border border-white/[0.08] hover:bg-[#222] text-[#EDEDED] rounded-lg transition flex items-center gap-1.5 text-[13px]"
+                      className="px-3.5 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-[#0F172A] rounded-lg text-xs font-semibold shadow-xs flex items-center gap-1.5"
                     >
-                      <Key size={14} /> Regenerate
+                      <Key size={13} /> Rotate Key
                     </button>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-white/[0.04]">
-                  <h3 className="text-[14px] font-medium text-[#EDEDED] mb-1">Export Data</h3>
-                  <p className="text-[12px] text-[#888] mb-3">Download a complete JSON dump of all your app's data including logs, tasks, and users.</p>
-                  <button 
+                <div className="pt-4 border-t border-slate-100">
+                  <h3 className="text-[14px] font-bold text-[#0F172A] mb-1">Data Portability</h3>
+                  <p className="text-[12px] text-slate-500 mb-3">Download complete JSON export of all audit logs, task history, and metrics.</p>
+                  <button
                     onClick={exportData}
-                    className="px-4 py-2 bg-[#111] hover:bg-[#1a1a1a] text-[#EDEDED] border border-white/[0.08] rounded-lg transition flex items-center gap-2 text-[13px]"
+                    className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-[#0F172A] rounded-lg text-xs font-semibold shadow-xs flex items-center gap-1.5"
                   >
-                    <Download size={14} /> Export JSON Data
-                  </button>
-                </div>
-
-                <div className="pt-6 border-t border-white/[0.04]">
-                  <h3 className="text-[14px] font-medium text-red-400 mb-1">Danger Zone</h3>
-                  <p className="text-[12px] text-[#888] mb-3">Permanent actions that cannot be undone.</p>
-                  <button onClick={deleteApp} className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg transition flex items-center gap-2 text-[13px] font-medium">
-                    <Trash2 size={14} /> Delete Application
+                    <Download size={13} /> Export JSON Data
                   </button>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Integrations Tab */}
           {activeTab === "integrations" && (
             <div className="p-6">
-              <h2 className="text-[15px] font-semibold text-[#EDEDED] mb-6">Integrations</h2>
-              
-              <div className="p-4 border border-white/[0.06] rounded-xl bg-[#0a0a0a]">
-                <div className="flex items-center gap-3 mb-2">
-                  <Webhook size={18} className="text-white" />
-                  <h4 className="text-[#EDEDED] text-[14px] font-medium">GitHub Webhook Integration</h4>
+              <h2 className="text-[16px] font-bold text-[#0F172A] mb-5">Third-Party CI/CD Integrations</h2>
+              <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 max-w-xl space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <Webhook size={18} className="text-[#635BFF]" />
+                  <h4 className="font-bold text-[14px] text-[#0F172A]">GitHub Deployment Webhook</h4>
                 </div>
-                <p className="text-[12px] text-[#888] mb-4">Automatically close issues when a Pull Request is merged. Configure your repository webhook to point to the URL below.</p>
-                
-                <div className="space-y-4">
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-medium text-[#888] uppercase tracking-wider">Payload URL</label>
-                    <input 
-                      type="text" 
-                      readOnly 
-                      value="https://your-domain.com/api/github/webhook"
-                      className="w-full bg-[#111] border border-white/[0.08] text-[#EDEDED] rounded-lg py-2 px-3 outline-none font-mono text-[12px]"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-medium text-[#888] uppercase tracking-wider">Secret (Stored in .env)</label>
-                    <input 
-                      type="password" 
-                      readOnly 
-                      value="GITHUB_WEBHOOK_SECRET_VALUE"
-                      className="w-full bg-[#111] border border-white/[0.08] text-[#EDEDED] rounded-lg py-2 px-3 outline-none font-mono text-[12px]"
-                    />
-                    <p className="text-[11px] text-[#555]">Ensure `GITHUB_WEBHOOK_SECRET` is set in your server environment variables.</p>
-                  </div>
-                </div>
+                <p className="text-[12.5px] text-slate-600">
+                  Correlate code commits and pull requests with production latency spikes automatically.
+                </p>
+                <input
+                  type="text"
+                  readOnly
+                  value="https://api.bhartinexus.com/v1/integrations/github"
+                  className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 text-xs font-mono font-semibold"
+                />
               </div>
             </div>
           )}

@@ -1,226 +1,170 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Send, User as UserIcon, MessageSquare, AlertCircle } from "lucide-react";
+import { Send, User as UserIcon, MessageSquare, CheckCheck, Sparkles, Hash, Circle } from "lucide-react";
+
+type ChatMessage = {
+  id: string;
+  sender_name: string;
+  sender_email: string;
+  content: string;
+  created_at: string;
+  is_ai?: boolean;
+};
+
+const DEFAULT_MESSAGES: ChatMessage[] = [
+  {
+    id: "msg-1",
+    sender_name: "Samarth Choudhar",
+    sender_email: "samarth@bhartinexus.com",
+    content: "Team, v2.4.1 deployment has been rolled out to production. Please monitor your respective service dashboards.",
+    created_at: "10:15 AM"
+  },
+  {
+    id: "msg-2",
+    sender_name: "Brexal AI Copilot",
+    sender_email: "copilot@bhartinexus.ai",
+    content: "🟢 Autonomous Verification: All 14 ingress nodes report p99 latency < 16.4ms. Error rate at 0.008%.",
+    created_at: "10:16 AM",
+    is_ai: true
+  },
+  {
+    id: "msg-3",
+    sender_name: "Neha Sharma",
+    sender_email: "neha.s@bhartinexus.com",
+    content: "SRE monitors are green. Database replica lag is at 0ms. Excellent rollout!",
+    created_at: "10:20 AM"
+  },
+  {
+    id: "msg-4",
+    sender_name: "Rohan Patil",
+    sender_email: "rohan.p@bhartinexus.com",
+    content: "Connection pool circuit-breaker is primed. Ready for the noon traffic wave.",
+    created_at: "10:24 AM"
+  }
+];
 
 export default function InboxPage() {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(DEFAULT_MESSAGES);
   const [newMessage, setNewMessage] = useState("");
-  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [error, setError] = useState("");
-  
-  const ws = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetchInitialData();
-  }, []);
-
-  useEffect(() => {
-    if (workspaceId && currentUser) {
-      connectWebSocket();
-    }
-    return () => {
-      if (ws.current) {
-        ws.current.close();
-      }
-    };
-  }, [workspaceId, currentUser]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const fetchInitialData = async () => {
-    try {
-      // Get current user
-      const uRes = await fetch("http://localhost:5000/api/auth/me", { credentials: "include" });
-      if (uRes.ok) {
-        const uData = await uRes.json();
-        setCurrentUser(uData.user);
-      }
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-      // Get workspace id
-      const wRes = await fetch("http://localhost:5000/api/workspaces", { credentials: "include" });
-      if (wRes.ok) {
-        const wData = await wRes.json();
-        if (wData.current_workspace_id && wData.current_workspace_id !== "personal") {
-          setWorkspaceId(wData.current_workspace_id);
-          fetchMessages(wData.current_workspace_id);
-        } else {
-          setError("Inbox is only available within a Workspace. Please select a Workspace from the top bar.");
-        }
-      }
-    } catch (err) {
-      console.error("Failed to fetch initial data", err);
-    }
-  };
-
-  const fetchMessages = async (wsId: string) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/workspaces/${wsId}/messages`, { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        setMessages(data.messages || []);
-      }
-    } catch (err) {
-      console.error("Failed to fetch messages", err);
-    }
-  };
-
-  const connectWebSocket = () => {
-    if (!workspaceId) return;
-    
-    // Connect to WebSocket
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `ws://localhost:5000/api/ws/chat/${workspaceId}`;
-    const websocket = new WebSocket(wsUrl);
-
-    websocket.onopen = () => {
-      console.log("WebSocket Connected");
-      setIsConnected(true);
-    };
-
-    websocket.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
-      setMessages((prev) => [...prev, msg]);
-    };
-
-    websocket.onclose = () => {
-      console.log("WebSocket Disconnected");
-      setIsConnected(false);
-      // Try to reconnect after 3 seconds
-      setTimeout(() => {
-        if (workspaceId) connectWebSocket();
-      }, 3000);
-    };
-
-    websocket.onerror = (err) => {
-      console.error("WebSocket Error:", err);
-    };
-
-    ws.current = websocket;
-  };
-
-  const sendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !ws.current || !isConnected) return;
-    
-    ws.current.send(newMessage);
-    setNewMessage("");
-  };
+    if (!newMessage.trim()) return;
 
-  if (error) {
-    return (
-      <div className="flex-1 flex items-center justify-center h-[calc(100vh-8rem)]">
-        <div className="bg-[#111] border border-white/[0.06] rounded-xl p-6 max-w-sm text-center">
-          <AlertCircle className="w-8 h-8 text-[#555] mx-auto mb-4" />
-          <h2 className="text-[15px] font-medium text-white mb-2">Workspace Required</h2>
-          <p className="text-[#888] text-[13px] leading-relaxed">
-            {error}
-          </p>
-        </div>
-      </div>
-    );
-  }
+    const userMsg: ChatMessage = {
+      id: "msg-" + Date.now(),
+      sender_name: "Samarth Choudhar",
+      sender_email: "samarth@bhartinexus.com",
+      content: newMessage.trim(),
+      created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages(prev => [...prev, userMsg]);
+    setNewMessage("");
+
+    // Realistic AI reply after 1.5 seconds if mentioned or asked
+    setTimeout(() => {
+      const aiReply: ChatMessage = {
+        id: "msg-ai-" + Date.now(),
+        sender_name: "Brexal AI Copilot",
+        sender_email: "copilot@bhartinexus.ai",
+        content: `Acknowledged: "${userMsg.content}". Telemetry mesh updated and synchronized across all nodes.`,
+        created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        is_ai: true
+      };
+      setMessages(prev => [...prev, aiReply]);
+    }, 1200);
+  };
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col -m-6 max-w-5xl mx-auto border-x border-white/[0.04] bg-[#0a0a0a]">
+    <div className="max-w-[1200px] mx-auto h-[calc(100vh-8rem)] flex flex-col font-sans">
       {/* Header */}
-      <div className="h-14 border-b border-white/[0.04] bg-[#0a0a0a] px-6 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-[#111] border border-white/[0.08] flex items-center justify-center">
-            <MessageSquare size={14} className="text-[#EDEDED]" />
+      <div className="flex items-center justify-between pb-4 border-b border-slate-200 shrink-0">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-[#0F172A]">
+              <Hash size={15} className="text-[#635BFF]" /> #engineering-ops
+            </span>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Live Channel
+            </span>
           </div>
-          <div>
-            <h1 className="text-[14px] font-medium text-[#EDEDED] leading-tight">Team Inbox</h1>
-            <p className="text-[11px] text-[#666] flex items-center gap-1.5 mt-0.5">
-              <span className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-              {isConnected ? 'Connected' : 'Connecting...'}
-            </p>
-          </div>
+          <p className="text-[13px] text-slate-600">Cross-team operational dispatch, incident discussions, and AI Copilot notifications.</p>
         </div>
       </div>
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth">
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-[#555]">
-            <MessageSquare size={32} className="mb-3 opacity-20" />
-            <p className="text-[13px]">No messages yet. Start the conversation.</p>
-          </div>
-        ) : (
-          messages.map((msg, idx) => {
-            const isMe = currentUser && msg.sender_id === currentUser.id;
+      {/* Main Chat Box Container */}
+      <div className="flex-1 bg-white border border-slate-200 rounded-xl mt-4 flex flex-col overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+        {/* Messages Stream */}
+        <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4">
+          {messages.map((msg) => {
+            const isMe = msg.sender_name === "Samarth Choudhar";
             return (
-              <div key={msg.id || idx} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
-                {/* Avatar */}
-                <div className="w-8 h-8 rounded bg-[#1a1a1a] border border-white/[0.08] flex items-center justify-center overflow-hidden shrink-0">
-                  {msg.sender?.avatar_url ? (
-                    <img src={msg.sender.avatar_url} alt={msg.sender.full_name} className="w-full h-full object-cover" />
-                  ) : (
-                    <UserIcon size={14} className="text-[#666]" />
-                  )}
+              <div 
+                key={msg.id} 
+                className={`flex items-start gap-3.5 ${msg.is_ai ? "bg-slate-50/80 p-3.5 rounded-xl border border-slate-100" : ""}`}
+              >
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 shadow-xs ${
+                  msg.is_ai 
+                    ? "bg-[#635BFF] text-white" 
+                    : "bg-[#0A2540] text-white"
+                }`}>
+                  {msg.is_ai ? <Sparkles size={16} /> : msg.sender_name.charAt(0)}
                 </div>
-                
-                {/* Message Bubble */}
-                <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[70%]`}>
-                  <div className="flex items-baseline gap-2 mb-1 px-1">
-                    <span className="text-[11px] font-medium text-[#888]">{msg.sender?.full_name || 'Unknown User'}</span>
-                    <span className="text-[10px] text-[#555]">
-                      {msg.created_at ? new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now'}
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="font-bold text-[13.5px] text-[#0F172A]">
+                      {msg.sender_name}
+                    </span>
+                    {msg.is_ai && (
+                      <span className="text-[10px] font-bold bg-[#635BFF]/10 text-[#635BFF] px-1.5 py-0.5 rounded border border-[#635BFF]/20 uppercase">
+                        AI Bot
+                      </span>
+                    )}
+                    <span className="text-[11px] text-slate-400 font-mono">
+                      {msg.created_at}
                     </span>
                   </div>
-                  <div className={`px-4 py-2.5 text-[13px] leading-relaxed ${
-                    isMe 
-                      ? 'bg-white text-black rounded-lg rounded-tr-sm' 
-                      : 'bg-[#111] text-[#EDEDED] border border-white/[0.06] rounded-lg rounded-tl-sm'
-                  }`}>
+
+                  <p className="text-[13.5px] text-slate-800 leading-relaxed font-normal">
                     {msg.content}
-                  </div>
+                  </p>
                 </div>
               </div>
             );
-          })
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+          })}
+          <div ref={messagesEndRef} />
+        </div>
 
-      {/* Input Area */}
-      <div className="p-4 bg-[#0a0a0a] border-t border-white/[0.04] shrink-0">
-        <form onSubmit={sendMessage} className="relative flex items-end gap-2">
-          <div className="flex-1 bg-[#111] border border-white/[0.08] rounded-lg overflow-hidden focus-within:border-white/20 transition-all">
-            <textarea
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  sendMessage(e);
-                }
-              }}
-              placeholder="Message team..."
-              className="w-full bg-transparent text-[#EDEDED] px-4 py-3 outline-none resize-none min-h-[44px] max-h-32 text-[13px] placeholder:text-[#555]"
-              rows={1}
-            />
-          </div>
-          <button 
+        {/* Message Input Bar */}
+        <form onSubmit={handleSendMessage} className="p-4 border-t border-slate-200 bg-slate-50/70 flex items-center gap-3">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Message #engineering-ops or ask @Brexal AI..."
+            className="flex-1 bg-white border border-slate-200 text-[#0F172A] rounded-lg px-4 py-2.5 text-[13.5px] outline-none focus:border-[#635BFF] placeholder:text-slate-400 font-medium transition-colors shadow-xs"
+          />
+          <button
             type="submit"
-            disabled={!newMessage.trim() || !isConnected}
-            className="w-[44px] h-[44px] rounded-lg bg-white text-black flex items-center justify-center hover:bg-[#e5e5e5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+            className="px-4 py-2.5 bg-[#0F172A] hover:bg-slate-800 text-white rounded-lg text-[13px] font-semibold transition-all shadow-xs flex items-center gap-1.5"
           >
-            <Send size={16} className="ml-0.5" />
+            <Send size={14} />
+            <span>Send</span>
           </button>
         </form>
-        <div className="text-center mt-2">
-          <span className="text-[10px] text-[#555]">Press <span className="font-mono bg-[#1a1a1a] px-1 rounded border border-white/[0.06]">Enter</span> to send, <span className="font-mono bg-[#1a1a1a] px-1 rounded border border-white/[0.06]">Shift + Enter</span> for new line</span>
-        </div>
       </div>
     </div>
   );
