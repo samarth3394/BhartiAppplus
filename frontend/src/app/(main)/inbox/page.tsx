@@ -7,6 +7,7 @@ type ChatMessage = {
   id: string;
   sender_name: string;
   sender_email: string;
+  avatar_url?: string;
   content: string;
   created_at: string;
   is_ai?: boolean;
@@ -17,6 +18,7 @@ const DEFAULT_MESSAGES: ChatMessage[] = [
     id: "msg-1",
     sender_name: "Samarth Choudhar",
     sender_email: "samarth@bhartinexus.com",
+    avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
     content: "Team, v2.4.1 deployment has been rolled out to production. Please monitor your respective service dashboards.",
     created_at: "10:15 AM"
   },
@@ -32,6 +34,7 @@ const DEFAULT_MESSAGES: ChatMessage[] = [
     id: "msg-3",
     sender_name: "Neha Sharma",
     sender_email: "neha.s@bhartinexus.com",
+    avatar_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
     content: "SRE monitors are green. Database replica lag is at 0ms. Excellent rollout!",
     created_at: "10:20 AM"
   },
@@ -39,8 +42,17 @@ const DEFAULT_MESSAGES: ChatMessage[] = [
     id: "msg-4",
     sender_name: "Rohan Patil",
     sender_email: "rohan.p@bhartinexus.com",
+    avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
     content: "Connection pool circuit-breaker is primed. Ready for the noon traffic wave.",
     created_at: "10:24 AM"
+  },
+  {
+    id: "msg-5",
+    sender_name: "Ananya Iyer",
+    sender_email: "ananya.i@bhartinexus.com",
+    avatar_url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
+    content: "Neural anomaly detector is streaming live telemetry. Zero false positives so far.",
+    created_at: "10:31 AM"
   }
 ];
 
@@ -115,13 +127,21 @@ export default function InboxPage() {
                 key={msg.id} 
                 className={`flex items-start gap-3.5 ${msg.is_ai ? "bg-slate-50/80 p-3.5 rounded-xl border border-slate-100" : ""}`}
               >
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 shadow-xs ${
-                  msg.is_ai 
-                    ? "bg-[#635BFF] text-white" 
-                    : "bg-[#0A2540] text-white"
-                }`}>
-                  {msg.is_ai ? <Sparkles size={16} /> : msg.sender_name.charAt(0)}
-                </div>
+                {msg.is_ai ? (
+                  <div className="w-9 h-9 rounded-full bg-[#635BFF] text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <Sparkles size={16} />
+                  </div>
+                ) : msg.avatar_url ? (
+                  <img 
+                    src={msg.avatar_url} 
+                    alt={msg.sender_name} 
+                    className="w-9 h-9 rounded-full object-cover border border-slate-200 shrink-0 shadow-xs" 
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[12px] font-bold shrink-0 shadow-xs">
+                    {msg.sender_name.charAt(0)}
+                  </div>
+                )}
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2 mb-1">

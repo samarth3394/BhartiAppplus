@@ -10,7 +10,9 @@ type BugItem = {
   severity: "critical" | "high" | "medium" | "low";
   status: "open" | "in_progress" | "resolved";
   reported_by: string;
+  reporter_avatar?: string;
   assignee: string;
+  assignee_avatar?: string;
   created_at: string;
 };
 
@@ -23,6 +25,7 @@ const DEFAULT_BUGS: BugItem[] = [
     status: "in_progress",
     reported_by: "SRE Autonomous Watchdog",
     assignee: "Rohan Patil",
+    assignee_avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
     created_at: "2026-11-08T18:24:00Z"
   },
   {
@@ -32,7 +35,9 @@ const DEFAULT_BUGS: BugItem[] = [
     severity: "high",
     status: "open",
     reported_by: "Ananya Iyer",
+    reporter_avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
     assignee: "Neha Sharma",
+    assignee_avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
     created_at: "2026-11-08T14:10:00Z"
   },
   {
@@ -42,7 +47,9 @@ const DEFAULT_BUGS: BugItem[] = [
     severity: "medium",
     status: "resolved",
     reported_by: "Samarth Choudhar",
+    reporter_avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
     assignee: "Samarth Choudhar",
+    assignee_avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
     created_at: "2026-11-07T21:05:00Z"
   },
   {
@@ -52,7 +59,8 @@ const DEFAULT_BUGS: BugItem[] = [
     severity: "medium",
     status: "open",
     reported_by: "Automated SRE Daemon",
-    assignee: "DevOps Team",
+    assignee: "Vikram Desai",
+    assignee_avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
     created_at: "2026-11-07T11:45:00Z"
   },
   {
@@ -62,7 +70,9 @@ const DEFAULT_BUGS: BugItem[] = [
     severity: "low",
     status: "resolved",
     reported_by: "Vikram Desai",
+    reporter_avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
     assignee: "Sarah Jenkins",
+    assignee_avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
     created_at: "2026-11-06T09:15:00Z"
   }
 ];
@@ -236,9 +246,19 @@ export default function BugsPage() {
                     {bug.description}
                   </p>
 
-                  <div className="flex items-center gap-4 mt-2.5 text-[11px] text-slate-500 font-medium">
-                    <span>Reported by: <strong className="text-slate-700">{bug.reported_by}</strong></span>
-                    <span>Assignee: <strong className="text-slate-700">{bug.assignee}</strong></span>
+                  <div className="flex items-center gap-5 mt-2.5 text-[11.5px] text-slate-500 font-medium">
+                    <span className="flex items-center gap-1.5">
+                      {bug.reporter_avatar ? (
+                        <img src={bug.reporter_avatar} alt="" className="w-4.5 h-4.5 rounded-full object-cover border border-slate-200" />
+                      ) : null}
+                      Reported by: <strong className="text-slate-700">{bug.reported_by}</strong>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      {bug.assignee_avatar ? (
+                        <img src={bug.assignee_avatar} alt="" className="w-4.5 h-4.5 rounded-full object-cover border border-slate-200" />
+                      ) : null}
+                      Assignee: <strong className="text-slate-700">{bug.assignee}</strong>
+                    </span>
                     <span className="font-mono text-slate-400">{new Date(bug.created_at).toLocaleDateString()}</span>
                   </div>
                 </div>

@@ -38,7 +38,10 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     type: "feature",
     status: "todo",
     priority: "high",
-    assignee: { full_name: "Samarth Choudhar" },
+    assignee: { 
+      full_name: "Samarth Choudhar",
+      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: "2026-11-06",
     labels: ["tracing", "frontend"]
   },
@@ -49,7 +52,10 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     type: "task",
     status: "todo",
     priority: "medium",
-    assignee: { full_name: "Neha Sharma" },
+    assignee: { 
+      full_name: "Neha Sharma",
+      avatar_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: "2026-11-07",
     labels: ["security", "mesh"]
   },
@@ -60,7 +66,10 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     type: "bug",
     status: "in_progress",
     priority: "high",
-    assignee: { full_name: "Rohan Patil" },
+    assignee: { 
+      full_name: "Rohan Patil",
+      avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: "2026-11-08",
     labels: ["p1", "database"]
   },
@@ -71,7 +80,10 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     type: "feature",
     status: "in_progress",
     priority: "medium",
-    assignee: { full_name: "Vikram Desai" },
+    assignee: { 
+      full_name: "Vikram Desai",
+      avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: "2026-11-07",
     labels: ["alerts", "sre"]
   },
@@ -82,7 +94,10 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     type: "feature",
     status: "review",
     priority: "high",
-    assignee: { full_name: "Ananya Iyer" },
+    assignee: { 
+      full_name: "Ananya Iyer",
+      avatar_url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: "2026-11-05",
     labels: ["streaming", "infra"]
   },
@@ -93,7 +108,10 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     type: "task",
     status: "review",
     priority: "low",
-    assignee: { full_name: "Sarah Jenkins" },
+    assignee: { 
+      full_name: "Sarah Jenkins",
+      avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: "2026-11-06",
     labels: ["docs"]
   },
@@ -104,7 +122,10 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     type: "epic",
     status: "done",
     priority: "urgent",
-    assignee: { full_name: "Samarth Choudhar" },
+    assignee: { 
+      full_name: "Samarth Choudhar",
+      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: "2026-11-02",
     labels: ["infra", "completed"]
   },
@@ -115,7 +136,10 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     type: "bug",
     status: "done",
     priority: "high",
-    assignee: { full_name: "Rohan Patil" },
+    assignee: { 
+      full_name: "Rohan Patil",
+      avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: "2026-11-04",
     labels: ["performance", "fixed"]
   }
@@ -344,9 +368,18 @@ export default function KanbanPage() {
                             </span>
                           ))}
                         </div>
-                        <div className="w-6 h-6 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[10px] font-bold shadow-xs">
-                          {issue.assignee?.full_name?.charAt(0) || "U"}
-                        </div>
+                        {issue.assignee?.avatar_url ? (
+                          <img 
+                            src={issue.assignee.avatar_url} 
+                            alt={issue.assignee.full_name} 
+                            className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-xs" 
+                            title={issue.assignee.full_name}
+                          />
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[10px] font-bold shadow-xs">
+                            {issue.assignee?.full_name?.charAt(0) || "U"}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))

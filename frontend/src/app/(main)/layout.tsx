@@ -310,12 +310,14 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {/* User Info & Sign out in Sidebar */}
         <div className="p-3 border-t border-slate-200 bg-white">
           <div className="flex items-center gap-2.5 px-2 py-2 mb-1.5 rounded-lg bg-slate-50 border border-slate-100">
-            <div className="w-7 h-7 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[11px] font-bold shadow-xs">
-              N
-            </div>
+            <img 
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" 
+              alt="Samarth Choudhar" 
+              className="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-xs" 
+            />
             <div className="flex flex-col min-w-0">
-              <span className="text-[12px] font-semibold text-[#0F172A] truncate">Bharti Nexus</span>
-              <span className="text-[10px] text-slate-500 font-mono">admin@bhartinexus.com</span>
+              <span className="text-[12px] font-bold text-[#0F172A] truncate">Samarth Choudhar</span>
+              <span className="text-[10px] text-slate-500 font-mono truncate">samarth@bhartinexus.com</span>
             </div>
           </div>
           <button onClick={handleSignOut} title="Sign out" className="flex w-full items-center gap-2.5 px-2 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors">
@@ -449,8 +451,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                   )}
                 </div>
 
-                <Link href="/settings" className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center hover:border-slate-300 transition-all cursor-pointer overflow-hidden shadow-xs">
-                    <User size={15} className="text-slate-700" />
+                <Link href="/settings" className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center hover:border-slate-300 transition-all cursor-pointer overflow-hidden shadow-xs">
+                    <img 
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" 
+                      alt="Profile" 
+                      className="w-full h-full object-cover" 
+                    />
                 </Link>
             </div>
         </header>

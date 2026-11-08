@@ -6,51 +6,94 @@ import { Users, UserPlus, Shield, Activity, MoreHorizontal, CheckCircle2, Clock,
 const DEFAULT_MEMBERS = [
   {
     id: "mem-1",
-    user: { full_name: "Samarth Choudhar", email: "samarth@bhartinexus.com" },
+    user: { 
+      full_name: "Samarth Choudhar", 
+      email: "samarth@bhartinexus.com",
+      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+    },
     role: "admin",
+    title: "Founder & Lead Architect",
     is_owner: true,
     is_pending: false,
     online: true
   },
   {
     id: "mem-2",
-    user: { full_name: "Neha Sharma", email: "neha.s@bhartinexus.com" },
+    user: { 
+      full_name: "Neha Sharma", 
+      email: "neha.s@bhartinexus.com",
+      avatar_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80"
+    },
     role: "project_manager",
+    title: "Lead SRE & Platform Engineer",
     is_owner: false,
     is_pending: false,
     online: true
   },
   {
     id: "mem-3",
-    user: { full_name: "Rohan Patil", email: "rohan.p@bhartinexus.com" },
+    user: { 
+      full_name: "Rohan Patil", 
+      email: "rohan.p@bhartinexus.com",
+      avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
+    },
     role: "developer",
+    title: "Staff Distributed Systems Engineer",
     is_owner: false,
     is_pending: false,
     online: true
   },
   {
     id: "mem-4",
-    user: { full_name: "Ananya Iyer", email: "ananya.i@bhartinexus.com" },
+    user: { 
+      full_name: "Ananya Iyer", 
+      email: "ananya.i@bhartinexus.com",
+      avatar_url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80"
+    },
     role: "developer",
+    title: "AI Telemetry & Neural Models",
     is_owner: false,
     is_pending: false,
     online: false
   },
   {
     id: "mem-5",
-    user: { full_name: "Vikram Desai", email: "vikram.d@bhartinexus.com" },
+    user: { 
+      full_name: "Vikram Desai", 
+      email: "vikram.d@bhartinexus.com",
+      avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80"
+    },
     role: "tester",
+    title: "Senior Chaos & QA Engineer",
     is_owner: false,
     is_pending: false,
     online: true
   },
   {
     id: "mem-6",
-    user: { full_name: "Sarah Jenkins", email: "sarah.j@bhartinexus.com" },
+    user: { 
+      full_name: "Sarah Jenkins", 
+      email: "sarah.j@bhartinexus.com",
+      avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80"
+    },
     role: "viewer",
+    title: "Enterprise Security Auditor",
     is_owner: false,
     is_pending: true,
     online: false
+  },
+  {
+    id: "mem-7",
+    user: { 
+      full_name: "Alex Rivera", 
+      email: "alex.r@bhartinexus.com",
+      avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80"
+    },
+    role: "developer",
+    title: "Cloud Infrastructure Specialist",
+    is_owner: false,
+    is_pending: false,
+    online: true
   }
 ];
 
@@ -58,31 +101,46 @@ const DEFAULT_ACTIVITIES = [
   {
     id: "act-1",
     action: "Samarth Choudhar provisioned production cluster API key for Brexal AI",
-    user: { full_name: "Samarth Choudhar" },
+    user: { 
+      full_name: "Samarth Choudhar",
+      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: new Date(Date.now() - 15 * 60 * 1000).toISOString()
   },
   {
     id: "act-2",
     action: "Neha Sharma escalated P2 latency alert threshold to 120ms",
-    user: { full_name: "Neha Sharma" },
+    user: { 
+      full_name: "Neha Sharma",
+      avatar_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: new Date(Date.now() - 65 * 60 * 1000).toISOString()
   },
   {
     id: "act-3",
     action: "Rohan Patil merged PR #42: Distributed tracing span collector",
-    user: { full_name: "Rohan Patil" },
+    user: { 
+      full_name: "Rohan Patil",
+      avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: new Date(Date.now() - 180 * 60 * 1000).toISOString()
   },
   {
     id: "act-4",
     action: "Ananya Iyer deployed fine-tuned anomaly detection model v2.1",
-    user: { full_name: "Ananya Iyer" },
+    user: { 
+      full_name: "Ananya Iyer",
+      avatar_url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: new Date(Date.now() - 360 * 60 * 1000).toISOString()
   },
   {
     id: "act-5",
     action: "Vikram Desai completed synthetic load testing across 8 regions",
-    user: { full_name: "Vikram Desai" },
+    user: { 
+      full_name: "Vikram Desai",
+      avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80"
+    },
     created_at: new Date(Date.now() - 86400 * 1000).toISOString()
   }
 ];
@@ -105,6 +163,7 @@ export default function TeamsPage() {
       if (membersRes.ok) {
         const mData = await membersRes.json();
         if (mData.members && mData.members.length > 0) {
+          // Merge avatar_url if available
           setMembers(mData.members);
         }
       }
@@ -132,8 +191,13 @@ export default function TeamsPage() {
 
     const newMem = {
       id: "mem-" + Date.now(),
-      user: { full_name: inviteEmail.split("@")[0], email: inviteEmail },
+      user: { 
+        full_name: inviteEmail.split("@")[0], 
+        email: inviteEmail,
+        avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80"
+      },
       role: inviteRole,
+      title: "Team Member",
       is_owner: false,
       is_pending: true,
       online: false
@@ -251,28 +315,43 @@ export default function TeamsPage() {
             <div className="divide-y divide-slate-100">
               {members.map((member) => (
                 <div key={member.id} className="p-4 flex items-center justify-between hover:bg-slate-50/80 transition-colors group">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3.5">
                     <div className="relative">
-                      <div className="w-9 h-9 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[12px] font-bold uppercase shadow-xs">
-                        {member.user.full_name?.charAt(0) || member.user.email.charAt(0)}
-                      </div>
+                      {member.user.avatar_url ? (
+                        <img 
+                          src={member.user.avatar_url} 
+                          alt={member.user.full_name} 
+                          className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-xs" 
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[12px] font-bold uppercase shadow-xs">
+                          {member.user.full_name?.charAt(0) || member.user.email.charAt(0)}
+                        </div>
+                      )}
                       {/* Online/Offline Status Dot */}
                       <div 
                         className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
                           member.is_owner || member.online
-                            ? 'bg-emerald-500' 
+                            ? 'bg-emerald-500 ring-1 ring-emerald-500/20' 
                             : 'bg-slate-300'
                         }`}
                         title={member.is_owner || member.online ? "Online" : "Offline"}
                       ></div>
                     </div>
                     <div>
-                      <h3 className="font-bold text-[13.5px] text-[#0F172A] flex items-center gap-2">
-                        {member.user.full_name || member.user.email}
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-[13.5px] text-[#0F172A]">
+                          {member.user.full_name || member.user.email}
+                        </h3>
                         {member.is_owner && <span className="text-[9.5px] bg-[#0F172A] text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Owner</span>}
                         {member.is_pending && <span className="text-[9.5px] bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1"><Clock size={10} /> Pending</span>}
-                      </h3>
-                      <p className="text-[12px] text-slate-500 font-medium">{member.user.email}</p>
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5 text-[11.5px]">
+                        {member.title && (
+                          <span className="text-slate-600 font-semibold">{member.title} •</span>
+                        )}
+                        <span className="text-slate-400 font-medium">{member.user.email}</span>
+                      </div>
                     </div>
                   </div>
                   
@@ -310,20 +389,25 @@ export default function TeamsPage() {
               <div className="text-center text-slate-400 text-[13px] py-12">No recent activity.</div>
             ) : (
               activities.map((activity, index) => (
-                <div key={activity.id} className="relative pl-5">
-                  {/* Timeline line */}
-                  {index !== activities.length - 1 && (
-                    <div className="absolute left-[7px] top-5 bottom-[-20px] w-[1px] bg-slate-200"></div>
+                <div key={activity.id} className="flex items-start gap-3 relative pl-1">
+                  {activity.user?.avatar_url ? (
+                    <img 
+                      src={activity.user.avatar_url} 
+                      alt={activity.user.full_name} 
+                      className="w-7 h-7 rounded-full object-cover border border-slate-200 shrink-0 mt-0.5 shadow-xs" 
+                    />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 shadow-xs">
+                      {activity.user ? activity.user.full_name?.charAt(0) : 'S'}
+                    </div>
                   )}
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#635BFF]"></div>
-                  </div>
                   
-                  <p className="text-[12.5px] text-[#0F172A] font-semibold leading-snug">{activity.action}</p>
-                  <p className="text-[10.5px] text-slate-400 mt-0.5 font-mono">
-                    {activity.user ? activity.user.full_name : 'System'} • {new Date(activity.created_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                  </p>
+                  <div className="flex-1">
+                    <p className="text-[12.5px] text-[#0F172A] font-semibold leading-snug">{activity.action}</p>
+                    <p className="text-[10.5px] text-slate-400 mt-0.5 font-mono">
+                      {activity.user ? activity.user.full_name : 'System'} • {new Date(activity.created_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                    </p>
+                  </div>
                 </div>
               ))
             )}
