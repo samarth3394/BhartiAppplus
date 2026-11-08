@@ -56,9 +56,7 @@ const SAMPLE_SERVICES: ServiceHealth[] = [
   { name: "event-stream-consumer", category: "compute", status: "operational", latency: "5.1ms", errorRate: "0.004%", rps: "9.3k", checked: "3s ago" },
 ];
 
-/* ═══════════════════════════════════════════════════════════════
-   SECTION 1: STRIPE-STYLE NAVIGATION
-   ═══════════════════════════════════════════════════════════════ */
+
 function Navigation() {
   const [scrolled, setScrolled] = useState(false);
 
