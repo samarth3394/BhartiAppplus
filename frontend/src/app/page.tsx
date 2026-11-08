@@ -157,14 +157,14 @@ function HeroSection() {
               <span className="text-[#635BFF] font-bold">99.984201%</span>
             </div>
 
-            {/* Main Headline (Matching text color & style from user's screenshot) */}
+            {/* Main Headline (BREXAL Mission with Stripe-grade typography & accent) */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold tracking-[-0.03em] text-[#0A2540] leading-[1.06] mb-6 font-display max-w-3xl">
-              Financial infrastructure to grow <span className="text-[#635BFF]">your revenue.</span>
+              See the failure before it becomes <span className="text-[#635BFF]">an incident.</span>
             </h1>
 
-            {/* Supporting Description (Matching steel blue/slate text color #3A5A78 from screenshot) */}
+            {/* Supporting Description */}
             <p className="text-lg sm:text-xl md:text-[21px] text-[#3A5A78] font-normal leading-relaxed max-w-2xl mb-8 font-sans">
-              Accept payments, offer financial services and implement custom revenue models – from your first transaction to your billionth.
+              Monitor every microservice, trace every distributed request, and identify the root cause with AI before downtime impacts your users or your business.
             </p>
 
             {/* Stripe-style Action Buttons */}
@@ -173,11 +173,11 @@ function HeroSection() {
                 href="/register"
                 className="w-full sm:w-auto px-7 py-3 rounded-full bg-[#635BFF] text-white text-[14.5px] font-semibold hover:bg-[#5349e0] transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(99,91,255,0.35)] hover:shadow-[0_6px_22px_rgba(99,91,255,0.45)] focus:ring-2 focus:ring-[#635BFF]"
               >
-                Request an invite
+                Request early access
                 <ChevronRight size={16} />
               </Link>
               <a
-                href="#telemetry-cockpit"
+                href="#modular-showcase"
                 className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/90 text-[#0A2540] border border-slate-200 text-[14px] font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-xs flex items-center justify-center gap-2"
               >
                 Explore the platform
