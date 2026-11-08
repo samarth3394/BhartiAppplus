@@ -29,7 +29,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
-import { Stripe3DAnimation } from "@/components/Stripe3DAnimation";
+import { CreationTouchAnimation } from "@/components/CreationTouchAnimation";
 import { StripeProductShowcase } from "@/components/StripeProductShowcase";
 import { DarkTelemetryCard } from "@/components/DarkTelemetryCard";
 
@@ -134,31 +134,28 @@ function Navigation() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION 2: STRIPE-STYLE HERO WITH FLOATING COLOR MESH ANIMATION
+   SECTION 2: BREXAL HERO WITH CREATION TOUCH (HUMAN + ROBOT HAND)
    ═══════════════════════════════════════════════════════════════ */
 function HeroSection() {
   return (
-    <section className="relative pt-32 pb-20 md:pt-44 md:pb-32 px-6 sm:px-10 overflow-hidden bg-white min-h-[580px] md:min-h-[660px] flex items-center">
+    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 sm:px-10 overflow-hidden bg-white min-h-[620px] md:min-h-[700px] flex items-center border-b border-slate-100">
       
-      {/* ── Real 3D WebGL Colored Wave Mesh Animation (Three.js) ── */}
-      <Stripe3DAnimation />
-
       <div className="relative z-10 max-w-[1360px] mx-auto w-full">
         
-        {/* HERO INTRO GRID: Headline & Text with Stripe Typography & Colors */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        {/* HERO GRID: Left Editorial Content + Right Creation Touch Animation */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           
-          {/* LEFT COLUMN: Editorial Headline & Value (8 cols) */}
-          <div className="lg:col-span-8 flex flex-col items-start text-left">
+          {/* LEFT COLUMN: Editorial Headline & Value (7 cols) */}
+          <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
             
-            {/* Live GDP / Telemetry Ticker Line (Exact Stripe style from screenshot) */}
+            {/* Live Telemetry Ticker Line */}
             <div className="text-[12.5px] font-mono text-[#0A2540] font-semibold tracking-tight mb-5 flex items-center gap-2">
               <span>Global telemetry running on BREXAL:</span>
               <span className="text-[#635BFF] font-bold">99.984201%</span>
             </div>
 
             {/* Main Headline (BREXAL Mission with Stripe-grade typography & accent) */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold tracking-[-0.03em] text-[#0A2540] leading-[1.06] mb-6 font-display max-w-3xl">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[66px] font-bold tracking-[-0.03em] text-[#0A2540] leading-[1.06] mb-6 font-display max-w-2xl">
               See the failure before it becomes <span className="text-[#635BFF]">an incident.</span>
             </h1>
 
@@ -199,16 +196,22 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Floating Atmospheric Accent */}
-          <div className="lg:col-span-4 hidden lg:flex flex-col items-end justify-center pointer-events-none">
-            <div className="flex flex-col gap-2 font-mono text-[11px] items-end">
-              <div className="px-4 py-2 rounded-full bg-white/85 backdrop-blur-md border border-slate-200/80 text-[#0A2540] flex items-center gap-2 shadow-sm font-semibold">
-                <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse" />
-                <span>REAL-TIME ENGINE // 48.2k OPS/SEC</span>
+          {/* RIGHT COLUMN: Human + Robot Single Finger Touch Animation (5 cols) */}
+          <div className="lg:col-span-5 w-full flex items-center justify-center">
+            <div className="w-full max-w-[560px] lg:max-w-none rounded-3xl bg-gradient-to-b from-[#F8FAFC] to-white border border-slate-200/80 p-4 sm:p-6 shadow-[0_20px_50px_-15px_rgba(50,50,93,0.08),0_10px_20px_-8px_rgba(0,0,0,0.04)] relative overflow-hidden group">
+              
+              {/* Header inside the interactive canvas card */}
+              <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-100 font-mono text-[11px] text-[#627D98]">
+                <span className="flex items-center gap-2 font-semibold text-[#0A2540]">
+                  <span className="w-2 h-2 rounded-full bg-[#635BFF] animate-pulse" />
+                  NEURAL TOUCHPOINT // CREATION SYNERGY
+                </span>
+                <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-500">60 FPS LIVE</span>
               </div>
-              <div className="px-3.5 py-1 rounded-full bg-white/70 backdrop-blur-sm border border-slate-200/50 text-[#627D98] text-[10.5px]">
-                Global latency p99: 1.43ms • SLA: 99.98%
-              </div>
+
+              {/* The Creation Touch Animation Component */}
+              <CreationTouchAnimation />
+
             </div>
           </div>
 
