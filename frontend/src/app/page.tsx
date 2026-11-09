@@ -35,6 +35,10 @@ import {
   MessageSquare
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { BrexalIntegrationsSection } from "@/components/landing/BrexalIntegrationsSection";
+import { BrexalComparisonSection } from "@/components/landing/BrexalComparisonSection";
+import { BrexalTrustSecuritySection } from "@/components/landing/BrexalTrustSecuritySection";
+import { BrexalFaqSection } from "@/components/landing/BrexalFaqSection";
 
 /* ═══════════════════════════════════════════════════════════════
    1. STRIPE-STYLE NAVIGATION BAR
@@ -1532,9 +1536,13 @@ export default function LandingPage() {
         <StripeClientMarquee />
         <StripeArchitectureFlowSection />
         <StripeProductShowcaseSection />
+        <BrexalIntegrationsSection />
         <StripeDeveloperSandboxSection />
+        <BrexalComparisonSection />
+        <BrexalTrustSecuritySection />
         <StripeGlobalScaleSection />
         <StripePricingSection />
+        <BrexalFaqSection />
         <StripeFinalCtaSection />
       </main>
       <StripeFooter />
