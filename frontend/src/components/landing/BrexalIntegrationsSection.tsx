@@ -324,10 +324,11 @@ export function BrexalIntegrationsSection() {
       {/* Background ambient lighting */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-blue-50/70 via-indigo-50/20 to-transparent pointer-events-none" />
 
+      {/* ── TOP SECTION CONTAINER: HEADER + 2 ROWS OF PILLS ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* ── HEADER ── */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+        {/* HEADER */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-[11px] font-mono font-bold text-[#2563EB] uppercase tracking-wider mb-4 shadow-2xs">
             <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
             ENTERPRISE ECOSYSTEM &amp; ZERO-CODE INSTRUMENTATION
@@ -343,8 +344,8 @@ export function BrexalIntegrationsSection() {
           </p>
         </div>
 
-        {/* ── 2 LINES OF HORIZONTALLY SCROLLABLE INTEGRATION PILLS ── */}
-        <div className="space-y-3.5 mb-8">
+        {/* 2 LINES OF HORIZONTALLY SCROLLABLE INTEGRATION PILLS */}
+        <div className="space-y-3.5 mb-2">
           
           {/* Row 1: Cloud & Infrastructure */}
           <div className="flex items-center gap-3 overflow-x-auto pb-2 scroll-smooth no-scrollbar px-1 justify-start md:justify-center">
@@ -424,8 +425,11 @@ export function BrexalIntegrationsSection() {
 
         </div>
 
-        {/* ── HORIZONTAL WHITE TELEMETRY PANEL (CLEAN WHITE ENTERPRISE STRIPE) ── */}
-        <div className="rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 p-5 sm:p-7 text-slate-800 shadow-xl text-left mb-10 transition-all duration-300">
+      </div>
+
+      {/* ── FULL SCREEN EDGE-TO-EDGE WHITE STRIPE (TOUCHES LEFT & RIGHT SCREEN EDGES ON MOBILE & LAPTOP) ── */}
+      <div className="w-full bg-white border-y border-slate-200/90 py-6 sm:py-8 shadow-xs my-8 sm:my-10 text-left">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Top Bar inside Stripe: Service Meta & Highlights */}
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-5 border-b border-slate-100">
@@ -538,9 +542,11 @@ export function BrexalIntegrationsSection() {
           </div>
 
         </div>
+      </div>
 
-        {/* ── BOTTOM ENTERPRISE STAT STRIP (4 PILLARS) ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-6 border-t border-slate-200/90 text-left">
+      {/* ── BOTTOM CONTAINER: 4 ENTERPRISE STAT PILLARS ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-2 text-left">
           
           <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
             <div className="text-xl sm:text-2xl font-black text-[#0A2540] font-mono mb-0.5">
@@ -591,8 +597,8 @@ export function BrexalIntegrationsSection() {
           </div>
 
         </div>
-
       </div>
+
     </section>
   );
 }
