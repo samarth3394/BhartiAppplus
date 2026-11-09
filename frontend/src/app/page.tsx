@@ -496,7 +496,7 @@ function StripeClientMarquee() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeProductShowcaseSection() {
   return (
-    <section className="py-24 md:py-36 px-6 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden">
+    <section id="architecture" className="py-24 md:py-36 px-6 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden">
       
       {/* Ambient subtle color grading meshes behind the showcases */}
       <div className="absolute top-1/4 -right-40 w-[600px] h-[600px] bg-gradient-to-bl from-[#FF725E]/15 via-[#635BFF]/15 to-transparent rounded-full blur-[120px] pointer-events-none" />
@@ -694,129 +694,6 @@ function StripeProductShowcaseSection() {
               <span>View cluster architecture</span>
               <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
             </Link>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   5. STRIPE BENTO GRID: "A FULLY INTEGRATED SUITE"
-   ═══════════════════════════════════════════════════════════════ */
-function StripeBentoGridSection() {
-  return (
-    <section id="architecture" className="py-24 md:py-32 px-6 sm:px-10 bg-white border-b border-slate-200/80">
-      <div className="max-w-[1320px] mx-auto">
-        
-        {/* Section Header */}
-        <div className="max-w-2xl mb-16 text-left">
-          <div className="text-[12px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-3">
-            Unified Infrastructure
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-[#0A2540] leading-tight mb-4">
-            A fully integrated suite of telemetry products.
-          </h2>
-          <p className="text-base sm:text-lg text-[#425466] font-normal leading-relaxed">
-            We bring together everything that's required to observe, trace, and stabilize high-throughput cloud software.
-          </p>
-        </div>
-
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          
-          {/* Bento Card 1 (Large 7 cols) */}
-          <div className="md:col-span-7 p-8 sm:p-10 rounded-3xl bg-slate-50/70 border border-slate-200 hover:border-slate-300 transition-all shadow-xs hover:shadow-md flex flex-col justify-between text-left">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-[#635BFF] mb-6">
-                <Cpu size={24} />
-              </div>
-              <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#635BFF] mb-2">
-                Kernel Telemetry // 0.0% CPU Penalty
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0A2540] mb-3">
-                Zero-overhead kernel eBPF socket inspection
-              </h3>
-              <p className="text-[#425466] text-base leading-relaxed max-w-lg mb-6">
-                Deploy without changing code or rebuilding containers. BREXAL attaches lightweight eBPF probes directly into Linux kernel sockets to measure TCP drops, TLS negotiation latencies, and SQL connection pools in microsecond resolution.
-              </p>
-            </div>
-
-            <div className="pt-6 border-t border-slate-200/80 flex items-center justify-between font-mono text-xs">
-              <span className="text-[#425466] font-semibold">Throughput capacity:</span>
-              <span className="font-extrabold text-[#0A2540] text-sm">14.2M spans/second per cluster</span>
-            </div>
-          </div>
-
-          {/* Bento Card 2 (5 cols) */}
-          <div className="md:col-span-5 p-8 sm:p-10 rounded-3xl bg-slate-50/70 border border-slate-200 hover:border-slate-300 transition-all shadow-xs hover:shadow-md flex flex-col justify-between text-left">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-[#00D4FF] mb-6">
-                <Sparkles size={24} />
-              </div>
-              <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#635BFF] mb-2">
-                Automated Root-Cause
-              </div>
-              <h3 className="text-2xl font-extrabold text-[#0A2540] mb-3">
-                Autonomous AI incident correlation
-              </h3>
-              <p className="text-[#425466] text-sm leading-relaxed mb-6">
-                No more 2-hour war rooms. When an anomaly triggers, BREXAL analyzes git history, deployment manifests, and cloud provider API status to pinpoint the exact commit causing the regression.
-              </p>
-            </div>
-
-            <div className="pt-6 border-t border-slate-200/80 flex items-center justify-between font-mono text-xs">
-              <span className="text-[#425466] font-semibold">MTTR Reduction:</span>
-              <span className="font-extrabold text-emerald-700 text-sm">&lt; 90 seconds</span>
-            </div>
-          </div>
-
-          {/* Bento Card 3 (5 cols) */}
-          <div className="md:col-span-5 p-8 sm:p-10 rounded-3xl bg-slate-50/70 border border-slate-200 hover:border-slate-300 transition-all shadow-xs hover:shadow-md flex flex-col justify-between text-left">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-[#FF5894] mb-6">
-                <Network size={24} />
-              </div>
-              <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#635BFF] mb-2">
-                OpenTelemetry Native
-              </div>
-              <h3 className="text-2xl font-extrabold text-[#0A2540] mb-3">
-                Distributed trace waterfalls & graphs
-              </h3>
-              <p className="text-[#425466] text-sm leading-relaxed mb-6">
-                Capture complete request flows across distributed microservices, Redis queues, and edge workers with open standards and zero vendor lock-in.
-              </p>
-            </div>
-
-            <div className="pt-6 border-t border-slate-200/80 flex items-center justify-between font-mono text-xs">
-              <span className="text-[#425466] font-semibold">Standard Support:</span>
-              <span className="font-extrabold text-[#0A2540] text-sm">OTel v1.28 Native</span>
-            </div>
-          </div>
-
-          {/* Bento Card 4 (Large 7 cols) */}
-          <div className="md:col-span-7 p-8 sm:p-10 rounded-3xl bg-slate-50/70 border border-slate-200 hover:border-slate-300 transition-all shadow-xs hover:shadow-md flex flex-col justify-between text-left">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-emerald-600 mb-6">
-                <ShieldCheck size={24} />
-              </div>
-              <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#635BFF] mb-2">
-                Self-Healing Infrastructure
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0A2540] mb-3">
-                Automated mitigations with human safeguards
-              </h3>
-              <p className="text-[#425466] text-base leading-relaxed max-w-lg mb-6">
-                Connect your CI/CD and Kubernetes orchestrator. When database pool saturation or memory leak cascades occur, BREXAL can automatically trigger canary rollbacks, connection recycling, or traffic sheds with strict RBAC approval logs.
-              </p>
-            </div>
-
-            <div className="pt-6 border-t border-slate-200/80 flex items-center justify-between font-mono text-xs">
-              <span className="text-[#425466] font-semibold">Safety:</span>
-              <span className="font-extrabold text-[#0A2540] text-sm">Non-Custodial RBAC Controls</span>
-            </div>
           </div>
 
         </div>
@@ -1271,7 +1148,6 @@ export default function LandingPage() {
         <StripeHeroSection />
         <StripeClientMarquee />
         <StripeProductShowcaseSection />
-        <StripeBentoGridSection />
         <StripeDeveloperSandboxSection />
         <StripeGlobalScaleSection />
         <StripePricingSection />
