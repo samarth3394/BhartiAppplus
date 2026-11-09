@@ -128,18 +128,18 @@ export function BrexalTrustSecuritySection() {
 
       </div>
 
-      {/* ── FULL SCREEN EDGE-TO-EDGE WHITE SECURITY REPORT CTA STRIPE ── */}
-      <div className="w-full bg-white border-y border-slate-200/90 py-6 sm:py-8 shadow-xs text-left mt-8 sm:mt-10">
+      {/* ── FULL SCREEN EDGE-TO-EDGE ORIGINAL DARK NAVY SECURITY REPORT CTA STRIPE ── */}
+      <div className="w-full bg-[#0A2540] border-y border-[#1E3A8A]/50 py-7 sm:py-9 shadow-md text-left mt-8 sm:mt-10">
         <div className="max-w-[1320px] mx-auto px-4 sm:px-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#2563EB] border border-blue-200/80 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+            <div className="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 border border-blue-400/30 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               <FileText size={24} />
             </div>
             <div>
-              <h3 className="text-lg sm:text-xl font-extrabold text-[#0A2540] mb-1">
+              <h3 className="text-lg sm:text-xl font-extrabold text-white mb-1">
                 Need our SOC-2 Type II Report or Security Whitepaper?
               </h3>
-              <p className="text-xs sm:text-sm text-[#425466] max-w-2xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
                 Our InfoSec team provides full audit packages, penetration testing summaries, and architecture diagrams under standard NDA within 1 business day.
               </p>
             </div>
@@ -147,7 +147,7 @@ export function BrexalTrustSecuritySection() {
 
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs sm:text-sm transition-all shadow-sm shrink-0 whitespace-nowrap cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs sm:text-sm transition-all shadow-md shrink-0 whitespace-nowrap cursor-pointer"
           >
             <span>Request Security Audit Kit</span>
             <ArrowRight size={14} />
