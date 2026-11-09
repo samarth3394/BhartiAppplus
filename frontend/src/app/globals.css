@@ -4,6 +4,7 @@
   --font-display: var(--font-sora), system-ui, sans-serif;
   --font-sans: var(--font-manrope), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;
+  --font-space: var(--font-space-grotesk), system-ui, sans-serif;
 
   --color-bg-base: #FFFFFF;
   --color-bg-subtle: #F6F9FC;

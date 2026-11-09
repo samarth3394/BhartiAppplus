@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Sora, Manrope, JetBrains_Mono } from "next/font/google";
+import { Sora, Manrope, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const sora = Sora({
@@ -23,6 +23,13 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "BREXAL — Intelligence, engineered to move",
   description: "AI-powered observability, real-time application monitoring, and automated incident management for modern engineering teams.",
@@ -33,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${sora.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${sora.variable} ${manrope.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white text-[#0A2540] font-sans selection:bg-[#635BFF]/20 selection:text-[#635BFF]">
         {children}
