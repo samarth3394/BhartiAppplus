@@ -57,8 +57,8 @@ function Navigation() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md border-b border-black/10 shadow-[0_4px_20px_rgba(0,0,0,0.04)] py-3"
-          : "bg-white/70 backdrop-blur-sm border-b border-black/5 py-4.5"
+          ? "bg-white/95 backdrop-blur-md border-b border-black/15 py-3"
+          : "bg-white/70 backdrop-blur-sm border-b border-black/10 py-4.5"
       }`}
     >
       <div className="max-w-[1320px] mx-auto px-6 sm:px-10 flex items-center justify-between">
@@ -109,7 +109,7 @@ function Navigation() {
           </Link>
           <Link
             href="/register"
-            className="px-4.5 py-2 rounded-lg bg-black text-white text-[13px] font-bold hover:bg-[#635BFF] transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center gap-1.5"
+            className="px-4.5 py-2 rounded-lg bg-black text-white text-[13px] font-bold hover:bg-[#635BFF] transition-colors flex items-center gap-1.5"
           >
             <span>Get Started Free</span>
             <ArrowRight size={14} />
@@ -147,7 +147,7 @@ function HeroSignupCard() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
-          className="w-full px-5 py-3.5 sm:py-4 rounded-2xl border-2 border-black/25 bg-white text-black placeholder:text-slate-400 text-base font-medium outline-none focus:border-[#1868DB] focus:ring-4 focus:ring-[#1868DB]/15 transition-all shadow-xs"
+          className="w-full px-5 py-3.5 sm:py-4 rounded-xl border-2 border-black/25 bg-white text-black placeholder:text-slate-400 text-base font-medium outline-none focus:border-[#1868DB] focus:ring-2 focus:ring-[#1868DB]/20 transition-colors"
         />
         <p className="text-[13px] sm:text-[13.5px] text-black/80 mt-2.5 mb-1 font-medium leading-relaxed">
           Use a work email to find teammates and get access to BREXAL AI
@@ -155,7 +155,7 @@ function HeroSignupCard() {
 
         <button
           type="submit"
-          className="w-full mt-4 py-3.5 sm:py-4 rounded-full bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-base sm:text-[16.5px] tracking-wide transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
+          className="w-full mt-4 py-3.5 sm:py-4 rounded-xl bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-base sm:text-[16.5px] tracking-wide transition-colors"
         >
           Sign up
         </button>
@@ -172,7 +172,7 @@ function HeroSignupCard() {
       <button
         type="button"
         onClick={() => { window.location.href = "/register"; }}
-        className="w-full py-3.5 rounded-full border-2 border-black/25 bg-white hover:bg-slate-50 text-black font-bold text-base flex items-center justify-center gap-3 transition-all shadow-2xs hover:border-black/50 hover:-translate-y-0.5"
+        className="w-full py-3.5 rounded-xl border-2 border-black/25 bg-white hover:bg-slate-50 text-black font-bold text-base flex items-center justify-center gap-3 transition-colors hover:border-black"
       >
         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -233,14 +233,14 @@ function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center justify-start gap-3 w-full sm:w-auto">
               <Link
                 href="/register"
-                className="w-full sm:w-auto px-6.5 py-3 rounded-xl bg-black text-white text-[13.5px] font-bold hover:bg-[#635BFF] transition-all shadow-md hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6.5 py-3 rounded-xl bg-black text-white text-[13.5px] font-bold hover:bg-[#635BFF] transition-colors flex items-center justify-center gap-2"
               >
                 <span>Start Free in Sandbox</span>
                 <ArrowRight size={15} />
               </Link>
               <Link
                 href="/dashboard"
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white border-2 border-black text-black text-[13.5px] font-bold hover:bg-slate-50 transition-all shadow-xs flex items-center justify-center gap-2 hover:-translate-y-0.5"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white border-2 border-black text-black text-[13.5px] font-bold hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
               >
                 <Play size={13} className="fill-black text-black" />
                 <span>Interactive Console Tour</span>
@@ -283,42 +283,40 @@ function HeroSection() {
           </div>
         </div>
 
-        {/* ─── THE INTERACTIVE HERO COCKPIT MOCKUP ─── */}
-        <div className="w-full max-w-5xl rounded-2xl bg-white border-2 border-black/15 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden text-left">
+        {/* ─── THE PLANE HERO CONSOLE (ZERO CARDS, FLAT PLANE ARCHITECTURE) ─── */}
+        <div className="w-full max-w-5xl border-t-2 border-b-2 border-black text-left">
           
-          {/* Top Browser / Cockpit Chrome */}
-          <div className="px-5 py-3.5 bg-slate-50 border-b border-black/10 flex items-center justify-between">
+          {/* Top Console Chrome */}
+          <div className="py-3 border-b border-black/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-amber-500" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500" />
-              <span className="ml-2 font-mono text-[11.5px] font-bold text-black">
+              <span className="w-2 h-2 bg-emerald-500 animate-pulse" />
+              <span className="font-mono text-[11.5px] font-bold text-black uppercase tracking-wider">
                 https://console.bhartinexus.com/live-mesh
               </span>
             </div>
 
-            {/* Interactive Mode Tabs */}
-            <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-black/15 shadow-xs text-[11.5px] font-mono">
+            {/* Flat Plane Mode Tabs */}
+            <div className="flex items-center gap-4 text-[12px] font-mono">
               <button
                 onClick={() => setActiveConsoleTab("topology")}
-                className={`px-3 py-1 rounded font-bold transition-all ${
-                  activeConsoleTab === "topology" ? "bg-black text-white shadow-xs" : "text-black hover:bg-slate-100"
+                className={`pb-1 font-bold transition-all border-b-2 ${
+                  activeConsoleTab === "topology" ? "border-black text-black" : "border-transparent text-black/50 hover:text-black"
                 }`}
               >
                 Service Topology
               </button>
               <button
                 onClick={() => setActiveConsoleTab("traces")}
-                className={`px-3 py-1 rounded font-bold transition-all ${
-                  activeConsoleTab === "traces" ? "bg-black text-white shadow-xs" : "text-black hover:bg-slate-100"
+                className={`pb-1 font-bold transition-all border-b-2 ${
+                  activeConsoleTab === "traces" ? "border-black text-black" : "border-transparent text-black/50 hover:text-black"
                 }`}
               >
                 Trace Spans
               </button>
               <button
                 onClick={() => setActiveConsoleTab("anomaly")}
-                className={`px-3 py-1 rounded font-bold transition-all ${
-                  activeConsoleTab === "anomaly" ? "bg-black text-white shadow-xs" : "text-black hover:bg-slate-100"
+                className={`pb-1 font-bold transition-all border-b-2 ${
+                  activeConsoleTab === "anomaly" ? "border-black text-black" : "border-transparent text-black/50 hover:text-black"
                 }`}
               >
                 AI Anomaly Radar
@@ -326,65 +324,60 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* Cockpit Content Area */}
-          <div className="p-6 sm:p-8 bg-white min-h-[380px]">
+          {/* Console Content Area */}
+          <div className="py-6 min-h-[340px]">
             
             {/* VIEW 1: INTERACTIVE SERVICE TOPOLOGY GRAPH */}
             {activeConsoleTab === "topology" && (
               <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-black/10 gap-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-black/10 gap-2">
                   <div>
-                    <h3 className="font-bold text-[16px] text-black">Production Microservice Mesh</h3>
+                    <h3 className="font-black text-[16px] text-black">Production Microservice Mesh</h3>
                     <p className="text-[12px] text-black font-mono font-medium">Live traffic routes, mTLS state, and distributed nodes</p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-[11px] font-mono font-bold flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> 14/14 NODES NOMINAL
+                  <span className="text-[11px] font-mono font-bold text-emerald-800 flex items-center gap-1.5 uppercase">
+                    <span className="w-1.5 h-1.5 bg-emerald-500 animate-pulse" /> 14/14 NODES NOMINAL
                   </span>
                 </div>
 
-                {/* Node Cards Interactive Flow */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Flat Plane Node Matrix (Zero Cards) */}
+                <div className="grid grid-cols-1 md:grid-cols-4 border-t border-b border-black/15 divide-y md:divide-y-0 md:divide-x divide-black/15">
                   {[
-                    { id: "api-gateway", name: "Cloudflare Envoy", type: "EDGE INGRESS", latency: "0.8ms", status: "HEALTHY", rps: "48.2k/s", color: "border-black/20 bg-blue-50/20" },
-                    { id: "auth-service", name: "Auth & IAM Cluster", type: "SECURITY", latency: "2.4ms", status: "HEALTHY", rps: "12.4k/s", color: "border-black/20 bg-purple-50/20" },
-                    { id: "payment-worker", name: "Billing Engine", type: "WORKER", latency: "14.2ms", status: "HEALTHY", rps: "3.1k/s", color: "border-black/20 bg-emerald-50/20" },
-                    { id: "postgres-mesh", name: "PostgreSQL Primary", type: "DATASTORE", latency: "0.4ms", status: "HEALTHY", rps: "22.8k/s", color: "border-black/20 bg-cyan-50/20" },
+                    { id: "api-gateway", name: "Cloudflare Envoy", type: "EDGE INGRESS", latency: "0.8ms", status: "HEALTHY", rps: "48.2k/s" },
+                    { id: "auth-service", name: "Auth & IAM Cluster", type: "SECURITY", latency: "2.4ms", status: "HEALTHY", rps: "12.4k/s" },
+                    { id: "payment-worker", name: "Billing Engine", type: "WORKER", latency: "14.2ms", status: "HEALTHY", rps: "3.1k/s" },
+                    { id: "postgres-mesh", name: "PostgreSQL Primary", type: "DATASTORE", latency: "0.4ms", status: "HEALTHY", rps: "22.8k/s" },
                   ].map((node) => (
                     <div
                       key={node.id}
                       onClick={() => setActiveNode(node.id)}
-                      className={`p-4 rounded-xl border-2 transition-all cursor-pointer shadow-xs ${
-                        activeNode === node.id
-                          ? "border-black bg-slate-50 ring-2 ring-black/10"
-                          : `${node.color} hover:border-black/50`
+                      className={`p-4 transition-colors cursor-pointer ${
+                        activeNode === node.id ? "bg-black text-white" : "hover:bg-black/5 text-black"
                       }`}
                     >
-                      <div className="flex items-center justify-between text-[10.5px] font-mono font-bold text-black uppercase tracking-wider mb-2">
+                      <div className="flex items-center justify-between text-[10px] font-mono font-bold uppercase tracking-wider mb-2 opacity-80">
                         <span>{node.type}</span>
-                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <span className={`w-1.5 h-1.5 ${activeNode === node.id ? "bg-emerald-400" : "bg-emerald-600"}`} />
                       </div>
-                      <div className="font-extrabold text-[15px] text-black mb-1">{node.name}</div>
-                      <div className="flex items-center justify-between text-[12px] font-mono mt-3 pt-2 border-t border-black/10">
-                        <span className="text-black font-bold">{node.latency}</span>
-                        <span className="text-[#635BFF] font-extrabold">{node.rps}</span>
+                      <div className="font-black text-[15px] mb-1">{node.name}</div>
+                      <div className="flex items-center justify-between text-[11.5px] font-mono mt-3 pt-2 border-t border-current/20">
+                        <span>{node.latency}</span>
+                        <span className="font-black">{node.rps}</span>
                       </div>
                     </div>
                   ))}
                 </div>
 
                 {/* Selected Node Drilldown */}
-                <div className="p-4 rounded-xl bg-slate-50 border border-black/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-[12px]">
-                  <div className="flex items-center gap-3">
-                    <Terminal size={18} className="text-black" />
-                    <div>
-                      <span className="text-black font-semibold">Selected Node Inspection: </span>
-                      <strong className="text-black uppercase font-black">{activeNode}</strong>
-                    </div>
+                <div className="py-3 border-t border-b border-black/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-[12px]">
+                  <div className="flex items-center gap-2">
+                    <Terminal size={16} className="text-black" />
+                    <span className="text-black">Selected Node: <strong className="uppercase font-black">{activeNode}</strong></span>
                   </div>
-                  <div className="flex items-center gap-4 text-[11.5px] text-black font-bold">
-                    <span>eBPF probes: <strong className="text-emerald-700">Active</strong></span>
-                    <span>mTLS: <strong className="text-emerald-700">TLS v1.3 Verified</strong></span>
-                    <span>Replicas: <strong className="text-black">8 / 8 Active</strong></span>
+                  <div className="flex items-center gap-4 text-[11px] text-black font-bold uppercase tracking-wider">
+                    <span>eBPF: <strong className="text-emerald-700">Active</strong></span>
+                    <span>mTLS: <strong className="text-emerald-700">TLS v1.3</strong></span>
+                    <span>Replicas: <strong>8/8</strong></span>
                   </div>
                 </div>
               </div>
@@ -394,11 +387,11 @@ function HeroSection() {
             {activeConsoleTab === "traces" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-black/10 font-mono text-[12px]">
-                  <span className="font-extrabold text-black">Trace ID: 0x8f2a1b9c44e0</span>
+                  <span className="font-black text-black">Trace ID: 0x8f2a1b9c44e0</span>
                   <span className="text-black font-semibold">Total duration: <strong className="text-black font-black">18.4ms</strong></span>
                 </div>
 
-                <div className="space-y-2.5 font-mono text-[12px]">
+                <div className="divide-y divide-black/10 font-mono text-[12px]">
                   {[
                     { name: "HTTP POST /v1/checkout", duration: "18.4ms", width: "100%", offset: "0%", color: "bg-black" },
                     { name: "auth.verify_bearer_token", duration: "2.1ms", width: "12%", offset: "2%", color: "bg-emerald-600" },
@@ -406,14 +399,14 @@ function HeroSection() {
                     { name: "stripe.charge_intent", duration: "14.2ms", width: "76%", offset: "18%", color: "bg-amber-600" },
                     { name: "sql.insert_audit_record", duration: "1.2ms", width: "8%", offset: "92%", color: "bg-purple-600" },
                   ].map((span, idx) => (
-                    <div key={idx} className="p-2.5 rounded-lg border border-black/15 hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center justify-between mb-1.5 font-bold text-black">
+                    <div key={idx} className="py-2.5 hover:bg-black/[0.02] transition-colors">
+                      <div className="flex items-center justify-between mb-1 font-bold text-black">
                         <span>{span.name}</span>
                         <span className="text-black font-black">{span.duration}</span>
                       </div>
-                      <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                      <div className="h-1 w-full bg-slate-200">
                         <div
-                          className={`h-full rounded-full ${span.color}`}
+                          className={`h-full ${span.color}`}
                           style={{ width: span.width, marginLeft: span.offset }}
                         />
                       </div>
@@ -426,33 +419,33 @@ function HeroSection() {
             {/* VIEW 3: AI ANOMALY RADAR */}
             {activeConsoleTab === "anomaly" && (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300 flex items-start gap-3.5">
-                  <ShieldCheck size={20} className="text-emerald-700 mt-0.5 shrink-0" />
+                <div className="py-3 border-b border-black/15 flex items-start gap-3">
+                  <ShieldCheck size={20} className="text-black mt-0.5 shrink-0" />
                   <div>
-                    <h4 className="font-extrabold text-[14px] text-black font-sans">
+                    <h4 className="font-black text-[14px] text-black">
                       Autonomous Intelligence: Baseline Nominal
                     </h4>
-                    <p className="text-[13px] text-black font-sans mt-0.5 leading-relaxed font-medium">
+                    <p className="text-[13px] text-black mt-0.5 leading-relaxed font-medium">
                       AI Root-Cause models evaluated 42,000 requests in the last 60 seconds across US, EU, and APAC clusters. Zero latency regression anomalies detected.
                     </p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-[12px]">
-                  <div className="p-3.5 rounded-xl border border-black/15 bg-slate-50">
-                    <span className="text-[10.5px] text-black uppercase font-bold block mb-1">Seasonal Baseline</span>
-                    <span className="text-lg font-black text-black">48,200 req/s</span>
-                    <span className="text-[10.5px] text-emerald-800 font-bold block mt-1">Normal Friday Peak</span>
+                <div className="grid grid-cols-1 md:grid-cols-3 border-t border-b border-black/15 divide-y md:divide-y-0 md:divide-x divide-black/15 py-3 font-mono text-[12px]">
+                  <div className="py-2 md:px-4 first:pl-0 last:pr-0">
+                    <span className="text-[10px] text-black uppercase font-bold block">Seasonal Baseline</span>
+                    <span className="text-xl font-black text-black">48,200 req/s</span>
+                    <span className="text-[10px] text-emerald-800 font-bold block mt-0.5">Normal Friday Peak</span>
                   </div>
-                  <div className="p-3.5 rounded-xl border border-black/15 bg-slate-50">
-                    <span className="text-[10.5px] text-black uppercase font-bold block mb-1">Memory Fragmentation</span>
-                    <span className="text-lg font-black text-black">1.2%</span>
-                    <span className="text-[10.5px] text-emerald-800 font-bold block mt-1">Well below 15% threshold</span>
+                  <div className="py-2 md:px-4 first:pl-0 last:pr-0">
+                    <span className="text-[10px] text-black uppercase font-bold block">Memory Fragmentation</span>
+                    <span className="text-xl font-black text-black">1.2%</span>
+                    <span className="text-[10px] text-emerald-800 font-bold block mt-0.5">Below 15% threshold</span>
                   </div>
-                  <div className="p-3.5 rounded-xl border border-black/15 bg-slate-50">
-                    <span className="text-[10.5px] text-black uppercase font-bold block mb-1">Autonomous Safeguard</span>
-                    <span className="text-lg font-black text-black">Armed</span>
-                    <span className="text-[10.5px] text-black font-bold block mt-1">Auto-scale buffer ready</span>
+                  <div className="py-2 md:px-4 first:pl-0 last:pr-0">
+                    <span className="text-[10px] text-black uppercase font-bold block">Autonomous Safeguard</span>
+                    <span className="text-xl font-black text-black">Armed</span>
+                    <span className="text-[10px] text-black font-bold block mt-0.5">Auto-scale buffer ready</span>
                   </div>
                 </div>
               </div>
@@ -460,10 +453,10 @@ function HeroSection() {
 
           </div>
 
-          {/* Bottom Cockpit Status Bar */}
-          <div className="px-6 py-3 bg-slate-50 border-t border-black/10 flex items-center justify-between text-[11.5px] font-mono text-black font-bold">
+          {/* Bottom Console Status Bar */}
+          <div className="py-3 border-t border-black/15 flex items-center justify-between text-[11.5px] font-mono text-black font-bold">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="w-1.5 h-1.5 bg-emerald-500" />
               <span>Real-time WebSocket link active</span>
             </div>
             <Link href="/dashboard" className="text-black underline decoration-2 hover:text-[#635BFF] font-bold flex items-center gap-1">
@@ -495,19 +488,16 @@ function EcosystemSection() {
   ];
 
   return (
-    <section className="py-10 px-6 sm:px-10 border-b border-black/10 bg-white">
+    <section className="py-8 px-6 sm:px-10 border-b border-black/10 bg-white">
       <div className="max-w-[1320px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-[12px] font-mono uppercase tracking-wider text-black font-black shrink-0 text-center md:text-left">
-          Seamless Zero-Config Ingestion:
+          Seamless Ingestion:
         </div>
-        <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-4 font-mono text-[12.5px]">
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-2 font-mono text-[13px]">
           {stacks.map((stack, i) => (
-            <div
-              key={i}
-              className="px-3.5 py-1.5 rounded-lg bg-white border border-black/20 shadow-xs flex items-center gap-2 hover:border-black hover:shadow-sm transition-all"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-black" />
-              <span className="font-bold text-black">{stack.name}</span>
+            <div key={i} className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-black" />
+              <span className="font-extrabold text-black uppercase tracking-wider">{stack.name}</span>
             </div>
           ))}
         </div>
@@ -517,7 +507,7 @@ function EcosystemSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   4. THREE CORE PILLARS (ALL BLACK TEXT)
+   4. THREE CORE PILLARS (PLANE DESIGN, ZERO CARDS)
    ═══════════════════════════════════════════════════════════════ */
 function ArchitecturePillarsSection() {
   const pillars = [
@@ -550,10 +540,12 @@ function ArchitecturePillarsSection() {
         
         {/* Section Header */}
         <div className="max-w-2xl mb-8 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-black border border-black/15 font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
-            Unified Core Architecture
+          <div className="inline-flex items-center gap-2 text-black font-mono text-[11px] font-bold uppercase tracking-wider mb-2">
+            <span>[ ARCHITECTURE ]</span>
+            <span>—</span>
+            <span>UNIFIED CORE</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight mb-2.5">
             Built for mission-critical reliability at enterprise scale.
           </h2>
           <p className="text-sm sm:text-base text-black font-medium leading-relaxed">
@@ -561,33 +553,33 @@ function ArchitecturePillarsSection() {
           </p>
         </div>
 
-        {/* 3 Pillars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* 3 Pillars Plane Grid (Zero Cards) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 border-t-2 border-b-2 border-black divide-y md:divide-y-0 md:divide-x divide-black/15">
           {pillars.map((pil, idx) => {
             const Icon = pil.icon;
             return (
               <div
                 key={idx}
-                className="p-8 rounded-2xl bg-white border-2 border-black/15 hover:border-black hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col justify-between group"
+                className="py-8 md:py-10 md:px-8 first:pl-0 last:pr-0 flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-slate-50 border-2 border-black/20 flex items-center justify-center text-black mb-6 shadow-xs group-hover:bg-black group-hover:text-white transition-all">
-                    <Icon size={22} />
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="font-mono text-xs font-black text-black uppercase tracking-widest">
+                      0{idx + 1} // {pil.highlight}
+                    </span>
+                    <Icon size={20} className="text-black" />
                   </div>
-                  <div className="text-[11px] font-mono font-bold text-black uppercase tracking-wider mb-2">
-                    {pil.highlight}
-                  </div>
-                  <h3 className="text-xl font-extrabold text-black mb-3 leading-snug">
+                  <h3 className="text-2xl font-black text-black mb-3 leading-snug">
                     {pil.title}
                   </h3>
-                  <p className="text-[14px] text-black font-medium leading-relaxed">
+                  <p className="text-[14.5px] text-black font-medium leading-relaxed">
                     {pil.desc}
                   </p>
                 </div>
 
-                <div className="mt-8 pt-5 border-t border-black/10 flex items-center justify-between font-mono text-[12px]">
-                  <span className="text-black font-semibold">Benchmark:</span>
-                  <span className="font-black text-black">{pil.stat}</span>
+                <div className="mt-8 pt-4 border-t border-black/15 flex items-center justify-between font-mono text-[12px]">
+                  <span className="text-black font-semibold uppercase tracking-wider">Benchmark</span>
+                  <span className="font-black text-black text-sm">{pil.stat}</span>
                 </div>
               </div>
             );
@@ -629,50 +621,44 @@ function InteractiveSimulatorSection() {
           </p>
         </div>
 
-        {/* Phase Selector Buttons */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        {/* Flat Plane Stepper (Zero Cards) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 border-t-2 border-b-2 border-black divide-y md:divide-y-0 md:divide-x divide-black/15 mb-6">
           {steps.map((st) => (
             <button
               key={st.step}
               onClick={() => setSimStep(st.step as any)}
-              className={`p-4 rounded-xl text-left border-2 transition-all shadow-xs ${
-                simStep === st.step
-                  ? "bg-white border-black ring-2 ring-black/15"
-                  : "bg-white border-black/15 hover:border-black/40"
+              className={`p-4 text-left transition-colors cursor-pointer ${
+                simStep === st.step ? "bg-black text-white" : "bg-white text-black hover:bg-black/5"
               }`}
             >
-              <div className="flex items-center justify-between text-[11px] font-mono font-bold mb-1">
-                <span className="text-black">PHASE 0{st.step}</span>
-                <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                  st.step === 2 ? "bg-red-100 text-red-800" : st.step === 3 ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"
-                }`}>
-                  {st.badge}
-                </span>
+              <div className="flex items-center justify-between text-[11px] font-mono font-bold mb-1 opacity-80">
+                <span>PHASE 0{st.step}</span>
+                <span className="text-[10px] tracking-wider">{st.badge}</span>
               </div>
-              <div className="font-extrabold text-[14px] text-black">{st.title}</div>
+              <div className="font-black text-[14px]">{st.title}</div>
             </button>
           ))}
         </div>
 
-        {/* Live Simulation Display Card */}
-        <div className="rounded-2xl bg-white border-2 border-black/15 p-6 sm:p-8 shadow-sm">
+        {/* Live Simulation Display (Plane Architecture, Zero Cards) */}
+        <div className="py-4 space-y-6">
           {simStep === 1 && (
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-emerald-800 font-mono text-[12px] font-bold">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2 h-2 bg-emerald-500 animate-pulse" />
                 STATE: ALL SYSTEMS OPERATIONAL
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-[12px]">
-                <div className="p-4 rounded-xl bg-slate-50 border border-black/15">
-                  <span className="text-black font-bold">INGRESS P99</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 border-t border-b border-black/15 divide-y md:divide-y-0 md:divide-x divide-black/15 py-4 font-mono text-[12px]">
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-black font-bold uppercase tracking-wider block text-[11px]">INGRESS P99</span>
                   <div className="text-2xl font-black text-black mt-1">0.84ms</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-50 border border-black/15">
-                  <span className="text-black font-bold">ERROR RATE</span>
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-black font-bold uppercase tracking-wider block text-[11px]">ERROR RATE</span>
                   <div className="text-2xl font-black text-emerald-700 mt-1">0.000%</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-50 border border-black/15">
-                  <span className="text-black font-bold">ACTIVE PODS</span>
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-black font-bold uppercase tracking-wider block text-[11px]">ACTIVE PODS</span>
                   <div className="text-2xl font-black text-black mt-1">14 / 14</div>
                 </div>
               </div>
@@ -688,17 +674,17 @@ function InteractiveSimulatorSection() {
                 <AlertTriangle size={16} />
                 ALERT: CRITICAL THRESHOLD BREACH ON PAYMENT-WORKER-POOL
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-[12px]">
-                <div className="p-4 rounded-xl bg-red-50 border border-red-300">
-                  <span className="text-red-900 font-bold">INGRESS P99</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 border-t border-b border-black/15 divide-y md:divide-y-0 md:divide-x divide-black/15 py-4 font-mono text-[12px]">
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-red-700 font-bold uppercase tracking-wider block text-[11px]">INGRESS P99</span>
                   <div className="text-2xl font-black text-red-700 mt-1">148.2ms</div>
                 </div>
-                <div className="p-4 rounded-xl bg-red-50 border border-red-300">
-                  <span className="text-red-900 font-bold">ERROR RATE</span>
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-red-700 font-bold uppercase tracking-wider block text-[11px]">ERROR RATE</span>
                   <div className="text-2xl font-black text-red-700 mt-1">3.42%</div>
                 </div>
-                <div className="p-4 rounded-xl bg-red-50 border border-red-300">
-                  <span className="text-red-900 font-bold">QUEUE DEPTH</span>
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-red-700 font-bold uppercase tracking-wider block text-[11px]">QUEUE DEPTH</span>
                   <div className="text-2xl font-black text-red-700 mt-1">1,842 queued</div>
                 </div>
               </div>
@@ -714,10 +700,10 @@ function InteractiveSimulatorSection() {
                 <GitCommit size={16} className="text-[#635BFF]" />
                 AI CORRELATION: SOURCE COMMIT IDENTIFIED
               </div>
-              <div className="p-4 rounded-xl bg-[#0A2540] text-slate-100 font-mono text-[12px] space-y-2">
-                <div className="text-emerald-400 font-bold">Root Cause Analysis Output:</div>
-                <div className="text-white">Commit <span className="text-[#635BFF] font-bold">#8f2a1b9</span> (merged 14m ago by dev-ops-bot) introduced unbounded WebSocket buffer in <span className="text-amber-300">websocket_handler.py:142</span>.</div>
-                <div className="text-slate-300 text-[11px]">Correlation Confidence: 99.4% • Diagnostic Duration: 1.2s</div>
+              <div className="border-t border-b border-black/15 py-4 font-mono text-[12.5px] space-y-2">
+                <div className="text-black font-bold uppercase tracking-wider text-[11px]">Root Cause Analysis Output:</div>
+                <div className="text-black font-semibold">Commit <span className="underline decoration-2 font-black">#8f2a1b9</span> (merged 14m ago by dev-ops-bot) introduced unbounded WebSocket buffer in <span className="font-mono bg-black/5 px-1.5 py-0.5">websocket_handler.py:142</span>.</div>
+                <div className="text-black/60 text-[11px]">Correlation Confidence: 99.4% • Diagnostic Duration: 1.2s</div>
               </div>
             </div>
           )}
@@ -728,17 +714,17 @@ function InteractiveSimulatorSection() {
                 <CheckCircle2 size={16} />
                 MITIGATION COMPLETE: LATENCY NORMALIZED
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-[12px]">
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300">
-                  <span className="text-emerald-900 font-bold">INGRESS P99</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 border-t border-b border-black/15 divide-y md:divide-y-0 md:divide-x divide-black/15 py-4 font-mono text-[12px]">
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-emerald-800 font-bold uppercase tracking-wider block text-[11px]">INGRESS P99</span>
                   <div className="text-2xl font-black text-emerald-700 mt-1">0.86ms</div>
                 </div>
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300">
-                  <span className="text-emerald-900 font-bold">RESOLVED IN</span>
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-emerald-800 font-bold uppercase tracking-wider block text-[11px]">RESOLVED IN</span>
                   <div className="text-2xl font-black text-emerald-700 mt-1">42 seconds</div>
                 </div>
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300">
-                  <span className="text-emerald-900 font-bold">CUSTOMERS AFFECTED</span>
+                <div className="py-2 md:px-6 first:pl-0 last:pr-0">
+                  <span className="text-emerald-800 font-bold uppercase tracking-wider block text-[11px]">CUSTOMERS AFFECTED</span>
                   <div className="text-2xl font-black text-emerald-700 mt-1">0 dropped</div>
                 </div>
               </div>
@@ -783,14 +769,14 @@ function ComparisonSection() {
           </p>
         </div>
 
-        {/* Table Comparison */}
-        <div className="rounded-2xl border-2 border-black/15 overflow-hidden shadow-xs">
+        {/* Table Comparison (Plane Design, Zero Cards) */}
+        <div className="w-full border-t-2 border-b-2 border-black">
           <table className="w-full text-left font-sans text-sm">
             <thead>
-              <tr className="bg-slate-50 border-b border-black/10 text-black font-mono text-[12px] uppercase">
-                <th className="p-4 sm:p-5 font-black">Capabilities</th>
-                <th className="p-4 sm:p-5 font-bold text-black/60">Traditional APM Tools</th>
-                <th className="p-4 sm:p-5 font-bold text-black bg-slate-100">
+              <tr className="border-b-2 border-black text-black font-mono text-[12px] uppercase">
+                <th className="py-4 pr-4 font-black">Capabilities</th>
+                <th className="py-4 px-4 font-bold text-black/60">Traditional APM Tools</th>
+                <th className="py-4 px-4 font-black text-black">
                   <div className="flex items-center gap-2">
                     <Logo className="h-3.5 text-black" />
                     <span>Autonomous Mesh</span>
@@ -798,14 +784,14 @@ function ComparisonSection() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-black/10">
+            <tbody className="divide-y divide-black/15">
               {points.map((p, idx) => (
-                <tr key={idx} className="hover:bg-slate-50/60 transition-colors">
-                  <td className="p-4 sm:p-5 font-bold text-black">{p.feature}</td>
-                  <td className="p-4 sm:p-5 text-black font-medium flex items-center gap-2">
+                <tr key={idx} className="hover:bg-black/[0.02] transition-colors">
+                  <td className="py-4 pr-4 font-bold text-black">{p.feature}</td>
+                  <td className="py-4 px-4 text-black font-medium flex items-center gap-2">
                     <span className="text-red-600 font-black">✕</span> {p.traditional}
                   </td>
-                  <td className="p-4 sm:p-5 font-extrabold text-black bg-slate-100/60">
+                  <td className="py-4 px-4 font-black text-black">
                     <span className="text-emerald-700 font-black mr-2">✓</span> {p.brexal}
                   </td>
                 </tr>
@@ -870,31 +856,27 @@ function PricingSection() {
           </p>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl text-left">
+        {/* Plane Pricing Grid (Zero Cards) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 border-t-2 border-b-2 border-black divide-y md:divide-y-0 md:divide-x divide-black/15 w-full max-w-5xl text-left">
           {tiers.map((t, idx) => (
             <div
               key={idx}
-              className={`p-8 rounded-2xl bg-white border-2 transition-all flex flex-col justify-between shadow-xs ${
-                t.highlight
-                  ? "border-black shadow-lg -translate-y-2"
-                  : "border-black/15 hover:border-black"
-              }`}
+              className="py-8 md:py-10 md:px-8 flex flex-col justify-between"
             >
               <div>
                 {t.highlight && (
-                  <span className="inline-block px-3 py-1 rounded-full bg-black text-white text-[10.5px] font-mono font-bold tracking-wider uppercase mb-4">
-                    MOST POPULAR
+                  <span className="inline-block text-[10px] font-mono font-black tracking-widest uppercase mb-3 text-[#635BFF]">
+                    ★ MOST POPULAR
                   </span>
                 )}
-                <h3 className="text-xl font-black text-black mb-1">{t.name}</h3>
-                <p className="text-xs text-black font-semibold mb-6">{t.desc}</p>
+                <h3 className="text-2xl font-black text-black mb-1">{t.name}</h3>
+                <p className="text-xs text-black font-medium mb-6">{t.desc}</p>
                 <div className="flex items-baseline gap-1.5 mb-6">
                   <span className="text-4xl font-black text-black font-mono">{t.price}</span>
                   <span className="text-xs text-black font-bold font-mono">{t.period}</span>
                 </div>
 
-                <div className="space-y-3 pt-6 border-t border-black/10 text-[13.5px] text-black font-medium">
+                <div className="space-y-3 pt-6 border-t border-black/15 text-[13.5px] text-black font-medium">
                   {t.features.map((f, i) => (
                     <div key={i} className="flex items-center gap-2.5">
                       <Check size={16} className="text-black font-bold shrink-0" />
@@ -907,10 +889,10 @@ function PricingSection() {
               <div className="pt-8">
                 <Link
                   href="/register"
-                  className={`w-full py-3 rounded-xl text-center text-sm font-bold transition-all block ${
+                  className={`w-full py-3.5 text-center text-sm font-black transition-all block ${
                     t.highlight
-                      ? "bg-black text-white hover:bg-[#635BFF] shadow-sm"
-                      : "bg-slate-100 text-black border border-black hover:bg-black hover:text-white"
+                      ? "bg-black text-white hover:bg-[#635BFF]"
+                      : "bg-white text-black border-2 border-black hover:bg-black hover:text-white"
                   }`}
                 >
                   {t.cta}
@@ -944,14 +926,14 @@ function FinalCtaSection() {
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <Link
             href="/register"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-black text-white text-[15px] font-bold hover:bg-[#635BFF] transition-all shadow-md flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-black text-white text-[15px] font-bold hover:bg-[#635BFF] transition-colors flex items-center justify-center gap-2"
           >
             <span>Deploy Free Sandbox Cluster</span>
             <ArrowRight size={16} />
           </Link>
           <Link
             href="/dashboard"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white border-2 border-black text-black text-[15px] font-bold hover:bg-slate-50 transition-colors shadow-xs"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white border-2 border-black text-black text-[15px] font-bold hover:bg-slate-50 transition-colors"
           >
             Live Sandboxed Console
           </Link>
