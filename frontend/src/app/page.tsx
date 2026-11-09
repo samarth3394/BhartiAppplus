@@ -50,11 +50,7 @@ function StripeNavbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-        scrolled || mobileMenuOpen
-          ? "bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.04)] py-3 sm:py-3.5"
-          : "bg-transparent py-4 sm:py-5"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-[0_1px_12px_rgba(10,37,64,0.03)] py-3 sm:py-3.5 transition-all duration-200"
     >
       <div className="max-w-[1320px] mx-auto px-4 sm:px-10 flex items-center justify-between">
         
@@ -64,9 +60,9 @@ function StripeNavbar() {
         </Link>
 
         {/* Right Nav & Action CTAs Group */}
-        <div className="flex items-center gap-6 xl:gap-8">
+        <div className="flex items-center gap-4 xl:gap-7 shrink-0">
           {/* Stripe Desktop Navigation Menu */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-[14.5px] font-semibold text-[#0A2540]">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-[13.5px] xl:text-[14.5px] font-semibold text-[#0A2540] whitespace-nowrap">
             <div 
               className="relative cursor-pointer group flex items-center gap-1 hover:text-[#635BFF] transition-colors"
               onMouseEnter={() => setActiveDropdown("products")}
@@ -128,16 +124,16 @@ function StripeNavbar() {
           </nav>
 
           {/* Action CTAs & Mobile Hamburger */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Link
               href="/login"
-              className="text-[13px] sm:text-[14px] font-bold text-[#0A2540] hover:text-[#635BFF] px-2 sm:px-3 py-1.5 transition-colors"
+              className="text-[13px] sm:text-[14px] font-bold text-[#0A2540] hover:text-[#635BFF] px-2 sm:px-3 py-1.5 transition-colors whitespace-nowrap"
             >
               Sign in
             </Link>
             <Link
               href="/register"
-              className="group px-3.5 py-2 sm:px-4.5 sm:py-2.5 rounded-full bg-[#0A2540] hover:bg-[#635BFF] text-white text-[12.5px] sm:text-[13.5px] font-bold transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-1.5"
+              className="group px-3.5 py-2 sm:px-4.5 sm:py-2.5 rounded-full bg-[#0A2540] hover:bg-[#635BFF] text-white text-[12.5px] sm:text-[13.5px] font-bold transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-1.5 whitespace-nowrap"
             >
               <span>Start now</span>
               <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
@@ -413,7 +409,7 @@ function StripeColorGridCanvas() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative pt-20 pb-10 sm:pt-24 sm:pb-12 md:pt-28 md:pb-14 px-4 sm:px-10 overflow-hidden bg-white">
+    <section className="relative pt-24 pb-10 sm:pt-28 sm:pb-12 md:pt-32 md:pb-14 px-4 sm:px-10 overflow-hidden bg-white">
       
       {/* ── THE SIGNATURE STRIPE COLOR GRID CANVAS ── */}
       <StripeColorGridCanvas />
