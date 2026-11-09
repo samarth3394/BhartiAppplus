@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ShieldCheck, Lock, Globe, Server, CheckCircle2, FileText, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export function BrexalTrustSecuritySection() {
@@ -11,54 +11,42 @@ export function BrexalTrustSecuritySection() {
       title: "SOC-2 Type II Certified",
       subtitle: "AICPA Independent Audit",
       desc: "Audited annually across all Trust Services Criteria: Security, Availability, and Confidentiality. Verified controls for production access and zero-trust perimeter.",
-      icon: ShieldCheck,
-      color: "text-blue-600",
-      bg: "bg-blue-50 border-blue-200"
+      logo: "/badges/soc2.svg"
     },
     {
       badge: "ISO/IEC 27001",
       title: "ISO 27001 Certified",
       subtitle: "Information Security ISMS",
       desc: "Internationally standardized Information Security Management System covering continuous code scanning, secret isolation, vulnerability disclosure, and infrastructure hardening.",
-      icon: Lock,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50 border-emerald-200"
+      logo: "/badges/iso27001.svg"
     },
     {
       badge: "HIPAA Ready",
       title: "HIPAA & HITECH Compliant",
       subtitle: "Healthcare BAA Available",
       desc: "Formal Business Associate Agreements (BAAs) signed for healthcare and life-sciences teams. Automatic ePHI identification and kernel-level masking before packet transmission.",
-      icon: ShieldCheck,
-      color: "text-indigo-600",
-      bg: "bg-indigo-50 border-indigo-200"
+      logo: "/badges/hipaa.svg"
     },
     {
       badge: "GDPR & CCPA",
       title: "GDPR & CCPA Verified",
       subtitle: "EU Sovereign Residency",
       desc: "Strict compliance with EU and California privacy frameworks. Guaranteed EU/US data residency options with dedicated localized time-series storage nodes.",
-      icon: Globe,
-      color: "text-amber-600",
-      bg: "bg-amber-50 border-amber-200"
+      logo: "/badges/gdpr.svg"
     },
     {
       badge: "AES-256 & TLS 1.3",
       title: "End-to-End Encryption",
       subtitle: "CMEK / Vault Key Support",
       desc: "AES-256 GCM encryption at rest with automated key rotation. Mutual TLS 1.3 (mTLS) with pinned client certificates for all telemetry in flight.",
-      icon: Lock,
-      color: "text-sky-600",
-      bg: "bg-sky-50 border-sky-200"
+      logo: "/badges/aes256.svg"
     },
     {
       badge: "Zero-PII Redaction",
       title: "Kernel-Level Sanitization",
       subtitle: "eBPF In-Memory Masking",
       desc: "Authentication tokens, Authorization headers, credit cards, and social security formats are scrubbed in Linux kernel memory before any payload touches disk.",
-      icon: Server,
-      color: "text-purple-600",
-      bg: "bg-purple-50 border-purple-200"
+      logo: "/badges/zeropii.svg"
     }
   ];
 
@@ -87,10 +75,9 @@ export function BrexalTrustSecuritySection() {
           </p>
         </div>
 
-        {/* 6 Certification Badges & Cards */}
+        {/* 6 Certification Badges & Cards with 100% OFFICIAL BRAND BADGE LOGOS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-2">
           {certifications.map((item, idx) => {
-            const Icon = item.icon;
             return (
               <div
                 key={idx}
@@ -98,8 +85,13 @@ export function BrexalTrustSecuritySection() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`w-11 h-11 rounded-xl ${item.bg} border ${item.color} flex items-center justify-center`}>
-                      <Icon size={22} />
+                    {/* Official Seal / Badge Logo */}
+                    <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200/90 p-1 flex items-center justify-center shadow-xs">
+                      <img
+                        src={item.logo}
+                        alt={item.title}
+                        className="w-full h-full object-contain"
+                      />
                     </div>
                     <span className="px-3 py-1 rounded-full bg-slate-100 text-[#0A2540] text-[11px] font-mono font-extrabold tracking-wide">
                       {item.badge}
@@ -132,8 +124,13 @@ export function BrexalTrustSecuritySection() {
       <div className="w-full bg-[#0A2540] border-y border-[#1E3A8A]/50 py-7 sm:py-9 text-white shadow-md text-left mt-8 sm:mt-10">
         <div className="max-w-[1320px] mx-auto px-4 sm:px-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 border border-blue-400/30 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-              <FileText size={24} />
+            {/* Official Report Binder Badge */}
+            <div className="w-13 h-13 rounded-2xl bg-white/10 border border-white/20 p-1.5 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+              <img
+                src="/badges/soc2-report.svg"
+                alt="SOC-2 Audit Package"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="text-white">
               <h3

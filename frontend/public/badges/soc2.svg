@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%" fill="none">
+  <!-- Outer Ring -->
+  <circle cx="60" cy="60" r="56" fill="#0A2540" stroke="#2563EB" stroke-width="3"/>
+  <circle cx="60" cy="60" r="50" stroke="#38BDF8" stroke-width="1.2" stroke-dasharray="3 2"/>
+  
+  <!-- Inner Badge Background -->
+  <circle cx="60" cy="60" r="44" fill="#0D2E54"/>
+  
+  <!-- AICPA Header Arc / Text -->
+  <path id="aicpaArc" d="M 26 50 A 38 38 0 0 1 94 50" fill="none"/>
+  <text font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="900" fill="#38BDF8" letter-spacing="2">
+    <textPath href="#aicpaArc" startOffset="50%" text-anchor="middle">AICPA</textPath>
+  </text>
+  
+  <!-- Center SOC Text -->
+  <text x="60" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">SOC</text>
+  
+  <!-- Sub Banner TYPE II -->
+  <rect x="30" y="76" width="60" height="15" rx="3" fill="#2563EB"/>
+  <text x="60" y="87" font-family="system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">TYPE II</text>
+  
+  <!-- Trust Services Criteria Subtext -->
+  <text x="60" y="101" font-family="system-ui, -apple-system, sans-serif" font-size="5.5" font-weight="700" fill="#94A3B8" text-anchor="middle" letter-spacing="0.5">SECURITY &amp; PRIVACY</text>
+  
+  <!-- Gold Stars -->
+  <polygon points="60,20 62,25 67,25 63,28 65,33 60,30 55,33 57,28 53,25 58,25" fill="#FBBF24"/>
+  <polygon points="46,24 47.5,28 51.5,28 48.5,30 50,34 46,31.5 42,34 43.5,30 40.5,28 44.5,28" fill="#FBBF24" transform="scale(0.8) translate(14, 4)"/>
+  <polygon points="74,24 75.5,28 79.5,28 76.5,30 78,34 74,31.5 70,34 71.5,30 68.5,28 72.5,28" fill="#FBBF24" transform="scale(0.8) translate(19, 4)"/>
+</svg>

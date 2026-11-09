@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%" fill="none">
+  <!-- Outer Ring in Purple / Indigo -->
+  <circle cx="60" cy="60" r="56" fill="#3B0764" stroke="#9333EA" stroke-width="3"/>
+  <circle cx="60" cy="60" r="50" stroke="#C084FC" stroke-width="1.2" stroke-dasharray="3 2"/>
+  
+  <!-- Inner Background -->
+  <circle cx="60" cy="60" r="44" fill="#581C87"/>
+  
+  <!-- Shield with Eye Slash / Mask -->
+  <path d="M 60 20 L 76 26 C 76 42 66 52 60 56 C 54 52 44 42 44 26 Z" fill="#7E22CE" stroke="#C084FC" stroke-width="1.5"/>
+  <circle cx="60" cy="35" r="4" fill="#FFFFFF"/>
+  <line x1="52" y1="42" x2="68" y2="28" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"/>
+  
+  <!-- Main Title ZERO-PII -->
+  <text x="60" y="70" font-family="system-ui, -apple-system, sans-serif" font-size="14.5" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">ZERO-PII</text>
+  
+  <!-- Ribbon Banner eBPF MASK -->
+  <rect x="23" y="75" width="74" height="15" rx="3" fill="#9333EA"/>
+  <text x="60" y="86" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.2">KERNEL MASK</text>
+  
+  <!-- Subtext SANITIZATION -->
+  <text x="60" y="101" font-family="system-ui, -apple-system, sans-serif" font-size="5.5" font-weight="700" fill="#E9D5FF" text-anchor="middle" letter-spacing="0.5">AUTO TOKEN SCRUB</text>
+</svg>

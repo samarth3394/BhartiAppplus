@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%" fill="none">
+  <!-- Outer Ring in Cyan / Sky Blue -->
+  <circle cx="60" cy="60" r="56" fill="#0C4A6E" stroke="#0284C7" stroke-width="3"/>
+  <circle cx="60" cy="60" r="50" stroke="#38BDF8" stroke-width="1.2" stroke-dasharray="3 2"/>
+  
+  <!-- Inner Background -->
+  <circle cx="60" cy="60" r="44" fill="#075985"/>
+  
+  <!-- Cryptographic Padlock Top -->
+  <rect x="50" y="24" width="20" height="15" rx="7" stroke="#38BDF8" stroke-width="3" fill="none"/>
+  <rect x="46" y="34" width="28" height="18" rx="4" fill="#0369A1" stroke="#38BDF8" stroke-width="1.5"/>
+  <circle cx="60" cy="42" r="2.5" fill="#FFFFFF"/>
+  <line x1="60" y1="44.5" x2="60" y2="48" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <!-- Main AES-256 Title -->
+  <text x="60" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">AES-256</text>
+  
+  <!-- Ribbon Banner TLS 1.3 -->
+  <rect x="25" y="74" width="70" height="15" rx="3" fill="#0284C7"/>
+  <text x="60" y="85" font-family="system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">TLS 1.3 E2EE</text>
+  
+  <!-- Subtext CMEK / FIPS -->
+  <text x="60" y="100" font-family="system-ui, -apple-system, sans-serif" font-size="5.5" font-weight="700" fill="#BAE6FD" text-anchor="middle" letter-spacing="0.5">CMEK &amp; IN-FLIGHT</text>
+</svg>
