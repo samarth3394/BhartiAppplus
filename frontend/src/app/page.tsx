@@ -761,15 +761,34 @@ helm install brexal-agent brexal/ebpf-mesh \\
       <div className="max-w-[1320px] mx-auto text-left">
         
         {/* Section Header */}
-        <div className="max-w-2xl mb-16">
-          <div className="text-[12px] font-mono font-bold text-[#00D4FF] uppercase tracking-widest mb-3">
-            Designed for Developers
+        <div className="max-w-3xl mb-16">
+          {/* Futuristic Dual-Font Eyebrow */}
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md mb-6 shadow-[0_0_20px_rgba(0,212,255,0.1)]">
+            <span className="w-2 h-2 rounded-full bg-[#00D4FF] shadow-[0_0_8px_#00D4FF] animate-pulse" />
+            <span className="font-sans text-[11px] font-semibold tracking-[0.2em] uppercase text-white/70">
+              Designed for
+            </span>
+            <span className="font-mono text-[12px] font-black tracking-widest uppercase bg-gradient-to-r from-[#00D4FF] via-[#80E9FF] to-[#635BFF] bg-clip-text text-transparent px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-400/30 shadow-[0_0_12px_rgba(0,212,255,0.2)]">
+              &lt;Developers /&gt;
+            </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-white leading-tight mb-4">
-            The world’s most powerful and developer-friendly telemetry engine.
+
+          {/* Futuristic Modern Headline */}
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-[42px] font-bold tracking-[-0.03em] text-white leading-[1.18] mb-5">
+            The world’s most powerful and{" "}
+            <span className="bg-gradient-to-r from-[#00D4FF] via-[#7A73FF] to-[#FF5894] bg-clip-text text-transparent font-extrabold">
+              developer-friendly
+            </span>{" "}
+            telemetry engine.
           </h2>
-          <p className="text-base sm:text-lg text-white/85 font-normal leading-relaxed">
-            We obsess over developer experience. Instrument your entire distributed system in two lines of code without rebuilding Docker containers.
+
+          {/* Modern Supporting Subhead */}
+          <p className="font-sans text-base sm:text-[17.5px] text-slate-300 font-normal leading-relaxed">
+            We obsess over developer experience. Instrument your entire distributed system in{" "}
+            <code className="font-mono text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded-md border border-cyan-500/30 text-[13.5px] font-bold">
+              two lines of code
+            </code>{" "}
+            without rebuilding Docker containers.
           </p>
         </div>
 
