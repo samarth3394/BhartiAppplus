@@ -149,13 +149,76 @@ function StripeNavbar() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   HERO INSTANT SIGNUP CARD (CLEAN & MINIMAL)
+   ═══════════════════════════════════════════════════════════════ */
+function HeroSignupCard() {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      window.location.href = `/register?email=${encodeURIComponent(email)}`;
+    } else {
+      window.location.href = "/register";
+    }
+  };
+
+  return (
+    <div className="w-full max-w-[460px] bg-transparent p-0 flex flex-col text-left">
+      <form onSubmit={handleSubmit} className="w-full flex flex-col">
+        <label className="block text-[15px] sm:text-base font-bold text-[#0A2540] mb-2">
+          Work email
+        </label>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@company.com"
+          className="w-full px-5 py-3.5 sm:py-4 rounded-xl border-2 border-slate-300 bg-white text-[#0A2540] placeholder:text-slate-400 text-base font-medium outline-none focus:border-[#635BFF] focus:ring-4 focus:ring-[#635BFF]/15 transition-colors shadow-xs"
+        />
+        <p className="text-[13px] sm:text-[13.5px] text-[#425466] mt-2.5 mb-1 font-medium leading-relaxed">
+          Use a work email to find teammates and get access to BREXAL AI
+        </p>
+
+        <button
+          type="submit"
+          className="w-full mt-4 py-3.5 sm:py-4 rounded-full bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-base sm:text-[16.5px] tracking-wide transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+        >
+          <span>Sign up</span>
+          <ChevronRight size={18} />
+        </button>
+      </form>
+
+      <div className="relative flex py-4 sm:py-5 items-center">
+        <div className="flex-grow border-t border-slate-200"></div>
+        <span className="flex-shrink mx-4 text-xs uppercase tracking-wider text-[#425466] font-bold">
+          Or continue with
+        </span>
+        <div className="flex-grow border-t border-slate-200"></div>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => { window.location.href = "/register"; }}
+        className="w-full py-3.5 rounded-full border-2 border-slate-300 bg-white hover:bg-slate-50 text-[#0A2540] font-bold text-base flex items-center justify-center gap-3 transition-colors hover:border-[#0A2540] shadow-xs"
+      >
+        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+        </svg>
+        <span>Google</span>
+      </button>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
    2. STRIPE HERO SECTION WITH ICONIC ANGLED GRADIENT CANVAS
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
-  const [activeConsoleTab, setActiveConsoleTab] = useState<"topology" | "traces" | "anomaly">("topology");
-  const [activeNode, setActiveNode] = useState("api-gateway");
-  const [anomalyResolved, setAnomalyResolved] = useState(false);
-
   return (
     <section className="relative pt-36 pb-24 md:pt-44 md:pb-32 px-6 sm:px-10 overflow-hidden bg-white">
       
@@ -249,200 +312,9 @@ function StripeHeroSection() {
 
           </div>
 
-          {/* Right Column (5 cols): The Signature Stripe Interactive Device */}
-          <div className="lg:col-span-5 relative w-full">
-            
-            {/* Ambient Glow */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-[#635BFF]/20 to-[#00D4FF]/20 rounded-3xl blur-2xl opacity-70 -z-10" />
-
-            {/* Main Interactive Mockup Device Card */}
-            <div className="w-full bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-[0_24px_64px_rgba(10,37,64,0.12)] overflow-hidden text-left">
-              
-              {/* Device Window Chrome */}
-              <div className="px-5 py-3.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                  <span className="ml-2 font-mono text-[11px] font-bold text-[#425466]">
-                    live-mesh.bhartinexus.io
-                  </span>
-                </div>
-
-                {/* Live Pill Indicator */}
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10.5px] font-mono font-bold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>STREAMING</span>
-                </div>
-              </div>
-
-              {/* Mode Switcher Tabs */}
-              <div className="flex border-b border-slate-200/80 bg-slate-100/50 text-[12px] font-mono font-bold">
-                <button
-                  onClick={() => setActiveConsoleTab("topology")}
-                  className={`flex-1 py-2.5 px-3 transition-colors ${
-                    activeConsoleTab === "topology"
-                      ? "bg-white text-[#635BFF] border-b-2 border-[#635BFF]"
-                      : "text-[#425466] hover:text-[#0A2540]"
-                  }`}
-                >
-                  Topology
-                </button>
-                <button
-                  onClick={() => setActiveConsoleTab("traces")}
-                  className={`flex-1 py-2.5 px-3 transition-colors ${
-                    activeConsoleTab === "traces"
-                      ? "bg-white text-[#635BFF] border-b-2 border-[#635BFF]"
-                      : "text-[#425466] hover:text-[#0A2540]"
-                  }`}
-                >
-                  Traces
-                </button>
-                <button
-                  onClick={() => setActiveConsoleTab("anomaly")}
-                  className={`flex-1 py-2.5 px-3 transition-colors ${
-                    activeConsoleTab === "anomaly"
-                      ? "bg-white text-[#635BFF] border-b-2 border-[#635BFF]"
-                      : "text-[#425466] hover:text-[#0A2540]"
-                  }`}
-                >
-                  AI Radar
-                </button>
-              </div>
-
-              {/* Card Body */}
-              <div className="p-5 sm:p-6 min-h-[300px]">
-                
-                {activeConsoleTab === "topology" && (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between text-xs font-mono text-[#425466] pb-2 border-b border-slate-100">
-                      <span>42.8k req/sec • Ingress p99: 0.84ms</span>
-                      <span className="text-emerald-700 font-bold">14/14 Nominal</span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2.5 font-mono text-xs">
-                      {[
-                        { id: "api-gateway", name: "Cloudflare Ingress", type: "EDGE", p99: "0.8ms" },
-                        { id: "auth-cluster", name: "Auth & IAM Mesh", type: "SECURITY", p99: "2.1ms" },
-                        { id: "payment-worker", name: "Billing Engine", type: "SERVICE", p99: "12.4ms" },
-                        { id: "postgres-primary", name: "PostgreSQL Primary", type: "DATA", p99: "0.4ms" },
-                      ].map((node) => (
-                        <div
-                          key={node.id}
-                          onClick={() => setActiveNode(node.id)}
-                          className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                            activeNode === node.id
-                              ? "border-[#635BFF] bg-[#635BFF]/5 ring-1 ring-[#635BFF]"
-                              : "border-slate-200 hover:border-slate-300 bg-white"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between text-[10px] text-[#425466] uppercase mb-1">
-                            <span>{node.type}</span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                          </div>
-                          <div className="font-bold text-[#0A2540] truncate">{node.name}</div>
-                          <div className="text-[11px] font-bold text-[#635BFF] mt-1">{node.p99}</div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-[11.5px] font-mono text-[#425466]">
-                      <span className="font-bold text-[#0A2540]">Node Inspection: </span>
-                      <span className="text-[#635BFF] font-bold uppercase">{activeNode}</span>
-                      <div className="mt-1 flex items-center justify-between text-[11px] text-slate-600">
-                        <span>eBPF: Active</span>
-                        <span>mTLS: TLS 1.3</span>
-                        <span>Replicas: 8/8</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeConsoleTab === "traces" && (
-                  <div className="space-y-3 font-mono text-xs">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-[#425466]">
-                      <span>Trace ID: 0x9f2a1b4e</span>
-                      <span className="font-bold text-[#0A2540]">Total: 18.2ms</span>
-                    </div>
-
-                    <div className="space-y-2">
-                      {[
-                        { name: "POST /v1/checkout", duration: "18.2ms", width: "100%", color: "bg-[#0A2540]" },
-                        { name: "auth.verify_bearer", duration: "2.1ms", width: "18%", color: "bg-[#635BFF]" },
-                        { name: "redis.get(session)", duration: "0.3ms", width: "8%", color: "bg-[#00D4FF]" },
-                        { name: "stripe.charge_intent", duration: "14.1ms", width: "74%", color: "bg-emerald-600" },
-                      ].map((span, idx) => (
-                        <div key={idx} className="p-2 rounded-lg bg-slate-50 border border-slate-200/60">
-                          <div className="flex items-center justify-between font-bold text-[#0A2540] text-[11px] mb-1">
-                            <span>{span.name}</span>
-                            <span>{span.duration}</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                            <div className={`h-full rounded-full ${span.color}`} style={{ width: span.width }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeConsoleTab === "anomaly" && (
-                  <div className="space-y-4">
-                    <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950">
-                      <div className="flex items-center gap-1.5 font-bold text-emerald-900 mb-1">
-                        <CheckCircle2 size={15} className="text-emerald-600" />
-                        <span>Baseline Nominal: 0 Critical Outages</span>
-                      </div>
-                      <p className="text-[11.5px] leading-relaxed text-emerald-800">
-                        AI correlation monitored 48,000 transactions across 14 clusters in last 60s.
-                      </p>
-                    </div>
-
-                    <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 font-mono text-xs">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-[#425466]">Simulation Test:</span>
-                        <button
-                          onClick={() => setAnomalyResolved(!anomalyResolved)}
-                          className="px-2.5 py-1 rounded-md bg-[#635BFF] text-white font-bold text-[10.5px] hover:bg-[#5046e5] transition-colors"
-                        >
-                          {anomalyResolved ? "Reset State" : "Simulate Outage"}
-                        </button>
-                      </div>
-                      <div className="text-[11px] font-bold text-[#0A2540]">
-                        {anomalyResolved ? (
-                          <span className="text-emerald-700">✓ Resolved in 38s via canary pool recycle</span>
-                        ) : (
-                          <span className="text-amber-700">Ready to inject connection pool anomaly</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-              </div>
-
-              {/* Card Footer Link */}
-              <div className="px-5 py-3 bg-slate-50 border-t border-slate-200/80 flex items-center justify-between text-xs font-mono">
-                <span className="text-[#425466] font-medium">WebSocket link live</span>
-                <Link href="/dashboard" className="text-[#635BFF] font-bold flex items-center gap-1 hover:underline">
-                  <span>Open Full Dashboard</span>
-                  <ArrowRight size={13} />
-                </Link>
-              </div>
-
-            </div>
-
-            {/* Floating Stripe-Style Accent Badge */}
-            <div className="hidden sm:flex absolute -bottom-6 -left-6 bg-white rounded-2xl border border-slate-200/90 shadow-xl p-4 items-center gap-3.5 font-mono text-xs">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 font-bold">
-                <Zap size={20} />
-              </div>
-              <div>
-                <div className="text-[13px] font-black text-[#0A2540]">0.84ms P99 Latency</div>
-                <div className="text-[11px] text-[#425466]">0.0% Bytecode CPU penalty</div>
-              </div>
-            </div>
-
+          {/* Right Column (5 cols): Instant Signup Component */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-end w-full">
+            <HeroSignupCard />
           </div>
 
         </div>
