@@ -614,7 +614,7 @@ function StripeBentoGridSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   5. STRIPE DEVELOPER SECTION (DARK CONTRAST IDE / PLAYGROUND)
+   5. STRIPE DEVELOPER SECTION (WHITE BACKGROUND, CLEAN HIGH CONTRAST)
    ═══════════════════════════════════════════════════════════════ */
 function StripeDeveloperSandboxSection() {
   const [activeLang, setActiveLang] = useState<"curl" | "python" | "go" | "helm">("curl");
@@ -667,18 +667,18 @@ helm install brexal-agent brexal/ebpf-mesh \\
   };
 
   return (
-    <section id="developer-sandbox" className="py-24 md:py-32 px-6 sm:px-10 bg-[#0A2540] text-white">
+    <section id="developer-sandbox" className="py-24 md:py-32 px-6 sm:px-10 bg-white border-b border-slate-200/80 text-[#0A2540]">
       <div className="max-w-[1320px] mx-auto text-left">
         
         {/* Section Header */}
         <div className="max-w-2xl mb-16">
-          <div className="text-[12px] font-mono font-bold text-[#00D4FF] uppercase tracking-widest mb-3">
+          <div className="text-[12px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-3">
             Designed for Developers
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-white leading-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-[#0A2540] leading-tight mb-4">
             The world’s most powerful and developer-friendly telemetry engine.
           </h2>
-          <p className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed">
+          <p className="text-base sm:text-lg text-[#425466] font-normal leading-relaxed">
             We obsess over developer experience. Instrument your entire distributed system in two lines of code without rebuilding Docker containers.
           </p>
         </div>
@@ -687,19 +687,19 @@ helm install brexal-agent brexal/ebpf-mesh \\
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
           {/* Left: Code Snippet Panel */}
-          <div className="lg:col-span-7 bg-[#051527] rounded-3xl border border-slate-700/80 p-6 sm:p-8 flex flex-col justify-between shadow-2xl">
+          <div className="lg:col-span-7 bg-[#0A2540] rounded-3xl border border-slate-800 p-6 sm:p-8 flex flex-col justify-between shadow-xl text-white">
             <div>
               {/* Language Switcher Tabs */}
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6 font-mono text-xs">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-700/80 mb-6 font-mono text-xs">
                 <div className="flex items-center gap-2">
                   {(["curl", "python", "go", "helm"] as const).map((lang) => (
                     <button
                       key={lang}
                       onClick={() => setActiveLang(lang)}
-                      className={`px-3 py-1.5 rounded-lg font-bold transition-all uppercase ${
+                      className={`px-3.5 py-1.5 rounded-lg font-bold transition-all uppercase ${
                         activeLang === lang
-                          ? "bg-[#635BFF] text-white"
-                          : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                          ? "bg-[#635BFF] text-white shadow-xs"
+                          : "text-slate-300 hover:text-white hover:bg-slate-800"
                       }`}
                     >
                       {lang}
@@ -709,20 +709,20 @@ helm install brexal-agent brexal/ebpf-mesh \\
 
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors cursor-pointer"
                 >
                   {copied ? <CheckCheck size={14} className="text-emerald-400" /> : <Copy size={14} />}
                   <span>{copied ? "Copied" : "Copy"}</span>
                 </button>
               </div>
 
-              {/* Code Pre Block */}
-              <pre className="font-mono text-[13px] sm:text-[14px] leading-relaxed text-slate-200 overflow-x-auto whitespace-pre">
+              {/* Code Pre Block with Crisp White Code Text */}
+              <pre className="font-mono text-[13px] sm:text-[14px] leading-relaxed text-white overflow-x-auto whitespace-pre">
                 <code>{codeSnippets[activeLang]}</code>
               </pre>
             </div>
 
-            <div className="pt-6 border-t border-slate-800/80 mt-6 flex items-center justify-between text-xs font-mono text-slate-400">
+            <div className="pt-6 border-t border-slate-700/80 mt-6 flex items-center justify-between text-xs font-mono text-slate-300">
               <span>Client SDK v3.2.0 • Zero dependencies</span>
               <Link href="/dashboard" className="text-[#00D4FF] hover:underline font-bold flex items-center gap-1">
                 <span>View Full API Reference</span>
@@ -732,9 +732,9 @@ helm install brexal-agent brexal/ebpf-mesh \\
           </div>
 
           {/* Right: Simulated Real-Time Response Payload */}
-          <div className="lg:col-span-5 bg-[#051527] rounded-3xl border border-slate-700/80 p-6 sm:p-8 flex flex-col justify-between shadow-2xl font-mono text-xs">
+          <div className="lg:col-span-5 bg-[#0A2540] rounded-3xl border border-slate-800 p-6 sm:p-8 flex flex-col justify-between shadow-xl font-mono text-xs text-white">
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6 text-slate-400">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-700/80 mb-6 text-slate-300">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="font-bold text-white uppercase">Live Ingestion Response</span>
@@ -742,20 +742,20 @@ helm install brexal-agent brexal/ebpf-mesh \\
                 <span className="text-emerald-400 font-bold">200 OK (0.84ms)</span>
               </div>
 
-              <div className="p-4 rounded-2xl bg-black/40 border border-slate-800 text-[12px] text-slate-300 space-y-2 overflow-x-auto">
-                <div className="text-emerald-400">&#123;</div>
-                <div className="pl-4 text-slate-300">&quot;status&quot;: &quot;MESH_ACTIVE&quot;,</div>
-                <div className="pl-4 text-slate-300">&quot;cluster_id&quot;: &quot;k8s-us-east-prod&quot;,</div>
-                <div className="pl-4 text-slate-300">&quot;ebpf_socket_probes&quot;: 14,</div>
-                <div className="pl-4 text-slate-300">&quot;p99_latency_ms&quot;: 0.84,</div>
-                <div className="pl-4 text-slate-300">&quot;anomaly_detection_model&quot;: &quot;brexal-deep-correlation-v3&quot;,</div>
-                <div className="pl-4 text-slate-300">&quot;auto_mitigation_ready&quot;: true</div>
-                <div className="text-emerald-400">&#125;</div>
+              <div className="p-4 rounded-2xl bg-[#051527] border border-slate-800 text-[12.5px] text-white space-y-2 overflow-x-auto">
+                <div className="text-emerald-400 font-bold">&#123;</div>
+                <div className="pl-4 text-white">&quot;status&quot;: &quot;MESH_ACTIVE&quot;,</div>
+                <div className="pl-4 text-white">&quot;cluster_id&quot;: &quot;k8s-us-east-prod&quot;,</div>
+                <div className="pl-4 text-white">&quot;ebpf_socket_probes&quot;: 14,</div>
+                <div className="pl-4 text-white">&quot;p99_latency_ms&quot;: 0.84,</div>
+                <div className="pl-4 text-white">&quot;anomaly_model&quot;: &quot;deep-correlation-v3&quot;,</div>
+                <div className="pl-4 text-white">&quot;auto_mitigation_ready&quot;: true</div>
+                <div className="text-emerald-400 font-bold">&#125;</div>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-800/80 mt-6">
-              <div className="flex items-center justify-between text-slate-400 text-[11.5px]">
+            <div className="pt-6 border-t border-slate-700/80 mt-6">
+              <div className="flex items-center justify-between text-slate-300 text-[11.5px]">
                 <span>Kernel eBPF Socket Filter: OK</span>
                 <span className="text-emerald-400 font-bold">0.0% CPU overhead</span>
               </div>

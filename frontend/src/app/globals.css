@@ -39,13 +39,13 @@ body {
 /* Stripe-inspired Typography Rules */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sora), var(--font-manrope), sans-serif;
-  color: #000000;
+  color: inherit;
   text-wrap: balance;
   letter-spacing: -0.025em;
 }
 
 p {
-  color: #000000;
+  color: inherit;
   text-wrap: pretty;
   line-height: 1.65;
 }
