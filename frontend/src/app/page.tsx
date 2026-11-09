@@ -149,7 +149,39 @@ function StripeNavbar() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   HERO INSTANT SIGNUP CARD (CLEAN & MINIMAL)
+   BROWSER MOCKUP FRAME (MACOS WINDOW WITH URL BAR)
+   ═══════════════════════════════════════════════════════════════ */
+interface BrowserFrameProps {
+  url?: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+function BrowserFrame({ url = "console.bhartinexus.io", children, className = "" }: BrowserFrameProps) {
+  return (
+    <div className={`rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white shadow-[0_20px_50px_rgba(10,37,64,0.09)] overflow-hidden ${className}`}>
+      {/* Browser Bar */}
+      <div className="flex items-center gap-2 px-4 py-2.5 sm:py-3 bg-slate-50/90 border-b border-slate-200/80">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]/90 border border-[#E0443E]/50" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]/90 border border-[#DEA123]/50" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]/90 border border-[#1AAB29]/50" />
+        </div>
+        <div className="flex-1 max-w-xs sm:max-w-sm mx-auto flex items-center justify-center gap-1.5 px-3 py-1 rounded-md bg-white border border-slate-200/70 text-[11px] font-mono text-slate-500 font-medium truncate">
+          <Lock size={10} className="text-slate-400 shrink-0" />
+          <span className="truncate">{url}</span>
+        </div>
+      </div>
+      {/* Window Body */}
+      <div className="relative bg-white overflow-hidden">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HERO INSTANT SIGNUP CARD (CLEAN & COMPACT)
    ═══════════════════════════════════════════════════════════════ */
 function HeroSignupCard() {
   const [email, setEmail] = useState("");
@@ -164,35 +196,36 @@ function HeroSignupCard() {
   };
 
   return (
-    <div className="w-full max-w-[460px] bg-transparent p-0 flex flex-col text-left">
+    <div className="w-full max-w-[480px] bg-transparent p-0 flex flex-col text-left mb-6">
       <form onSubmit={handleSubmit} className="w-full flex flex-col">
-        <label className="block text-[15px] sm:text-base font-bold text-[#0A2540] mb-2">
+        <label className="block text-[13.5px] font-bold text-[#0A2540] mb-1.5">
           Work email
         </label>
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@company.com"
-          className="w-full px-5 py-3.5 sm:py-4 rounded-xl border-2 border-slate-300 bg-white text-[#0A2540] placeholder:text-slate-400 text-base font-medium outline-none focus:border-[#635BFF] focus:ring-4 focus:ring-[#635BFF]/15 transition-colors shadow-xs"
-        />
-        <p className="text-[13px] sm:text-[13.5px] text-[#425466] mt-2.5 mb-1 font-medium leading-relaxed">
+        <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            className="flex-1 px-4 py-3 rounded-xl border border-slate-300 bg-white text-[#0A2540] placeholder:text-slate-400 text-sm font-medium outline-none focus:border-[#635BFF] focus:ring-3 focus:ring-[#635BFF]/15 transition-all shadow-2xs"
+          />
+          <button
+            type="submit"
+            className="px-5 py-3 rounded-xl bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-sm tracking-wide transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-1.5 shrink-0"
+          >
+            <span>Sign up</span>
+            <ChevronRight size={16} />
+          </button>
+        </div>
+        <p className="text-[12px] text-[#425466] mt-2 font-medium leading-relaxed">
           Use a work email to find teammates and get access to BREXAL AI
         </p>
-
-        <button
-          type="submit"
-          className="w-full mt-4 py-3.5 sm:py-4 rounded-full bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-base sm:text-[16.5px] tracking-wide transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
-        >
-          <span>Sign up</span>
-          <ChevronRight size={18} />
-        </button>
       </form>
 
-      <div className="relative flex py-4 sm:py-5 items-center">
+      <div className="relative flex py-3 items-center">
         <div className="flex-grow border-t border-slate-200"></div>
-        <span className="flex-shrink mx-4 text-xs uppercase tracking-wider text-[#425466] font-bold">
+        <span className="flex-shrink mx-3 text-[11px] uppercase tracking-wider text-[#425466] font-bold">
           Or continue with
         </span>
         <div className="flex-grow border-t border-slate-200"></div>
@@ -201,9 +234,9 @@ function HeroSignupCard() {
       <button
         type="button"
         onClick={() => { window.location.href = "/register"; }}
-        className="w-full py-3.5 rounded-full border-2 border-slate-300 bg-white hover:bg-slate-50 text-[#0A2540] font-bold text-base flex items-center justify-center gap-3 transition-colors hover:border-[#0A2540] shadow-xs"
+        className="w-full py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-[#0A2540] font-bold text-sm flex items-center justify-center gap-2.5 transition-colors hover:border-[#0A2540] shadow-2xs"
       >
-        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
@@ -220,13 +253,13 @@ function HeroSignupCard() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative pt-36 pb-24 md:pt-44 md:pb-32 px-6 sm:px-10 overflow-hidden bg-white">
+    <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 px-6 sm:px-10 overflow-hidden bg-white">
       
       {/* ── THE SIGNATURE STRIPE ANGLED GRADIENT MESH CANVAS ── */}
       <div 
-        className="absolute top-0 left-0 right-0 h-[680px] pointer-events-none -z-10 overflow-hidden"
+        className="absolute top-0 left-0 right-0 h-[720px] pointer-events-none -z-10 overflow-hidden"
         style={{
-          clipPath: "polygon(0 0, 100% 0, 100% 75%, 0 100%)"
+          clipPath: "polygon(0 0, 100% 0, 100% 78%, 0 100%)"
         }}
       >
         {/* Multicolored Gradient Mesh Layers */}
@@ -250,23 +283,23 @@ function StripeHeroSection() {
         {/* TWO-COLUMN STRIPE LAYOUT */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
           
-          {/* Left Column (7 cols): Stripe Editorial Copy */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left">
+          {/* Left Column (5 cols): Editorial Copy & Quick Signup */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left">
             
             {/* Top Pill Eyebrow */}
             <Link 
               href="#interactive-simulator" 
-              className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-slate-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-6 hover:border-[#635BFF]/40 transition-colors"
+              className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-slate-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-5 hover:border-[#635BFF]/40 transition-colors"
             >
               <span className="flex h-2 w-2 rounded-full bg-[#635BFF] animate-pulse" />
-              <span className="text-[12.5px] font-bold text-[#0A2540]">
+              <span className="text-[12px] font-bold text-[#0A2540]">
                 Now in GA: Autonomous eBPF Telemetry Mesh 3.0
               </span>
               <ChevronRight size={13} className="text-[#635BFF] group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
             {/* Grand Headline (Stripe Typographic System) */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-extrabold tracking-[-0.04em] text-[#0A2540] leading-[1.05] mb-6 text-left">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-[-0.04em] text-[#0A2540] leading-[1.08] mb-5 text-left">
               Autonomous telemetry <br className="hidden sm:inline" />
               infrastructure for <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-[#635BFF] via-[#0073E6] to-[#00D4FF] bg-clip-text text-transparent">
@@ -275,46 +308,69 @@ function StripeHeroSection() {
             </h1>
 
             {/* Supporting Subhead */}
-            <p className="text-lg sm:text-[20px] text-[#425466] font-normal max-w-xl leading-relaxed mb-8 text-left">
+            <p className="text-base sm:text-[17px] text-[#425466] font-normal leading-relaxed mb-6 text-left">
               Millions of requests across Kubernetes, microservices, and databases are monitored in real time with BREXAL. Synthesize logs, kernel traces, and metrics into self-healing incident intelligence.
             </p>
 
-            {/* Stripe Dual Action CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-8">
-              <Link
-                href="/register"
-                className="group px-7 py-3.5 rounded-full bg-[#0A2540] text-white text-[15px] font-bold hover:bg-[#635BFF] transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2"
-              >
-                <span>Start now</span>
-                <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-              <Link
-                href="/dashboard"
-                className="group px-7 py-3.5 rounded-full bg-white/80 hover:bg-white border border-slate-300/80 text-[#0A2540] text-[15px] font-bold transition-all shadow-xs flex items-center justify-center gap-2 hover:-translate-y-0.5"
-              >
-                <span>Explore Live Console</span>
-                <ChevronRight size={16} className="text-[#635BFF] group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </div>
+            {/* Instant Signup Card */}
+            <HeroSignupCard />
 
             {/* Reassurance Micro-Metrics */}
-            <div className="flex flex-wrap items-center gap-6 text-[12.5px] font-semibold text-[#425466]">
+            <div className="flex flex-wrap items-center gap-5 text-[12px] font-semibold text-[#425466] pt-1">
               <span className="flex items-center gap-1.5">
-                <Check size={15} className="text-emerald-600 font-bold" /> Free developer tier
+                <Check size={14} className="text-emerald-600 font-bold" /> Free developer tier
               </span>
               <span className="flex items-center gap-1.5">
-                <Check size={15} className="text-emerald-600 font-bold" /> Zero bytecode injection
+                <Check size={14} className="text-emerald-600 font-bold" /> Zero bytecode injection
               </span>
               <span className="flex items-center gap-1.5">
-                <Check size={15} className="text-emerald-600 font-bold" /> SOC-2 Type II Certified
+                <Check size={14} className="text-emerald-600 font-bold" /> SOC-2 Type II Certified
               </span>
             </div>
 
           </div>
 
-          {/* Right Column (5 cols): Instant Signup Component */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end w-full">
-            <HeroSignupCard />
+          {/* Right Column (7 cols): Layered Futuristic Visual Showcase (shot-3 + shot-1) */}
+          <div className="lg:col-span-7 relative w-full pt-4 lg:pt-0">
+            
+            {/* Ambient Multi-Color Gradient Mesh Glow */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-[#635BFF]/30 via-[#00D4FF]/25 to-[#FF5894]/25 rounded-3xl blur-3xl opacity-75 -z-10" />
+            
+            {/* Main Background Window: shot-3.png (Console Dashboard Overview) */}
+            <BrowserFrame url="console.bhartinexus.io/dashboard" className="transition-transform duration-300 hover:scale-[1.01]">
+              <div className="relative">
+                <img
+                  src="/showcase/shot-3.png"
+                  alt="Bharti Nexus Telemetry Console Overview"
+                  className="w-full h-auto block select-none"
+                />
+                {/* Subtle Modern Futuristic Color Grading Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#635BFF]/5 via-transparent to-[#00D4FF]/5 pointer-events-none" />
+              </div>
+            </BrowserFrame>
+
+            {/* Overlapping Corner Card: shot-1.png (Live Telemetry Cockpit) */}
+            <div className="absolute -bottom-6 -left-3 sm:-bottom-8 sm:-left-6 w-[62%] sm:w-[56%] z-20 transition-transform duration-300 hover:-translate-y-1">
+              <div className="rounded-2xl border-2 border-white/95 bg-white/95 backdrop-blur-md shadow-[0_25px_60px_-12px_rgba(10,37,64,0.28)] overflow-hidden ring-1 ring-slate-900/10">
+                <div className="px-3 py-1.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10px] font-mono font-bold text-[#0A2540] uppercase tracking-wider">Live Mesh Ingress</span>
+                  </div>
+                  <span className="text-[9.5px] font-mono font-extrabold text-[#635BFF]">0.84ms P99</span>
+                </div>
+                <div className="relative">
+                  <img
+                    src="/showcase/shot-1.png"
+                    alt="Live Telemetry Ingress Probe"
+                    className="w-full h-auto block select-none"
+                  />
+                  {/* Subtle Corner Vignette & Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#635BFF]/10 via-transparent to-transparent pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
@@ -363,7 +419,219 @@ function StripeClientMarquee() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   4. STRIPE BENTO GRID: "A FULLY INTEGRATED SUITE"
+   4. LAYERED PRODUCT SHOWCASES (CORNER-OVERLAPPING PANELS)
+   ═══════════════════════════════════════════════════════════════ */
+function StripeProductShowcaseSection() {
+  return (
+    <section className="py-24 md:py-36 px-6 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden">
+      
+      {/* Ambient subtle color grading meshes behind the showcases */}
+      <div className="absolute top-1/4 -right-40 w-[600px] h-[600px] bg-gradient-to-bl from-[#FF725E]/15 via-[#635BFF]/15 to-transparent rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -left-40 w-[600px] h-[600px] bg-gradient-to-tr from-[#00D4FF]/15 via-[#10B981]/15 to-transparent rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-[1320px] mx-auto space-y-28 md:space-y-40">
+
+        {/* ── SHOWCASE A: SPRINT VELOCITY & LIVE BUG RADAR ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Editorial Left */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left">
+            <div className="text-[11.5px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-3">
+              Engineering Velocity
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-[42px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.12] mb-5">
+              Agile sprint pipelines with autonomous bug watchdogs.
+            </h2>
+            <p className="text-base sm:text-lg text-[#425466] leading-relaxed mb-6 font-normal">
+              Track multi-engineer sprint deliverables in lockstep with automated production regression feeds. Critical runtime anomalies are mapped directly to git commits before impacting customers.
+            </p>
+
+            <div className="space-y-3.5 mb-8 w-full">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-[#635BFF]/10 text-[#635BFF] flex items-center justify-center shrink-0 mt-0.5">
+                  <Check size={13} className="font-bold" />
+                </div>
+                <div className="text-sm text-[#0A2540] font-semibold">
+                  Live Kanban boards synchronized with GitHub and GitLab pull requests
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-[#635BFF]/10 text-[#635BFF] flex items-center justify-center shrink-0 mt-0.5">
+                  <Check size={13} className="font-bold" />
+                </div>
+                <div className="text-sm text-[#0A2540] font-semibold">
+                  Zero-latency regression radar with automated issue severity tags
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-[#635BFF]/10 text-[#635BFF] flex items-center justify-center shrink-0 mt-0.5">
+                  <Check size={13} className="font-bold" />
+                </div>
+                <div className="text-sm text-[#0A2540] font-semibold">
+                  Automated commit correlation & fast rollback recommendations
+                </div>
+              </div>
+            </div>
+
+            <Link
+              href="/register"
+              className="group inline-flex items-center gap-2 text-sm font-bold text-[#635BFF] hover:text-[#0A2540] transition-colors"
+            >
+              <span>Explore engineering workflows</span>
+              <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Layered Visual Right: shot-4 (Kanban Board) + shot-5 (Issues & Bugs) */}
+          <div className="lg:col-span-7 relative w-full pt-4 lg:pt-0">
+            {/* Warm Sunset / Amber-Violet Ambient Glow */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-[#FF725E]/20 via-[#635BFF]/25 to-[#00D4FF]/20 rounded-3xl blur-3xl opacity-75 -z-10" />
+            
+            {/* Background Browser Window: shot-4.png (Kanban Board) */}
+            <BrowserFrame url="git.bhartinexus.io/sprints/active" className="transition-transform duration-300 hover:scale-[1.01]">
+              <div className="relative">
+                <img
+                  src="/showcase/shot-4.png"
+                  alt="Engineering Sprint Kanban Board"
+                  className="w-full h-auto block select-none"
+                />
+                {/* Modern subtle ambient tint */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#635BFF]/5 via-transparent to-[#FF725E]/5 pointer-events-none" />
+              </div>
+            </BrowserFrame>
+
+            {/* Overlapping Corner Card: shot-5.png (Issues & Bugs Feed) */}
+            <div className="absolute -bottom-6 -left-3 sm:-bottom-8 sm:-left-6 w-[76%] sm:w-[68%] z-20 transition-transform duration-300 hover:-translate-y-1">
+              <div className="rounded-2xl border-2 border-white/95 bg-white/95 backdrop-blur-md shadow-[0_25px_60px_-12px_rgba(10,37,64,0.28)] overflow-hidden ring-1 ring-slate-900/10">
+                <div className="px-3.5 py-1.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                    <span className="text-[10px] font-mono font-bold text-[#0A2540] uppercase tracking-wider">AI Incident Watchdog</span>
+                  </div>
+                  <span className="text-[9.5px] font-mono font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+                    2 Critical Alerts
+                  </span>
+                </div>
+                <div className="relative">
+                  <img
+                    src="/showcase/shot-5.png"
+                    alt="Active Issues and Bug Traces"
+                    className="w-full h-auto block select-none"
+                  />
+                  {/* Subtle Corner Glow Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-rose-500/10 via-transparent to-transparent pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* ── SHOWCASE B: TEAM GOVERNANCE & MULTI-CLUSTER INFRASTRUCTURE ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Layered Visual Left: shot-2 (Team Access) + shot-6 (Infrastructure Nodes) */}
+          <div className="lg:col-span-7 relative w-full order-2 lg:order-1 pt-4 lg:pt-0">
+            {/* Tech Cyan / Emerald Ambient Glow */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-[#00D4FF]/25 via-[#10B981]/25 to-[#635BFF]/20 rounded-3xl blur-3xl opacity-75 -z-10" />
+            
+            {/* Background Browser Window: shot-2.png (Team Access Control) */}
+            <BrowserFrame url="auth.bhartinexus.io/organization/members" className="transition-transform duration-300 hover:scale-[1.01]">
+              <div className="relative">
+                <img
+                  src="/showcase/shot-2.png"
+                  alt="Team Governance and Access Control"
+                  className="w-full h-auto block select-none"
+                />
+                {/* Subtle Modern Ambient Tint */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#10B981]/5 via-transparent to-[#00D4FF]/5 pointer-events-none" />
+              </div>
+            </BrowserFrame>
+
+            {/* Overlapping Corner Card: shot-6.png (Infrastructure & Worker Nodes) */}
+            <div className="absolute -bottom-6 -right-3 sm:-bottom-8 sm:-right-6 w-[70%] sm:w-[62%] z-20 transition-transform duration-300 hover:-translate-y-1">
+              <div className="rounded-2xl border-2 border-white/95 bg-white/95 backdrop-blur-md shadow-[0_25px_60px_-12px_rgba(10,37,64,0.28)] overflow-hidden ring-1 ring-slate-900/10">
+                <div className="px-3.5 py-1.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span className="text-[10px] font-mono font-bold text-[#0A2540] uppercase tracking-wider">Cluster Telemetry</span>
+                  </div>
+                  <span className="text-[9.5px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    99.99% Uptime
+                  </span>
+                </div>
+                <div className="relative">
+                  <img
+                    src="/showcase/shot-6.png"
+                    alt="Active Worker Nodes and Hardware Telemetry"
+                    className="w-full h-auto block select-none"
+                  />
+                  {/* Subtle Corner Glow Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/10 via-transparent to-transparent pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Editorial Right */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left order-1 lg:order-2">
+            <div className="text-[11.5px] font-mono font-bold text-emerald-600 uppercase tracking-widest mb-3">
+              Infrastructure & Governance
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-[42px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.12] mb-5">
+              Enterprise team controls with hardware node telemetry.
+            </h2>
+            <p className="text-base sm:text-lg text-[#425466] leading-relaxed mb-6 font-normal">
+              Manage architectural ownership, RBAC permissions, and multi-tenant audit logs alongside live CPU, memory, NVMe disk, and network throughput across every cloud cluster.
+            </p>
+
+            <div className="space-y-3.5 mb-8 w-full">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <Check size={13} className="font-bold" />
+                </div>
+                <div className="text-sm text-[#0A2540] font-semibold">
+                  Granular role-based access control (RBAC) with audit verification
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <Check size={13} className="font-bold" />
+                </div>
+                <div className="text-sm text-[#0A2540] font-semibold">
+                  Microsecond node metrics: 34.8% CPU, 58.2% RAM, 1.8 Gbps network
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <Check size={13} className="font-bold" />
+                </div>
+                <div className="text-sm text-[#0A2540] font-semibold">
+                  Automated security audit log streams and team invite workflows
+                </div>
+              </div>
+            </div>
+
+            <Link
+              href="/dashboard"
+              className="group inline-flex items-center gap-2 text-sm font-bold text-emerald-600 hover:text-[#0A2540] transition-colors"
+            >
+              <span>View cluster architecture</span>
+              <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. STRIPE BENTO GRID: "A FULLY INTEGRATED SUITE"
    ═══════════════════════════════════════════════════════════════ */
 function StripeBentoGridSection() {
   return (
@@ -929,6 +1197,7 @@ export default function LandingPage() {
       <main>
         <StripeHeroSection />
         <StripeClientMarquee />
+        <StripeProductShowcaseSection />
         <StripeBentoGridSection />
         <StripeDeveloperSandboxSection />
         <StripeGlobalScaleSection />
