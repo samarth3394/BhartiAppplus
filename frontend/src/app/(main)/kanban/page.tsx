@@ -40,7 +40,7 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     priority: "high",
     assignee: { 
       full_name: "Samarth Choudhar",
-      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+      avatar_url: "/avatars/samarth.png"
     },
     created_at: "2026-11-06",
     labels: ["tracing", "frontend"]
@@ -124,7 +124,7 @@ const DEFAULT_KANBAN_ISSUES: Issue[] = [
     priority: "urgent",
     assignee: { 
       full_name: "Samarth Choudhar",
-      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+      avatar_url: "/avatars/samarth.png"
     },
     created_at: "2026-11-02",
     labels: ["infra", "completed"]
@@ -228,7 +228,7 @@ export default function KanbanPage() {
       type: newTask.type,
       status: "todo",
       priority: newTask.priority,
-      assignee: { full_name: "Samarth Choudhar" },
+      assignee: { full_name: "Samarth Choudhar", avatar_url: "/avatars/samarth.png" },
       created_at: new Date().toISOString().split("T")[0],
       labels: newTask.labels ? newTask.labels.split(',').map(l => l.trim()) : ["general"]
     };
@@ -368,12 +368,12 @@ export default function KanbanPage() {
                             </span>
                           ))}
                         </div>
-                        {issue.assignee?.avatar_url ? (
+                        {issue.assignee?.avatar_url || issue.assignee?.full_name?.includes("Samarth") ? (
                           <img 
-                            src={issue.assignee.avatar_url} 
-                            alt={issue.assignee.full_name} 
+                            src={issue.assignee?.avatar_url || "/avatars/samarth.png"} 
+                            alt={issue.assignee?.full_name} 
                             className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-xs" 
-                            title={issue.assignee.full_name}
+                            title={issue.assignee?.full_name}
                           />
                         ) : (
                           <div className="w-6 h-6 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[10px] font-bold shadow-xs">

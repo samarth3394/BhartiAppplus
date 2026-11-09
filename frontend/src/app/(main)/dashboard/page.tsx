@@ -355,7 +355,12 @@ export default function Dashboard() {
                       {act.title}
                     </p>
                     <div className="flex justify-between items-center mt-1 text-[11px]">
-                      <span className="text-slate-600 font-medium">{act.user}</span>
+                      <span className="text-slate-600 font-medium flex items-center gap-1.5">
+                        {act.user === "Samarth Choudhar" && (
+                          <img src="/avatars/samarth.png" alt="" className="w-4 h-4 rounded-full object-cover border border-slate-200" />
+                        )}
+                        {act.user}
+                      </span>
                       <span className="text-slate-400 font-mono">{act.time}</span>
                     </div>
                   </div>

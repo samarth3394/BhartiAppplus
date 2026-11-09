@@ -47,9 +47,9 @@ const DEFAULT_BUGS: BugItem[] = [
     severity: "medium",
     status: "resolved",
     reported_by: "Samarth Choudhar",
-    reporter_avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+    reporter_avatar: "/avatars/samarth.png",
     assignee: "Samarth Choudhar",
-    assignee_avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+    assignee_avatar: "/avatars/samarth.png",
     created_at: "2026-11-07T21:05:00Z"
   },
   {
@@ -248,14 +248,14 @@ export default function BugsPage() {
 
                   <div className="flex items-center gap-5 mt-2.5 text-[11.5px] text-slate-500 font-medium">
                     <span className="flex items-center gap-1.5">
-                      {bug.reporter_avatar ? (
-                        <img src={bug.reporter_avatar} alt="" className="w-4.5 h-4.5 rounded-full object-cover border border-slate-200" />
+                      {(bug.reporter_avatar || bug.reported_by?.includes("Samarth")) ? (
+                        <img src={bug.reporter_avatar || "/avatars/samarth.png"} alt="" className="w-4.5 h-4.5 rounded-full object-cover border border-slate-200" />
                       ) : null}
                       Reported by: <strong className="text-slate-700">{bug.reported_by}</strong>
                     </span>
                     <span className="flex items-center gap-1.5">
-                      {bug.assignee_avatar ? (
-                        <img src={bug.assignee_avatar} alt="" className="w-4.5 h-4.5 rounded-full object-cover border border-slate-200" />
+                      {(bug.assignee_avatar || bug.assignee?.includes("Samarth")) ? (
+                        <img src={bug.assignee_avatar || "/avatars/samarth.png"} alt="" className="w-4.5 h-4.5 rounded-full object-cover border border-slate-200" />
                       ) : null}
                       Assignee: <strong className="text-slate-700">{bug.assignee}</strong>
                     </span>

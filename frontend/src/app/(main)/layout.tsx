@@ -311,7 +311,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         <div className="p-3 border-t border-slate-200 bg-white">
           <div className="flex items-center gap-2.5 px-2 py-2 mb-1.5 rounded-lg bg-slate-50 border border-slate-100">
             <img 
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" 
+              src="/avatars/samarth.png" 
               alt="Samarth Choudhar" 
               className="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-xs" 
             />
@@ -453,7 +453,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
                 <Link href="/settings" className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center hover:border-slate-300 transition-all cursor-pointer overflow-hidden shadow-xs">
                     <img 
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" 
+                      src="/avatars/samarth.png" 
                       alt="Profile" 
                       className="w-full h-full object-cover" 
                     />

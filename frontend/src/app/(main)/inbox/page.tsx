@@ -18,7 +18,7 @@ const DEFAULT_MESSAGES: ChatMessage[] = [
     id: "msg-1",
     sender_name: "Samarth Choudhar",
     sender_email: "samarth@bhartinexus.com",
-    avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+    avatar_url: "/avatars/samarth.png",
     content: "Team, v2.4.1 deployment has been rolled out to production. Please monitor your respective service dashboards.",
     created_at: "10:15 AM"
   },
@@ -77,6 +77,7 @@ export default function InboxPage() {
       id: "msg-" + Date.now(),
       sender_name: "Samarth Choudhar",
       sender_email: "samarth@bhartinexus.com",
+      avatar_url: "/avatars/samarth.png",
       content: newMessage.trim(),
       created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
@@ -131,9 +132,9 @@ export default function InboxPage() {
                   <div className="w-9 h-9 rounded-full bg-[#635BFF] text-white flex items-center justify-center shrink-0 shadow-xs">
                     <Sparkles size={16} />
                   </div>
-                ) : msg.avatar_url ? (
+                ) : (msg.avatar_url || isMe) ? (
                   <img 
-                    src={msg.avatar_url} 
+                    src={msg.avatar_url || (isMe ? "/avatars/samarth.png" : "")} 
                     alt={msg.sender_name} 
                     className="w-9 h-9 rounded-full object-cover border border-slate-200 shrink-0 shadow-xs" 
                   />

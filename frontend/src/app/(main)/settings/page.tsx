@@ -11,7 +11,7 @@ export default function SettingsPage() {
     full_name: "Samarth Choudhar", 
     email: "samarth@bhartinexus.com", 
     password: "", 
-    avatar_url: "" 
+    avatar_url: "/avatars/samarth.png" 
   });
   const [savingProfile, setSavingProfile] = useState(false);
 
@@ -135,7 +135,23 @@ export default function SettingsPage() {
           {/* Profile Tab */}
           {activeTab === "profile" && (
             <div className="p-6">
-              <h2 className="text-[16px] font-bold text-[#0F172A] mb-5">Personal Profile</h2>
+              <h2 className="text-[16px] font-bold text-[#0F172A] mb-4">Personal Profile</h2>
+              
+              <div className="flex items-center gap-4 mb-6 pb-5 border-b border-slate-100">
+                <img 
+                  src={profile.avatar_url || "/avatars/samarth.png"} 
+                  alt={profile.full_name} 
+                  className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 shadow-xs"
+                />
+                <div>
+                  <h3 className="text-sm font-bold text-[#0F172A]">{profile.full_name}</h3>
+                  <p className="text-xs text-slate-500 font-mono">{profile.email}</p>
+                  <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-[#635BFF]/10 text-[#635BFF] uppercase tracking-wider">
+                    Organization Admin
+                  </span>
+                </div>
+              </div>
+
               <form onSubmit={saveProfile} className="space-y-4 max-w-lg">
                 <div>
                   <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Full Name</label>

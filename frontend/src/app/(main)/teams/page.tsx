@@ -9,7 +9,7 @@ const DEFAULT_MEMBERS = [
     user: { 
       full_name: "Samarth Choudhar", 
       email: "samarth@bhartinexus.com",
-      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+      avatar_url: "/avatars/samarth.png"
     },
     role: "admin",
     title: "Founder & Lead Architect",
@@ -103,7 +103,7 @@ const DEFAULT_ACTIVITIES = [
     action: "Samarth Choudhar provisioned production cluster API key for Brexal AI",
     user: { 
       full_name: "Samarth Choudhar",
-      avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+      avatar_url: "/avatars/samarth.png"
     },
     created_at: new Date(Date.now() - 15 * 60 * 1000).toISOString()
   },
@@ -172,7 +172,7 @@ export default function TeamsPage() {
               user: {
                 full_name: serverUser.user?.full_name || "Samarth Choudhar",
                 email: serverUser.user?.email || "samarthchoudhar@gmail.com",
-                avatar_url: serverUser.user?.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+                avatar_url: serverUser.user?.avatar_url || "/avatars/samarth.png"
               },
               role: serverUser.role || "admin",
               title: "Founder & Lead Architect",
@@ -194,7 +194,7 @@ export default function TeamsPage() {
             ...act,
             user: {
               full_name: act.user_name || act.user?.full_name || "Samarth Choudhar",
-              avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+              avatar_url: "/avatars/samarth.png"
             }
           }));
           combinedActivities = [...serverActs, ...DEFAULT_ACTIVITIES];
@@ -346,7 +346,7 @@ export default function TeamsPage() {
               {members.map((member) => {
                 const avatarSrc = member.user?.avatar_url || (
                   member.is_owner 
-                    ? "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" 
+                    ? "/avatars/samarth.png" 
                     : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
                 );
                 return (
@@ -420,7 +420,7 @@ export default function TeamsPage() {
               <div className="text-center text-slate-400 text-[13px] py-12">No recent activity.</div>
             ) : (
               activities.map((activity, index) => {
-                const actAvatar = activity.user?.avatar_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80";
+                const actAvatar = activity.user?.avatar_url || "/avatars/samarth.png";
                 return (
                   <div key={activity.id} className="flex items-start gap-3 relative pl-1">
                     <img 
