@@ -306,8 +306,8 @@ export function BrexalIntegrationsSection() {
           })}
         </div>
 
-        {/* ── 3D PERSPECTIVE NEURAL MATRIX CANVAS (DESKTOP) ── */}
-        <div className="hidden lg:block relative w-full h-[680px] rounded-3xl bg-white border border-slate-200/90 shadow-[0_8px_36px_rgba(10,37,64,0.06)] overflow-hidden mb-10 [perspective:1400px]">
+        {/* ── 3D PERSPECTIVE NEURAL MATRIX CANVAS (UNCLUTTERED, NO FLOATING OVERLAY) ── */}
+        <div className="hidden lg:block relative w-full h-[650px] rounded-3xl bg-white border border-slate-200/90 shadow-[0_8px_36px_rgba(10,37,64,0.06)] overflow-hidden mb-6 sm:mb-8 [perspective:1400px]">
           
           {/* Subtle high-tech isometric grid floor */}
           <div className="absolute inset-0 bg-[radial-gradient(#3B82F6_1px,transparent_1px)] [background-size:28px_28px] opacity-15 pointer-events-none" />
@@ -494,64 +494,6 @@ export function BrexalIntegrationsSection() {
 
           </div>
 
-          {/* ── FLOATING LIVE TELEMETRY RADAR CARD (BOTTOM-RIGHT) ── */}
-          <div className="absolute bottom-6 right-6 z-40 w-84 rounded-2xl bg-[#0A2540]/95 backdrop-blur-md border border-[#1E3A8A] p-4.5 text-white shadow-2xl text-left transition-all duration-300">
-            <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-2.5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/15 p-1.5 flex items-center justify-center">
-                  <img
-                    src={activeNode.logo}
-                    alt={activeNode.name}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div>
-                  <h4 className="text-sm font-black text-white leading-tight">
-                    {activeNode.name}
-                  </h4>
-                  <span className="text-[10.5px] font-mono text-emerald-400 font-bold">
-                    ● {activeNode.metrics.status}
-                  </span>
-                </div>
-              </div>
-              <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-mono font-bold">
-                eBPF Kernel Socket
-              </span>
-            </div>
-
-            {/* Metrics 3-box strip */}
-            <div className="grid grid-cols-3 gap-2 mb-3">
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-center">
-                <div className="text-xs sm:text-sm font-black text-white font-mono">
-                  {activeNode.metrics.primary}
-                </div>
-                <div className="text-[9.5px] text-slate-400 font-mono mt-0.5">
-                  {activeNode.metrics.primaryLabel}
-                </div>
-              </div>
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-center">
-                <div className="text-xs sm:text-sm font-black text-white font-mono">
-                  {activeNode.metrics.secondary}
-                </div>
-                <div className="text-[9.5px] text-slate-400 font-mono mt-0.5">
-                  {activeNode.metrics.secondaryLabel}
-                </div>
-              </div>
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-center">
-                <div className="text-xs sm:text-sm font-black text-emerald-400 font-mono">
-                  {activeNode.metrics.latency}
-                </div>
-                <div className="text-[9.5px] text-slate-400 font-mono mt-0.5">
-                  Avg Overhead
-                </div>
-              </div>
-            </div>
-
-            <p className="text-[11.5px] text-slate-300 font-normal leading-relaxed">
-              {activeNode.details}
-            </p>
-          </div>
-
           {/* ── TOP-LEFT LIVE STATUS BADGE ── */}
           <div className="absolute top-6 left-6 z-40 flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-xs font-mono font-bold text-[#0A2540] shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
@@ -560,56 +502,84 @@ export function BrexalIntegrationsSection() {
 
         </div>
 
-        {/* ── MOBILE / TABLET 3D PERSPECTIVE CARD SHOWCASE (< 1024px) ── */}
-        <div className="block lg:hidden rounded-2xl bg-white border border-slate-200 p-5 mb-8 shadow-sm text-left">
-          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-            <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 p-2 flex items-center justify-center">
-              <img
-                src={activeNode.logo}
-                alt={activeNode.name}
-                className="w-full h-full object-contain"
-              />
+        {/* ── ACTIVE SERVICE LIVE TELEMETRY PANEL (DIRECTLY BELOW THE 3D CANVAS) ── */}
+        <div className="rounded-2xl sm:rounded-3xl bg-[#0A2540] border border-[#1E3A8A] p-5 sm:p-7 text-white shadow-xl text-left mb-10 transition-all duration-300">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 pb-5 border-b border-white/10">
+            
+            {/* Left: Active Service Logo, Name & Status */}
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/15 p-2 flex items-center justify-center shrink-0 shadow-xs">
+                <img
+                  src={activeNode.logo}
+                  alt={activeNode.name}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <h3 className="text-lg sm:text-xl font-extrabold text-white">
+                    {activeNode.name} Telemetry
+                  </h3>
+                  <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10.5px] font-mono font-bold">
+                    eBPF Kernel Socket
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-xs font-mono text-emerald-400 font-bold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    {activeNode.metrics.status}
+                  </span>
+                  <span className="text-slate-500">•</span>
+                  <span className="text-xs text-slate-300 font-mono">
+                    {activeNode.category}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <h3 className="text-base font-extrabold text-[#0A2540]">
-                {activeNode.name}
-              </h3>
-              <p className="text-xs text-emerald-600 font-bold font-mono">
-                ● {activeNode.metrics.status}
-              </p>
+
+            {/* Right: The 3 Live Metrics */}
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0">
+              <div className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[105px]">
+                <div className="text-sm sm:text-base font-black text-white font-mono">
+                  {activeNode.metrics.primary}
+                </div>
+                <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                  {activeNode.metrics.primaryLabel}
+                </div>
+              </div>
+
+              <div className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[105px]">
+                <div className="text-sm sm:text-base font-black text-white font-mono">
+                  {activeNode.metrics.secondary}
+                </div>
+                <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                  {activeNode.metrics.secondaryLabel}
+                </div>
+              </div>
+
+              <div className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[105px]">
+                <div className="text-sm sm:text-base font-black text-emerald-400 font-mono">
+                  {activeNode.metrics.latency}
+                </div>
+                <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                  Avg Overhead
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Bottom details description */}
+          <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-[13px] text-slate-300">
+            <p className="leading-relaxed font-normal">
+              {activeNode.details}
+            </p>
+            <div className="flex items-center gap-2 text-blue-300 font-mono text-[11px] shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+              <span>Real-time Kernel Stream Active</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 mb-3">
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-center">
-              <div className="text-xs font-black text-[#0A2540] font-mono">
-                {activeNode.metrics.primary}
-              </div>
-              <div className="text-[10px] text-slate-500 font-mono">
-                {activeNode.metrics.primaryLabel}
-              </div>
-            </div>
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-center">
-              <div className="text-xs font-black text-[#0A2540] font-mono">
-                {activeNode.metrics.secondary}
-              </div>
-              <div className="text-[10px] text-slate-500 font-mono">
-                {activeNode.metrics.secondaryLabel}
-              </div>
-            </div>
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-center">
-              <div className="text-xs font-black text-emerald-600 font-mono">
-                {activeNode.metrics.latency}
-              </div>
-              <div className="text-[10px] text-slate-500 font-mono">
-                Overhead
-              </div>
-            </div>
-          </div>
-
-          <p className="text-xs text-[#425466] leading-relaxed">
-            {activeNode.details}
-          </p>
         </div>
 
         {/* ── BOTTOM ENTERPRISE STAT STRIP ── */}
