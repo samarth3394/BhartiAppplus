@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Map, Plus, Target, Rocket, Lightbulb, Clock, MoreHorizontal, CheckCircle2, Circle } from "lucide-react";
+import { Map, Plus, Target, Rocket, Lightbulb, Clock, MoreHorizontal, CheckCircle2, Circle, X } from "lucide-react";
 
 type RoadmapFeature = {
   id: string;
@@ -14,9 +14,9 @@ type RoadmapFeature = {
 };
 
 const STATUS_COLS = [
-  { id: "planned", title: "Planned Ideas", icon: Lightbulb, color: "text-amber-500", bgLight: "bg-amber-50 text-amber-700 border-amber-200" },
-  { id: "in_progress", title: "In Progress", icon: Clock, color: "text-blue-500", bgLight: "bg-blue-50 text-blue-700 border-blue-200" },
-  { id: "completed", title: "Launched", icon: Rocket, color: "text-emerald-500", bgLight: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  { id: "planned", title: "Planned Vision", icon: Lightbulb, color: "text-amber-500", bgLight: "bg-amber-50 text-amber-700 border-amber-200/80" },
+  { id: "in_progress", title: "In Active Engineering", icon: Clock, color: "text-blue-500", bgLight: "bg-blue-50 text-blue-700 border-blue-200/80" },
+  { id: "completed", title: "Launched & Live", icon: Rocket, color: "text-emerald-500", bgLight: "bg-emerald-50 text-emerald-700 border-emerald-200/80" },
 ];
 
 const DEFAULT_ROADMAP_FEATURES: RoadmapFeature[] = [
@@ -123,7 +123,7 @@ export default function RoadmapPage() {
         if (data.user_role) setUserRole(data.user_role);
       }
     } catch (err) {
-      // Keep rich default roadmap
+      // Retain rich fallback
     } finally {
       setLoading(false);
     }
@@ -179,26 +179,35 @@ export default function RoadmapPage() {
 
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
-      case "urgent": return "bg-red-50 text-red-700 border-red-200";
-      case "high": return "bg-orange-50 text-orange-700 border-orange-200";
-      case "medium": return "bg-blue-50 text-blue-700 border-blue-200";
-      case "low": return "bg-slate-100 text-slate-700 border-slate-200";
-      default: return "bg-slate-100 text-slate-700 border-slate-200";
+      case "urgent": return "bg-red-50 text-red-700 border-red-200/80";
+      case "high": return "bg-orange-50 text-orange-700 border-orange-200/80";
+      case "medium": return "bg-blue-50 text-blue-700 border-blue-200/80";
+      case "low": return "bg-slate-100 text-slate-700 border-slate-200/80";
+      default: return "bg-slate-100 text-slate-700 border-slate-200/80";
     }
   };
 
   return (
     <div className="space-y-6 max-w-[1400px] mx-auto h-full flex flex-col pb-8 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-200 shrink-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80 shrink-0">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] mb-1">Product Roadmap</h1>
-          <p className="text-[13.5px] text-slate-600">Plan epics, track major architecture features, and synchronize sprint vision.</p>
+          <div className="flex items-center gap-2 mb-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A2540]">
+              Product Architecture Roadmap
+            </h1>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider bg-[#635BFF]/10 text-[#635BFF] border border-[#635BFF]/20">
+              Q4 / Q1 Horizon
+            </span>
+          </div>
+          <p className="text-[13.5px] text-[#425466]">
+            Plan epics, track strategic telemetry milestones, and synchronize architectural releases.
+          </p>
         </div>
         {canEdit && (
           <button
             onClick={() => setShowFeatureModal(true)}
-            className="flex items-center gap-1.5 bg-[#0F172A] hover:bg-slate-800 text-white px-3.5 py-2 rounded-lg text-[13px] font-semibold transition-all shadow-xs"
+            className="inline-flex items-center justify-center gap-2 bg-[#635BFF] hover:bg-[#5349e0] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all shadow-[0_4px_14px_rgba(99,91,255,0.25)] hover:shadow-[0_6px_20px_rgba(99,91,255,0.35)] shrink-0 cursor-pointer"
           >
             <Plus size={15} />
             Suggest Feature
@@ -207,119 +216,130 @@ export default function RoadmapPage() {
       </div>
 
       {/* 3 Status Columns */}
-      <div className="flex-1 grid grid-cols-1 xl:grid-cols-3 gap-5 items-start">
-        {STATUS_COLS.map((col) => {
-          const colFeatures = features.filter((f) => f.status === col.id);
-          return (
-            <div key={col.id} className="bg-white border border-slate-200 rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col max-h-[calc(100vh-12rem)]">
-              <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/70 rounded-t-xl shrink-0">
-                <h2 className="text-[14px] font-bold text-[#0F172A] flex items-center gap-2">
-                  <col.icon size={16} className={col.color} /> {col.title}
-                </h2>
-                <span className="bg-white border border-slate-200 text-slate-700 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
-                  {colFeatures.length}
-                </span>
-              </div>
+      <div className="flex-1 overflow-x-auto pb-4">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start min-w-[320px] xl:min-w-full">
+          {STATUS_COLS.map((col) => {
+            const colFeatures = features.filter((f) => f.status === col.id);
+            return (
+              <div key={col.id} className="bg-white border border-slate-200/80 rounded-2xl shadow-[0_4px_20px_rgba(10,37,64,0.03)] flex flex-col max-h-[calc(100vh-14rem)]">
+                <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 bg-[#FAFBFD] rounded-t-2xl shrink-0">
+                  <h2 className="text-[15px] font-bold text-[#0A2540] flex items-center gap-2">
+                    <col.icon size={17} className={col.color} /> {col.title}
+                  </h2>
+                  <span className="bg-white border border-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full shadow-2xs">
+                    {colFeatures.length}
+                  </span>
+                </div>
 
-              <div className="p-3 space-y-3 overflow-y-auto">
-                {colFeatures.length === 0 ? (
-                  <div className="text-center py-10 text-slate-400 text-[13px] border border-dashed border-slate-200 rounded-lg">
-                    No features in this phase.
-                  </div>
-                ) : (
-                  colFeatures.map((feature) => (
-                    <div key={feature.id} className="p-4 bg-white hover:bg-slate-50/80 border border-slate-200 rounded-lg transition-all group relative shadow-xs hover:border-slate-300">
-                      <div className="flex items-start justify-between mb-2">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getPriorityBadge(feature.priority)}`}>
-                          {feature.priority}
-                        </span>
-
-                        {/* Quick actions on hover */}
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white rounded-lg border border-slate-200 absolute right-3 top-3 p-1 shadow-md">
-                          {col.id !== "planned" && (
-                            <button onClick={() => updateStatus(feature.id, "planned")} className="p-1 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors" title="Move to Planned">
-                              <Lightbulb size={13} />
-                            </button>
-                          )}
-                          {col.id !== "in_progress" && (
-                            <button onClick={() => updateStatus(feature.id, "in_progress")} className="p-1 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Move to In Progress">
-                              <Clock size={13} />
-                            </button>
-                          )}
-                          {col.id !== "completed" && (
-                            <button onClick={() => updateStatus(feature.id, "completed")} className="p-1 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title="Mark Completed">
-                              <CheckCircle2 size={13} />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                      <h3 className="font-bold text-[14px] text-[#0F172A] mb-1.5 leading-snug pr-8">{feature.title}</h3>
-                      {feature.description && (
-                        <p className="text-[12.5px] text-slate-600 line-clamp-3 leading-relaxed">{feature.description}</p>
-                      )}
-
-                      {feature.due_date && (
-                        <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
-                          <span className="flex items-center gap-1.5">
-                            <Target size={12} className="text-slate-400" /> Target: {new Date(feature.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                          </span>
-                        </div>
-                      )}
+                <div className="p-4 space-y-3.5 overflow-y-auto">
+                  {colFeatures.length === 0 ? (
+                    <div className="text-center py-12 text-[#425466] text-[13px] border border-dashed border-slate-200/80 rounded-xl">
+                      No milestones in this phase.
                     </div>
-                  ))
-                )}
+                  ) : (
+                    colFeatures.map((feature) => (
+                      <div key={feature.id} className="p-4 sm:p-5 bg-white hover:bg-slate-50/70 border border-slate-200/80 rounded-xl transition-all group relative shadow-[0_1px_4px_rgba(10,37,64,0.02)] hover:border-[#635BFF]/40">
+                        <div className="flex items-start justify-between mb-2.5">
+                          <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${getPriorityBadge(feature.priority)}`}>
+                            {feature.priority}
+                          </span>
+
+                          {/* Quick actions on hover */}
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white rounded-lg border border-slate-200 absolute right-3.5 top-3.5 p-1 shadow-md">
+                            {col.id !== "planned" && (
+                              <button onClick={() => updateStatus(feature.id, "planned")} className="p-1 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors cursor-pointer" title="Move to Planned">
+                                <Lightbulb size={13} />
+                              </button>
+                            )}
+                            {col.id !== "in_progress" && (
+                              <button onClick={() => updateStatus(feature.id, "in_progress")} className="p-1 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer" title="Move to In Progress">
+                                <Clock size={13} />
+                              </button>
+                            )}
+                            {col.id !== "completed" && (
+                              <button onClick={() => updateStatus(feature.id, "completed")} className="p-1 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-colors cursor-pointer" title="Mark Completed">
+                                <CheckCircle2 size={13} />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        <h3 className="font-bold text-[14.5px] text-[#0A2540] mb-1.5 leading-snug pr-8">{feature.title}</h3>
+                        {feature.description && (
+                          <p className="text-[12.5px] text-[#425466] line-clamp-3 leading-relaxed">{feature.description}</p>
+                        )}
+
+                        {feature.due_date && (
+                          <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11.5px] text-[#425466] font-medium">
+                            <span className="flex items-center gap-1.5">
+                              <Target size={13} className="text-[#635BFF]" /> Target: {new Date(feature.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {showFeatureModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white border border-slate-200 rounded-xl w-full max-w-lg p-6 shadow-2xl">
-            <h2 className="text-[16px] font-bold text-[#0F172A] mb-4">Suggest Roadmap Feature</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A2540]/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white border border-slate-200/90 rounded-2xl w-full max-w-lg p-6 sm:p-7 shadow-[0_20px_60px_rgba(10,37,64,0.15)]">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-[17px] font-extrabold text-[#0A2540]">Suggest Roadmap Milestone</h2>
+              <button 
+                onClick={() => setShowFeatureModal(false)}
+                className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-600 transition cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
             <div className="space-y-4 mb-6">
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Title</label>
+                <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Milestone Title</label>
                 <input
                   type="text"
-                  placeholder="e.g. Distributed Tracing Visualizer"
+                  placeholder="e.g. Distributed Tracing Waterfall Engine"
                   value={newFeature.title}
                   onChange={e => setNewFeature({ ...newFeature, title: e.target.value })}
-                  className="w-full bg-white border border-slate-200 text-[#0F172A] py-2 px-3 rounded-lg outline-none focus:border-[#635BFF] text-[14px] placeholder:text-slate-400 font-medium transition-colors"
+                  className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] py-2.5 px-3.5 rounded-xl outline-none focus:border-[#635BFF] focus:bg-white focus:ring-2 focus:ring-[#635BFF]/15 text-[14px] placeholder:text-slate-400 font-semibold transition"
                   autoFocus
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Description</label>
+                <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Technical Scope & Impact</label>
                 <textarea
                   rows={3}
-                  placeholder="Feature requirements and impact..."
+                  placeholder="Detailed architecture requirements and outcomes..."
                   value={newFeature.description}
                   onChange={e => setNewFeature({ ...newFeature, description: e.target.value })}
-                  className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] placeholder:text-slate-400 resize-none transition-colors"
+                  className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] rounded-xl py-2.5 px-3.5 outline-none focus:border-[#635BFF] focus:bg-white focus:ring-2 focus:ring-[#635BFF]/15 text-[13px] placeholder:text-slate-400 resize-none transition"
                 />
               </div>
-              <div className="flex gap-4">
-                <div className="flex-1 space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</label>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Phase</label>
                   <select
                     value={newFeature.status}
                     onChange={e => setNewFeature({ ...newFeature, status: e.target.value })}
-                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] transition-colors"
+                    className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] rounded-xl py-2.5 px-3.5 outline-none focus:border-[#635BFF] text-[13px] font-semibold transition"
                   >
-                    <option value="planned">Planned Ideas</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="completed">Launched</option>
+                    <option value="planned">Planned Vision</option>
+                    <option value="in_progress">In Active Engineering</option>
+                    <option value="completed">Launched & Live</option>
                   </select>
                 </div>
-                <div className="flex-1 space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Priority</label>
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Priority</label>
                   <select
                     value={newFeature.priority}
                     onChange={e => setNewFeature({ ...newFeature, priority: e.target.value })}
-                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] transition-colors"
+                    className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] rounded-xl py-2.5 px-3.5 outline-none focus:border-[#635BFF] text-[13px] font-semibold transition"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -329,9 +349,19 @@ export default function RoadmapPage() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
-              <button onClick={() => setShowFeatureModal(false)} className="px-3 py-1.5 text-[13px] font-medium text-slate-600 hover:text-slate-900 transition">Cancel</button>
-              <button onClick={handleCreateFeature} className="px-4 py-1.5 bg-[#0F172A] hover:bg-slate-800 text-white rounded-lg text-[13px] font-semibold transition">Save Feature</button>
+            <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-100">
+              <button 
+                onClick={() => setShowFeatureModal(false)} 
+                className="px-4 py-2 text-[13px] font-bold text-[#425466] hover:text-[#0A2540] transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleCreateFeature} 
+                className="px-5 py-2 bg-[#635BFF] hover:bg-[#5349e0] text-white rounded-xl text-[13px] font-bold transition shadow-xs cursor-pointer"
+              >
+                Save Milestone
+              </button>
             </div>
           </div>
         </div>

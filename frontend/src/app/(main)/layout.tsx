@@ -260,8 +260,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out shadow-[1px_0_4px_rgba(0,0,0,0.02)]
         ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static
       `}>
-        <div className="px-5 py-4 flex items-center h-14 border-b border-slate-200">
-          <Logo className="h-4 text-[#0A2540]" />
+        <div className="px-5 py-3.5 flex items-center justify-between h-14 border-b border-slate-200/80 bg-white">
+          <Link href="/" className="flex items-center gap-2 group">
+            <Logo className="h-4 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
+          </Link>
+          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-indigo-50 text-[#635BFF] border border-indigo-100 uppercase tracking-wider">
+            CONSOLE
+          </span>
         </div>
         
         <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto no-scrollbar">
@@ -282,22 +287,23 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                       const Icon = item.icon;
                       const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
                       return (
-                        <a
+                        <Link
                           key={item.name}
                           href={item.href}
                           title={item.name}
+                          onClick={() => setIsMobileMenuOpen(false)}
                           className={`
-                            flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 whitespace-nowrap overflow-hidden
+                            flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 whitespace-nowrap overflow-hidden
                             ${isActive 
-                              ? "bg-slate-100 text-[#0F172A] font-semibold shadow-xs" 
-                              : "text-slate-600 hover:text-[#0F172A] hover:bg-slate-50"}
+                              ? "bg-[#635BFF]/10 text-[#635BFF] font-bold border border-[#635BFF]/20 shadow-2xs" 
+                              : "text-slate-600 hover:text-[#0A2540] hover:bg-slate-50"}
                           `}
                         >
-                          <Icon size={14} className={`shrink-0 ${isActive ? "text-[#635BFF]" : "text-slate-400"}`} />
+                          <Icon size={15} className={`shrink-0 ${isActive ? "text-[#635BFF]" : "text-slate-400"}`} />
                           <span>
                             {item.name}
                           </span>
-                        </a>
+                        </Link>
                       );
                     })}
                   </div>
@@ -330,7 +336,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden bg-[#F8FAFC]">
         {/* Top Header */}
-        <header className="h-14 border-b border-slate-200 bg-white/95 backdrop-blur-md flex items-center justify-between px-6 relative z-30 shadow-xs">
+        <header className="h-14 border-b border-slate-200 bg-white/95 backdrop-blur-md flex items-center justify-between px-4 sm:px-6 relative z-30 shadow-xs">
             
             {/* App Switcher Dropdown */}
             <div className="relative">
@@ -404,12 +410,28 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               )}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3">
+                {/* Command Palette Trigger Pill */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const event = new KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true });
+                    window.dispatchEvent(event);
+                  }}
+                  className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50/80 hover:bg-slate-100/80 text-xs text-slate-500 font-medium transition-colors"
+                >
+                  <span>Quick search...</span>
+                  <kbd className="px-1.5 py-0.5 rounded bg-white border border-slate-200 text-[10px] font-mono text-slate-400 font-bold shadow-2xs">
+                    ⌘K
+                  </kbd>
+                </button>
+
                 {/* Notifications Dropdown */}
                 <div className="relative">
                   <button 
                     onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
                     className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer relative shadow-xs"
+                    title="Notifications"
                   >
                     <Bell size={15} className="text-slate-600" />
                     {notifications.filter(n => !n.is_read).length > 0 && (
@@ -451,7 +473,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                   )}
                 </div>
 
-                <Link href="/settings" className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center hover:border-slate-300 transition-all cursor-pointer overflow-hidden shadow-xs">
+                <Link href="/settings" title="Account settings" className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center hover:border-slate-300 transition-all cursor-pointer overflow-hidden shadow-xs ring-1 ring-slate-900/5">
                     <img 
                       src="/avatars/samarth.png" 
                       alt="Profile" 
@@ -461,7 +483,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto bg-[#F8FAFC] p-6 sm:p-8 relative">
+        <div className="flex-1 overflow-y-auto bg-[#F8FAFC] p-4 sm:p-6 lg:p-8 relative">
           {children}
 
           {/* Premium UI Components */}

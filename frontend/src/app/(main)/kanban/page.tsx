@@ -263,42 +263,51 @@ export default function KanbanPage() {
 
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
-      case "urgent": return "text-red-700 bg-red-50 border-red-200";
-      case "high": return "text-orange-700 bg-orange-50 border-orange-200";
-      case "medium": return "text-blue-700 bg-blue-50 border-blue-200";
-      case "low": return "text-slate-700 bg-slate-100 border-slate-200";
-      default: return "text-slate-700 bg-slate-100 border-slate-200";
+      case "urgent": return "text-red-700 bg-red-50 border-red-200/80";
+      case "high": return "text-orange-700 bg-orange-50 border-orange-200/80";
+      case "medium": return "text-blue-700 bg-blue-50 border-blue-200/80";
+      case "low": return "text-slate-700 bg-slate-100 border-slate-200/80";
+      default: return "text-slate-700 bg-slate-100 border-slate-200/80";
     }
   };
 
   const getTypeBadge = (type: string) => {
     switch (type) {
-      case "bug": return "text-rose-600 bg-rose-50 border-rose-200";
-      case "epic": return "text-purple-600 bg-purple-50 border-purple-200";
-      case "feature": return "text-emerald-600 bg-emerald-50 border-emerald-200";
-      default: return "text-slate-600 bg-slate-50 border-slate-200";
+      case "bug": return "text-rose-600 bg-rose-50 border-rose-200/80";
+      case "epic": return "text-purple-600 bg-purple-50 border-purple-200/80";
+      case "feature": return "text-emerald-600 bg-emerald-50 border-emerald-200/80";
+      default: return "text-slate-600 bg-slate-50 border-slate-200/80";
     }
   };
 
   return (
     <div className="space-y-6 max-w-[1440px] mx-auto h-full flex flex-col pb-6 font-sans">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0 pb-4 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0 pb-5 border-b border-slate-200/80">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#0F172A] mb-1">Engineering Kanban Board</h1>
-          <p className="text-[13.5px] text-slate-600">Track sprint issues, infrastructure tasks, and distributed releases across teams.</p>
+          <div className="flex items-center gap-2 mb-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A2540]">
+              Engineering Sprint Board
+            </h1>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider bg-[#635BFF]/10 text-[#635BFF] border border-[#635BFF]/20">
+              Sprint 24
+            </span>
+          </div>
+          <p className="text-[13.5px] text-[#425466]">
+            Track sprint velocity, distributed telemetry tasks, and continuous deployment workflows.
+          </p>
         </div>
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
           <button 
             onClick={() => setShowColumnModal(true)} 
-            className="flex items-center gap-1.5 bg-white border border-slate-200 text-[#0F172A] px-3.5 py-2 rounded-lg text-[13px] font-semibold hover:bg-slate-50 transition shadow-xs"
+            className="inline-flex items-center gap-1.5 bg-white border border-slate-200/90 text-[#0A2540] px-4 py-2.5 rounded-xl text-[13px] font-bold hover:bg-[#FAFBFD] transition shadow-xs cursor-pointer"
           >
             <Settings size={14} className="text-slate-500" />
             Add Column
           </button>
           <button 
             onClick={() => setShowTaskModal(true)} 
-            className="flex items-center gap-1.5 bg-[#0F172A] hover:bg-slate-800 text-white px-3.5 py-2 rounded-lg text-[13px] font-semibold transition shadow-xs"
+            className="inline-flex items-center gap-2 bg-[#635BFF] hover:bg-[#5349e0] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold transition shadow-[0_4px_14px_rgba(99,91,255,0.25)] hover:shadow-[0_6px_20px_rgba(99,91,255,0.35)] cursor-pointer"
           >
             <Plus size={15} />
             New Issue
@@ -306,124 +315,135 @@ export default function KanbanPage() {
         </div>
       </div>
 
-      {/* Kanban Columns */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-start">
-        {columns.map((col) => {
-          const colIssues = issues.filter((i) => i.status === col.id);
-          const ColIcon = col.icon;
-          return (
-            <div 
-              key={col.id} 
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, col.id)}
-              className="bg-white border border-slate-200 rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col max-h-[calc(100vh-13rem)]"
-            >
-              <div className="flex items-center justify-between p-3.5 border-b border-slate-100 bg-slate-50/70 rounded-t-xl shrink-0">
-                <h2 className="text-[14px] font-bold text-[#0F172A] flex items-center gap-2">
-                  <ColIcon size={16} className={col.color} /> {col.title}
-                </h2>
-                <span className="bg-white border border-slate-200 text-slate-700 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
-                  {colIssues.length}
-                </span>
-              </div>
+      {/* Kanban Columns (Horizontal Scroll Container for Mobile/Tablet) */}
+      <div className="flex-1 overflow-x-auto pb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 min-w-[320px] md:min-w-[700px] xl:min-w-full items-start">
+          {columns.map((col) => {
+            const colIssues = issues.filter((i) => i.status === col.id);
+            const ColIcon = col.icon;
+            return (
+              <div 
+                key={col.id} 
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, col.id)}
+                className="bg-white border border-slate-200/80 rounded-2xl shadow-[0_4px_20px_rgba(10,37,64,0.03)] flex flex-col max-h-[calc(100vh-14rem)]"
+              >
+                <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-[#FAFBFD] rounded-t-2xl shrink-0">
+                  <h2 className="text-[14px] font-bold text-[#0A2540] flex items-center gap-2">
+                    <ColIcon size={16} className={col.color} /> {col.title}
+                  </h2>
+                  <span className="bg-white border border-slate-200 text-slate-700 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-2xs">
+                    {colIssues.length}
+                  </span>
+                </div>
 
-              <div className="p-3 space-y-3 overflow-y-auto">
-                {colIssues.length === 0 ? (
-                  <div className="text-center py-10 text-slate-400 text-[12.5px] border border-dashed border-slate-200 rounded-lg">
-                    Drag issues here
-                  </div>
-                ) : (
-                  colIssues.map((issue) => (
-                    <div 
-                      key={issue.id} 
-                      draggable 
-                      onDragStart={(e) => handleDragStart(e, issue.id)}
-                      className="p-3.5 bg-white hover:bg-slate-50/90 border border-slate-200 rounded-lg transition-all cursor-grab active:cursor-grabbing shadow-xs hover:border-slate-300 group"
-                    >
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getTypeBadge(issue.type)}`}>
-                          {issue.type}
-                        </span>
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getPriorityBadge(issue.priority)}`}>
-                          {issue.priority}
-                        </span>
-                      </div>
-
-                      <h3 className="font-bold text-[13.5px] text-[#0F172A] leading-snug mb-1">
-                        {issue.title}
-                      </h3>
-
-                      {issue.description && (
-                        <p className="text-[12px] text-slate-600 line-clamp-2 leading-relaxed mb-3">
-                          {issue.description}
-                        </p>
-                      )}
-
-                      {/* Labels and Assignee */}
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-2 text-[11px]">
-                        <div className="flex items-center gap-1 flex-wrap">
-                          {issue.labels?.map((label, idx) => (
-                            <span key={idx} className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[10px] font-mono">
-                              #{label}
-                            </span>
-                          ))}
-                        </div>
-                        {issue.assignee?.avatar_url || issue.assignee?.full_name?.includes("Samarth") ? (
-                          <img 
-                            src={issue.assignee?.avatar_url || "/avatars/samarth.png"} 
-                            alt={issue.assignee?.full_name} 
-                            className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-xs" 
-                            title={issue.assignee?.full_name}
-                          />
-                        ) : (
-                          <div className="w-6 h-6 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[10px] font-bold shadow-xs">
-                            {issue.assignee?.full_name?.charAt(0) || "U"}
-                          </div>
-                        )}
-                      </div>
+                <div className="p-3.5 space-y-3 overflow-y-auto">
+                  {colIssues.length === 0 ? (
+                    <div className="text-center py-12 text-[#425466] text-[12.5px] border border-dashed border-slate-200/80 rounded-xl">
+                      Drag issues here
                     </div>
-                  ))
-                )}
+                  ) : (
+                    colIssues.map((issue) => (
+                      <div 
+                        key={issue.id} 
+                        draggable 
+                        onDragStart={(e) => handleDragStart(e, issue.id)}
+                        className="p-4 bg-white hover:bg-slate-50/70 border border-slate-200/80 rounded-xl transition-all cursor-grab active:cursor-grabbing shadow-[0_1px_4px_rgba(10,37,64,0.02)] hover:border-[#635BFF]/40 group"
+                      >
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${getTypeBadge(issue.type)}`}>
+                            {issue.type}
+                          </span>
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${getPriorityBadge(issue.priority)}`}>
+                            {issue.priority}
+                          </span>
+                        </div>
+
+                        <h3 className="font-bold text-[13.5px] text-[#0A2540] leading-snug mb-1.5">
+                          {issue.title}
+                        </h3>
+
+                        {issue.description && (
+                          <p className="text-[12px] text-[#425466] line-clamp-2 leading-relaxed mb-3">
+                            {issue.description}
+                          </p>
+                        )}
+
+                        {/* Labels and Assignee */}
+                        <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 mt-2.5 text-[11px]">
+                          <div className="flex items-center gap-1 flex-wrap">
+                            {issue.labels?.map((label, idx) => (
+                              <span key={idx} className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium">
+                                #{label}
+                              </span>
+                            ))}
+                          </div>
+                          {issue.assignee?.avatar_url || issue.assignee?.full_name?.includes("Samarth") ? (
+                            <img 
+                              src={issue.assignee?.avatar_url || "/avatars/samarth.png"} 
+                              alt={issue.assignee?.full_name} 
+                              className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-2xs" 
+                              title={issue.assignee?.full_name}
+                            />
+                          ) : (
+                            <div className="w-6 h-6 rounded-full bg-[#0A2540] text-white flex items-center justify-center text-[10px] font-bold shadow-2xs">
+                              {issue.assignee?.full_name?.charAt(0) || "U"}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* New Task Modal */}
       {showTaskModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white border border-slate-200 rounded-xl w-full max-w-lg p-6 shadow-2xl">
-            <h2 className="text-[16px] font-bold text-[#0F172A] mb-4">Create New Issue</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A2540]/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white border border-slate-200/90 rounded-2xl w-full max-w-lg p-6 sm:p-7 shadow-[0_20px_60px_rgba(10,37,64,0.15)]">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-[17px] font-extrabold text-[#0A2540]">Create New Sprint Issue</h2>
+              <button 
+                onClick={() => setShowTaskModal(false)}
+                className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-600 transition cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
             <div className="space-y-4 mb-6">
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Title</label>
+                <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Title</label>
                 <input 
                   type="text" 
-                  placeholder="Issue title..."
+                  placeholder="e.g. Ingress telemetry circuit breaker..."
                   value={newTask.title}
                   onChange={e => setNewTask({...newTask, title: e.target.value})}
-                  className="w-full bg-white border border-slate-200 text-[#0F172A] py-2 px-3 rounded-lg outline-none focus:border-[#635BFF] text-[14px] placeholder:text-slate-400 font-medium transition-colors"
+                  className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] py-2.5 px-3.5 rounded-xl outline-none focus:border-[#635BFF] focus:bg-white focus:ring-2 focus:ring-[#635BFF]/15 text-[14px] placeholder:text-slate-400 font-semibold transition"
                   autoFocus
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Description</label>
+                <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Description</label>
                 <textarea 
                   rows={3}
-                  placeholder="Issue details and reproduction steps..."
+                  placeholder="Technical scope, architectural impact, criteria..."
                   value={newTask.description}
                   onChange={e => setNewTask({...newTask, description: e.target.value})}
-                  className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] placeholder:text-slate-400 resize-none transition-colors"
+                  className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] rounded-xl py-2.5 px-3.5 outline-none focus:border-[#635BFF] focus:bg-white focus:ring-2 focus:ring-[#635BFF]/15 text-[13px] placeholder:text-slate-400 resize-none transition"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Type</label>
+                  <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Type</label>
                   <select 
                     value={newTask.type}
                     onChange={e => setNewTask({...newTask, type: e.target.value})}
-                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] transition-colors"
+                    className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] rounded-xl py-2.5 px-3.5 outline-none focus:border-[#635BFF] text-[13px] font-semibold transition"
                   >
                     <option value="task">Task</option>
                     <option value="feature">Feature</option>
@@ -432,11 +452,11 @@ export default function KanbanPage() {
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Priority</label>
+                  <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Priority</label>
                   <select 
                     value={newTask.priority}
                     onChange={e => setNewTask({...newTask, priority: e.target.value})}
-                    className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] transition-colors"
+                    className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] rounded-xl py-2.5 px-3.5 outline-none focus:border-[#635BFF] text-[13px] font-semibold transition"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -446,19 +466,29 @@ export default function KanbanPage() {
                 </div>
               </div>
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Labels (comma-separated)</label>
+                <label className="block text-[11px] font-bold text-[#425466] uppercase tracking-wider">Labels (comma-separated)</label>
                 <input 
                   type="text" 
                   placeholder="e.g. backend, database, p1"
                   value={newTask.labels}
                   onChange={e => setNewTask({...newTask, labels: e.target.value})}
-                  className="w-full bg-white border border-slate-200 text-[#0F172A] py-2 px-3 rounded-lg outline-none focus:border-[#635BFF] text-[13px] placeholder:text-slate-400 font-medium transition-colors"
+                  className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] py-2.5 px-3.5 rounded-xl outline-none focus:border-[#635BFF] text-[13px] placeholder:text-slate-400 font-semibold transition"
                 />
               </div>
             </div>
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
-              <button onClick={() => setShowTaskModal(false)} className="px-3 py-1.5 text-[13px] font-medium text-slate-600 hover:text-slate-900 transition">Cancel</button>
-              <button onClick={handleCreateTask} className="px-4 py-1.5 bg-[#0F172A] hover:bg-slate-800 text-white rounded-lg text-[13px] font-semibold transition">Create Issue</button>
+            <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-100">
+              <button 
+                onClick={() => setShowTaskModal(false)} 
+                className="px-4 py-2 text-[13px] font-bold text-[#425466] hover:text-[#0A2540] transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleCreateTask} 
+                className="px-5 py-2 bg-[#635BFF] hover:bg-[#5349e0] text-white rounded-xl text-[13px] font-bold transition shadow-xs cursor-pointer"
+              >
+                Create Issue
+              </button>
             </div>
           </div>
         </div>
@@ -466,20 +496,30 @@ export default function KanbanPage() {
 
       {/* Add Column Modal */}
       {showColumnModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white border border-slate-200 rounded-xl w-full max-w-sm p-6 shadow-2xl">
-            <h2 className="text-[15px] font-bold text-[#0F172A] mb-4">Add Board Column</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A2540]/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white border border-slate-200/90 rounded-2xl w-full max-w-sm p-6 shadow-[0_20px_60px_rgba(10,37,64,0.15)]">
+            <h2 className="text-[16px] font-extrabold text-[#0A2540] mb-4">Add Board Column</h2>
             <input 
               type="text" 
               placeholder="Column name (e.g. QA Testing)"
               value={newColumnTitle}
               onChange={e => setNewColumnTitle(e.target.value)}
-              className="w-full bg-white border border-slate-200 text-[#0F172A] py-2 px-3 rounded-lg outline-none focus:border-[#635BFF] text-[13.5px] placeholder:text-slate-400 font-medium mb-4"
+              className="w-full bg-[#FAFBFD] border border-slate-200/90 text-[#0A2540] py-2.5 px-3.5 rounded-xl outline-none focus:border-[#635BFF] text-[13.5px] placeholder:text-slate-400 font-semibold mb-5"
               autoFocus
             />
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setShowColumnModal(false)} className="px-3 py-1.5 text-[13px] font-medium text-slate-600 hover:text-slate-900 transition">Cancel</button>
-              <button onClick={handleAddColumn} className="px-4 py-1.5 bg-[#0F172A] hover:bg-slate-800 text-white rounded-lg text-[13px] font-semibold transition">Add</button>
+            <div className="flex justify-end gap-2.5">
+              <button 
+                onClick={() => setShowColumnModal(false)} 
+                className="px-3.5 py-2 text-[13px] font-bold text-[#425466] hover:text-[#0A2540] transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleAddColumn} 
+                className="px-4 py-2 bg-[#635BFF] hover:bg-[#5349e0] text-white rounded-xl text-[13px] font-bold transition shadow-xs cursor-pointer"
+              >
+                Add Column
+              </button>
             </div>
           </div>
         </div>

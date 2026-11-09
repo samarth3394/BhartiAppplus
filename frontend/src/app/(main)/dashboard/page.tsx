@@ -187,28 +187,28 @@ export default function Dashboard() {
           return (
             <div 
               key={idx} 
-              className="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-md transition-all flex flex-col justify-between"
+              className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-[0_4px_20px_rgba(10,37,64,0.03)] hover:border-slate-300 transition-all flex flex-col justify-between"
             >
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className={`p-1.5 rounded-lg ${card.iconColor}`}>
+                <div className="flex items-center gap-2.5">
+                  <div className={`p-2 rounded-xl ${card.iconColor}`}>
                     <Icon size={16} />
                   </div>
-                  <h3 className="text-slate-700 font-semibold text-[13px] tracking-wide">{card.label}</h3>
+                  <h3 className="text-[#0A2540] font-bold text-[13px] tracking-wide">{card.label}</h3>
                 </div>
-                <span className={`text-[10.5px] font-bold px-2 py-0.5 rounded-full border ${card.badgeColor}`}>
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${card.badgeColor}`}>
                   {card.badge}
                 </span>
               </div>
 
               <div>
                 <div className="flex items-baseline gap-1 my-1">
-                  <p className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight">{card.value}</p>
+                  <p className="text-3xl sm:text-4xl font-extrabold text-[#0A2540] font-mono tracking-tight">{card.value}</p>
                   {card.suffix && (
-                    <span className="text-slate-500 font-semibold text-sm">{card.suffix}</span>
+                    <span className="text-slate-500 font-semibold text-sm font-mono">{card.suffix}</span>
                   )}
                 </div>
-                <p className="text-[11.5px] text-slate-500 font-medium mt-1">
+                <p className="text-[11.5px] text-[#425466] font-medium mt-1">
                   {card.detail}
                 </p>
               </div>
@@ -221,56 +221,56 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         
         {/* System Performance Visualizer (2 Cols) */}
-        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col justify-between min-h-[390px]">
+        <div className="lg:col-span-2 bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-[0_4px_20px_rgba(10,37,64,0.03)] flex flex-col justify-between min-h-[390px]">
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
               <div>
-                <h3 className="text-[15px] font-bold text-[#0F172A] flex items-center gap-2">
+                <h3 className="text-[15px] font-bold text-[#0A2540] flex items-center gap-2">
                   System Performance & Telemetry
                 </h3>
-                <p className="text-[12px] text-slate-500 mt-0.5">Continuous telemetry collected over the last 24 hours</p>
+                <p className="text-[12px] text-[#425466] mt-0.5">Continuous telemetry collected over the last 24 hours</p>
               </div>
 
               {/* Metric switcher tabs */}
-              <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
+              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
                 <button 
                   onClick={() => setSelectedMetricTab("throughput")}
-                  className={`px-2.5 py-1 rounded-md transition-all ${selectedMetricTab === "throughput" ? "bg-white text-[#0F172A] shadow-xs" : "text-slate-600 hover:text-[#0F172A]"}`}
+                  className={`px-3 py-1 rounded-lg transition-all text-xs font-bold ${selectedMetricTab === "throughput" ? "bg-white text-[#0A2540] shadow-2xs" : "text-slate-600 hover:text-[#0A2540]"}`}
                 >
                   Throughput
                 </button>
                 <button 
                   onClick={() => setSelectedMetricTab("latency")}
-                  className={`px-2.5 py-1 rounded-md transition-all ${selectedMetricTab === "latency" ? "bg-white text-[#0F172A] shadow-xs" : "text-slate-600 hover:text-[#0F172A]"}`}
+                  className={`px-3 py-1 rounded-lg transition-all text-xs font-bold ${selectedMetricTab === "latency" ? "bg-white text-[#0A2540] shadow-2xs" : "text-slate-600 hover:text-[#0A2540]"}`}
                 >
                   p99 Latency
                 </button>
                 <button 
                   onClick={() => setSelectedMetricTab("cpu")}
-                  className={`px-2.5 py-1 rounded-md transition-all ${selectedMetricTab === "cpu" ? "bg-white text-[#0F172A] shadow-xs" : "text-slate-600 hover:text-[#0F172A]"}`}
+                  className={`px-3 py-1 rounded-lg transition-all text-xs font-bold ${selectedMetricTab === "cpu" ? "bg-white text-[#0A2540] shadow-2xs" : "text-slate-600 hover:text-[#0A2540]"}`}
                 >
                   CPU / Mem
                 </button>
               </div>
             </div>
 
-            {/* Quick Metrics Summary Strip */}
-            <div className="grid grid-cols-4 gap-2 py-3 px-4 bg-slate-50 rounded-lg border border-slate-100 mb-5 text-center">
+            {/* Quick Metrics Summary Strip (2x2 on mobile, 4 across on sm+) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 px-4 bg-slate-50/80 rounded-xl border border-slate-200/70 mb-5 text-center">
               <div>
-                <span className="text-[10.5px] uppercase font-bold text-slate-400 tracking-wider">Avg Latency</span>
-                <p className="text-base font-extrabold text-[#0F172A] mt-0.5">12.4 ms</p>
+                <span className="text-[10px] uppercase font-mono font-bold text-slate-400 tracking-wider">Avg Latency</span>
+                <p className="text-base font-extrabold text-[#0A2540] font-mono mt-0.5">12.4 ms</p>
               </div>
               <div>
-                <span className="text-[10.5px] uppercase font-bold text-slate-400 tracking-wider">Throughput</span>
-                <p className="text-base font-extrabold text-[#0F172A] mt-0.5">2,840 req/s</p>
+                <span className="text-[10px] uppercase font-mono font-bold text-slate-400 tracking-wider">Throughput</span>
+                <p className="text-base font-extrabold text-[#0A2540] font-mono mt-0.5">2,840 req/s</p>
               </div>
               <div>
-                <span className="text-[10.5px] uppercase font-bold text-slate-400 tracking-wider">CPU Avg</span>
-                <p className="text-base font-extrabold text-[#0F172A] mt-0.5">34.8%</p>
+                <span className="text-[10px] uppercase font-mono font-bold text-slate-400 tracking-wider">CPU Avg</span>
+                <p className="text-base font-extrabold text-[#0A2540] font-mono mt-0.5">34.8%</p>
               </div>
               <div>
-                <span className="text-[10.5px] uppercase font-bold text-slate-400 tracking-wider">Error Rate</span>
-                <p className="text-base font-extrabold text-emerald-600 mt-0.5">0.008%</p>
+                <span className="text-[10px] uppercase font-mono font-bold text-slate-400 tracking-wider">Error Rate</span>
+                <p className="text-base font-extrabold text-emerald-600 font-mono mt-0.5">0.008%</p>
               </div>
             </div>
 
@@ -332,10 +332,10 @@ export default function Dashboard() {
         </div>
 
         {/* Live Activity Stream (1 Col) */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] flex flex-col justify-between min-h-[390px]">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-[0_4px_20px_rgba(10,37,64,0.03)] flex flex-col justify-between min-h-[390px]">
           <div>
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
-              <h3 className="text-[15px] font-bold text-[#0F172A]">
+              <h3 className="text-[15px] font-bold text-[#0A2540]">
                 Activity Feed
               </h3>
               <span className="text-slate-500 text-[11px] font-mono bg-slate-100 px-2 py-0.5 rounded-full font-semibold">
@@ -351,17 +351,17 @@ export default function Dashboard() {
                     <div className="w-[1px] h-9 bg-slate-200 my-1 group-last:hidden" />
                   </div>
                   <div className="flex-1 pb-1">
-                    <p className="text-[12.5px] font-semibold text-[#0F172A] leading-snug">
+                    <p className="text-[12.5px] font-semibold text-[#0A2540] leading-snug">
                       {act.title}
                     </p>
                     <div className="flex justify-between items-center mt-1 text-[11px]">
-                      <span className="text-slate-600 font-medium flex items-center gap-1.5">
+                      <span className="text-[#425466] font-medium flex items-center gap-1.5">
                         {act.user === "Samarth Choudhar" && (
                           <img src="/avatars/samarth.png" alt="" className="w-4 h-4 rounded-full object-cover border border-slate-200" />
                         )}
                         {act.user}
                       </span>
-                      <span className="text-slate-400 font-mono">{act.time}</span>
+                      <span className="text-slate-400 font-mono text-[10px]">{act.time}</span>
                     </div>
                   </div>
                 </div>
@@ -371,7 +371,7 @@ export default function Dashboard() {
 
           <button 
             onClick={() => router.push('/logs')}
-            className="w-full mt-3 py-2 text-center text-[12px] font-semibold text-[#635BFF] hover:bg-slate-50 rounded-lg transition-colors border border-transparent hover:border-slate-200"
+            className="w-full mt-3 py-2 text-center text-xs font-bold text-[#635BFF] hover:bg-indigo-50/50 rounded-xl transition-colors border border-transparent hover:border-indigo-100"
           >
             View all audit logs →
           </button>
@@ -379,13 +379,13 @@ export default function Dashboard() {
       </div>
 
       {/* Microservices & Infrastructure Mesh Health */}
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-[0_4px_20px_rgba(10,37,64,0.03)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
-            <h3 className="text-[15px] font-bold text-[#0F172A]">Microservices & Mesh Health</h3>
-            <p className="text-[12px] text-slate-500">Distributed components running across US East and EU Central clusters</p>
+            <h3 className="text-[15px] font-bold text-[#0A2540]">Microservices & Mesh Health</h3>
+            <p className="text-[12px] text-[#425466]">Distributed components running across US East and EU Central clusters</p>
           </div>
-          <span className="text-[11.5px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+          <span className="text-[11.5px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1.5 self-start sm:self-auto">
             <CheckCircle2 size={13} className="text-emerald-600" /> All Services Operational
           </span>
         </div>
@@ -394,18 +394,18 @@ export default function Dashboard() {
           {microservices.map((svc, idx) => {
             const Icon = svc.icon;
             return (
-              <div key={idx} className="p-3.5 rounded-lg border border-slate-100 bg-slate-50/70 hover:bg-slate-50 transition-colors flex items-center justify-between">
+              <div key={idx} className="p-3.5 rounded-xl border border-slate-200/70 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all flex items-center justify-between shadow-2xs">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-md bg-white border border-slate-200 text-slate-700">
-                    <Icon size={16} />
+                  <div className="p-2 rounded-lg bg-white border border-slate-200 text-[#0A2540] shadow-2xs">
+                    <Icon size={16} className="text-[#635BFF]" />
                   </div>
                   <div>
-                    <h4 className="text-[12.5px] font-bold text-[#0F172A] leading-tight">{svc.name}</h4>
+                    <h4 className="text-[12.5px] font-bold text-[#0A2540] leading-tight">{svc.name}</h4>
                     <span className="text-[11px] text-emerald-600 font-semibold">{svc.status}</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[11px] font-mono font-bold text-[#0F172A]">{svc.latency}</div>
+                  <div className="text-[11px] font-mono font-bold text-[#0A2540]">{svc.latency}</div>
                   <div className="text-[10px] text-slate-400 font-mono">{svc.uptime}</div>
                 </div>
               </div>
