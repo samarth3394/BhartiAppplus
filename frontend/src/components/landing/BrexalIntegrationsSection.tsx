@@ -1,567 +1,491 @@
 "use client";
 
 import React, { useState } from "react";
-import { Brain, Zap, Activity, CheckCircle2, ShieldCheck } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Terminal,
+  Cpu,
+  Layers,
+  ShieldCheck,
+  Zap
+} from "lucide-react";
 
-interface NodeData {
+interface IntegrationItem {
   id: string;
   name: string;
   category: string;
-  logo: string;
   badge: string;
-  angle: number; // in degrees
-  radius: number; // in pixels
-  color: string;
+  logo: string;
+  command: string;
+  tagline: string;
+  details: string;
   metrics: {
     primary: string;
     primaryLabel: string;
     secondary: string;
     secondaryLabel: string;
     latency: string;
-    status: string;
   };
-  details: string;
 }
 
-const NODES_DATA: NodeData[] = [
+const INTEGRATIONS_ROW_1: IntegrationItem[] = [
   {
     id: "kubernetes",
     name: "Kubernetes",
-    category: "Container Mesh",
-    logo: "/logos/kubernetes.svg",
+    category: "Container Orchestration",
     badge: "1-Click Helm",
-    angle: -90,
-    radius: 190,
-    color: "#326CE5",
+    logo: "/logos/kubernetes.svg",
+    command: "helm repo add brexal https://charts.brexal.io\nhelm install brexal-agent brexal/ebpf-telemetry --namespace brexal --create-namespace",
+    tagline: "Automatic pod socket discovery, network flow tracing, and memory leak analysis across all nodes.",
+    details: "Deploys as an ultra-lightweight DaemonSet with host-pid privileges. Requires zero sidecars and zero pod restarts.",
     metrics: {
-      primary: "184 Pods",
-      primaryLabel: "Auto-Probed",
-      secondary: "0 Drops",
-      secondaryLabel: "Network Health",
-      latency: "0.14ms",
-      status: "Cluster Healthy"
-    },
-    details: "eBPF kernel probes hook container network namespaces with zero CPU and zero bytecode penalty."
-  },
-  {
-    id: "redis",
-    name: "Redis",
-    category: "In-Memory Cache",
-    logo: "/logos/redis.svg",
-    badge: "0% Overhead",
-    angle: -30,
-    radius: 190,
-    color: "#DC382D",
-    metrics: {
-      primary: "99.8%",
-      primaryLabel: "Cache Hit Rate",
-      secondary: "84k ops/s",
-      secondaryLabel: "Throughput",
-      latency: "0.12ms",
-      status: "Zero Evictions"
-    },
-    details: "Automatic key eviction tracking, hit-rate profiling, and slow command audit at socket layer."
-  },
-  {
-    id: "postgres",
-    name: "PostgreSQL",
-    category: "Relational DB",
-    logo: "/logos/postgresql.svg",
-    badge: "Slow Query AI",
-    angle: 30,
-    radius: 190,
-    color: "#4169E1",
-    metrics: {
-      primary: "0 Locks",
-      primaryLabel: "Wait Lock Free",
-      secondary: "32 / 32",
-      secondaryLabel: "Active Pool",
-      latency: "0.84ms",
-      status: "Query Optimal"
-    },
-    details: "eBPF intercepts query plans and wait lock contention without installing database extensions."
-  },
-  {
-    id: "kafka",
-    name: "Apache Kafka",
-    category: "Event Streaming",
-    logo: "/logos/kafka.svg",
-    badge: "Lag Sentry",
-    angle: 90,
-    radius: 190,
-    color: "#231F20",
-    metrics: {
-      primary: "0 ms",
-      primaryLabel: "Consumer Lag",
-      secondary: "140k msg/s",
-      secondaryLabel: "Ingestion Rate",
-      latency: "0.45ms",
-      status: "Balanced Partitions"
-    },
-    details: "Zero-latency consumer offset inspection, partition skew detection, and rebalance mitigations."
+      primary: "DaemonSet",
+      primaryLabel: "Deployment Mode",
+      secondary: "0 Pod Restarts",
+      secondaryLabel: "Cluster Impact",
+      latency: "0.12ms"
+    }
   },
   {
     id: "docker",
     name: "Docker",
     category: "Container Engine",
-    logo: "/logos/docker.svg",
     badge: "Host Daemon",
-    angle: 150,
-    radius: 190,
-    color: "#2496ED",
+    logo: "/logos/docker.svg",
+    command: "docker run -d --name brexal-probe --privileged --pid=host --net=host -v /sys/kernel/debug:/sys/kernel/debug:ro brexal/agent:latest",
+    tagline: "Direct host-level socket interception covering every container without modifying docker-compose or Dockerfiles.",
+    details: "Attaches to host networking namespace and container cgroups to capture ingress, egress, and container lifecycle events.",
     metrics: {
-      primary: "Host Daemon",
-      primaryLabel: "Kernel Linked",
-      secondary: "< 40 MB",
-      secondaryLabel: "RAM Footprint",
-      latency: "0.08ms",
-      status: "Socket Hooked"
-    },
-    details: "Attaches directly to host kernel socket tables, monitoring bridge networks and container lifecycles."
-  },
-  {
-    id: "python",
-    name: "Python",
-    category: "FastAPI / Django",
-    logo: "/logos/python.svg",
-    badge: "Auto-Instrument",
-    angle: -150,
-    radius: 190,
-    color: "#3776AB",
-    metrics: {
-      primary: "Async IO",
-      primaryLabel: "Event Loop",
-      secondary: "0.0% CPU",
-      secondaryLabel: "Overhead",
-      latency: "0.32ms",
-      status: "Auto-Instrumented"
-    },
-    details: "Automatic ASGI & WSGI request span correlation, exception tracking, and unhandled promise monitoring."
+      primary: "1 Container",
+      primaryLabel: "Per Node",
+      secondary: "All cgroups",
+      secondaryLabel: "Coverage",
+      latency: "0.08ms"
+    }
   },
   {
     id: "aws",
-    name: "AWS Cloud",
-    category: "Cloud Provider",
+    name: "AWS",
+    category: "Amazon Web Services",
+    badge: "CloudFormation",
     logo: "/logos/aws.svg",
-    badge: "Zero Egress Tax",
-    angle: -120,
-    radius: 290,
-    color: "#FF9900",
+    command: "aws cloudformation deploy --template-file https://brexal.io/aws/ebpf-stack.yml --stack-name brexal-telemetry --capabilities CAPABILITY_IAM",
+    tagline: "VPC Flow Logs, EKS telemetry, ECS task profiling, and API Gateway latency without CloudWatch egress costs.",
+    details: "Bypasses costly AWS CloudWatch custom metrics by streaming raw OTel metrics directly to your private Brexal collector.",
     metrics: {
-      primary: "EKS & Lambda",
-      primaryLabel: "Serverless Mesh",
+      primary: "EKS & ECS",
+      primaryLabel: "Supported Runtimes",
       secondary: "$0 Egress",
       secondaryLabel: "VPC Peering",
-      latency: "Line-Rate",
-      status: "CloudWatch Free"
-    },
-    details: "Native telemetry extraction inside your AWS VPC, eliminating costly CloudWatch custom metric bills."
+      latency: "Line-Rate"
+    }
   },
   {
     id: "gcp",
     name: "Google Cloud",
-    category: "GCP & GKE",
-    logo: "/logos/gcp.svg",
+    category: "Google Cloud Platform",
     badge: "GKE Native",
-    angle: -60,
-    radius: 290,
-    color: "#4285F4",
+    logo: "/logos/gcp.svg",
+    command: "gcloud container clusters get-credentials prod-cluster --region us-central1\nkubectl apply -f https://install.brexal.io/gcp-daemonset.yaml",
+    tagline: "Instant GKE Autopilot and Cloud Run observability with zero proxy overhead and native Google VPC peering.",
+    details: "Pre-configured for Google Kubernetes Engine (GKE) Autopilot and Standard modes with zero code modifications.",
     metrics: {
       primary: "GKE Autopilot",
-      primaryLabel: "Container Mesh",
+      primaryLabel: "Cluster Mesh",
       secondary: "Native",
       secondaryLabel: "Cloud Run",
-      latency: "0.19ms",
-      status: "VPC Linked"
-    },
-    details: "Zero-configuration GKE and Cloud Run telemetry with Google Cloud VPC peering support."
+      latency: "0.19ms"
+    }
   },
   {
     id: "azure",
     name: "Microsoft Azure",
-    category: "AKS & App Services",
-    logo: "/logos/azure.svg",
+    category: "Azure Cloud",
     badge: "AKS Ready",
-    angle: 0,
-    radius: 290,
-    color: "#0078D4",
+    logo: "/logos/azure.svg",
+    command: "az aks get-credentials --resource-group prod-rg --name prod-aks\nhelm install brexal-probe brexal/azure-aks -n brexal --create-namespace",
+    tagline: "End-to-end tracing for AKS clusters, Azure App Services, and Event Hub throughput.",
+    details: "Collects high-frequency socket metrics across Azure Virtual Networks with zero Azure Monitor ingest penalty.",
     metrics: {
       primary: "AKS Cluster",
       primaryLabel: "Pod Telemetry",
       secondary: "Event Hub",
       secondaryLabel: "Stream Latency",
-      latency: "0.22ms",
-      status: "Azure Verified"
-    },
-    details: "End-to-end tracing for AKS clusters, Azure App Services, and Event Hub throughput."
+      latency: "0.22ms"
+    }
   },
+  {
+    id: "terraform",
+    name: "Terraform",
+    category: "Infrastructure as Code",
+    badge: "Registry Provider",
+    logo: "/logos/terraform.svg",
+    command: "provider \"brexal\" { api_key = var.brexal_key }\nresource \"brexal_cluster_agent\" \"prod\" { cluster_name = \"us-prod-1\" }",
+    tagline: "Automate entire fleet telemetry deployment across multi-cloud environments via official HashiCorp provider.",
+    details: "Integrates seamlessly into CI/CD pipelines to automatically configure alert thresholds and telemetry endpoints.",
+    metrics: {
+      primary: "HashiCorp",
+      primaryLabel: "Official Partner",
+      secondary: "100% IaC",
+      secondaryLabel: "Automation",
+      latency: "< 5s Apply"
+    }
+  },
+  {
+    id: "postgresql",
+    name: "PostgreSQL",
+    category: "Relational DB",
+    badge: "Query Planner AI",
+    logo: "/logos/postgresql.svg",
+    command: "# Zero extensions or pg_stat_statements required\n# Automatically hooked via eBPF kernel network socket probes",
+    tagline: "Live slow-query detection, wait-lock contention, and connection pool starvation without database extensions.",
+    details: "eBPF listens to libpq protocol packets on port 5432 directly at the kernel socket layer, decoding SQL queries in real-time.",
+    metrics: {
+      primary: "0 Locks",
+      primaryLabel: "Wait Lock Free",
+      secondary: "Port 5432",
+      secondaryLabel: "Socket Intercept",
+      latency: "0.84ms"
+    }
+  },
+  {
+    id: "redis",
+    name: "Redis",
+    category: "In-Memory Cache",
+    badge: "Zero CPU Overhead",
+    logo: "/logos/redis.svg",
+    command: "# Zero redis.conf changes needed\n# Brexal eBPF attaches directly to Redis TCP socket port 6379",
+    tagline: "Track command latencies (HGET, SET, MGET), key eviction rates, and pipeline delays with zero CPU overhead.",
+    details: "Parses RESP protocol packets directly on the wire with zero CPU contention on single-threaded Redis processes.",
+    metrics: {
+      primary: "RESP Wire",
+      primaryLabel: "Protocol Sniffer",
+      secondary: "0ms Delay",
+      secondaryLabel: "Redis Main Thread",
+      latency: "0.02ms"
+    }
+  }
+];
+
+const INTEGRATIONS_ROW_2: IntegrationItem[] = [
   {
     id: "go",
     name: "Go (Golang)",
     category: "Systems Runtime",
+    badge: "0% Overhead",
     logo: "/logos/go.svg",
-    badge: "0% CPU Penalty",
-    angle: 60,
-    radius: 290,
-    color: "#00ADD8",
+    command: "# Compile your Go binary normally with zero dependencies\n./my-go-service  # Brexal eBPF uprobes auto-discover runtime goroutines",
+    tagline: "Attaches to compiled ELF symbols via eBPF uprobes. No imports, no code edits, and zero binary overhead.",
+    details: "Instruments Go routines, GC pauses, and net/http handlers without linking any CGO or third-party Go libraries.",
     metrics: {
       primary: "4,120",
-      primaryLabel: "Goroutines",
+      primaryLabel: "Live Goroutines",
       secondary: "0 Deadlocks",
       secondaryLabel: "Thread Safety",
-      latency: "0.05ms",
-      status: "Zero GC Pause"
-    },
-    details: "Attaches to compiled ELF symbols via eBPF uprobes. No imports, no code edits, and zero binary overhead."
+      latency: "0.05ms"
+    }
+  },
+  {
+    id: "python",
+    name: "Python",
+    category: "FastAPI / Django / Flask",
+    badge: "Auto-Instrument",
+    logo: "/logos/python.svg",
+    command: "pip install opentelemetry-distro\nopentelemetry-instrument python main.py",
+    tagline: "Automated distributed tracing across FastAPI, Django, Flask, SQLAlchemy, Celery, and async event loops.",
+    details: "Auto-wraps incoming WSGI/ASGI requests and downstream HTTP calls with full OpenTelemetry v1.32 span context.",
+    metrics: {
+      primary: "ASGI / WSGI",
+      primaryLabel: "Auto Wrapped",
+      secondary: "1-Command",
+      secondaryLabel: "No Code Changes",
+      latency: "0.45ms"
+    }
   },
   {
     id: "nodejs",
     name: "Node.js",
-    category: "Express / Nest",
+    category: "Express / Nest / Next.js",
+    badge: "Zero-Code Loader",
     logo: "/logos/nodejs.svg",
-    badge: "V8 Profiler",
-    angle: 120,
-    radius: 290,
-    color: "#339933",
+    command: "NODE_OPTIONS=\"--require @brexal/auto-probe\" node server.js",
+    tagline: "Continuous event loop delay monitoring, async microtask profiling, and unhandled promise tracking.",
+    details: "Instruments V8 engine handles directly before your application starts, reporting event loop lag and heap stats.",
     metrics: {
       primary: "V8 Engine",
       primaryLabel: "Event Loop Lag",
       secondary: "< 1.2ms",
       secondaryLabel: "Task Delay",
-      latency: "0.22ms",
-      status: "Handle Monitoring"
-    },
-    details: "Continuous event loop starvation checks and asynchronous microtask pipeline profiling."
+      latency: "0.22ms"
+    }
+  },
+  {
+    id: "java",
+    name: "Java / JVM",
+    category: "Spring Boot / Quarkus",
+    badge: "JVM eBPF Probe",
+    logo: "/logos/java.svg",
+    command: "java -javaagent:/opt/brexal/brexal-agent.jar -jar application.jar",
+    tagline: "JVM Garbage Collection pause profiling, thread contention, and Spring Web / Hibernate query tracing.",
+    details: "Bytecode enhancement for Java 11, 17, and 21 with zero configuration changes to pom.xml or build.gradle.",
+    metrics: {
+      primary: "G1 / ZGC",
+      primaryLabel: "GC Profiler",
+      secondary: "Zero Edits",
+      secondaryLabel: "pom.xml",
+      latency: "0.31ms"
+    }
+  },
+  {
+    id: "rust",
+    name: "Rust",
+    category: "Tokio / Axum / Actix",
+    badge: "Native Binary",
+    logo: "/logos/rust.svg",
+    command: "# Zero Rust dependencies or Cargo.toml crates needed\n./target/release/my-rust-app  # Brexal eBPF maps syscalls at line-rate",
+    tagline: "Zero-cost abstractions with socket-level async Tokio runtime polling metrics and epoll flow analysis.",
+    details: "Tracks async task yields, future executor delays, and raw TCP throughput without slowing memory-safe binaries.",
+    metrics: {
+      primary: "Tokio Tasks",
+      primaryLabel: "Async Runtime",
+      secondary: "0 Cargo Deps",
+      secondaryLabel: "Cargo.toml",
+      latency: "0.03ms"
+    }
+  },
+  {
+    id: "dotnet",
+    name: ".NET Core",
+    category: "C# / ASP.NET Core",
+    badge: "CLR Socket Hooks",
+    logo: "/logos/dotnet.svg",
+    command: "export CORECLR_ENABLE_PROFILING=1\ndotnet run -c Release",
+    tagline: "ASP.NET Core controller latency, Entity Framework Core queries, and CLR GC generation monitoring.",
+    details: "Hooks directly into the .NET CLR profiling API to trace incoming Kestrel HTTP requests and background workers.",
+    metrics: {
+      primary: "CLR Gen 0/1/2",
+      primaryLabel: "GC Allocation",
+      secondary: "Kestrel",
+      secondaryLabel: "HTTP Tracing",
+      latency: "0.26ms"
+    }
+  },
+  {
+    id: "kafka",
+    name: "Apache Kafka",
+    category: "Event Streaming",
+    badge: "Lag Exporter",
+    logo: "/logos/kafka.svg",
+    command: "# eBPF probes inspect Kafka broker port 9092\n# Zero JMX plugins or Kafka connect dependencies required",
+    tagline: "Real-time consumer group lag calculation, partition skew analysis, and broker fetch latencies.",
+    details: "Inspects raw Kafka binary protocol packets on port 9092 to identify slow consumer partitions instantly.",
+    metrics: {
+      primary: "Port 9092",
+      primaryLabel: "Wire Protocol",
+      secondary: "0 Lag Alert",
+      secondaryLabel: "Consumer State",
+      latency: "0.41ms"
+    }
   },
   {
     id: "opentelemetry",
     name: "OpenTelemetry",
     category: "CNCF Standard",
+    badge: "Zero Vendor Lock-In",
     logo: "/logos/opentelemetry.svg",
-    badge: "Zero Lock-In",
-    angle: 180,
-    radius: 290,
-    color: "#4A154B",
+    command: "export OTEL_EXPORTER_OTLP_ENDPOINT=\"https://otlp.brexal.io:4317\"\n# Drop-in compatible with standard OTel collectors",
+    tagline: "100% native CNCF OTel v1.32 protocol support. Ingest, query, and forward traces, metrics, and logs freely.",
+    details: "Eliminates proprietary vendor lock-in. Compatible with PromQL, Grafana, Jaeger, and standard OTLP gRPC/HTTP.",
     metrics: {
-      primary: "OTLP Native",
+      primary: "OTLP v1.32",
       primaryLabel: "gRPC & HTTP",
       secondary: "PromQL",
-      secondaryLabel: "Dashboard Drop-In",
-      latency: "Sub-ms",
-      status: "Zero Lock-In"
-    },
-    details: "100% compliant with CNCF standards. Ingests and exports standard OTLP metrics and PromQL queries."
+      secondaryLabel: "Query Engine",
+      latency: "Sub-ms"
+    }
   }
 ];
 
 export function BrexalIntegrationsSection() {
-  const [activeNode, setActiveNode] = useState<NodeData>(NODES_DATA[0]);
+  const [activeItem, setActiveItem] = useState<IntegrationItem>(INTEGRATIONS_ROW_1[0]);
+  const [copied, setCopied] = useState(false);
 
-  // Center coordinates for SVG 2D layout that maps onto 3D tilted plane
-  const cx = 450;
-  const cy = 350;
+  const handleCopy = () => {
+    if (navigator?.clipboard) {
+      navigator.clipboard.writeText(activeItem.command);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
-    <section id="integrations" className="py-16 sm:py-20 md:py-26 px-4 sm:px-10 bg-[#FAFCFF] border-b border-slate-200/80 font-sans relative overflow-hidden">
-      
-      {/* Ambient background lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[750px] bg-gradient-to-r from-blue-100/40 via-sky-50/30 to-indigo-50/30 rounded-full blur-[140px] pointer-events-none" />
+    <section className="py-20 sm:py-28 bg-[#F8FAFC] border-y border-slate-200/80 relative overflow-hidden text-center">
+      {/* Background ambient lighting */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-blue-50/70 via-indigo-50/20 to-transparent pointer-events-none" />
 
-      <div className="max-w-[1320px] mx-auto text-left relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* ── SECTION HEADER ── */}
-        <div className="max-w-3xl mb-8 sm:mb-12">
-          <div className="flex items-center gap-2 mb-2.5">
-            <span className="w-6 h-[1.5px] bg-[#2563EB]" />
-            <span className="text-[11px] sm:text-[12px] font-mono font-bold text-[#2563EB] uppercase tracking-widest">
-              AUTONOMOUS 3D ECOSYSTEM MESH
-            </span>
+        {/* ── HEADER ── */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-[11px] font-mono font-bold text-[#2563EB] uppercase tracking-wider mb-4 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+            ENTERPRISE ECOSYSTEM &amp; ZERO-CODE INSTRUMENTATION
           </div>
-          <h2 className="text-2xl sm:text-4xl md:text-[44px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.15] mb-3">
-            One Brain. Every Layer of Your Cloud.
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0A2540] tracking-tight leading-tight">
+            20+ Enterprise Integrations. <br className="hidden sm:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] via-indigo-600 to-[#0A2540]">
+              Zero Code Changes.
+            </span>
           </h2>
-          <p className="text-sm sm:text-base text-[#425466] leading-relaxed max-w-2xl font-normal">
-            BREXAL's Neural Engine hooks directly into Linux kernel sockets. It autonomously discovers, traces, and correlates all microservices, databases, and message brokers with zero code changes.
+          <p className="mt-4 text-sm sm:text-base text-[#425466] max-w-2xl mx-auto leading-relaxed">
+            Attach to running processes in seconds via verified eBPF probes. Native support for every major cloud, container runtime, database, and backend framework.
           </p>
         </div>
 
-        {/* ── QUICK 1-CLICK SELECTOR PILLS (MOBILE & TABLET) ── */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 no-scrollbar">
-          {NODES_DATA.map((node) => {
-            const isSelected = activeNode.id === node.id;
-            return (
-              <button
-                key={node.id}
-                onClick={() => setActiveNode(node)}
-                className={`py-1.5 px-3.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200 cursor-pointer flex items-center gap-2 ${
-                  isSelected
-                    ? "bg-[#0A2540] text-white shadow-sm ring-2 ring-blue-500/25"
-                    : "bg-white text-[#425466] border border-slate-200/90 hover:border-blue-400 hover:text-[#0A2540]"
-                }`}
-              >
-                <img src={node.logo} alt={node.name} className="w-3.5 h-3.5 object-contain" />
-                <span>{node.name}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* ── 3D PERSPECTIVE NEURAL MATRIX CANVAS (UNCLUTTERED, NO FLOATING OVERLAY) ── */}
-        <div className="hidden lg:block relative w-full h-[650px] rounded-3xl bg-white border border-slate-200/90 shadow-[0_8px_36px_rgba(10,37,64,0.06)] overflow-hidden mb-6 sm:mb-8 [perspective:1400px]">
+        {/* ── 2 LINES OF HORIZONTALLY SCROLLABLE INTEGRATION PILLS ── */}
+        <div className="space-y-3.5 mb-8">
           
-          {/* Subtle high-tech isometric grid floor */}
-          <div className="absolute inset-0 bg-[radial-gradient(#3B82F6_1px,transparent_1px)] [background-size:28px_28px] opacity-15 pointer-events-none" />
-
-          {/* 3D Tilted Orbital Plane Container */}
-          <div className="absolute inset-0 w-full h-full flex items-center justify-center [transform-style:preserve-3d] [transform:rotateX(42deg)_rotateZ(-10deg)]">
-            
-            {/* SVG Glowing Neural Synaptic Lines & Orbit Rings */}
-            <svg
-              className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
-              viewBox="0 0 900 700"
-            >
-              <defs>
-                {/* Electric Blue Neural Glow Filter */}
-                <filter id="neuralGlow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="3.5" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <linearGradient id="neuralCoreGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#2563EB" stopOpacity="0.9" />
-                  <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0.3" />
-                </linearGradient>
-              </defs>
-
-              {/* Orbit Ring 1 (Inner Glowing Dashed Orbit) */}
-              <circle
-                cx={cx}
-                cy={cy}
-                r={190}
-                fill="none"
-                stroke="#60A5FA"
-                strokeWidth="1.5"
-                strokeOpacity="0.45"
-                strokeDasharray="6 6"
-              />
-
-              {/* Orbit Ring 2 (Outer Glowing Dashed Orbit) */}
-              <circle
-                cx={cx}
-                cy={cy}
-                r={290}
-                fill="none"
-                stroke="#93C5FD"
-                strokeWidth="1.5"
-                strokeOpacity="0.35"
-                strokeDasharray="8 8"
-              />
-
-              {/* ── VIVID NEURAL CONNECTION SYNAPSES (ALL 12 VISIBLE & GLOWING) ── */}
-              {NODES_DATA.map((node) => {
-                const rad = (node.angle * Math.PI) / 180;
-                const nx = cx + node.radius * Math.cos(rad);
-                const ny = cy + node.radius * Math.sin(rad);
-                const isSelected = activeNode.id === node.id;
-
-                return (
-                  <g key={`neural-${node.id}`}>
-                    {/* Background glow halo line */}
-                    <line
-                      x1={cx}
-                      y1={cy}
-                      x2={nx}
-                      y2={ny}
-                      stroke={isSelected ? "#2563EB" : "#3B82F6"}
-                      strokeWidth={isSelected ? "5" : "2.5"}
-                      strokeOpacity={isSelected ? "0.75" : "0.35"}
-                      filter="url(#neuralGlow)"
-                    />
-
-                    {/* Sharp foreground synaptic laser beam */}
-                    <line
-                      x1={cx}
-                      y1={cy}
-                      x2={nx}
-                      y2={ny}
-                      stroke={isSelected ? "#00F0FF" : "#60A5FA"}
-                      strokeWidth={isSelected ? "3" : "1.8"}
-                      strokeOpacity={isSelected ? "1" : "0.7"}
-                      strokeDasharray={isSelected ? "8 6" : "5 5"}
-                      className={isSelected ? "animate-synapse-fast" : "animate-synapse"}
-                    />
-
-                    {/* Traveling energy photon particle */}
-                    <circle
-                      cx={(cx + nx) / 2}
-                      cy={(cy + ny) / 2}
-                      r={isSelected ? "4.5" : "3"}
-                      fill={isSelected ? "#00F0FF" : "#38BDF8"}
-                      filter="url(#neuralGlow)"
-                      className="animate-pulse"
-                    />
-                  </g>
-                );
-              })}
-            </svg>
-
-            {/* ── 3D ELEVATED CENTRAL NEURAL CORE ── */}
-            <div
-              className="absolute -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center [transform-style:preserve-3d] pointer-events-none"
-              style={{ left: `${(cx / 900) * 100}%`, top: `${(cy / 700) * 100}%` }}
-            >
-              {/* Pulsing 3D floor shadow */}
-              <div className="absolute w-44 h-44 rounded-full bg-blue-600/20 blur-2xl [transform:translateZ(-20px)]" />
-              
-              {/* Outer holographic ripple wave */}
-              <div className="absolute w-36 h-36 rounded-full border border-blue-400/50 animate-ping [transform:translateZ(10px)]" />
-              
-              {/* Center 3D elevated brain pedestal */}
-              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#1E40AF] via-[#2563EB] to-[#0A2540] p-1 shadow-[0_0_40px_rgba(37,99,235,0.6)] [transform:translateZ(35px)] flex items-center justify-center">
-                <div className="w-full h-full rounded-[22px] bg-[#0A2540] border border-blue-400/50 flex flex-col items-center justify-center p-2 text-white">
-                  <Brain size={30} className="text-cyan-400 mb-1 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-                  <span className="text-[10px] font-mono font-black uppercase tracking-wider text-blue-200">
-                    BREXAL AI
-                  </span>
-                  <span className="text-[8px] font-mono text-emerald-400 font-extrabold flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    CORE ACTIVE
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* ── SATELLITE NODES WITH 100% ORIGINAL OFFICIAL LOGOS ── */}
-            {NODES_DATA.map((node) => {
-              const rad = (node.angle * Math.PI) / 180;
-              const nx = cx + node.radius * Math.cos(rad);
-              const ny = cy + node.radius * Math.sin(rad);
-              const isSelected = activeNode.id === node.id;
-
+          {/* Row 1: Cloud & Infrastructure */}
+          <div className="flex items-center gap-3 overflow-x-auto pb-2 scroll-smooth no-scrollbar px-1 justify-start md:justify-center">
+            {INTEGRATIONS_ROW_1.map((item) => {
+              const isSelected = activeItem.id === item.id;
               return (
-                <div
-                  key={node.id}
-                  onClick={() => setActiveNode(node)}
-                  onMouseEnter={() => setActiveNode(node)}
-                  className={`absolute -translate-x-1/2 -translate-y-1/2 z-30 transition-all duration-300 cursor-pointer ${
+                <button
+                  key={item.id}
+                  onClick={() => setActiveItem(item)}
+                  type="button"
+                  className={`group inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full border text-xs font-semibold whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer shadow-xs ${
                     isSelected
-                      ? "z-40 [transform:translateZ(45px)]"
-                      : "hover:[transform:translateZ(25px)]"
+                      ? "bg-white border-[#2563EB] ring-2 ring-blue-500/30 text-[#0A2540] shadow-md scale-[1.03]"
+                      : "bg-white/95 border-slate-200/90 text-slate-700 hover:border-slate-300 hover:bg-white hover:text-[#0A2540]"
                   }`}
-                  style={{
-                    left: `${(nx / 900) * 100}%`,
-                    top: `${(ny / 700) * 100}%`
-                  }}
                 >
-                  {/* Counter-rotate in 3D so the badge stays upright and faces forward */}
-                  <div className="[transform:rotateZ(10deg)_rotateX(-42deg)]">
-                    <div
-                      className={`p-2 sm:p-2.5 rounded-2xl border transition-all duration-200 flex items-center gap-2.5 shadow-md ${
-                        isSelected
-                          ? "bg-white border-[#2563EB] ring-4 ring-blue-500/30 shadow-2xl scale-110 -translate-y-2"
-                          : "bg-white/95 border-slate-200/90 hover:border-slate-300 hover:shadow-lg hover:scale-105"
-                      }`}
-                    >
-                      {/* 100% REAL OFFICIAL BRAND LOGO */}
-                      <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200/70 p-1.5 flex items-center justify-center shrink-0 shadow-2xs">
-                        <img
-                          src={node.logo}
-                          alt={node.name}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-
-                      <div className="text-left pr-1">
-                        <div className="text-xs font-black text-[#0A2540] leading-tight">
-                          {node.name}
-                        </div>
-                        <div className="text-[10px] text-slate-400 font-mono font-medium">
-                          {node.category}
-                        </div>
-                      </div>
-
-                      {isSelected && (
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-0.5" />
-                      )}
-                    </div>
+                  {/* Official SVG Logo */}
+                  <div className="w-5 h-5 rounded-md bg-slate-50 border border-slate-200/70 p-0.5 flex items-center justify-center shrink-0">
+                    <img
+                      src={item.logo}
+                      alt={item.name}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
-                </div>
+
+                  <span className="font-bold text-[#0A2540]">{item.name}</span>
+
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-medium ${
+                    isSelected
+                      ? "bg-blue-100/80 text-[#2563EB]"
+                      : "bg-slate-100 text-slate-500 group-hover:bg-slate-200/70"
+                  }`}>
+                    {item.badge}
+                  </span>
+                </button>
               );
             })}
-
           </div>
 
-          {/* ── TOP-LEFT LIVE STATUS BADGE ── */}
-          <div className="absolute top-6 left-6 z-40 flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-xs font-mono font-bold text-[#0A2540] shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span>Autonomous 3D Socket Mesh Active</span>
+          {/* Row 2: Runtimes & Frameworks */}
+          <div className="flex items-center gap-3 overflow-x-auto pb-2 scroll-smooth no-scrollbar px-1 justify-start md:justify-center">
+            {INTEGRATIONS_ROW_2.map((item) => {
+              const isSelected = activeItem.id === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveItem(item)}
+                  type="button"
+                  className={`group inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full border text-xs font-semibold whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer shadow-xs ${
+                    isSelected
+                      ? "bg-white border-[#2563EB] ring-2 ring-blue-500/30 text-[#0A2540] shadow-md scale-[1.03]"
+                      : "bg-white/95 border-slate-200/90 text-slate-700 hover:border-slate-300 hover:bg-white hover:text-[#0A2540]"
+                  }`}
+                >
+                  {/* Official SVG Logo */}
+                  <div className="w-5 h-5 rounded-md bg-slate-50 border border-slate-200/70 p-0.5 flex items-center justify-center shrink-0">
+                    <img
+                      src={item.logo}
+                      alt={item.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+
+                  <span className="font-bold text-[#0A2540]">{item.name}</span>
+
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-medium ${
+                    isSelected
+                      ? "bg-blue-100/80 text-[#2563EB]"
+                      : "bg-slate-100 text-slate-500 group-hover:bg-slate-200/70"
+                  }`}>
+                    {item.badge}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
         </div>
 
-        {/* ── ACTIVE SERVICE LIVE TELEMETRY PANEL (DIRECTLY BELOW THE 3D CANVAS) ── */}
-        <div className="rounded-2xl sm:rounded-3xl bg-[#0A2540] border border-[#1E3A8A] p-5 sm:p-7 text-white shadow-xl text-left mb-10 transition-all duration-300">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 pb-5 border-b border-white/10">
+        {/* ── HORIZONTAL DARK BLUE STRIPE (ADVEE STRIPE AS REQUESTED) ── */}
+        <div className="rounded-2xl sm:rounded-3xl bg-[#071E33] border border-[#143252] p-5 sm:p-7 text-white shadow-2xl text-left mb-10 transition-all duration-300">
+          
+          {/* Top Bar inside Stripe: Service Meta & Highlights */}
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-5 border-b border-white/10">
             
-            {/* Left: Active Service Logo, Name & Status */}
+            {/* Left: Active Service Logo, Name & Badge */}
             <div className="flex items-center gap-3.5">
               <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/15 p-2 flex items-center justify-center shrink-0 shadow-xs">
                 <img
-                  src={activeNode.logo}
-                  alt={activeNode.name}
+                  src={activeItem.logo}
+                  alt={activeItem.name}
                   className="w-full h-full object-contain"
                 />
               </div>
               <div>
                 <div className="flex items-center gap-2.5">
                   <h3 className="text-lg sm:text-xl font-extrabold text-white">
-                    {activeNode.name} Telemetry
+                    {activeItem.name}
                   </h3>
                   <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10.5px] font-mono font-bold">
-                    eBPF Kernel Socket
+                    {activeItem.badge}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-xs font-mono text-emerald-400 font-bold flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    {activeNode.metrics.status}
+                    eBPF Kernel Socket Verified
                   </span>
                   <span className="text-slate-500">•</span>
                   <span className="text-xs text-slate-300 font-mono">
-                    {activeNode.category}
+                    {activeItem.category}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Right: The 3 Live Metrics */}
-            <div className="grid grid-cols-3 gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0">
-              <div className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[105px]">
-                <div className="text-sm sm:text-base font-black text-white font-mono">
-                  {activeNode.metrics.primary}
+            {/* Right: Metrics Badges */}
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full lg:w-auto shrink-0">
+              <div className="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-center min-w-[95px]">
+                <div className="text-xs sm:text-sm font-black text-white font-mono">
+                  {activeItem.metrics.primary}
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">
-                  {activeNode.metrics.primaryLabel}
-                </div>
-              </div>
-
-              <div className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[105px]">
-                <div className="text-sm sm:text-base font-black text-white font-mono">
-                  {activeNode.metrics.secondary}
-                </div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">
-                  {activeNode.metrics.secondaryLabel}
+                <div className="text-[9.5px] text-slate-400 font-mono mt-0.5">
+                  {activeItem.metrics.primaryLabel}
                 </div>
               </div>
 
-              <div className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[105px]">
-                <div className="text-sm sm:text-base font-black text-emerald-400 font-mono">
-                  {activeNode.metrics.latency}
+              <div className="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-center min-w-[95px]">
+                <div className="text-xs sm:text-sm font-black text-white font-mono">
+                  {activeItem.metrics.secondary}
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                <div className="text-[9.5px] text-slate-400 font-mono mt-0.5">
+                  {activeItem.metrics.secondaryLabel}
+                </div>
+              </div>
+
+              <div className="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-center min-w-[95px]">
+                <div className="text-xs sm:text-sm font-black text-emerald-400 font-mono">
+                  {activeItem.metrics.latency}
+                </div>
+                <div className="text-[9.5px] text-slate-400 font-mono mt-0.5">
                   Avg Overhead
                 </div>
               </div>
@@ -569,20 +493,53 @@ export function BrexalIntegrationsSection() {
 
           </div>
 
-          {/* Bottom details description */}
-          <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-[13px] text-slate-300">
-            <p className="leading-relaxed font-normal">
-              {activeNode.details}
-            </p>
-            <div className="flex items-center gap-2 text-blue-300 font-mono text-[11px] shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-              <span>Real-time Kernel Stream Active</span>
+          {/* Middle: Code Snippet Bar with Copy Button */}
+          <div className="mt-5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-mono text-slate-300 flex items-center gap-2">
+                <Terminal size={14} className="text-cyan-400" />
+                <span>Zero-Code 1-Command Installation:</span>
+              </span>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-mono font-bold transition-all duration-150 shadow-xs cursor-pointer"
+              >
+                {copied ? (
+                  <>
+                    <Check size={13} className="text-emerald-300" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={13} />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-[#041321] border border-blue-900/50 font-mono text-xs sm:text-[13px] text-emerald-400 overflow-x-auto whitespace-pre-wrap leading-relaxed shadow-inner">
+              {activeItem.command}
+            </div>
+          </div>
+
+          {/* Bottom Row inside Stripe */}
+          <div className="mt-4 pt-3.5 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs text-slate-300">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-mono text-emerald-400 font-bold">
+                0.0% CPU penalty verified via eBPF probes
+              </span>
+            </div>
+            <div className="text-slate-400 font-mono text-[11px]">
+              Protocol: OpenTelemetry v1.32+ &amp; PromQL Native
             </div>
           </div>
 
         </div>
 
-        {/* ── BOTTOM ENTERPRISE STAT STRIP ── */}
+        {/* ── BOTTOM ENTERPRISE STAT STRIP (4 PILLARS) ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-6 border-t border-slate-200/90 text-left">
           
           <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
@@ -636,27 +593,6 @@ export function BrexalIntegrationsSection() {
         </div>
 
       </div>
-
-      {/* ── CSS KEYFRAMES FOR 3D SYNAPTIC LASER BEAMS ── */}
-      <style jsx>{`
-        @keyframes synapse {
-          to {
-            stroke-dashoffset: -20;
-          }
-        }
-        @keyframes synapse-fast {
-          to {
-            stroke-dashoffset: -24;
-          }
-        }
-        .animate-synapse {
-          animation: synapse 2.5s linear infinite;
-        }
-        .animate-synapse-fast {
-          animation: synapse-fast 1.2s linear infinite;
-        }
-      `}</style>
-
     </section>
   );
 }
