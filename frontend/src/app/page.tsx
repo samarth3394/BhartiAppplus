@@ -136,9 +136,9 @@ function HeroSignupCard() {
   };
 
   return (
-    <div className="w-full max-w-[420px] bg-transparent p-0 flex flex-col text-left">
+    <div className="w-full max-w-[480px] bg-transparent p-0 flex flex-col text-left">
       <form onSubmit={handleSubmit} className="w-full flex flex-col">
-        <label className="block text-sm font-bold text-black mb-2">
+        <label className="block text-[15px] sm:text-base font-bold text-black mb-2">
           Work email
         </label>
         <input
@@ -147,23 +147,23 @@ function HeroSignupCard() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
-          className="w-full px-4.5 py-3 rounded-2xl border border-black/25 bg-transparent text-black placeholder:text-slate-400 text-sm outline-none focus:border-[#1868DB] focus:ring-2 focus:ring-[#1868DB]/20 transition-all"
+          className="w-full px-5 py-3.5 sm:py-4 rounded-2xl border-2 border-black/25 bg-white text-black placeholder:text-slate-400 text-base font-medium outline-none focus:border-[#1868DB] focus:ring-4 focus:ring-[#1868DB]/15 transition-all shadow-xs"
         />
-        <p className="text-[12.5px] text-black/75 mt-2.5 font-medium leading-relaxed">
+        <p className="text-[13px] sm:text-[13.5px] text-black/80 mt-2.5 mb-1 font-medium leading-relaxed">
           Use a work email to find teammates and get access to BREXAL AI
         </p>
 
         <button
           type="submit"
-          className="w-full mt-5 py-3 rounded-full bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-[14.5px] transition-all shadow-xs hover:shadow hover:-translate-y-0.5"
+          className="w-full mt-4 py-3.5 sm:py-4 rounded-full bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-base sm:text-[16.5px] tracking-wide transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
         >
           Sign up
         </button>
       </form>
 
-      <div className="relative flex py-5 items-center">
+      <div className="relative flex py-4 sm:py-5 items-center">
         <div className="flex-grow border-t border-black/15"></div>
-        <span className="flex-shrink mx-4 text-xs text-black/60 font-medium">
+        <span className="flex-shrink mx-4 text-xs uppercase tracking-wider text-black/60 font-bold">
           Or continue with
         </span>
         <div className="flex-grow border-t border-black/15"></div>
@@ -172,9 +172,9 @@ function HeroSignupCard() {
       <button
         type="button"
         onClick={() => { window.location.href = "/register"; }}
-        className="w-full py-2.5 rounded-full border border-black/25 bg-transparent hover:bg-black/5 text-black font-bold text-sm flex items-center justify-center gap-2.5 transition-all shadow-none hover:border-black/50"
+        className="w-full py-3.5 rounded-full border-2 border-black/25 bg-white hover:bg-slate-50 text-black font-bold text-base flex items-center justify-center gap-3 transition-all shadow-2xs hover:border-black/50 hover:-translate-y-0.5"
       >
-        <svg className="w-4.5 h-4.5 shrink-0" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
@@ -194,17 +194,17 @@ function HeroSection() {
   const [activeNode, setActiveNode] = useState("api-gateway");
 
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 px-6 sm:px-10 overflow-hidden bg-white border-b border-black/10">
+    <section className="relative pt-24 pb-12 md:pt-28 md:pb-16 px-6 sm:px-10 overflow-hidden bg-white border-b border-black/10">
       
       <div className="max-w-[1320px] mx-auto text-left flex flex-col items-start relative z-10">
         
         {/* HERO 2-COLUMN GRID: Left Hero Copy + Right Instant Signup Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full mb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full mb-8">
           
           {/* Left Column (7 cols): Hero Headline & Description */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
             {/* Top Product Release Pill */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-transparent border border-black/15 shadow-none mb-7 hover:border-black/30 transition-colors cursor-pointer self-start">
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-transparent border border-black/15 shadow-none mb-4 hover:border-black/30 transition-colors cursor-pointer self-start">
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <Logo className="h-3.5 text-black" />
               <span className="text-[12px] font-mono font-bold text-black tracking-tight">
@@ -217,7 +217,7 @@ function HeroSection() {
             </div>
 
             {/* Master Grand Headline (Black Text - Sleek Reduced Size) */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-black max-w-2xl leading-[1.1] mb-5 text-left">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-black max-w-2xl leading-[1.1] mb-3.5 text-left">
               Autonomous Telemetry & <br className="hidden sm:inline" />
               <span className="text-black underline decoration-[#635BFF] decoration-4 underline-offset-8">
                 AI Incident Intelligence
@@ -225,7 +225,7 @@ function HeroSection() {
             </h1>
 
             {/* Supporting Narrative (Sleek Reduced Size) */}
-            <p className="text-base sm:text-[17px] text-black font-medium max-w-xl leading-relaxed mb-7 text-left">
+            <p className="text-base sm:text-[17px] text-black font-medium max-w-xl leading-relaxed mb-5 text-left">
               Synthesize distributed microservices, traces, and kernel eBPF signals into one real-time operational mesh. Detect anomalies and resolve outages before customer impact.
             </p>
 
@@ -256,7 +256,7 @@ function HeroSection() {
         </div>
 
         {/* Live Operational Metrics Ribbon (Black text) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-2xl w-full pt-6 pb-10 border-t border-black/10 mb-10 text-left font-mono">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-3xl w-full pt-4 pb-6 border-t border-black/10 mb-8 text-left font-mono">
           <div>
             <div className="text-xl sm:text-2xl font-extrabold text-black">0.84ms</div>
             <div className="text-[10.5px] text-black font-bold uppercase tracking-wider mt-0.5 flex items-center gap-1.5">
@@ -545,11 +545,11 @@ function ArchitecturePillarsSection() {
   ];
 
   return (
-    <section id="architecture" className="py-20 md:py-28 px-6 sm:px-10 border-b border-black/10 bg-white">
+    <section id="architecture" className="py-12 md:py-16 px-6 sm:px-10 border-b border-black/10 bg-white">
       <div className="max-w-[1320px] mx-auto">
         
         {/* Section Header */}
-        <div className="max-w-2xl mb-12 text-left">
+        <div className="max-w-2xl mb-8 text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-black border border-black/15 font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
             Unified Core Architecture
           </div>
@@ -613,15 +613,15 @@ function InteractiveSimulatorSection() {
   ];
 
   return (
-    <section id="interactive-simulator" className="py-20 md:py-28 px-6 sm:px-10 border-b border-black/10 bg-white">
+    <section id="interactive-simulator" className="py-12 md:py-16 px-6 sm:px-10 border-b border-black/10 bg-white">
       <div className="max-w-[1320px] mx-auto">
         
         {/* Section Header */}
-        <div className="max-w-2xl mb-10 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-black border border-black/15 font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
+        <div className="max-w-2xl mb-6 text-left">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-black border border-black/15 font-mono text-[11px] font-bold uppercase tracking-wider mb-2.5">
             Interactive AI Lab
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight mb-2.5">
             Test the Autonomous Incident Engine live.
           </h2>
           <p className="text-sm sm:text-base text-black font-medium leading-relaxed">
@@ -630,7 +630,7 @@ function InteractiveSimulatorSection() {
         </div>
 
         {/* Phase Selector Buttons */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {steps.map((st) => (
             <button
               key={st.step}
@@ -767,15 +767,15 @@ function ComparisonSection() {
   ];
 
   return (
-    <section id="comparison" className="py-20 md:py-28 px-6 sm:px-10 border-b border-black/10 bg-white">
+    <section id="comparison" className="py-12 md:py-16 px-6 sm:px-10 border-b border-black/10 bg-white">
       <div className="max-w-[1320px] mx-auto">
         
         {/* Section Header */}
-        <div className="max-w-2xl mb-10 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-black border border-black/15 font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
+        <div className="max-w-2xl mb-6 text-left">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-black border border-black/15 font-mono text-[11px] font-bold uppercase tracking-wider mb-2.5">
             Benchmark Analysis
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight mb-2.5">
             Why high-growth engineering teams choose BREXAL.
           </h2>
           <p className="text-sm sm:text-base text-black font-medium leading-relaxed">
@@ -854,15 +854,15 @@ function PricingSection() {
   ];
 
   return (
-    <section id="pricing" className="py-20 md:py-28 px-6 sm:px-10 border-b border-black/10 bg-white">
+    <section id="pricing" className="py-12 md:py-16 px-6 sm:px-10 border-b border-black/10 bg-white">
       <div className="max-w-[1320px] mx-auto text-center flex flex-col items-center">
         
         {/* Section Header */}
-        <div className="max-w-2xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-black border border-black/15 font-mono text-[11px] font-bold uppercase tracking-wider mb-3">
+        <div className="max-w-2xl mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-black border border-black/15 font-mono text-[11px] font-bold uppercase tracking-wider mb-2.5">
             Transparent Tiers
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight mb-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight mb-2.5">
             Simple, predictable pricing. No per-GB surprise fees.
           </h2>
           <p className="text-sm sm:text-base text-black font-medium leading-relaxed">
@@ -930,34 +930,34 @@ function PricingSection() {
    ═══════════════════════════════════════════════════════════════ */
 function FinalCtaSection() {
   return (
-    <section className="py-20 md:py-28 px-6 sm:px-10 border-b border-black/10 bg-white">
+    <section className="py-12 md:py-16 px-6 sm:px-10 border-b border-black/10 bg-white">
       <div className="max-w-[960px] mx-auto text-center flex flex-col items-center">
         
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-black leading-tight mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-black leading-tight mb-3">
           See outages before your customers do.
         </h2>
 
-        <p className="text-base sm:text-lg text-black font-medium max-w-xl leading-relaxed mb-8">
+        <p className="text-base sm:text-lg text-black font-medium max-w-xl leading-relaxed mb-6">
           Join leading platform teams who trust BREXAL for real-time observability, kernel-level telemetry, and automated MTTR reduction.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <Link
             href="/register"
-            className="w-full sm:w-auto px-8 py-4 rounded-xl bg-black text-white text-[15px] font-bold hover:bg-[#635BFF] transition-all shadow-md flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-black text-white text-[15px] font-bold hover:bg-[#635BFF] transition-all shadow-md flex items-center justify-center gap-2"
           >
             <span>Deploy Free Sandbox Cluster</span>
             <ArrowRight size={16} />
           </Link>
           <Link
             href="/dashboard"
-            className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white border-2 border-black text-black text-[15px] font-bold hover:bg-slate-50 transition-colors shadow-xs"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white border-2 border-black text-black text-[15px] font-bold hover:bg-slate-50 transition-colors shadow-xs"
           >
             Live Sandboxed Console
           </Link>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-10 text-[12px] font-mono text-black font-bold">
+        <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-[12px] font-mono text-black font-bold">
           <span className="flex items-center gap-1.5"><ShieldCheck size={15} className="text-emerald-700" /> SOC-2 Type II Certified</span>
           <span className="flex items-center gap-1.5"><Zap size={15} className="text-black" /> 5-Minute Zero-Downtime Setup</span>
           <span className="flex items-center gap-1.5"><Lock size={15} className="text-black" /> Non-Custodial Telemetry</span>
@@ -972,9 +972,9 @@ function FinalCtaSection() {
    ═══════════════════════════════════════════════════════════════ */
 function EnterpriseFooter() {
   return (
-    <footer className="py-16 px-6 sm:px-10 bg-white border-t border-black/10 text-black font-sans">
+    <footer className="py-10 px-6 sm:px-10 bg-white border-t border-black/10 text-black font-sans">
       <div className="max-w-[1320px] mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 pb-16 border-b border-black/10">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-10 border-b border-black/10">
           
           {/* Brand Info */}
           <div className="col-span-2 flex flex-col items-start">
