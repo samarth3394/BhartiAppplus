@@ -265,34 +265,34 @@ function HeroSignupCard() {
   };
 
   return (
-    <div className="w-full max-w-[480px] bg-transparent p-0 flex flex-col text-left mb-6">
+    <div className="w-full max-w-[480px] bg-transparent p-0 flex flex-col text-left mb-4 sm:mb-5">
       <form onSubmit={handleSubmit} className="w-full flex flex-col">
-        <label className="block text-[13px] sm:text-[13.5px] font-bold text-[#0A2540] mb-1.5">
+        <label className="block text-[13px] sm:text-[13.5px] font-bold text-[#0A2540] mb-1">
           Work email
         </label>
-        <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
+        <div className="flex flex-col sm:flex-row items-stretch gap-2">
           <input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
-            className="flex-1 px-4 py-3 min-h-[46px] rounded-xl border border-slate-300 bg-white text-[#0A2540] placeholder:text-slate-400 text-sm font-medium outline-none focus:border-[#635BFF] focus:ring-3 focus:ring-[#635BFF]/15 transition-all shadow-2xs"
+            className="flex-1 px-3.5 py-2.5 sm:px-4 sm:py-3 min-h-[44px] rounded-xl border border-slate-300 bg-white text-[#0A2540] placeholder:text-slate-400 text-sm font-medium outline-none focus:border-[#635BFF] focus:ring-3 focus:ring-[#635BFF]/15 transition-all shadow-2xs"
           />
           <button
             type="submit"
-            className="w-full sm:w-auto px-6 py-3 min-h-[46px] rounded-xl bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-sm tracking-wide transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-1.5 shrink-0"
+            className="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 min-h-[44px] rounded-xl bg-[#1868DB] hover:bg-[#1356ba] text-white font-bold text-sm tracking-wide transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-1.5 shrink-0"
           >
             <span>Sign up</span>
             <ChevronRight size={16} />
           </button>
         </div>
-        <p className="text-[11.5px] sm:text-[12px] text-[#425466] mt-2 font-medium leading-relaxed">
+        <p className="text-[11.5px] sm:text-[12px] text-[#425466] mt-1.5 font-medium leading-relaxed">
           Use a work email to find teammates and get access to BREXAL AI
         </p>
       </form>
 
-      <div className="relative flex py-3 items-center">
+      <div className="relative flex py-2 items-center">
         <div className="flex-grow border-t border-slate-200"></div>
         <span className="flex-shrink mx-3 text-[10.5px] sm:text-[11px] uppercase tracking-wider text-[#425466] font-bold">
           Or continue with
@@ -303,7 +303,7 @@ function HeroSignupCard() {
       <button
         type="button"
         onClick={() => { window.location.href = "/register"; }}
-        className="w-full py-3 min-h-[46px] rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-[#0A2540] font-bold text-sm flex items-center justify-center gap-2.5 transition-colors hover:border-[#0A2540] shadow-2xs active:bg-slate-100"
+        className="w-full py-2.5 sm:py-3 min-h-[44px] rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-[#0A2540] font-bold text-sm flex items-center justify-center gap-2.5 transition-colors hover:border-[#0A2540] shadow-2xs active:bg-slate-100"
       >
         <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -326,7 +326,7 @@ function StripeColorGridCanvas() {
       
       {/* ── SKEWED SLANTED CANVAS WRAPPER (STRIPE SIGNATURE -8deg SKEW) ── */}
       <div 
-        className="absolute -top-40 left-[-15%] w-[130%] h-[860px] origin-top-left"
+        className="absolute -top-40 left-[-15%] w-[130%] h-[680px] sm:h-[720px] md:h-[760px] origin-top-left"
         style={{
           transform: "skewY(-7.5deg)",
         }}
@@ -396,7 +396,7 @@ function StripeColorGridCanvas() {
       </div>
 
       {/* ── SMOOTH DISSOLVE MASK INTO PAGE WHITE ── */}
-      <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-white via-white/85 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-28 sm:h-32 bg-gradient-to-t from-white via-white/85 to-transparent pointer-events-none" />
       
       {/* ── SUBTLE GLOBAL AMBIENT DOT GRID ON BASE ── */}
       <div 
@@ -415,7 +415,7 @@ function StripeColorGridCanvas() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative pt-28 pb-16 md:pt-40 md:pb-32 px-4 sm:px-10 overflow-hidden bg-white">
+    <section className="relative pt-20 pb-10 sm:pt-24 sm:pb-12 md:pt-28 md:pb-14 px-4 sm:px-10 overflow-hidden bg-white">
       
       {/* ── THE SIGNATURE STRIPE COLOR GRID CANVAS ── */}
       <StripeColorGridCanvas />
@@ -423,7 +423,7 @@ function StripeHeroSection() {
       <div className="max-w-[1320px] mx-auto text-left relative z-10">
         
         {/* TWO-COLUMN STRIPE LAYOUT */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column (5 cols): Editorial Copy & Quick Signup */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
@@ -431,7 +431,7 @@ function StripeHeroSection() {
             {/* Top Pill Eyebrow */}
             <Link 
               href="#interactive-simulator" 
-              className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-4 sm:mb-5 hover:border-[#635BFF]/40 transition-colors"
+              className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-3 sm:mb-4 hover:border-[#635BFF]/40 transition-colors"
             >
               <span className="flex h-2 w-2 rounded-full bg-[#635BFF] animate-pulse" />
               <span className="text-[11px] sm:text-[12px] font-bold text-[#0A2540]">
@@ -441,7 +441,7 @@ function StripeHeroSection() {
             </Link>
 
             {/* Refined Headline (Compact & Modern Sans) */}
-            <h1 className="font-sans text-[26px] sm:text-3xl md:text-[34px] lg:text-[38px] font-bold tracking-[-0.025em] text-[#0A2540] leading-[1.18] mb-3 sm:mb-4 text-left">
+            <h1 className="font-sans text-[26px] sm:text-3xl md:text-[34px] lg:text-[38px] font-bold tracking-[-0.025em] text-[#0A2540] leading-[1.18] mb-2.5 sm:mb-3 text-left">
               Autonomous telemetry <br className="hidden sm:inline" />
               infrastructure for <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-[#635BFF] via-[#0073E6] to-[#00D4FF] bg-clip-text text-transparent">
@@ -450,7 +450,7 @@ function StripeHeroSection() {
             </h1>
 
             {/* Supporting Subhead */}
-            <p className="text-[15px] sm:text-[17px] text-[#425466] font-normal leading-relaxed mb-5 sm:mb-6 text-left">
+            <p className="text-[14.5px] sm:text-[16px] text-[#425466] font-normal leading-relaxed mb-4 sm:mb-5 text-left">
               Millions of requests across Kubernetes, microservices, and databases are monitored in real time with BREXAL. Synthesize logs, kernel traces, and metrics into self-healing incident intelligence.
             </p>
 
@@ -458,7 +458,7 @@ function StripeHeroSection() {
             <HeroSignupCard />
 
             {/* Reassurance Micro-Metrics */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[11.5px] sm:text-[12px] font-semibold text-[#425466] pt-1">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[11.5px] sm:text-[12px] font-semibold text-[#425466] pt-0.5">
               <span className="flex items-center gap-1.5">
                 <Check size={14} className="text-emerald-600 font-bold shrink-0" /> Free developer tier
               </span>
@@ -473,7 +473,7 @@ function StripeHeroSection() {
           </div>
 
           {/* Right Column (7 cols): Layered Futuristic Visual Showcase (shot-3 + shot-1) */}
-          <div className="lg:col-span-7 relative w-full pt-4 lg:pt-0 pb-8 sm:pb-0">
+          <div className="lg:col-span-7 relative w-full pt-2 lg:pt-0 pb-3 sm:pb-5 lg:pb-2">
             
             {/* Ambient Multi-Color Gradient Mesh Glow */}
             <div className="absolute -inset-4 bg-gradient-to-tr from-[#635BFF]/30 via-[#00D4FF]/25 to-[#FF5894]/25 rounded-3xl blur-3xl opacity-75 -z-10" />
@@ -492,7 +492,7 @@ function StripeHeroSection() {
             </BrowserFrame>
 
             {/* Overlapping Corner Card: shot-1.png (Live Telemetry Cockpit) */}
-            <div className="absolute -bottom-5 -left-2 sm:-bottom-8 sm:-left-6 w-[70%] sm:w-[56%] z-20 transition-transform duration-300 hover:-translate-y-1">
+            <div className="absolute -bottom-3 -left-2 sm:-bottom-5 sm:-left-5 w-[68%] sm:w-[54%] z-20 transition-transform duration-300 hover:-translate-y-1">
               <div className="rounded-xl sm:rounded-2xl border-2 border-white/95 bg-white/95 backdrop-blur-md shadow-[0_20px_50px_-10px_rgba(10,37,64,0.28)] overflow-hidden ring-1 ring-slate-900/10">
                 <div className="px-2.5 sm:px-3 py-1.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
@@ -539,9 +539,9 @@ function StripeClientMarquee() {
   ];
 
   return (
-    <section className="py-10 sm:py-14 border-t border-b border-slate-200/80 bg-[#FAFBFD] px-4 sm:px-10">
+    <section className="py-6 sm:py-8 border-t border-b border-slate-200/80 bg-[#FAFBFD] px-4 sm:px-10">
       <div className="max-w-[1320px] mx-auto">
-        <p className="text-center font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#425466] mb-6 sm:mb-8">
+        <p className="text-center font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#425466] mb-3 sm:mb-4">
           Powering mission-critical platforms and distributed engineering teams
         </p>
         
@@ -565,30 +565,30 @@ function StripeClientMarquee() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeProductShowcaseSection() {
   return (
-    <section id="architecture" className="py-16 md:py-36 px-4 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden">
+    <section id="architecture" className="py-10 sm:py-14 md:py-18 px-4 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden">
       
       {/* Ambient subtle color grading meshes behind the showcases */}
       <div className="absolute top-1/4 -right-40 w-[600px] h-[600px] bg-gradient-to-bl from-[#FF725E]/15 via-[#635BFF]/15 to-transparent rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 -left-40 w-[600px] h-[600px] bg-gradient-to-tr from-[#00D4FF]/15 via-[#10B981]/15 to-transparent rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="max-w-[1320px] mx-auto space-y-20 md:space-y-40">
+      <div className="max-w-[1320px] mx-auto space-y-12 sm:space-y-16 md:space-y-20">
 
         {/* ── SHOWCASE A: SPRINT VELOCITY & LIVE BUG RADAR ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
           
           {/* Editorial Left */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
-            <div className="text-[11px] sm:text-[11.5px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-2.5">
+            <div className="text-[11px] sm:text-[11.5px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-2">
               Engineering Velocity
             </div>
-            <h2 className="text-2xl sm:text-4xl md:text-[42px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.15] mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-[40px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.15] mb-3 sm:mb-3.5">
               Agile sprint pipelines with autonomous bug watchdogs.
             </h2>
-            <p className="text-sm sm:text-lg text-[#425466] leading-relaxed mb-6 font-normal">
+            <p className="text-sm sm:text-base text-[#425466] leading-relaxed mb-4 sm:mb-5 font-normal">
               Track multi-engineer sprint deliverables in lockstep with automated production regression feeds. Critical runtime anomalies are mapped directly to git commits before impacting customers.
             </p>
 
-            <div className="space-y-3 mb-6 sm:mb-8 w-full">
+            <div className="space-y-2.5 mb-4 sm:mb-5 w-full">
               <div className="flex items-start gap-2.5 sm:gap-3">
                 <div className="w-5 h-5 rounded-full bg-[#635BFF]/10 text-[#635BFF] flex items-center justify-center shrink-0 mt-0.5">
                   <Check size={13} className="font-bold" />
@@ -625,7 +625,7 @@ function StripeProductShowcaseSection() {
           </div>
 
           {/* Layered Visual Right: shot-4 (Kanban Board) + shot-5 (Issues & Bugs) */}
-          <div className="lg:col-span-7 relative w-full pt-4 lg:pt-0 pb-8 sm:pb-0">
+          <div className="lg:col-span-7 relative w-full pt-2 lg:pt-0 pb-3 sm:pb-5 lg:pb-2">
             {/* Warm Sunset / Amber-Violet Ambient Glow */}
             <div className="absolute -inset-4 bg-gradient-to-tr from-[#FF725E]/20 via-[#635BFF]/25 to-[#00D4FF]/20 rounded-3xl blur-3xl opacity-75 -z-10" />
             
@@ -642,7 +642,7 @@ function StripeProductShowcaseSection() {
             </BrowserFrame>
 
             {/* Overlapping Corner Card: shot-5.png (Issues & Bugs Feed) */}
-            <div className="absolute -bottom-5 -left-2 sm:-bottom-8 sm:-left-6 w-[82%] sm:w-[68%] z-20 transition-transform duration-300 hover:-translate-y-1">
+            <div className="absolute -bottom-3 -left-2 sm:-bottom-5 sm:-left-5 w-[75%] sm:w-[60%] z-20 transition-transform duration-300 hover:-translate-y-1">
               <div className="rounded-xl sm:rounded-2xl border-2 border-white/95 bg-white/95 backdrop-blur-md shadow-[0_20px_50px_-10px_rgba(10,37,64,0.28)] overflow-hidden ring-1 ring-slate-900/10">
                 <div className="px-2.5 sm:px-3.5 py-1.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
@@ -669,10 +669,10 @@ function StripeProductShowcaseSection() {
         </div>
 
         {/* ── SHOWCASE B: TEAM GOVERNANCE & MULTI-CLUSTER INFRASTRUCTURE ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
           
           {/* Layered Visual Left: shot-2 (Team Access) + shot-6 (Infrastructure Nodes) */}
-          <div className="lg:col-span-7 relative w-full order-2 lg:order-1 pt-4 lg:pt-0 pb-8 sm:pb-0">
+          <div className="lg:col-span-7 relative w-full order-2 lg:order-1 pt-2 lg:pt-0 pb-3 sm:pb-5 lg:pb-2">
             {/* Tech Cyan / Emerald Ambient Glow */}
             <div className="absolute -inset-4 bg-gradient-to-tr from-[#00D4FF]/25 via-[#10B981]/25 to-[#635BFF]/20 rounded-3xl blur-3xl opacity-75 -z-10" />
             
@@ -689,7 +689,7 @@ function StripeProductShowcaseSection() {
             </BrowserFrame>
 
             {/* Overlapping Corner Card: shot-6.png (Infrastructure & Worker Nodes) */}
-            <div className="absolute -bottom-5 -right-2 sm:-bottom-8 sm:-right-6 w-[78%] sm:w-[62%] z-20 transition-transform duration-300 hover:-translate-y-1">
+            <div className="absolute -bottom-3 -right-2 sm:-bottom-5 sm:-right-5 w-[72%] sm:w-[58%] z-20 transition-transform duration-300 hover:-translate-y-1">
               <div className="rounded-xl sm:rounded-2xl border-2 border-white/95 bg-white/95 backdrop-blur-md shadow-[0_20px_50px_-10px_rgba(10,37,64,0.28)] overflow-hidden ring-1 ring-slate-900/10">
                 <div className="px-2.5 sm:px-3.5 py-1.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
@@ -715,17 +715,17 @@ function StripeProductShowcaseSection() {
 
           {/* Editorial Right */}
           <div className="lg:col-span-5 flex flex-col items-start text-left order-1 lg:order-2">
-            <div className="text-[11px] sm:text-[11.5px] font-mono font-bold text-emerald-600 uppercase tracking-widest mb-2.5">
+            <div className="text-[11px] sm:text-[11.5px] font-mono font-bold text-emerald-600 uppercase tracking-widest mb-2">
               Infrastructure & Governance
             </div>
-            <h2 className="text-2xl sm:text-4xl md:text-[42px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.15] mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-[40px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.15] mb-3 sm:mb-3.5">
               Enterprise team controls with hardware node telemetry.
             </h2>
-            <p className="text-sm sm:text-lg text-[#425466] leading-relaxed mb-6 font-normal">
+            <p className="text-sm sm:text-base text-[#425466] leading-relaxed mb-4 sm:mb-5 font-normal">
               Manage architectural ownership, RBAC permissions, and multi-tenant audit logs alongside live CPU, memory, NVMe disk, and network throughput across every cloud cluster.
             </p>
 
-            <div className="space-y-3 mb-6 sm:mb-8 w-full">
+            <div className="space-y-2.5 mb-4 sm:mb-5 w-full">
               <div className="flex items-start gap-2.5 sm:gap-3">
                 <div className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                   <Check size={13} className="font-bold" />
@@ -822,7 +822,7 @@ helm install brexal-agent brexal/ebpf-mesh \\
   };
 
   return (
-    <section id="developer-sandbox" className="relative py-16 md:py-32 px-4 sm:px-10 bg-[#0A2540] text-white overflow-hidden">
+    <section id="developer-sandbox" className="relative py-10 sm:py-14 md:py-18 px-4 sm:px-10 bg-[#0A2540] text-white overflow-hidden">
       {/* Background Subtle Gradient & Mesh Glow */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[400px] bg-gradient-to-br from-[#635BFF]/20 via-[#00D4FF]/15 to-transparent rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 left-10 w-[500px] h-[350px] bg-gradient-to-tr from-[#00D4FF]/15 via-transparent to-transparent rounded-full blur-[90px] pointer-events-none" />
@@ -830,9 +830,9 @@ helm install brexal-agent brexal/ebpf-mesh \\
       <div className="max-w-[1320px] mx-auto text-left relative z-10">
         
         {/* Section Header */}
-        <div className="max-w-2xl mb-12 sm:mb-16 text-left">
+        <div className="max-w-2xl mb-6 sm:mb-8 text-left">
           {/* Eyebrow: Dual Font Style (Designed for in Modern Sans, Developers in Futuristic Mono Badge) */}
-          <div className="inline-flex items-center gap-2 mb-4">
+          <div className="inline-flex items-center gap-2 mb-3">
             <span className="font-sans text-[12px] sm:text-[13px] font-semibold uppercase tracking-[0.22em] text-[#00D4FF]">
               Designed for
             </span>
@@ -842,24 +842,24 @@ helm install brexal-agent brexal/ebpf-mesh \\
           </div>
 
           {/* Headline: Futuristic Space Grotesk Font, Pure 100% White */}
-          <h2 className="font-space text-2xl sm:text-4xl md:text-[44px] font-bold tracking-[-0.03em] text-white leading-[1.18] mb-4">
+          <h2 className="font-space text-2xl sm:text-4xl md:text-[42px] font-bold tracking-[-0.03em] text-white leading-[1.18] mb-3">
             The world’s most powerful and developer-friendly telemetry engine.
           </h2>
 
           {/* Subhead: Clean Modern Sans, High Contrast Pure Text */}
-          <p className="font-sans text-sm sm:text-lg text-slate-300 font-normal leading-relaxed">
+          <p className="font-sans text-sm sm:text-base text-slate-300 font-normal leading-relaxed">
             We obsess over developer experience. Instrument your entire distributed system in two lines of code without rebuilding Docker containers.
           </p>
         </div>
 
         {/* Split Sandbox Editor */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
           
           {/* Left: Code Snippet Panel */}
-          <div className="lg:col-span-7 bg-[#07101E] rounded-2xl sm:rounded-3xl border border-[#1C2E4A] p-4 sm:p-8 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden">
+          <div className="lg:col-span-7 bg-[#07101E] rounded-2xl sm:rounded-3xl border border-[#1C2E4A] p-4 sm:p-6 md:p-7 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden">
             <div>
               {/* Language Switcher Tabs */}
-              <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-[#1C2E4A] mb-4 sm:mb-6 font-mono text-xs gap-2">
+              <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-[#1C2E4A] mb-3 sm:mb-4 font-mono text-xs gap-2">
                 <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 max-w-full">
                   {(["curl", "python", "go", "helm"] as const).map((lang) => (
                     <button
@@ -886,12 +886,12 @@ helm install brexal-agent brexal/ebpf-mesh \\
               </div>
 
               {/* Code Pre Block */}
-              <pre className="font-mono text-xs sm:text-[14px] leading-relaxed text-white overflow-x-auto whitespace-pre p-1">
+              <pre className="font-mono text-xs sm:text-[13.5px] leading-relaxed text-white overflow-x-auto whitespace-pre p-1">
                 <code>{codeSnippets[activeLang]}</code>
               </pre>
             </div>
 
-            <div className="pt-4 sm:pt-6 border-t border-[#1C2E4A] mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center justify-between text-xs font-mono text-slate-400 gap-2">
+            <div className="pt-3 sm:pt-4 border-t border-[#1C2E4A] mt-3 sm:mt-4 flex flex-col sm:flex-row sm:items-center justify-between text-xs font-mono text-slate-400 gap-2">
               <span>Client SDK v3.2.0 • Zero dependencies</span>
               <Link href="/dashboard" className="text-[#00D4FF] hover:underline font-bold flex items-center gap-1">
                 <span>View Full API Reference</span>
@@ -901,9 +901,9 @@ helm install brexal-agent brexal/ebpf-mesh \\
           </div>
 
           {/* Right: Simulated Real-Time Response Payload */}
-          <div className="lg:col-span-5 bg-[#07101E] rounded-2xl sm:rounded-3xl border border-[#1C2E4A] p-4 sm:p-8 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.5)] font-mono text-xs overflow-hidden">
+          <div className="lg:col-span-5 bg-[#07101E] rounded-2xl sm:rounded-3xl border border-[#1C2E4A] p-4 sm:p-6 md:p-7 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.5)] font-mono text-xs overflow-hidden">
             <div>
-              <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-[#1C2E4A] mb-4 sm:mb-6 text-slate-400">
+              <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-[#1C2E4A] mb-3 sm:mb-4 text-slate-400">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="font-bold text-white uppercase text-[11px] sm:text-xs">Live Ingestion</span>
@@ -911,7 +911,7 @@ helm install brexal-agent brexal/ebpf-mesh \\
                 <span className="text-emerald-400 font-bold text-[11px] sm:text-xs">200 OK (0.84ms)</span>
               </div>
 
-              <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#030712] border border-[#1C2E4A] text-[11px] sm:text-[12px] text-white space-y-1.5 sm:space-y-2 overflow-x-auto">
+              <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#030712] border border-[#1C2E4A] text-[11px] sm:text-[12px] text-white space-y-1.5 overflow-x-auto">
                 <div className="text-emerald-400">&#123;</div>
                 <div className="pl-3 sm:pl-4 text-white">&quot;status&quot;: &quot;MESH_ACTIVE&quot;,</div>
                 <div className="pl-3 sm:pl-4 text-white">&quot;cluster_id&quot;: &quot;k8s-us-east-prod&quot;,</div>
@@ -923,7 +923,7 @@ helm install brexal-agent brexal/ebpf-mesh \\
               </div>
             </div>
 
-            <div className="pt-4 sm:pt-6 border-t border-[#1C2E4A] mt-4 sm:mt-6">
+            <div className="pt-3 sm:pt-4 border-t border-[#1C2E4A] mt-3 sm:mt-4">
               <div className="flex items-center justify-between text-slate-400 text-[10.5px] sm:text-[11.5px]">
                 <span>Kernel eBPF Filter: OK</span>
                 <span className="text-emerald-400 font-bold">0.0% CPU penalty</span>
@@ -950,24 +950,24 @@ function StripeGlobalScaleSection() {
   ];
 
   return (
-    <section className="py-16 md:py-32 px-4 sm:px-10 bg-white border-b border-slate-200/80">
+    <section className="py-10 sm:py-14 md:py-18 px-4 sm:px-10 bg-white border-b border-slate-200/80">
       <div className="max-w-[1320px] mx-auto text-left">
         
         {/* Section Header */}
-        <div className="max-w-2xl mb-10 sm:mb-16">
-          <div className="text-[11px] sm:text-[12px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-2.5 sm:mb-3">
+        <div className="max-w-2xl mb-6 sm:mb-8">
+          <div className="text-[11px] sm:text-[12px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-2">
             Global Scale
           </div>
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-[#0A2540] leading-tight mb-3 sm:mb-4">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-[#0A2540] leading-tight mb-2.5 sm:mb-3">
             The backbone for internet-scale infrastructure.
           </h2>
-          <p className="text-sm sm:text-lg text-[#425466] font-normal leading-relaxed">
+          <p className="text-sm sm:text-base text-[#425466] font-normal leading-relaxed">
             High-growth startups and global enterprises rely on Bharti Nexus to ensure 24/7 service availability.
           </p>
         </div>
 
         {/* 4 Stat Columns (2 columns on mobile, 4 on desktop) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 pt-6 sm:pt-8 border-t border-slate-200">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 pt-5 sm:pt-6 border-t border-slate-200">
           {stats.map((st, i) => (
             <div key={i} className="flex flex-col text-left">
               <div className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#0A2540] tracking-tight mb-1 sm:mb-2 font-mono">
@@ -1023,28 +1023,28 @@ function StripePricingSection() {
   ];
 
   return (
-    <section id="pricing" className="py-16 md:py-32 px-4 sm:px-10 bg-[#FAFBFD] border-b border-slate-200/80">
+    <section id="pricing" className="py-10 sm:py-14 md:py-18 px-4 sm:px-10 bg-[#FAFBFD] border-b border-slate-200/80">
       <div className="max-w-[1320px] mx-auto text-left">
         
         {/* Section Header */}
-        <div className="max-w-2xl mb-10 sm:mb-16">
-          <div className="text-[11px] sm:text-[12px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-2.5 sm:mb-3">
+        <div className="max-w-2xl mb-6 sm:mb-8">
+          <div className="text-[11px] sm:text-[12px] font-mono font-bold text-[#635BFF] uppercase tracking-widest mb-2">
             Transparent Pricing
           </div>
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-[#0A2540] leading-tight mb-3 sm:mb-4">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-[#0A2540] leading-tight mb-2.5 sm:mb-3">
             Simple, predictable pricing. No surprise per-GB penalties.
           </h2>
-          <p className="text-sm sm:text-lg text-[#425466] font-normal leading-relaxed">
+          <p className="text-sm sm:text-base text-[#425466] font-normal leading-relaxed">
             Scale your telemetry infrastructure without worrying about explosive log ingestion fees.
           </p>
         </div>
 
         {/* 3 Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full max-w-5xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 w-full">
           {tiers.map((t, idx) => (
             <div
               key={idx}
-              className={`p-6 sm:p-10 rounded-2xl sm:rounded-3xl bg-white border transition-all flex flex-col justify-between ${
+              className={`p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-white border transition-all flex flex-col justify-between ${
                 t.highlight
                   ? "border-[#635BFF] shadow-[0_16px_48px_rgba(99,91,255,0.12)] md:-translate-y-2 relative"
                   : "border-slate-200/90 shadow-xs hover:border-slate-300"
@@ -1052,18 +1052,18 @@ function StripePricingSection() {
             >
               <div>
                 {t.highlight && (
-                  <span className="inline-block px-3 py-1 rounded-full bg-[#635BFF] text-white text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase mb-3 sm:mb-4">
+                  <span className="inline-block px-3 py-1 rounded-full bg-[#635BFF] text-white text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase mb-2.5 sm:mb-3">
                     MOST POPULAR
                   </span>
                 )}
-                <h3 className="text-xl sm:text-2xl font-extrabold text-[#0A2540] mb-1.5 sm:mb-2">{t.name}</h3>
-                <p className="text-xs sm:text-sm text-[#425466] mb-4 sm:mb-6 leading-relaxed">{t.desc}</p>
-                <div className="flex items-baseline gap-1.5 mb-6 sm:mb-8">
-                  <span className="text-4xl sm:text-5xl font-black text-[#0A2540] font-mono tracking-tight">{t.price}</span>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-[#0A2540] mb-1 sm:mb-1.5">{t.name}</h3>
+                <p className="text-xs sm:text-sm text-[#425466] mb-3 sm:mb-4 leading-relaxed">{t.desc}</p>
+                <div className="flex items-baseline gap-1.5 mb-4 sm:mb-5">
+                  <span className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0A2540] font-mono tracking-tight">{t.price}</span>
                   <span className="text-xs text-[#425466] font-bold font-mono">{t.period}</span>
                 </div>
 
-                <div className="space-y-3 sm:space-y-3.5 pt-4 sm:pt-6 border-t border-slate-100 text-xs sm:text-sm text-[#0A2540] font-medium">
+                <div className="space-y-2.5 pt-3.5 sm:pt-4 border-t border-slate-100 text-xs sm:text-sm text-[#0A2540] font-medium">
                   {t.features.map((f, i) => (
                     <div key={i} className="flex items-center gap-2.5">
                       <Check size={15} className="text-[#635BFF] font-bold shrink-0" />
@@ -1073,10 +1073,10 @@ function StripePricingSection() {
                 </div>
               </div>
 
-              <div className="pt-6 sm:pt-8">
+              <div className="pt-5 sm:pt-6">
                 <Link
                   href="/register"
-                  className={`w-full py-3.5 min-h-[46px] rounded-full text-center text-sm font-bold transition-all flex items-center justify-center ${
+                  className={`w-full py-3 min-h-[44px] rounded-full text-center text-sm font-bold transition-all flex items-center justify-center ${
                     t.highlight
                       ? "bg-[#635BFF] text-white hover:bg-[#5046e5] shadow-md hover:shadow-lg"
                       : "bg-[#0A2540] text-white hover:bg-[#635BFF] shadow-xs"
@@ -1099,35 +1099,35 @@ function StripePricingSection() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeFinalCtaSection() {
   return (
-    <section className="py-16 md:py-32 px-4 sm:px-10 bg-white border-b border-slate-200/80">
+    <section className="py-10 sm:py-14 md:py-18 px-4 sm:px-10 bg-white border-b border-slate-200/80">
       <div className="max-w-[1320px] mx-auto text-left flex flex-col items-start">
         
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-[#0A2540] leading-tight mb-3 sm:mb-4">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-[-0.035em] text-[#0A2540] leading-tight mb-2.5 sm:mb-3">
           Ready to get started?
         </h2>
 
-        <p className="text-base sm:text-xl text-[#425466] font-normal max-w-xl leading-relaxed mb-6 sm:mb-8">
+        <p className="text-sm sm:text-base text-[#425466] font-normal max-w-xl leading-relaxed mb-4 sm:mb-5">
           Explore our live sandboxed console or talk with our solutions architects to instrument your clusters today.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 mb-8 sm:mb-10 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3.5 mb-6 sm:mb-7 w-full sm:w-auto">
           <Link
             href="/register"
-            className="group px-7 py-3.5 min-h-[46px] rounded-full bg-[#0A2540] text-white text-[14.5px] sm:text-[15px] font-bold hover:bg-[#635BFF] transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2"
+            className="group px-6 py-3 min-h-[44px] rounded-full bg-[#0A2540] text-white text-[14px] sm:text-[14.5px] font-bold hover:bg-[#635BFF] transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2"
           >
             <span>Start now</span>
             <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
           </Link>
           <Link
             href="/dashboard"
-            className="group px-7 py-3.5 min-h-[46px] rounded-full bg-slate-100 hover:bg-slate-200/80 text-[#0A2540] text-[14.5px] sm:text-[15px] font-bold transition-all shadow-xs flex items-center justify-center gap-2 hover:-translate-y-0.5"
+            className="group px-6 py-3 min-h-[44px] rounded-full bg-slate-100 hover:bg-slate-200/80 text-[#0A2540] text-[14px] sm:text-[14.5px] font-bold transition-all shadow-xs flex items-center justify-center gap-2 hover:-translate-y-0.5"
           >
             <span>Contact sales</span>
             <ChevronRight size={16} className="text-[#635BFF] group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[11.5px] sm:text-[12.5px] font-mono text-[#425466] font-semibold pt-5 sm:pt-6 border-t border-slate-200 w-full">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[11px] sm:text-[12px] font-mono text-[#425466] font-semibold pt-4 sm:pt-5 border-t border-slate-200 w-full">
           <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-emerald-600 shrink-0" /> SOC-2 Type II Certified</span>
           <span className="flex items-center gap-1.5"><Zap size={14} className="text-[#635BFF] shrink-0" /> 5-Minute Zero-Downtime Deployment</span>
           <span className="flex items-center gap-1.5"><Lock size={14} className="text-[#0A2540] shrink-0" /> Non-Custodial eBPF Telemetry</span>
@@ -1142,19 +1142,19 @@ function StripeFinalCtaSection() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeFooter() {
   return (
-    <footer className="py-12 sm:py-16 px-4 sm:px-10 bg-[#FAFBFD] text-[#0A2540] font-sans">
+    <footer className="py-8 sm:py-12 px-4 sm:px-10 bg-[#FAFBFD] text-[#0A2540] font-sans">
       <div className="max-w-[1320px] mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 sm:gap-10 pb-12 sm:pb-16 border-b border-slate-200">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8 pb-8 sm:pb-10 border-b border-slate-200">
           
           {/* Brand & Country Selector */}
           <div className="col-span-2 flex flex-col items-start text-left">
-            <div className="flex flex-col mb-3 sm:mb-4">
+            <div className="flex flex-col mb-2.5 sm:mb-3">
               <Logo className="h-5 sm:h-5.5 text-[#0A2540] mb-1" />
               <span className="text-[9px] sm:text-[9.5px] font-mono tracking-widest text-[#425466] uppercase font-bold">
                 Bharti Nexus Technologies
               </span>
             </div>
-            <p className="text-[12.5px] sm:text-[13.5px] text-[#425466] font-medium leading-relaxed max-w-sm mb-5 sm:mb-6">
+            <p className="text-[12px] sm:text-[13px] text-[#425466] font-medium leading-relaxed max-w-sm mb-4">
               Autonomous telemetry infrastructure and AI incident intelligence engineered by Bharti Nexus Technologies.
             </p>
             
@@ -1201,7 +1201,7 @@ function StripeFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-[#425466] gap-3 sm:gap-4 text-center sm:text-left">
+        <div className="pt-4 sm:pt-6 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-[#425466] gap-3 sm:gap-4 text-center sm:text-left">
           <div>
             © 2026 Bharti Nexus Technologies Inc. All rights reserved.
           </div>

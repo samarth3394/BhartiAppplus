@@ -196,7 +196,7 @@ export default function RoadmapPage() {
           <p className="text-[13.5px] text-slate-600">Plan epics, track major architecture features, and synchronize sprint vision.</p>
         </div>
         {canEdit && (
-          <button 
+          <button
             onClick={() => setShowFeatureModal(true)}
             className="flex items-center gap-1.5 bg-[#0F172A] hover:bg-slate-800 text-white px-3.5 py-2 rounded-lg text-[13px] font-semibold transition-all shadow-xs"
           >
@@ -220,7 +220,7 @@ export default function RoadmapPage() {
                   {colFeatures.length}
                 </span>
               </div>
-              
+
               <div className="p-3 space-y-3 overflow-y-auto">
                 {colFeatures.length === 0 ? (
                   <div className="text-center py-10 text-slate-400 text-[13px] border border-dashed border-slate-200 rounded-lg">
@@ -233,7 +233,7 @@ export default function RoadmapPage() {
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getPriorityBadge(feature.priority)}`}>
                           {feature.priority}
                         </span>
-                        
+
                         {/* Quick actions on hover */}
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white rounded-lg border border-slate-200 absolute right-3 top-3 p-1 shadow-md">
                           {col.id !== "planned" && (
@@ -253,12 +253,12 @@ export default function RoadmapPage() {
                           )}
                         </div>
                       </div>
-                      
+
                       <h3 className="font-bold text-[14px] text-[#0F172A] mb-1.5 leading-snug pr-8">{feature.title}</h3>
                       {feature.description && (
                         <p className="text-[12.5px] text-slate-600 line-clamp-3 leading-relaxed">{feature.description}</p>
                       )}
-                      
+
                       {feature.due_date && (
                         <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
                           <span className="flex items-center gap-1.5">
@@ -282,31 +282,31 @@ export default function RoadmapPage() {
             <div className="space-y-4 mb-6">
               <div className="space-y-1.5">
                 <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Title</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="e.g. Distributed Tracing Visualizer"
                   value={newFeature.title}
-                  onChange={e => setNewFeature({...newFeature, title: e.target.value})}
+                  onChange={e => setNewFeature({ ...newFeature, title: e.target.value })}
                   className="w-full bg-white border border-slate-200 text-[#0F172A] py-2 px-3 rounded-lg outline-none focus:border-[#635BFF] text-[14px] placeholder:text-slate-400 font-medium transition-colors"
                   autoFocus
                 />
               </div>
               <div className="space-y-1.5">
                 <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Description</label>
-                <textarea 
+                <textarea
                   rows={3}
                   placeholder="Feature requirements and impact..."
                   value={newFeature.description}
-                  onChange={e => setNewFeature({...newFeature, description: e.target.value})}
+                  onChange={e => setNewFeature({ ...newFeature, description: e.target.value })}
                   className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] placeholder:text-slate-400 resize-none transition-colors"
                 />
               </div>
               <div className="flex gap-4">
                 <div className="flex-1 space-y-1.5">
                   <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</label>
-                  <select 
+                  <select
                     value={newFeature.status}
-                    onChange={e => setNewFeature({...newFeature, status: e.target.value})}
+                    onChange={e => setNewFeature({ ...newFeature, status: e.target.value })}
                     className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] transition-colors"
                   >
                     <option value="planned">Planned Ideas</option>
@@ -316,9 +316,9 @@ export default function RoadmapPage() {
                 </div>
                 <div className="flex-1 space-y-1.5">
                   <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Priority</label>
-                  <select 
+                  <select
                     value={newFeature.priority}
-                    onChange={e => setNewFeature({...newFeature, priority: e.target.value})}
+                    onChange={e => setNewFeature({ ...newFeature, priority: e.target.value })}
                     className="w-full bg-white border border-slate-200 text-[#0F172A] rounded-lg py-2 px-3 outline-none focus:border-[#635BFF] text-[13px] transition-colors"
                   >
                     <option value="low">Low</option>
