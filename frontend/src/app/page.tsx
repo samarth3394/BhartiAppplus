@@ -249,34 +249,107 @@ function HeroSignupCard() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   STRIPE COLOR GRID BACKGROUND (THE ICONIC SKEWED MESH & GRID)
+   ═══════════════════════════════════════════════════════════════ */
+function StripeColorGridCanvas() {
+  return (
+    <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+      
+      {/* ── SKEWED SLANTED CANVAS WRAPPER (STRIPE SIGNATURE -8deg SKEW) ── */}
+      <div 
+        className="absolute -top-40 left-[-15%] w-[130%] h-[860px] origin-top-left"
+        style={{
+          transform: "skewY(-7.5deg)",
+        }}
+      >
+        {/* Layer 1: Vibrant Stripe Multi-Color Gradient Mesh */}
+        <div className="absolute inset-0">
+          {/* Top-Right: Warm Sunset Coral & Amber */}
+          <div className="absolute top-0 right-[6%] w-[600px] h-[540px] bg-gradient-to-bl from-[#FF725E] via-[#FF5894] to-transparent rounded-full blur-[80px] opacity-80" />
+          
+          {/* Center-Top: Iconic Stripe Blurple / Indigo */}
+          <div className="absolute -top-16 left-[32%] w-[680px] h-[580px] bg-gradient-to-br from-[#635BFF] via-[#7A73FF] to-[#00D4FF] rounded-full blur-[90px] opacity-85" />
+          
+          {/* Left: Electric Cyan & Turquoise */}
+          <div className="absolute top-10 left-[4%] w-[580px] h-[500px] bg-gradient-to-r from-[#00D4FF] via-[#80E9FF] to-[#635BFF] rounded-full blur-[85px] opacity-80" />
+          
+          {/* Bottom-Center: Mint Cyan & Deep Indigo Accent */}
+          <div className="absolute bottom-10 left-[24%] w-[720px] h-[420px] bg-gradient-to-tr from-[#A6FFCB]/75 via-[#00D4FF]/65 to-[#635BFF]/55 rounded-full blur-[80px] opacity-75" />
+          
+          {/* Bottom-Right: Hot Pink Glow */}
+          <div className="absolute bottom-4 right-[16%] w-[480px] h-[400px] bg-gradient-to-tl from-[#FF2E93] via-[#FF5894] to-transparent rounded-full blur-[75px] opacity-70" />
+        </div>
+
+        {/* Layer 2: The Iconic Technical Grid Pattern (Stripe Color Grid) */}
+        <div 
+          className="absolute inset-0 opacity-65"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 1px, transparent 1px)
+            `,
+            backgroundSize: "44px 44px"
+          }}
+        />
+
+        {/* Layer 3: Secondary Crisp Dark Grid Lines for Contrast on Bright Hues */}
+        <div 
+          className="absolute inset-0 opacity-[0.09]"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #0A2540 1px, transparent 1px),
+              linear-gradient(to bottom, #0A2540 1px, transparent 1px)
+            `,
+            backgroundSize: "44px 44px"
+          }}
+        />
+
+        {/* Layer 4: Grid Intersection Crosshair Dots */}
+        <div 
+          className="absolute inset-0 opacity-40"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(255, 255, 255, 0.9) 1.5px, transparent 1.5px)",
+            backgroundSize: "44px 44px"
+          }}
+        />
+
+        {/* Layer 5: Glowing Highlighted Tech Grid Cells */}
+        <div className="absolute inset-0">
+          <div className="absolute top-[176px] left-[352px] w-[88px] h-[44px] bg-white/20 border border-white/50 rounded-xs backdrop-blur-xs shadow-[0_0_20px_rgba(255,255,255,0.4)]" />
+          <div className="absolute top-[264px] right-[308px] w-[44px] h-[88px] bg-white/25 border border-white/60 rounded-xs backdrop-blur-xs shadow-[0_0_25px_rgba(255,255,255,0.5)]" />
+          <div className="absolute top-[352px] left-[220px] w-[132px] h-[44px] bg-[#635BFF]/30 border border-white/40 rounded-xs backdrop-blur-xs" />
+          <div className="absolute top-[132px] right-[440px] w-[44px] h-[44px] bg-[#FF5894]/30 border border-white/40 rounded-xs backdrop-blur-xs" />
+          <div className="absolute top-[308px] right-[176px] w-[88px] h-[44px] bg-[#00D4FF]/30 border border-white/40 rounded-xs backdrop-blur-xs" />
+        </div>
+
+        {/* Layer 6: Soft Glassmorphism Sheen Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/40 pointer-events-none" />
+      </div>
+
+      {/* ── SMOOTH DISSOLVE MASK INTO PAGE WHITE ── */}
+      <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-white via-white/85 to-transparent pointer-events-none" />
+      
+      {/* ── SUBTLE GLOBAL AMBIENT DOT GRID ON BASE ── */}
+      <div 
+        className="absolute inset-0 opacity-[0.035] pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(#0A2540 1px, transparent 1px)",
+          backgroundSize: "24px 24px"
+        }}
+      />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
    2. STRIPE HERO SECTION WITH ICONIC ANGLED GRADIENT CANVAS
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
     <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 px-6 sm:px-10 overflow-hidden bg-white">
       
-      {/* ── THE SIGNATURE STRIPE ANGLED GRADIENT MESH CANVAS ── */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-[720px] pointer-events-none -z-10 overflow-hidden"
-        style={{
-          clipPath: "polygon(0 0, 100% 0, 100% 78%, 0 100%)"
-        }}
-      >
-        {/* Multicolored Gradient Mesh Layers */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#80E9FF]/40 via-[#7A73FF]/30 to-[#FF5894]/25 blur-3xl opacity-80" />
-        <div className="absolute -top-24 -left-20 w-[600px] h-[500px] bg-[#635BFF]/30 rounded-full blur-[100px]" />
-        <div className="absolute top-10 right-0 w-[550px] h-[450px] bg-[#FF725E]/25 rounded-full blur-[110px]" />
-        <div className="absolute bottom-0 left-1/3 w-[650px] h-[350px] bg-[#00D4FF]/25 rounded-full blur-[90px]" />
-        
-        {/* Subtle Diagonal Scanlines */}
-        <div 
-          className="absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage: "linear-gradient(135deg, #0A2540 10%, transparent 10%, transparent 50%, #0A2540 50%, #0A2540 60%, transparent 60%, transparent 100%)",
-            backgroundSize: "28px 28px"
-          }}
-        />
-      </div>
+      {/* ── THE SIGNATURE STRIPE COLOR GRID CANVAS ── */}
+      <StripeColorGridCanvas />
 
       <div className="max-w-[1320px] mx-auto text-left relative z-10">
         
