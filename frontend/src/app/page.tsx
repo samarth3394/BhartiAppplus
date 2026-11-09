@@ -563,90 +563,51 @@ function StripeClientMarquee() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   OFFICIAL TECH LOGOS FOR ARCHITECTURE FLOW
+   OFFICIAL TECH LOGOS FOR ARCHITECTURE FLOW (EXACT AS SPEC)
    ═══════════════════════════════════════════════════════════════ */
-function KubernetesLogo({ className = "w-11 h-11" }: { className?: string }) {
+function KubernetesLogo({ className = "w-12 h-12" }: { className?: string }) {
   return (
-    <div className={`${className} rounded-xl bg-[#1A73E8] flex items-center justify-center p-2 shadow-xs shrink-0`}>
-      <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-white">
-        <path
-          d="M11.96 2.02a.7.7 0 0 0-.34.1L3.92 6.53a.7.7 0 0 0-.35.6v8.74c0 .25.13.48.35.6l7.7 4.43c.22.13.48.13.7 0l7.7-4.43a.7.7 0 0 0 .35-.6V7.13a.7.7 0 0 0-.35-.6l-7.7-4.41a.7.7 0 0 0-.36-.1z"
-          stroke="white"
-          strokeWidth="1.2"
-        />
-        <circle cx="12" cy="12" r="3.2" stroke="white" strokeWidth="1.2" fill="none" />
-        <path
-          d="M12 4v4.8M12 15.2V20M5.08 7.98l4.15 2.4M14.77 13.62l4.15 2.4M5.08 16.02l4.15-2.4M14.77 10.38l4.15-2.4"
-          stroke="white"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-        />
-        <circle cx="12" cy="12" r="1.5" fill="white" />
-      </svg>
+    <div className={`${className} rounded-xl bg-gradient-to-br from-[#1E60ED] to-[#0D4ECC] flex items-center justify-center p-2 shadow-sm shrink-0`}>
+      <img src="/k8s-wheel.svg" alt="Kubernetes" className="w-8 h-8 object-contain drop-shadow-xs" />
     </div>
   );
 }
 
-function EbpfLogo({ className = "w-11 h-11" }: { className?: string }) {
+function EbpfLogo({ className = "w-12 h-12" }: { className?: string }) {
   return (
-    <div className={`${className} rounded-xl bg-[#F0F7FF] flex items-center justify-center p-1 border border-slate-200/80 shadow-xs shrink-0`}>
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        {/* Left Wing */}
-        <ellipse cx="38" cy="32" rx="14" ry="24" transform="rotate(-30 38 32)" fill="#93C5FD" fillOpacity="0.85" stroke="#3B82F6" strokeWidth="2.5" />
-        {/* Right Wing */}
-        <ellipse cx="62" cy="30" rx="14" ry="24" transform="rotate(30 62 30)" fill="#93C5FD" fillOpacity="0.85" stroke="#3B82F6" strokeWidth="2.5" />
-        {/* Bee Antennae */}
-        <path d="M 45 42 Q 40 22 30 20 M 55 42 Q 60 22 70 20" fill="none" stroke="#0F172A" strokeWidth="3" strokeLinecap="round" />
-        <circle cx="29" cy="20" r="3.5" fill="#0F172A" />
-        <circle cx="71" cy="20" r="3.5" fill="#0F172A" />
-        {/* Stinger */}
-        <polygon points="46,84 54,84 50,94" fill="#0F172A" />
-        {/* Bee Body */}
-        <ellipse cx="50" cy="58" rx="26" ry="28" fill="#FBBF24" stroke="#0F172A" strokeWidth="3.5" />
-        {/* Stripes */}
-        <path d="M 26 53 Q 50 63 74 53" fill="none" stroke="#0F172A" strokeWidth="6" />
-        <path d="M 28 66 Q 50 76 72 66" fill="none" stroke="#0F172A" strokeWidth="6" />
-        <path d="M 36 78 Q 50 86 64 78" fill="none" stroke="#0F172A" strokeWidth="5" />
-        {/* Goggles Rim */}
-        <rect x="30" y="38" width="18" height="18" rx="9" fill="#0F172A" />
-        <rect x="52" y="38" width="18" height="18" rx="9" fill="#0F172A" />
-        <rect x="44" y="44" width="12" height="6" fill="#0F172A" />
-        {/* Goggles Glass */}
-        <circle cx="39" cy="47" r="6.5" fill="#38BDF8" />
-        <circle cx="61" cy="47" r="6.5" fill="#38BDF8" />
-        {/* Glare */}
-        <circle cx="37" cy="45" r="2" fill="white" />
-        <circle cx="59" cy="45" r="2" fill="white" />
-      </svg>
+    <div className={`${className} flex items-center justify-center shrink-0`}>
+      <img src="/ebpf-bee.svg" alt="eBPF Kernel Probe" className="w-11 h-11 object-contain drop-shadow-xs" />
     </div>
   );
 }
 
-function NeuralEngineLogo({ className = "w-11 h-11" }: { className?: string }) {
+function NeuralEngineLogo({ className = "w-12 h-12" }: { className?: string }) {
   return (
-    <div className={`${className} rounded-xl bg-[#E0EEFF] border border-[#BFDBFE] flex items-center justify-center p-2 shadow-xs shrink-0`}>
-      <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#1D4ED8]">
-        {/* Chip Body */}
-        <rect x="5" y="5" width="14" height="14" rx="3" stroke="#2563EB" strokeWidth="1.8" fill="#DBEAFE" fillOpacity="0.4" />
-        {/* Pins Top */}
-        <line x1="8" y1="2" x2="8" y2="5" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="12" y1="2" x2="12" y2="5" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="16" y1="2" x2="16" y2="5" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        {/* Pins Bottom */}
-        <line x1="8" y1="19" x2="8" y2="22" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="12" y1="19" x2="12" y2="22" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="16" y1="19" x2="16" y2="22" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        {/* Pins Left */}
-        <line x1="2" y1="8" x2="5" y2="8" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="2" y1="12" x2="5" y2="12" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="2" y1="16" x2="5" y2="16" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        {/* Pins Right */}
-        <line x1="19" y1="8" x2="22" y2="8" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="19" y1="12" x2="22" y2="12" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        <line x1="19" y1="16" x2="22" y2="16" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
-        {/* Center Neural Circuit Brackets */}
-        <path d="M10 9.5c-.8 0-1.2.4-1.2 1.2v.6c0 .7-.4 1.2-1.2 1.2.8 0 1.2.5 1.2 1.2v.6c0 .8.4 1.2 1.2 1.2" stroke="#1D4ED8" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-        <path d="M14 9.5c.8 0 1.2.4 1.2 1.2v.6c0 .7.4 1.2 1.2 1.2-.8 0-1.2.5-1.2 1.2v.6c0 .8-.4 1.2-1.2 1.2" stroke="#1D4ED8" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+    <div className={`${className} rounded-xl bg-[#E1EFFF] border border-blue-200/70 flex items-center justify-center p-2 shadow-xs shrink-0`}>
+      <svg viewBox="0 0 32 32" fill="none" className="w-8 h-8 text-[#2563EB]">
+        {/* Microchip Body */}
+        <rect x="7" y="7" width="18" height="18" rx="4" stroke="#2563EB" strokeWidth="2" fill="#DBEAFE" fillOpacity="0.3" />
+        {/* Top Pins (3) */}
+        <line x1="11" y1="3" x2="11" y2="7" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        <line x1="16" y1="3" x2="16" y2="7" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        <line x1="21" y1="3" x2="21" y2="7" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        {/* Bottom Pins (3) */}
+        <line x1="11" y1="25" x2="11" y2="29" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        <line x1="16" y1="25" x2="16" y2="29" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        <line x1="21" y1="25" x2="21" y2="29" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        {/* Left Pins (3) */}
+        <line x1="3" y1="11" x2="7" y2="11" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        <line x1="3" y1="16" x2="7" y2="16" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        <line x1="3" y1="21" x2="7" y2="21" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        {/* Right Pins (3) */}
+        <line x1="25" y1="11" x2="29" y2="11" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        <line x1="25" y1="16" x2="29" y2="16" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        <line x1="25" y1="21" x2="29" y2="21" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" />
+        {/* Neural Braces Code Synapse */}
+        <path d="M13.5 11.5c-1.2 0-1.8.6-1.8 1.6v.9c0 1-.6 1.6-1.7 1.8 1.1.2 1.7.8 1.7 1.8v.9c0 1 .6 1.6 1.8 1.6" stroke="#1D4ED8" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+        <path d="M18.5 11.5c1.2 0 1.8.6 1.8 1.6v.9c0 1 .6 1.6 1.7 1.8-1.1.2-1.7.8-1.7 1.8v.9c0 1-.6 1.6-1.8 1.6" stroke="#1D4ED8" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+        <circle cx="16" cy="13.5" r="1" fill="#2563EB" />
+        <circle cx="16" cy="18.5" r="1" fill="#2563EB" />
       </svg>
     </div>
   );
@@ -654,30 +615,16 @@ function NeuralEngineLogo({ className = "w-11 h-11" }: { className?: string }) {
 
 function SlackLogo({ className = "w-11 h-11" }: { className?: string }) {
   return (
-    <div className={`${className} rounded-xl bg-white border border-slate-200/80 flex items-center justify-center p-2 shadow-xs shrink-0`}>
-      <svg viewBox="0 0 24 24" className="w-full h-full">
-        <path d="M5.04 14.5c0-.9-.73-1.63-1.63-1.63H1.63A1.63 1.63 0 0 0 0 14.5c0 .9.73 1.63 1.63 1.63h1.78c.9 0 1.63-.73 1.63-1.63z" fill="#E01E5A"/>
-        <path d="M5.04 14.5c0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63v-4.14c0-.9-.73-1.63-1.63-1.63-.9 0-1.63.73-1.63 1.63V14.5z" fill="#E01E5A"/>
-        <path d="M9.5 5.04c-.9 0-1.63-.73-1.63-1.63V1.63C7.87.73 8.6 0 9.5 0c.9 0 1.63.73 1.63 1.63v1.78c0 .9-.73 1.63-1.63 1.63z" fill="#36C5F0"/>
-        <path d="M9.5 5.04c.9 0 1.63.73 1.63 1.63 0 .9-.73 1.63-1.63 1.63H5.36c-.9 0-1.63-.73-1.63-1.63 0-.9.73-1.63 1.63-1.63H9.5z" fill="#36C5F0"/>
-        <path d="M18.96 9.5c0 .9.73 1.63 1.63 1.63h1.78c.9 0 1.63-.73 1.63-1.63 0-.9-.73-1.63-1.63-1.63h-1.78c-.9 0-1.63.73-1.63 1.63z" fill="#2EB67D"/>
-        <path d="M18.96 9.5c0-.9-.73-1.63-1.63-1.63-.9 0-1.63.73-1.63 1.63v4.14c0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63V9.5z" fill="#2EB67D"/>
-        <path d="M14.5 18.96c.9 0 1.63.73 1.63 1.63v1.78c0 .9-.73 1.63-1.63 1.63-.9 0-1.63-.73-1.63-1.63v-1.78c0-.9.73-1.63 1.63-1.63z" fill="#ECB22E"/>
-        <path d="M14.5 18.96c-.9 0-1.63-.73-1.63 0-.9-.73-1.63-1.63-1.63-1.63h4.14c.9 0 1.63.73 1.63 1.63 0 .9-.73 1.63-1.63 1.63H14.5z" fill="#ECB22E"/>
-      </svg>
+    <div className={`${className} rounded-xl bg-[#F8FAFC] border border-slate-200/60 flex items-center justify-center p-2 shadow-2xs shrink-0`}>
+      <img src="/slack-logo.svg" alt="Slack" className="w-7 h-7 object-contain" />
     </div>
   );
 }
 
 function PagerDutyLogo({ className = "w-11 h-11" }: { className?: string }) {
   return (
-    <div className={`${className} rounded-xl bg-[#F0FDF4] border border-emerald-200/60 flex items-center justify-center p-2 shadow-xs shrink-0`}>
-      <svg viewBox="0 0 24 24" className="w-full h-full" fill="none">
-        <path
-          d="M5 3.5h7c3.86 0 7 3.14 7 7s-3.14 7-7 7H9.5V21H5V3.5zm4.5 9.5H12c1.38 0 2.5-1.12 2.5-2.5s-1.12-2.5-2.5-2.5H9.5V13z"
-          fill="#06AC38"
-        />
-      </svg>
+    <div className={`${className} rounded-xl bg-[#F0FDF4] border border-emerald-100 flex items-center justify-center p-2 shadow-2xs shrink-0`}>
+      <img src="/pagerduty-logo.svg" alt="PagerDuty" className="w-6 h-6 object-contain" />
     </div>
   );
 }
