@@ -59,102 +59,100 @@ function StripeNavbar() {
       <div className="max-w-[1320px] mx-auto px-4 sm:px-10 flex items-center justify-between">
         
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2 group focus:outline-none shrink-0">
-          <div className="flex flex-col">
-            <Logo className="h-4.5 sm:h-5 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
-            <span className="text-[8.5px] sm:text-[9px] font-mono tracking-widest text-[#425466] uppercase mt-0.5 font-bold">
-              Bharti Nexus Technologies
-            </span>
-          </div>
+        <Link href="/" className="flex items-center group focus:outline-none shrink-0">
+          <Logo className="h-5 sm:h-5.5 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
         </Link>
 
-        {/* Stripe Desktop Navigation Menu */}
-        <nav className="hidden lg:flex items-center gap-7 text-[14.5px] font-semibold text-[#0A2540]">
-          <div 
-            className="relative cursor-pointer group flex items-center gap-1 hover:text-[#635BFF] transition-colors"
-            onMouseEnter={() => setActiveDropdown("products")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link href="#architecture">Products</Link>
-            <ChevronDown size={14} className="opacity-60 group-hover:opacity-100 transition-opacity" />
-            
-            {activeDropdown === "products" && (
-              <div className="absolute top-full -left-4 w-72 pt-3">
-                <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-3 text-left">
-                  <Link href="#architecture" className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                    <div className="font-bold text-sm text-[#0A2540]">eBPF Telemetry Mesh</div>
-                    <div className="text-xs text-[#425466]">Kernel-level socket monitoring with 0% CPU overhead</div>
-                  </Link>
-                  <Link href="#interactive-simulator" className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                    <div className="font-bold text-sm text-[#0A2540]">AI Incident Engine</div>
-                    <div className="text-xs text-[#425466]">Automated root-cause commit correlation in &lt; 90s</div>
-                  </Link>
-                  <Link href="#developer-sandbox" className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                    <div className="font-bold text-sm text-[#0A2540]">Distributed Traces</div>
-                    <div className="text-xs text-[#425466]">Microsecond span waterfalls & dependency graphs</div>
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div 
-            className="relative cursor-pointer group flex items-center gap-1 hover:text-[#635BFF] transition-colors"
-            onMouseEnter={() => setActiveDropdown("solutions")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link href="#comparison">Solutions</Link>
-            <ChevronDown size={14} className="opacity-60 group-hover:opacity-100 transition-opacity" />
-            
-            {activeDropdown === "solutions" && (
-              <div className="absolute top-full -left-4 w-72 pt-3">
-                <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-3 text-left">
-                  <div className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                    <div className="font-bold text-sm text-[#0A2540]">Enterprise Kubernetes</div>
-                    <div className="text-xs text-[#425466]">Multi-cluster pod routing & ingress telemetry</div>
-                  </div>
-                  <div className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                    <div className="font-bold text-sm text-[#0A2540]">Fintech & High-Throughput</div>
-                    <div className="text-xs text-[#425466]">Sub-millisecond SLA enforcement & audits</div>
+        {/* Right Nav & Action CTAs Group */}
+        <div className="flex items-center gap-6 xl:gap-8">
+          {/* Stripe Desktop Navigation Menu */}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-[14.5px] font-semibold text-[#0A2540]">
+            <div 
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-[#635BFF] transition-colors"
+              onMouseEnter={() => setActiveDropdown("products")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link href="#architecture">Products</Link>
+              <ChevronDown size={14} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+              
+              {activeDropdown === "products" && (
+                <div className="absolute top-full -left-4 w-72 pt-3">
+                  <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-3 text-left">
+                    <Link href="#architecture" className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                      <div className="font-bold text-sm text-[#0A2540]">eBPF Telemetry Mesh</div>
+                      <div className="text-xs text-[#425466]">Kernel-level socket monitoring with 0% CPU overhead</div>
+                    </Link>
+                    <Link href="#interactive-simulator" className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                      <div className="font-bold text-sm text-[#0A2540]">AI Incident Engine</div>
+                      <div className="text-xs text-[#425466]">Automated root-cause commit correlation in &lt; 90s</div>
+                    </Link>
+                    <Link href="#developer-sandbox" className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                      <div className="font-bold text-sm text-[#0A2540]">Distributed Traces</div>
+                      <div className="text-xs text-[#425466]">Microsecond span waterfalls & dependency graphs</div>
+                    </Link>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            <div 
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-[#635BFF] transition-colors"
+              onMouseEnter={() => setActiveDropdown("solutions")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link href="#comparison">Solutions</Link>
+              <ChevronDown size={14} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+              
+              {activeDropdown === "solutions" && (
+                <div className="absolute top-full -left-4 w-72 pt-3">
+                  <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-3 text-left">
+                    <div className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                      <div className="font-bold text-sm text-[#0A2540]">Enterprise Kubernetes</div>
+                      <div className="text-xs text-[#425466]">Multi-cluster pod routing & ingress telemetry</div>
+                    </div>
+                    <div className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                      <div className="font-bold text-sm text-[#0A2540]">Fintech & High-Throughput</div>
+                      <div className="text-xs text-[#425466]">Sub-millisecond SLA enforcement & audits</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <Link href="#developer-sandbox" className="hover:text-[#635BFF] transition-colors">
+              Developers
+            </Link>
+            <Link href="#pricing" className="hover:text-[#635BFF] transition-colors">
+              Pricing
+            </Link>
+          </nav>
+
+          {/* Action CTAs & Mobile Hamburger */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/login"
+              className="text-[13px] sm:text-[14px] font-bold text-[#0A2540] hover:text-[#635BFF] px-2 sm:px-3 py-1.5 transition-colors"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/register"
+              className="group px-3.5 py-2 sm:px-4.5 sm:py-2.5 rounded-full bg-[#0A2540] hover:bg-[#635BFF] text-white text-[12.5px] sm:text-[13.5px] font-bold transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-1.5"
+            >
+              <span>Start now</span>
+              <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-xl text-[#0A2540] hover:bg-slate-100 transition-colors focus:outline-none"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
-
-          <Link href="#developer-sandbox" className="hover:text-[#635BFF] transition-colors">
-            Developers
-          </Link>
-          <Link href="#pricing" className="hover:text-[#635BFF] transition-colors">
-            Pricing
-          </Link>
-        </nav>
-
-        {/* Action CTAs & Mobile Hamburger */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Link
-            href="/login"
-            className="text-[13px] sm:text-[14px] font-bold text-[#0A2540] hover:text-[#635BFF] px-2 sm:px-3 py-1.5 transition-colors"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/register"
-            className="group px-3.5 py-2 sm:px-4.5 sm:py-2.5 rounded-full bg-[#0A2540] hover:bg-[#635BFF] text-white text-[12.5px] sm:text-[13.5px] font-bold transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-1.5"
-          >
-            <span>Start now</span>
-            <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-
-          {/* Mobile Hamburger Button */}
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl text-[#0A2540] hover:bg-slate-100 transition-colors focus:outline-none"
-            aria-label="Toggle Navigation Menu"
-          >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
         </div>
       </div>
 
@@ -1149,10 +1147,7 @@ function StripeFooter() {
           {/* Brand & Country Selector */}
           <div className="col-span-2 flex flex-col items-start text-left">
             <div className="flex flex-col mb-2.5 sm:mb-3">
-              <Logo className="h-5 sm:h-5.5 text-[#0A2540] mb-1" />
-              <span className="text-[9px] sm:text-[9.5px] font-mono tracking-widest text-[#425466] uppercase font-bold">
-                Bharti Nexus Technologies
-              </span>
+              <Logo className="h-5 sm:h-5.5 text-[#0A2540]" />
             </div>
             <p className="text-[12px] sm:text-[13px] text-[#425466] font-medium leading-relaxed max-w-sm mb-4">
               Autonomous telemetry infrastructure and AI incident intelligence engineered by Bharti Nexus Technologies.
