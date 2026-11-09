@@ -28,7 +28,11 @@ import {
   Code2,
   ChevronDown,
   Menu,
-  X
+  X,
+  Brain,
+  Bell,
+  RotateCcw,
+  MessageSquare
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
@@ -74,6 +78,10 @@ function StripeNavbar() {
               {activeDropdown === "products" && (
                 <div className="absolute top-full -left-4 w-72 pt-3">
                   <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xl space-y-3 text-left">
+                    <Link href="#architecture-flow" className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                      <div className="font-bold text-sm text-[#0A2540]">Architecture Data Flow</div>
+                      <div className="text-xs text-[#425466]">From Linux kernel sockets to Slack/PagerDuty in &lt; 90s</div>
+                    </Link>
                     <Link href="#architecture" className="block p-2 rounded-lg hover:bg-slate-50 transition-colors">
                       <div className="font-bold text-sm text-[#0A2540]">eBPF Telemetry Mesh</div>
                       <div className="text-xs text-[#425466]">Kernel-level socket monitoring with 0% CPU overhead</div>
@@ -549,6 +557,337 @@ function StripeClientMarquee() {
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3.5. INTERACTIVE ANIMATED ARCHITECTURE DATA FLOW
+   ═══════════════════════════════════════════════════════════════ */
+function StripeArchitectureFlowSection() {
+  const [activeStage, setActiveStage] = useState<number>(0);
+  const [simulating, setSimulating] = useState<boolean>(false);
+  const [simulationStep, setSimulationStep] = useState<number>(0);
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const stages = [
+    {
+      id: 0,
+      number: "01",
+      title: "Your Kubernetes Pod",
+      tag: "Ingress & Microservices",
+      badge: "Source Layer",
+      icon: Server,
+      color: "from-blue-500 to-indigo-600",
+      accent: "#2563EB",
+      headline: "Microservices emitting raw TCP, gRPC, and SQL traffic",
+      desc: "Containerized application pods run untouched across AWS EKS, GCP GKE, Azure AKS, or Bare-Metal nodes. Zero code modifications or manual SDK instrumentation required.",
+      stats: [
+        { label: "Active Replicas", val: "48 Pods" },
+        { label: "Ingress Throughput", val: "18,400 req/s" },
+        { label: "Protocols", val: "HTTP/2, gRPC, TLS" }
+      ],
+      payload: {
+        cluster_id: "prod-eks-us-east-1",
+        pod_name: "auth-mesh-ingress-7b49d",
+        namespace: "production",
+        ingress_rps: 18420,
+        connection_pool_active: 84,
+        upstream: "10.0.14.88:8080"
+      }
+    },
+    {
+      id: 1,
+      number: "02",
+      title: "eBPF Kernel Probe",
+      tag: "Zero-Overhead Probe",
+      badge: "0.0% CPU Penalty",
+      icon: Cpu,
+      color: "from-purple-500 to-[#635BFF]",
+      accent: "#635BFF",
+      headline: "Attaches directly into Linux kernel sockets",
+      desc: "BREXAL injects ultra-lightweight eBPF bytecode probes directly into Linux kernel socket buffers. Captures packet drops, TLS latencies, and connection pools without sidecar proxies.",
+      stats: [
+        { label: "Kernel Overhead", val: "< 1.2μs (0.0% CPU)" },
+        { label: "Data Resolution", val: "Microsecond" },
+        { label: "Container Rebuilds", val: "Zero Required" }
+      ],
+      payload: {
+        kernel_hook: "sock_alloc() & tcp_v4_connect()",
+        socket_latency: "1.14ms",
+        tls_handshake_ms: 2.3,
+        packet_drops: 0,
+        ebpf_probe_overhead_ns: 840,
+        status: "zero_cpu_overhead_verified"
+      }
+    },
+    {
+      id: 2,
+      number: "03",
+      title: "Brexal Neural Engine",
+      tag: "Real-time AI Synthesis",
+      badge: "MTTR < 90s",
+      icon: Brain,
+      color: "from-indigo-600 to-cyan-500",
+      accent: "#0073E6",
+      headline: "Correlates telemetry with git history and manifests",
+      desc: "Processes 14.2M spans/second per cluster. When an anomaly triggers, the neural engine analyzes deployment manifests and git commit diffs to isolate root cause in under 90 seconds.",
+      stats: [
+        { label: "Span Throughput", val: "14.2M spans/s" },
+        { label: "AI Confidence", val: "99.4%" },
+        { label: "Root Cause Time", val: "< 90 Seconds" }
+      ],
+      payload: {
+        anomaly_detected: true,
+        evaluated_spans: 14200000,
+        correlated_git_commit: "commit #a8f3b2 'Reduce connection timeout to 2.0s'",
+        author: "rohan.p@brexal.com",
+        ai_recommendation: "Recycle Redis pool & rollback canary",
+        confidence: "99.4%"
+      }
+    },
+    {
+      id: 3,
+      number: "04",
+      title: "Slack / PagerDuty Alert",
+      tag: "Autonomous Resolution",
+      badge: "Non-Custodial RBAC",
+      icon: Bell,
+      color: "from-emerald-500 to-teal-600",
+      accent: "#10B981",
+      headline: "Instant actionable dispatch with human guardrails",
+      desc: "Dispatches rich diagnostic cards to Slack, PagerDuty, or Discord with exact commit diffs and one-click canary rollback approval with strict non-custodial RBAC controls.",
+      stats: [
+        { label: "Dispatch Latency", val: "Instant (< 250ms)" },
+        { label: "False Positive Rate", val: "0.002%" },
+        { label: "Automated Rollback", val: "One-Click RBAC" }
+      ],
+      payload: {
+        channel: "#engineering-ops",
+        incident_id: "INC-2026-11-09-04",
+        status: "AUTO_TRIAGED",
+        pagerduty_escalation: "P1_RESOLVING",
+        actions_available: ["Approve Canary Rollback", "Recycle DB Pool", "Shed Traffic"]
+      }
+    }
+  ];
+
+  const handleSimulate = () => {
+    if (simulating) return;
+    setSimulating(true);
+    setSimulationStep(0);
+    setActiveStage(0);
+
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      if (step < 4) {
+        setSimulationStep(step);
+        setActiveStage(step);
+      } else {
+        clearInterval(interval);
+        setTimeout(() => {
+          setSimulating(false);
+          setSimulationStep(0);
+        }, 1500);
+      }
+    }, 1200);
+  };
+
+  const copyPayload = () => {
+    navigator.clipboard.writeText(JSON.stringify(stages[activeStage].payload, null, 2));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const currentStage = stages[activeStage];
+  const CurrentIcon = currentStage.icon;
+
+  return (
+    <section id="architecture-flow" className="py-14 sm:py-20 px-4 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden font-sans">
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-r from-blue-100/40 via-purple-100/30 to-emerald-100/30 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="max-w-[1320px] mx-auto relative z-10">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-6">
+          <div className="max-w-2xl text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#635BFF]/10 border border-[#635BFF]/20 text-[#635BFF] text-xs font-bold uppercase tracking-wider mb-3">
+              <Sparkles size={13} />
+              Interactive Architecture Flow
+            </div>
+            <h2 className="text-2xl sm:text-4xl md:text-[42px] font-extrabold tracking-[-0.03em] text-[#0A2540] leading-[1.15] mb-3">
+              How data travels: from Linux kernel sockets to instant incident resolution.
+            </h2>
+            <p className="text-sm sm:text-base text-[#425466] leading-relaxed">
+              Trace high-throughput telemetry as it travels through our zero-overhead kernel hooks, neural correlation engine, and automated incident triage.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 self-start md:self-end shrink-0">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FAFBFD] border border-slate-200 text-xs font-mono font-bold text-[#0A2540] shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Live Mesh: 14.2M spans/s</span>
+            </div>
+
+            <button
+              onClick={handleSimulate}
+              disabled={simulating}
+              className={`inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-all shadow-md cursor-pointer ${
+                simulating
+                  ? "bg-slate-700 opacity-90 cursor-not-allowed"
+                  : "bg-[#635BFF] hover:bg-[#5349e0] hover:shadow-[0_4px_16px_rgba(99,91,255,0.35)] active:translate-y-0.5"
+              }`}
+            >
+              <Play size={14} className={simulating ? "animate-spin" : "fill-current"} />
+              <span>{simulating ? `Simulating Stage 0${simulationStep + 1}...` : "Simulate Live Telemetry Flow"}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 4-Stage Interactive Pipeline Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-10 relative">
+          
+          {stages.map((stg, idx) => {
+            const IconComponent = stg.icon;
+            const isSelected = activeStage === stg.id;
+            const isSimActive = simulating && simulationStep === stg.id;
+
+            return (
+              <div
+                key={stg.id}
+                onClick={() => {
+                  if (!simulating) setActiveStage(stg.id);
+                }}
+                className={`relative p-5 sm:p-6 rounded-2xl border transition-all duration-300 text-left cursor-pointer group flex flex-col justify-between ${
+                  isSelected || isSimActive
+                    ? "bg-white border-[#635BFF] shadow-[0_10px_30px_rgba(99,91,255,0.12)] ring-2 ring-[#635BFF]/20 -translate-y-1"
+                    : "bg-[#FAFBFD] hover:bg-white border-slate-200/90 shadow-2xs hover:shadow-[0_6px_20px_rgba(10,37,64,0.05)] hover:border-slate-300"
+                }`}
+              >
+                {/* Active Pulse Glow during Simulation */}
+                {isSimActive && (
+                  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#635BFF] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#635BFF]" />
+                  </span>
+                )}
+
+                <div>
+                  {/* Top Bar: Icon + Stage Number */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div
+                      className={`w-11 h-11 rounded-xl flex items-center justify-center text-white bg-gradient-to-br ${stg.color} shadow-xs`}
+                    >
+                      <IconComponent size={20} />
+                    </div>
+                    <span className="font-mono text-xs font-black text-slate-300 group-hover:text-slate-400 transition-colors">
+                      {stg.number}
+                    </span>
+                  </div>
+
+                  {/* Stage Badge & Title */}
+                  <div className="mb-2">
+                    <span className="inline-block text-[10.5px] font-mono font-bold uppercase tracking-wider text-[#635BFF] mb-1">
+                      {stg.tag}
+                    </span>
+                    <h3 className="text-[17px] font-extrabold text-[#0A2540] tracking-tight leading-snug">
+                      {stg.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-[12.5px] text-[#425466] leading-relaxed line-clamp-2 mb-4">
+                    {stg.desc}
+                  </p>
+                </div>
+
+                {/* Bottom Stat Strip */}
+                <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-slate-700 bg-white border border-slate-200/80 px-2 py-0.5 rounded-md shadow-2xs">
+                    {stg.badge}
+                  </span>
+                  <span className="text-[11.5px] font-mono text-[#635BFF] font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                    Inspect <ArrowRight size={12} />
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Deep Stage Telemetry Inspector Card */}
+        <div className="bg-[#FAFBFD] border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-[0_4px_20px_rgba(10,37,64,0.03)] text-left">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            {/* Left Column: Stage Deep Explanation */}
+            <div className="lg:col-span-6 flex flex-col items-start">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-8 h-8 rounded-lg bg-[#635BFF]/10 text-[#635BFF] flex items-center justify-center font-mono font-bold text-xs">
+                  {currentStage.number}
+                </span>
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#635BFF]">
+                  {currentStage.tag}
+                </span>
+              </div>
+
+              <h4 className="text-xl sm:text-2xl font-extrabold text-[#0A2540] tracking-tight leading-snug mb-2.5">
+                {currentStage.headline}
+              </h4>
+
+              <p className="text-sm text-[#425466] leading-relaxed mb-6 font-normal">
+                {currentStage.desc}
+              </p>
+
+              {/* 3 Metric Pills */}
+              <div className="grid grid-cols-3 gap-3 w-full">
+                {currentStage.stats.map((st, i) => (
+                  <div key={i} className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs text-left">
+                    <span className="block text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">
+                      {st.label}
+                    </span>
+                    <strong className="text-xs sm:text-[13px] font-extrabold text-[#0A2540] tracking-tight">
+                      {st.val}
+                    </strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Live Telemetry Payload Terminal */}
+            <div className="lg:col-span-6">
+              <div className="rounded-xl bg-[#0A2540] border border-slate-800 shadow-xl overflow-hidden">
+                {/* Terminal Bar */}
+                <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900/90 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                    <span className="text-[11px] font-mono text-slate-400 ml-2 font-medium">
+                      telemetry-stream://{currentStage.title.toLowerCase().replace(/\s+/g, '-')}.json
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={copyPayload}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono font-medium transition cursor-pointer"
+                  >
+                    {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    <span>{copied ? "Copied" : "Copy Payload"}</span>
+                  </button>
+                </div>
+
+                {/* JSON Body */}
+                <pre className="p-5 font-mono text-[11.5px] sm:text-[12px] text-emerald-400 overflow-x-auto leading-relaxed">
+                  {JSON.stringify(currentStage.payload, null, 2)}
+                </pre>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </section>
   );
@@ -1217,6 +1556,7 @@ export default function LandingPage() {
       <main>
         <StripeHeroSection />
         <StripeClientMarquee />
+        <StripeArchitectureFlowSection />
         <StripeProductShowcaseSection />
         <StripeDeveloperSandboxSection />
         <StripeGlobalScaleSection />
