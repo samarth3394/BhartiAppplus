@@ -298,8 +298,8 @@ function StripeHeroSection() {
               <ChevronRight size={13} className="text-[#635BFF] group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
-            {/* Grand Headline (Stripe Typographic System) */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-[-0.04em] text-[#0A2540] leading-[1.08] mb-5 text-left">
+            {/* Refined Headline (Compact & Modern Sans) */}
+            <h1 className="font-sans text-2xl sm:text-3xl md:text-[34px] lg:text-[38px] font-bold tracking-[-0.025em] text-[#0A2540] leading-[1.16] mb-4 text-left">
               Autonomous telemetry <br className="hidden sm:inline" />
               infrastructure for <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-[#635BFF] via-[#0073E6] to-[#00D4FF] bg-clip-text text-transparent">
