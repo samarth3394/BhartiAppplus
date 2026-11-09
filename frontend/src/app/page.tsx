@@ -563,329 +563,356 @@ function StripeClientMarquee() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   3.5. INTERACTIVE ANIMATED ARCHITECTURE DATA FLOW
+   OFFICIAL TECH LOGOS FOR ARCHITECTURE FLOW
+   ═══════════════════════════════════════════════════════════════ */
+function KubernetesLogo({ className = "w-11 h-11" }: { className?: string }) {
+  return (
+    <div className={`${className} rounded-xl bg-[#1A73E8] flex items-center justify-center p-2 shadow-xs shrink-0`}>
+      <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-white">
+        <path
+          d="M11.96 2.02a.7.7 0 0 0-.34.1L3.92 6.53a.7.7 0 0 0-.35.6v8.74c0 .25.13.48.35.6l7.7 4.43c.22.13.48.13.7 0l7.7-4.43a.7.7 0 0 0 .35-.6V7.13a.7.7 0 0 0-.35-.6l-7.7-4.41a.7.7 0 0 0-.36-.1z"
+          stroke="white"
+          strokeWidth="1.2"
+        />
+        <circle cx="12" cy="12" r="3.2" stroke="white" strokeWidth="1.2" fill="none" />
+        <path
+          d="M12 4v4.8M12 15.2V20M5.08 7.98l4.15 2.4M14.77 13.62l4.15 2.4M5.08 16.02l4.15-2.4M14.77 10.38l4.15-2.4"
+          stroke="white"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+        />
+        <circle cx="12" cy="12" r="1.5" fill="white" />
+      </svg>
+    </div>
+  );
+}
+
+function EbpfLogo({ className = "w-11 h-11" }: { className?: string }) {
+  return (
+    <div className={`${className} rounded-xl bg-[#F0F7FF] flex items-center justify-center p-1 border border-slate-200/80 shadow-xs shrink-0`}>
+      <svg viewBox="0 0 100 100" className="w-full h-full">
+        {/* Left Wing */}
+        <ellipse cx="38" cy="32" rx="14" ry="24" transform="rotate(-30 38 32)" fill="#93C5FD" fillOpacity="0.85" stroke="#3B82F6" strokeWidth="2.5" />
+        {/* Right Wing */}
+        <ellipse cx="62" cy="30" rx="14" ry="24" transform="rotate(30 62 30)" fill="#93C5FD" fillOpacity="0.85" stroke="#3B82F6" strokeWidth="2.5" />
+        {/* Bee Antennae */}
+        <path d="M 45 42 Q 40 22 30 20 M 55 42 Q 60 22 70 20" fill="none" stroke="#0F172A" strokeWidth="3" strokeLinecap="round" />
+        <circle cx="29" cy="20" r="3.5" fill="#0F172A" />
+        <circle cx="71" cy="20" r="3.5" fill="#0F172A" />
+        {/* Stinger */}
+        <polygon points="46,84 54,84 50,94" fill="#0F172A" />
+        {/* Bee Body */}
+        <ellipse cx="50" cy="58" rx="26" ry="28" fill="#FBBF24" stroke="#0F172A" strokeWidth="3.5" />
+        {/* Stripes */}
+        <path d="M 26 53 Q 50 63 74 53" fill="none" stroke="#0F172A" strokeWidth="6" />
+        <path d="M 28 66 Q 50 76 72 66" fill="none" stroke="#0F172A" strokeWidth="6" />
+        <path d="M 36 78 Q 50 86 64 78" fill="none" stroke="#0F172A" strokeWidth="5" />
+        {/* Goggles Rim */}
+        <rect x="30" y="38" width="18" height="18" rx="9" fill="#0F172A" />
+        <rect x="52" y="38" width="18" height="18" rx="9" fill="#0F172A" />
+        <rect x="44" y="44" width="12" height="6" fill="#0F172A" />
+        {/* Goggles Glass */}
+        <circle cx="39" cy="47" r="6.5" fill="#38BDF8" />
+        <circle cx="61" cy="47" r="6.5" fill="#38BDF8" />
+        {/* Glare */}
+        <circle cx="37" cy="45" r="2" fill="white" />
+        <circle cx="59" cy="45" r="2" fill="white" />
+      </svg>
+    </div>
+  );
+}
+
+function NeuralEngineLogo({ className = "w-11 h-11" }: { className?: string }) {
+  return (
+    <div className={`${className} rounded-xl bg-[#E0EEFF] border border-[#BFDBFE] flex items-center justify-center p-2 shadow-xs shrink-0`}>
+      <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-[#1D4ED8]">
+        {/* Chip Body */}
+        <rect x="5" y="5" width="14" height="14" rx="3" stroke="#2563EB" strokeWidth="1.8" fill="#DBEAFE" fillOpacity="0.4" />
+        {/* Pins Top */}
+        <line x1="8" y1="2" x2="8" y2="5" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="12" y1="2" x2="12" y2="5" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="16" y1="2" x2="16" y2="5" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        {/* Pins Bottom */}
+        <line x1="8" y1="19" x2="8" y2="22" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="12" y1="19" x2="12" y2="22" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="16" y1="19" x2="16" y2="22" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        {/* Pins Left */}
+        <line x1="2" y1="8" x2="5" y2="8" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="2" y1="12" x2="5" y2="12" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="2" y1="16" x2="5" y2="16" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        {/* Pins Right */}
+        <line x1="19" y1="8" x2="22" y2="8" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="19" y1="12" x2="22" y2="12" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="19" y1="16" x2="22" y2="16" stroke="#2563EB" strokeWidth="1.8" strokeLinecap="round" />
+        {/* Center Neural Circuit Brackets */}
+        <path d="M10 9.5c-.8 0-1.2.4-1.2 1.2v.6c0 .7-.4 1.2-1.2 1.2.8 0 1.2.5 1.2 1.2v.6c0 .8.4 1.2 1.2 1.2" stroke="#1D4ED8" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+        <path d="M14 9.5c.8 0 1.2.4 1.2 1.2v.6c0 .7.4 1.2 1.2 1.2-.8 0-1.2.5-1.2 1.2v.6c0 .8-.4 1.2-1.2 1.2" stroke="#1D4ED8" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+      </svg>
+    </div>
+  );
+}
+
+function SlackLogo({ className = "w-11 h-11" }: { className?: string }) {
+  return (
+    <div className={`${className} rounded-xl bg-white border border-slate-200/80 flex items-center justify-center p-2 shadow-xs shrink-0`}>
+      <svg viewBox="0 0 24 24" className="w-full h-full">
+        <path d="M5.04 14.5c0-.9-.73-1.63-1.63-1.63H1.63A1.63 1.63 0 0 0 0 14.5c0 .9.73 1.63 1.63 1.63h1.78c.9 0 1.63-.73 1.63-1.63z" fill="#E01E5A"/>
+        <path d="M5.04 14.5c0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63v-4.14c0-.9-.73-1.63-1.63-1.63-.9 0-1.63.73-1.63 1.63V14.5z" fill="#E01E5A"/>
+        <path d="M9.5 5.04c-.9 0-1.63-.73-1.63-1.63V1.63C7.87.73 8.6 0 9.5 0c.9 0 1.63.73 1.63 1.63v1.78c0 .9-.73 1.63-1.63 1.63z" fill="#36C5F0"/>
+        <path d="M9.5 5.04c.9 0 1.63.73 1.63 1.63 0 .9-.73 1.63-1.63 1.63H5.36c-.9 0-1.63-.73-1.63-1.63 0-.9.73-1.63 1.63-1.63H9.5z" fill="#36C5F0"/>
+        <path d="M18.96 9.5c0 .9.73 1.63 1.63 1.63h1.78c.9 0 1.63-.73 1.63-1.63 0-.9-.73-1.63-1.63-1.63h-1.78c-.9 0-1.63.73-1.63 1.63z" fill="#2EB67D"/>
+        <path d="M18.96 9.5c0-.9-.73-1.63-1.63-1.63-.9 0-1.63.73-1.63 1.63v4.14c0 .9.73 1.63 1.63 1.63.9 0 1.63-.73 1.63-1.63V9.5z" fill="#2EB67D"/>
+        <path d="M14.5 18.96c.9 0 1.63.73 1.63 1.63v1.78c0 .9-.73 1.63-1.63 1.63-.9 0-1.63-.73-1.63-1.63v-1.78c0-.9.73-1.63 1.63-1.63z" fill="#ECB22E"/>
+        <path d="M14.5 18.96c-.9 0-1.63-.73-1.63 0-.9-.73-1.63-1.63-1.63-1.63h4.14c.9 0 1.63.73 1.63 1.63 0 .9-.73 1.63-1.63 1.63H14.5z" fill="#ECB22E"/>
+      </svg>
+    </div>
+  );
+}
+
+function PagerDutyLogo({ className = "w-11 h-11" }: { className?: string }) {
+  return (
+    <div className={`${className} rounded-xl bg-[#F0FDF4] border border-emerald-200/60 flex items-center justify-center p-2 shadow-xs shrink-0`}>
+      <svg viewBox="0 0 24 24" className="w-full h-full" fill="none">
+        <path
+          d="M5 3.5h7c3.86 0 7 3.14 7 7s-3.14 7-7 7H9.5V21H5V3.5zm4.5 9.5H12c1.38 0 2.5-1.12 2.5-2.5s-1.12-2.5-2.5-2.5H9.5V13z"
+          fill="#06AC38"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3.5. INTERACTIVE ANIMATED ARCHITECTURE DATA FLOW (EXACT SPEC)
    ═══════════════════════════════════════════════════════════════ */
 function StripeArchitectureFlowSection() {
-  const [activeStage, setActiveStage] = useState<number>(0);
-  const [simulating, setSimulating] = useState<boolean>(false);
-  const [simulationStep, setSimulationStep] = useState<number>(0);
-  const [copied, setCopied] = useState<boolean>(false);
+  const [simulating, setSimulating] = useState(false);
+  const [activeStep, setActiveStep] = useState<number | null>(null);
 
-  const stages = [
-    {
-      id: 0,
-      number: "01",
-      title: "Your Kubernetes Pod",
-      tag: "Ingress & Microservices",
-      badge: "Source Layer",
-      icon: Server,
-      color: "from-blue-500 to-indigo-600",
-      accent: "#2563EB",
-      headline: "Microservices emitting raw TCP, gRPC, and SQL traffic",
-      desc: "Containerized application pods run untouched across AWS EKS, GCP GKE, Azure AKS, or Bare-Metal nodes. Zero code modifications or manual SDK instrumentation required.",
-      stats: [
-        { label: "Active Replicas", val: "48 Pods" },
-        { label: "Ingress Throughput", val: "18,400 req/s" },
-        { label: "Protocols", val: "HTTP/2, gRPC, TLS" }
-      ],
-      payload: {
-        cluster_id: "prod-eks-us-east-1",
-        pod_name: "auth-mesh-ingress-7b49d",
-        namespace: "production",
-        ingress_rps: 18420,
-        connection_pool_active: 84,
-        upstream: "10.0.14.88:8080"
-      }
-    },
-    {
-      id: 1,
-      number: "02",
-      title: "eBPF Kernel Probe",
-      tag: "Zero-Overhead Probe",
-      badge: "0.0% CPU Penalty",
-      icon: Cpu,
-      color: "from-purple-500 to-[#635BFF]",
-      accent: "#635BFF",
-      headline: "Attaches directly into Linux kernel sockets",
-      desc: "BREXAL injects ultra-lightweight eBPF bytecode probes directly into Linux kernel socket buffers. Captures packet drops, TLS latencies, and connection pools without sidecar proxies.",
-      stats: [
-        { label: "Kernel Overhead", val: "< 1.2μs (0.0% CPU)" },
-        { label: "Data Resolution", val: "Microsecond" },
-        { label: "Container Rebuilds", val: "Zero Required" }
-      ],
-      payload: {
-        kernel_hook: "sock_alloc() & tcp_v4_connect()",
-        socket_latency: "1.14ms",
-        tls_handshake_ms: 2.3,
-        packet_drops: 0,
-        ebpf_probe_overhead_ns: 840,
-        status: "zero_cpu_overhead_verified"
-      }
-    },
-    {
-      id: 2,
-      number: "03",
-      title: "Brexal Neural Engine",
-      tag: "Real-time AI Synthesis",
-      badge: "MTTR < 90s",
-      icon: Brain,
-      color: "from-indigo-600 to-cyan-500",
-      accent: "#0073E6",
-      headline: "Correlates telemetry with git history and manifests",
-      desc: "Processes 14.2M spans/second per cluster. When an anomaly triggers, the neural engine analyzes deployment manifests and git commit diffs to isolate root cause in under 90 seconds.",
-      stats: [
-        { label: "Span Throughput", val: "14.2M spans/s" },
-        { label: "AI Confidence", val: "99.4%" },
-        { label: "Root Cause Time", val: "< 90 Seconds" }
-      ],
-      payload: {
-        anomaly_detected: true,
-        evaluated_spans: 14200000,
-        correlated_git_commit: "commit #a8f3b2 'Reduce connection timeout to 2.0s'",
-        author: "rohan.p@brexal.com",
-        ai_recommendation: "Recycle Redis pool & rollback canary",
-        confidence: "99.4%"
-      }
-    },
-    {
-      id: 3,
-      number: "04",
-      title: "Slack / PagerDuty Alert",
-      tag: "Autonomous Resolution",
-      badge: "Non-Custodial RBAC",
-      icon: Bell,
-      color: "from-emerald-500 to-teal-600",
-      accent: "#10B981",
-      headline: "Instant actionable dispatch with human guardrails",
-      desc: "Dispatches rich diagnostic cards to Slack, PagerDuty, or Discord with exact commit diffs and one-click canary rollback approval with strict non-custodial RBAC controls.",
-      stats: [
-        { label: "Dispatch Latency", val: "Instant (< 250ms)" },
-        { label: "False Positive Rate", val: "0.002%" },
-        { label: "Automated Rollback", val: "One-Click RBAC" }
-      ],
-      payload: {
-        channel: "#engineering-ops",
-        incident_id: "INC-2026-11-09-04",
-        status: "AUTO_TRIAGED",
-        pagerduty_escalation: "P1_RESOLVING",
-        actions_available: ["Approve Canary Rollback", "Recycle DB Pool", "Shed Traffic"]
-      }
-    }
-  ];
-
-  const handleSimulate = () => {
+  const handleTriggerFlow = () => {
     if (simulating) return;
     setSimulating(true);
-    setSimulationStep(0);
-    setActiveStage(0);
+    setActiveStep(1);
 
-    let step = 0;
-    const interval = setInterval(() => {
-      step++;
-      if (step < 4) {
-        setSimulationStep(step);
-        setActiveStage(step);
-      } else {
-        clearInterval(interval);
-        setTimeout(() => {
-          setSimulating(false);
-          setSimulationStep(0);
-        }, 1500);
-      }
-    }, 1200);
+    setTimeout(() => setActiveStep(2), 700);
+    setTimeout(() => setActiveStep(3), 1500);
+    setTimeout(() => setActiveStep(4), 2300);
+    setTimeout(() => {
+      setSimulating(false);
+      setActiveStep(null);
+    }, 3800);
   };
-
-  const copyPayload = () => {
-    navigator.clipboard.writeText(JSON.stringify(stages[activeStage].payload, null, 2));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const currentStage = stages[activeStage];
-  const CurrentIcon = currentStage.icon;
 
   return (
-    <section id="architecture-flow" className="py-14 sm:py-20 px-4 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden font-sans">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-r from-blue-100/40 via-purple-100/30 to-emerald-100/30 rounded-full blur-[140px] pointer-events-none" />
+    <section id="architecture-flow" className="py-16 sm:py-20 md:py-24 px-4 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden font-sans">
+      
+      {/* Subtle ambient lighting */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] bg-gradient-to-r from-blue-100/40 via-sky-50/30 to-emerald-50/30 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-[1320px] mx-auto relative z-10">
+      <div className="max-w-[1320px] mx-auto text-center relative z-10">
         
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-6">
-          <div className="max-w-2xl text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#635BFF]/10 border border-[#635BFF]/20 text-[#635BFF] text-xs font-bold uppercase tracking-wider mb-3">
-              <Sparkles size={13} />
-              Interactive Architecture Flow
+        {/* Eyebrow */}
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <span className="w-8 h-[1px] bg-slate-300" />
+          <span className="text-[11px] sm:text-[12px] font-mono font-bold uppercase tracking-widest text-slate-500">
+            ARCHITECTURE FLOW
+          </span>
+          <span className="w-8 h-[1px] bg-slate-300" />
+        </div>
+
+        {/* Title */}
+        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-extrabold tracking-[-0.03em] text-[#0A2540] mb-3 leading-tight">
+          From Your Workload <span className="text-[#2563EB]">to Action</span>
+        </h2>
+
+        {/* Subtitle */}
+        <p className="text-sm sm:text-base text-[#425466] max-w-2xl mx-auto leading-relaxed mb-10 sm:mb-14">
+          See how telemetry flows from your Kubernetes workloads through eBPF and BREXAL's AI engine to the tools your team already uses.
+        </p>
+
+        {/* Interactive Simulation Trigger Button */}
+        <div className="flex justify-center mb-8 sm:mb-12">
+          <button
+            onClick={handleTriggerFlow}
+            disabled={simulating}
+            className={`inline-flex items-center gap-2 px-4.5 py-2 rounded-full text-xs font-bold transition-all shadow-xs cursor-pointer ${
+              simulating
+                ? "bg-blue-50 text-blue-700 border border-blue-300"
+                : "bg-white hover:bg-slate-50 text-[#0A2540] border border-slate-300 hover:border-blue-400 hover:shadow-md"
+            }`}
+          >
+            <span className={`w-2 h-2 rounded-full ${simulating ? "bg-blue-600 animate-ping" : "bg-blue-500"}`} />
+            <span>{simulating ? "Simulating Telemetry Pipeline Flow..." : "Test Interactive Data Flow"}</span>
+          </button>
+        </div>
+
+        {/* ── DIAGRAM CONTAINER ── */}
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-3 xl:gap-4 max-w-[1240px] mx-auto">
+          
+          {/* 1. Your Kubernetes Pod */}
+          <div
+            className={`w-full lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(10,37,64,0.03)] shrink-0 ${
+              activeStep === 1
+                ? "border-blue-500 ring-2 ring-blue-500/20 shadow-lg -translate-y-1"
+                : "border-slate-200/90 hover:border-slate-300"
+            }`}
+          >
+            <KubernetesLogo />
+            <div>
+              <h3 className="text-[13.5px] sm:text-[14px] font-extrabold text-[#0A2540] leading-snug mb-1">
+                Your Kubernetes Pod
+              </h3>
+              <p className="text-[11.5px] text-[#425466] leading-relaxed">
+                Application, logs, metrics and network events
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-4xl md:text-[42px] font-extrabold tracking-[-0.03em] text-[#0A2540] leading-[1.15] mb-3">
-              How data travels: from Linux kernel sockets to instant incident resolution.
-            </h2>
-            <p className="text-sm sm:text-base text-[#425466] leading-relaxed">
-              Trace high-throughput telemetry as it travels through our zero-overhead kernel hooks, neural correlation engine, and automated incident triage.
-            </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 self-start md:self-end shrink-0">
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FAFBFD] border border-slate-200 text-xs font-mono font-bold text-[#0A2540] shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Live Mesh: 14.2M spans/s</span>
+          {/* Arrow 1 (Desktop: Horizontal / Mobile: Vertical) */}
+          <div className="hidden lg:flex items-center justify-center text-blue-500 w-8 xl:w-10 shrink-0">
+            <svg viewBox="0 0 36 16" className="w-9 h-4 stroke-current fill-none">
+              <line x1="0" y1="8" x2="28" y2="8" strokeWidth="1.8" strokeDasharray={activeStep === 1 ? "3 3" : "none"} />
+              <polyline points="24,4 30,8 24,12" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <div className="lg:hidden flex items-center justify-center text-blue-500">
+            <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
+              <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
+              <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+
+          {/* 2. eBPF Kernel Probe */}
+          <div
+            className={`w-full lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(10,37,64,0.03)] shrink-0 ${
+              activeStep === 2
+                ? "border-blue-500 ring-2 ring-blue-500/20 shadow-lg -translate-y-1"
+                : "border-slate-200/90 hover:border-slate-300"
+            }`}
+          >
+            <EbpfLogo />
+            <div>
+              <h3 className="text-[13.5px] sm:text-[14px] font-extrabold text-[#0A2540] leading-snug mb-1">
+                eBPF Kernel Probe
+              </h3>
+              <p className="text-[11.5px] text-[#425466] leading-relaxed">
+                Kernel-level telemetry with minimal overhead
+              </p>
+            </div>
+          </div>
+
+          {/* Arrow 2 (Desktop: Horizontal / Mobile: Vertical) */}
+          <div className="hidden lg:flex items-center justify-center text-blue-500 w-8 xl:w-10 shrink-0">
+            <svg viewBox="0 0 36 16" className="w-9 h-4 stroke-current fill-none">
+              <line x1="0" y1="8" x2="28" y2="8" strokeWidth="1.8" strokeDasharray={activeStep === 2 ? "3 3" : "none"} />
+              <polyline points="24,4 30,8 24,12" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <div className="lg:hidden flex items-center justify-center text-blue-500">
+            <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
+              <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
+              <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+
+          {/* 3. BREXAL Neural Engine (Featured Center Card) */}
+          <div
+            className={`w-full lg:w-[275px] xl:w-[295px] relative rounded-2xl border-2 p-5 sm:p-5.5 text-left transition-all duration-300 shadow-[0_8px_24px_rgba(37,99,235,0.08)] shrink-0 ${
+              activeStep === 3
+                ? "bg-[#EBF5FF] border-[#2563EB] ring-3 ring-blue-500/25 shadow-xl -translate-y-1"
+                : "bg-[#F0F7FF] border-[#60A5FA]"
+            }`}
+          >
+            {/* Top Right AI Engine Badge */}
+            <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100/80 text-blue-700 text-[10.5px] font-bold font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+              <span>AI Engine</span>
             </div>
 
-            <button
-              onClick={handleSimulate}
-              disabled={simulating}
-              className={`inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-all shadow-md cursor-pointer ${
-                simulating
-                  ? "bg-slate-700 opacity-90 cursor-not-allowed"
-                  : "bg-[#635BFF] hover:bg-[#5349e0] hover:shadow-[0_4px_16px_rgba(99,91,255,0.35)] active:translate-y-0.5"
+            <div className="flex items-center gap-3.5 pt-2 sm:pt-1">
+              <NeuralEngineLogo />
+              <div className="pr-1">
+                <h3 className="text-[14.5px] sm:text-[15px] font-black text-[#0A2540] leading-snug mb-1">
+                  BREXAL Neural Engine
+                </h3>
+                <p className="text-[11.5px] text-[#425466] leading-relaxed">
+                  AI-driven analysis, anomaly detection and root cause
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Branching Connector 3 (Desktop: Curved Fork to Slack & PagerDuty) */}
+          <div className="hidden lg:block w-12 xl:w-14 h-40 relative shrink-0">
+            <svg viewBox="0 0 54 160" className="w-full h-full stroke-blue-500 fill-none overflow-visible">
+              {/* Top Branch to Slack */}
+              <path
+                d="M 0 80 C 24 80, 24 35, 46 35"
+                strokeWidth="1.8"
+                strokeDasharray={activeStep === 4 ? "3 3" : "none"}
+              />
+              <polyline points="40,30 48,35 40,40" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              
+              {/* Bottom Branch to PagerDuty */}
+              <path
+                d="M 0 80 C 24 80, 24 125, 46 125"
+                strokeWidth="1.8"
+                strokeDasharray={activeStep === 4 ? "3 3" : "none"}
+              />
+              <polyline points="40,120 48,125 40,130" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+
+          <div className="lg:hidden flex items-center justify-center text-blue-500">
+            <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
+              <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
+              <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+
+          {/* 4 & 5. Right Column Stack (Slack & PagerDuty) */}
+          <div className="flex flex-col gap-3.5 w-full lg:w-[230px] xl:w-[245px] shrink-0">
+            
+            {/* Slack */}
+            <div
+              className={`bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(10,37,64,0.03)] ${
+                activeStep === 4
+                  ? "border-blue-500 ring-2 ring-blue-500/20 shadow-lg -translate-y-0.5"
+                  : "border-slate-200/90 hover:border-slate-300"
               }`}
             >
-              <Play size={14} className={simulating ? "animate-spin" : "fill-current"} />
-              <span>{simulating ? `Simulating Stage 0${simulationStep + 1}...` : "Simulate Live Telemetry Flow"}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* 4-Stage Interactive Pipeline Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-10 relative">
-          
-          {stages.map((stg, idx) => {
-            const IconComponent = stg.icon;
-            const isSelected = activeStage === stg.id;
-            const isSimActive = simulating && simulationStep === stg.id;
-
-            return (
-              <div
-                key={stg.id}
-                onClick={() => {
-                  if (!simulating) setActiveStage(stg.id);
-                }}
-                className={`relative p-5 sm:p-6 rounded-2xl border transition-all duration-300 text-left cursor-pointer group flex flex-col justify-between ${
-                  isSelected || isSimActive
-                    ? "bg-white border-[#635BFF] shadow-[0_10px_30px_rgba(99,91,255,0.12)] ring-2 ring-[#635BFF]/20 -translate-y-1"
-                    : "bg-[#FAFBFD] hover:bg-white border-slate-200/90 shadow-2xs hover:shadow-[0_6px_20px_rgba(10,37,64,0.05)] hover:border-slate-300"
-                }`}
-              >
-                {/* Active Pulse Glow during Simulation */}
-                {isSimActive && (
-                  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#635BFF] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#635BFF]" />
-                  </span>
-                )}
-
-                <div>
-                  {/* Top Bar: Icon + Stage Number */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div
-                      className={`w-11 h-11 rounded-xl flex items-center justify-center text-white bg-gradient-to-br ${stg.color} shadow-xs`}
-                    >
-                      <IconComponent size={20} />
-                    </div>
-                    <span className="font-mono text-xs font-black text-slate-300 group-hover:text-slate-400 transition-colors">
-                      {stg.number}
-                    </span>
-                  </div>
-
-                  {/* Stage Badge & Title */}
-                  <div className="mb-2">
-                    <span className="inline-block text-[10.5px] font-mono font-bold uppercase tracking-wider text-[#635BFF] mb-1">
-                      {stg.tag}
-                    </span>
-                    <h3 className="text-[17px] font-extrabold text-[#0A2540] tracking-tight leading-snug">
-                      {stg.title}
-                    </h3>
-                  </div>
-
-                  <p className="text-[12.5px] text-[#425466] leading-relaxed line-clamp-2 mb-4">
-                    {stg.desc}
-                  </p>
-                </div>
-
-                {/* Bottom Stat Strip */}
-                <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-slate-700 bg-white border border-slate-200/80 px-2 py-0.5 rounded-md shadow-2xs">
-                    {stg.badge}
-                  </span>
-                  <span className="text-[11.5px] font-mono text-[#635BFF] font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                    Inspect <ArrowRight size={12} />
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Deep Stage Telemetry Inspector Card */}
-        <div className="bg-[#FAFBFD] border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-[0_4px_20px_rgba(10,37,64,0.03)] text-left">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            {/* Left Column: Stage Deep Explanation */}
-            <div className="lg:col-span-6 flex flex-col items-start">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-8 h-8 rounded-lg bg-[#635BFF]/10 text-[#635BFF] flex items-center justify-center font-mono font-bold text-xs">
-                  {currentStage.number}
-                </span>
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#635BFF]">
-                  {currentStage.tag}
-                </span>
-              </div>
-
-              <h4 className="text-xl sm:text-2xl font-extrabold text-[#0A2540] tracking-tight leading-snug mb-2.5">
-                {currentStage.headline}
-              </h4>
-
-              <p className="text-sm text-[#425466] leading-relaxed mb-6 font-normal">
-                {currentStage.desc}
-              </p>
-
-              {/* 3 Metric Pills */}
-              <div className="grid grid-cols-3 gap-3 w-full">
-                {currentStage.stats.map((st, i) => (
-                  <div key={i} className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs text-left">
-                    <span className="block text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">
-                      {st.label}
-                    </span>
-                    <strong className="text-xs sm:text-[13px] font-extrabold text-[#0A2540] tracking-tight">
-                      {st.val}
-                    </strong>
-                  </div>
-                ))}
+              <SlackLogo />
+              <div>
+                <h3 className="text-[13.5px] sm:text-[14px] font-extrabold text-[#0A2540] leading-snug mb-1">
+                  Slack
+                </h3>
+                <p className="text-[11.5px] text-[#425466] leading-relaxed">
+                  Real-time alerts and updates to your team
+                </p>
               </div>
             </div>
 
-            {/* Right Column: Live Telemetry Payload Terminal */}
-            <div className="lg:col-span-6">
-              <div className="rounded-xl bg-[#0A2540] border border-slate-800 shadow-xl overflow-hidden">
-                {/* Terminal Bar */}
-                <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900/90 border-b border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                    <span className="text-[11px] font-mono text-slate-400 ml-2 font-medium">
-                      telemetry-stream://{currentStage.title.toLowerCase().replace(/\s+/g, '-')}.json
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={copyPayload}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono font-medium transition cursor-pointer"
-                  >
-                    {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-                    <span>{copied ? "Copied" : "Copy Payload"}</span>
-                  </button>
-                </div>
-
-                {/* JSON Body */}
-                <pre className="p-5 font-mono text-[11.5px] sm:text-[12px] text-emerald-400 overflow-x-auto leading-relaxed">
-                  {JSON.stringify(currentStage.payload, null, 2)}
-                </pre>
+            {/* PagerDuty */}
+            <div
+              className={`bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(10,37,64,0.03)] ${
+                activeStep === 4
+                  ? "border-blue-500 ring-2 ring-blue-500/20 shadow-lg -translate-y-0.5"
+                  : "border-slate-200/90 hover:border-slate-300"
+              }`}
+            >
+              <PagerDutyLogo />
+              <div>
+                <h3 className="text-[13.5px] sm:text-[14px] font-extrabold text-[#0A2540] leading-snug mb-1">
+                  PagerDuty
+                </h3>
+                <p className="text-[11.5px] text-[#425466] leading-relaxed">
+                  Critical incident alerts and on-call escalation
+                </p>
               </div>
             </div>
 
           </div>
+
         </div>
 
       </div>
