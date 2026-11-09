@@ -1,14 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCheck, Copy, ChevronRight } from "lucide-react";
-
-export type IntegrationCategory = "All" | "Cloud & Infra" | "Runtimes" | "Databases & Queues" | "Observability";
+import { CheckCheck, Copy, Terminal, CheckCircle2 } from "lucide-react";
 
 export interface IntegrationItem {
   id: string;
   name: string;
-  category: "Cloud & Infra" | "Runtimes" | "Databases & Queues" | "Observability";
   tag: string;
   iconBg: string;
   badge: string;
@@ -17,12 +14,11 @@ export interface IntegrationItem {
   description: string;
 }
 
-export const INTEGRATIONS_DATA: IntegrationItem[] = [
+export const ROW_1_INTEGRATIONS: IntegrationItem[] = [
   {
     id: "kubernetes",
     name: "Kubernetes",
-    category: "Cloud & Infra",
-    tag: "Container Orchestration",
+    tag: "Container Mesh",
     iconBg: "bg-blue-600",
     badge: "1-Click Helm",
     snippetLang: "bash",
@@ -33,7 +29,6 @@ helm install brexal-agent brexal/ebpf-telemetry --namespace brexal --create-name
   {
     id: "docker",
     name: "Docker",
-    category: "Cloud & Infra",
     tag: "Container Engine",
     iconBg: "bg-sky-500",
     badge: "Host Daemon",
@@ -45,7 +40,6 @@ helm install brexal-agent brexal/ebpf-telemetry --namespace brexal --create-name
   {
     id: "aws",
     name: "AWS",
-    category: "Cloud & Infra",
     tag: "Amazon Web Services",
     iconBg: "bg-amber-500",
     badge: "CloudFormation",
@@ -56,9 +50,8 @@ helm install brexal-agent brexal/ebpf-telemetry --namespace brexal --create-name
   },
   {
     id: "gcp",
-    name: "Google Cloud (GCP)",
-    category: "Cloud & Infra",
-    tag: "Google Cloud Platform",
+    name: "Google Cloud",
+    tag: "GCP & GKE",
     iconBg: "bg-red-500",
     badge: "GKE Native",
     snippetLang: "bash",
@@ -69,8 +62,7 @@ kubectl apply -f https://install.brexal.io/gcp-daemonset.yaml`,
   {
     id: "azure",
     name: "Microsoft Azure",
-    category: "Cloud & Infra",
-    tag: "Azure Cloud",
+    tag: "AKS & App Services",
     iconBg: "bg-blue-500",
     badge: "AKS Ready",
     snippetLang: "bash",
@@ -81,7 +73,6 @@ helm install brexal-aks brexal/ebpf-telemetry --set provider=azure`,
   {
     id: "terraform",
     name: "Terraform",
-    category: "Cloud & Infra",
     tag: "Infrastructure as Code",
     iconBg: "bg-purple-600",
     badge: "Registry Provider",
@@ -93,20 +84,18 @@ resource "brexal_cluster_mesh" "prod" { cluster_name = "k8s-prod-us" auto_trace 
   {
     id: "go",
     name: "Go (Golang)",
-    category: "Runtimes",
-    tag: "Systems Language",
+    tag: "Runtime Binary",
     iconBg: "bg-cyan-600",
-    badge: "Zero SDK Overhead",
+    badge: "0% Overhead",
     snippetLang: "bash",
-    command: `# No code modification required! eBPF attaches directly to Go runtime symbols.
+    command: `# No code modification required! eBPF attaches directly to Go runtime symbols:
 brexal-cli profile attach --pid $(pgrep my-go-binary) --goroutines`,
     description: "Live goroutine deadlock detection, GC stop-the-world latency, and HTTP route timings without code imports."
   },
   {
     id: "python",
     name: "Python",
-    category: "Runtimes",
-    tag: "FastAPI / Django / Flask",
+    tag: "FastAPI / Django",
     iconBg: "bg-amber-600",
     badge: "Auto-Instrument",
     snippetLang: "bash",
@@ -117,7 +106,6 @@ python -m brexal.instrument --service-name api-gateway python main.py`,
   {
     id: "nodejs",
     name: "Node.js",
-    category: "Runtimes",
     tag: "Express / Nest / Next.js",
     iconBg: "bg-emerald-600",
     badge: "Zero-Code Loader",
@@ -129,32 +117,32 @@ NODE_OPTIONS="--require @brexal/node-telemetry/register" node server.js`,
   {
     id: "java",
     name: "Java / JVM",
-    category: "Runtimes",
     tag: "Spring Boot / Quarkus",
     iconBg: "bg-orange-600",
     badge: "JVM eBPF Probe",
     snippetLang: "bash",
-    command: `# Zero bytecode rewrite required. eBPF monitors JVM socket calls & thread states.
+    command: `# Zero bytecode rewrite required. eBPF monitors JVM socket calls & thread states:
 brexal-cli jvm watch --pid $(jps -q -m | grep spring) --heap-profile`,
     description: "Track JVM thread pool contention, heap allocation spikes, and JNI boundary latency without agents."
-  },
+  }
+];
+
+export const ROW_2_INTEGRATIONS: IntegrationItem[] = [
   {
     id: "rust",
     name: "Rust",
-    category: "Runtimes",
-    tag: "Tokio / Axum / Actix",
+    tag: "Tokio / Axum",
     iconBg: "bg-stone-800",
     badge: "Native Binary",
     snippetLang: "bash",
-    command: `# Zero-overhead native eBPF tracing attaches to compiled ELF symbols.
+    command: `# Zero-overhead native eBPF tracing attaches to compiled ELF symbols:
 brexal-cli trace attach --bin ./target/release/my-microservice`,
     description: "Track async task scheduling, channel backpressure, and TCP connection pooling at microsecond scale."
   },
   {
     id: "dotnet",
     name: ".NET Core",
-    category: "Runtimes",
-    tag: "C# / ASP.NET Core",
+    tag: "C# / ASP.NET",
     iconBg: "bg-violet-600",
     badge: "CLR Socket Hooks",
     snippetLang: "bash",
@@ -165,7 +153,6 @@ export BREXAL_ENABLE_AUTO_TRACE="true" && dotnet run`,
   {
     id: "kafka",
     name: "Apache Kafka",
-    category: "Databases & Queues",
     tag: "Event Streaming",
     iconBg: "bg-slate-900",
     badge: "Lag Exporter",
@@ -177,7 +164,6 @@ export BREXAL_ENABLE_AUTO_TRACE="true" && dotnet run`,
   {
     id: "redis",
     name: "Redis",
-    category: "Databases & Queues",
     tag: "In-Memory Cache",
     iconBg: "bg-rose-600",
     badge: "Zero CPU Overhead",
@@ -189,7 +175,6 @@ export BREXAL_ENABLE_AUTO_TRACE="true" && dotnet run`,
   {
     id: "postgres",
     name: "PostgreSQL",
-    category: "Databases & Queues",
     tag: "Relational DB",
     iconBg: "bg-sky-700",
     badge: "Query Planner AI",
@@ -202,7 +187,6 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
   {
     id: "mongodb",
     name: "MongoDB",
-    category: "Databases & Queues",
     tag: "Document Store",
     iconBg: "bg-emerald-700",
     badge: "Replica Health",
@@ -214,8 +198,7 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
   {
     id: "elasticsearch",
     name: "Elasticsearch",
-    category: "Databases & Queues",
-    tag: "Search & Analytics",
+    tag: "Search & Log Engine",
     iconBg: "bg-yellow-600",
     badge: "Cluster Health",
     snippetLang: "bash",
@@ -226,7 +209,6 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
   {
     id: "rabbitmq",
     name: "RabbitMQ",
-    category: "Databases & Queues",
     tag: "AMQP Message Broker",
     iconBg: "bg-orange-500",
     badge: "Queue Sentry",
@@ -238,22 +220,19 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
   {
     id: "prometheus",
     name: "Prometheus",
-    category: "Observability",
     tag: "Metrics Engine",
     iconBg: "bg-amber-700",
-    badge: "100% PromQL Native",
+    badge: "PromQL Native",
     snippetLang: "yaml",
     command: `# Add to your existing prometheus.yml scrape_configs:
 - job_name: 'brexal-otel-metrics'
   scrape_interval: 5s
-  static_configs:
-    - targets: ['localhost:9464']`,
+  static_configs: [{ targets: ['localhost:9464'] }]`,
     description: "Drop-in replacement for node_exporter. Keep all your existing Grafana dashboards and PromQL queries intact."
   },
   {
     id: "opentelemetry",
     name: "OpenTelemetry",
-    category: "Observability",
     tag: "CNCF Open Standard",
     iconBg: "bg-indigo-600",
     badge: "Zero Lock-In",
@@ -266,21 +245,8 @@ export OTEL_EXPORTER_OTLP_HEADERS="x-brexal-token=bx_live_9f82a17b"
 ];
 
 export function BrexalIntegrationsSection() {
-  const [selectedCategory, setSelectedCategory] = useState<IntegrationCategory>("All");
-  const [activeIntegration, setActiveIntegration] = useState<IntegrationItem>(INTEGRATIONS_DATA[0]);
+  const [activeIntegration, setActiveIntegration] = useState<IntegrationItem>(ROW_1_INTEGRATIONS[0]);
   const [copied, setCopied] = useState(false);
-
-  const categories: IntegrationCategory[] = [
-    "All",
-    "Cloud & Infra",
-    "Runtimes",
-    "Databases & Queues",
-    "Observability"
-  ];
-
-  const filtered = selectedCategory === "All"
-    ? INTEGRATIONS_DATA
-    : INTEGRATIONS_DATA.filter((item) => item.category === selectedCategory);
 
   const handleCopy = () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -291,145 +257,145 @@ export function BrexalIntegrationsSection() {
   };
 
   return (
-    <section id="integrations" className="py-14 sm:py-20 md:py-24 px-4 sm:px-10 bg-[#FAFCFF] border-b border-slate-200/80 relative overflow-hidden font-sans">
+    <section id="integrations" className="pt-14 sm:pt-18 md:pt-20 pb-0 bg-white border-b border-slate-200/80 font-sans relative overflow-hidden">
       
-      {/* Background radial highlight */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[550px] bg-gradient-to-r from-blue-100/35 via-indigo-50/25 to-sky-100/30 rounded-full blur-[140px] pointer-events-none" />
+      {/* ── HEADER ── */}
+      <div className="max-w-[1320px] mx-auto px-4 sm:px-10 text-left mb-6 sm:mb-8">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="w-6 h-[1.5px] bg-[#2563EB]" />
+          <span className="text-[11px] sm:text-[12px] font-mono font-bold text-[#2563EB] uppercase tracking-widest">
+            ECOSYSTEM &amp; 20+ INTEGRATIONS
+          </span>
+        </div>
+        <h2 className="text-2xl sm:text-4xl md:text-[40px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.15] mb-2.5">
+          Connects With Everything You Already Run.
+        </h2>
+        <p className="text-sm sm:text-base text-[#425466] leading-relaxed max-w-2xl font-normal">
+          Zero vendor lock-in. 1-line instant instrumentation across your entire cloud infrastructure, databases, and microservices. Click any technology to see its quick setup.
+        </p>
+      </div>
 
-      <div className="max-w-[1320px] mx-auto text-left relative z-10">
+      {/* ── 2 HORIZONTALLY SCROLLING LINES (ADVA SCROLL) ── */}
+      <div className="max-w-[1320px] mx-auto px-4 sm:px-10 mb-8 sm:mb-10 space-y-2.5 sm:space-y-3">
         
-        {/* Eyebrow & Headline */}
-        <div className="max-w-3xl mb-8 sm:mb-12">
-          <div className="flex items-center gap-2 mb-2.5">
-            <span className="w-6 h-[1.5px] bg-[#2563EB]" />
-            <span className="text-[11px] sm:text-[12px] font-mono font-bold text-[#2563EB] uppercase tracking-widest">
-              ECOSYSTEM &amp; 20+ PLUGINS
-            </span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl md:text-[44px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.15] mb-3">
-            Connects With Everything You Already Run.
-          </h2>
-          <p className="text-sm sm:text-base text-[#425466] leading-relaxed max-w-2xl font-normal">
-            Zero vendor lock-in. Instrument your Kubernetes clusters, serverless workloads, databases, and microservice runtimes with 1-line installation. Click any integration below to see instant setup commands.
-          </p>
-        </div>
-
-        {/* Category Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 sm:mb-8 no-scrollbar">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${
-                selectedCategory === cat
-                  ? "bg-[#0A2540] text-white shadow-sm"
-                  : "bg-white text-[#425466] border border-slate-200/80 hover:border-slate-300 hover:text-[#0A2540]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* 20+ Integrations Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-3.5 mb-8 sm:mb-10">
-          {filtered.map((item) => {
+        {/* ROW 1 (10 Items) */}
+        <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-1 pt-0.5">
+          {ROW_1_INTEGRATIONS.map((item) => {
             const isSelected = activeIntegration.id === item.id;
             return (
-              <div
+              <button
                 key={item.id}
                 onClick={() => setActiveIntegration(item)}
-                className={`p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white border cursor-pointer transition-all duration-200 text-left relative flex flex-col justify-between ${
+                className={`group py-2 px-3 sm:px-3.5 rounded-full border transition-all duration-150 flex items-center gap-2.5 shrink-0 cursor-pointer text-left whitespace-nowrap ${
                   isSelected
-                    ? "border-[#2563EB] ring-2 ring-blue-500/20 shadow-md bg-blue-50/20 -translate-y-0.5"
-                    : "border-slate-200/80 hover:border-slate-300 hover:shadow-xs shadow-[0_1px_4px_rgba(10,37,64,0.02)]"
+                    ? "bg-[#EFF6FF] border-[#2563EB] ring-2 ring-blue-500/20 shadow-xs"
+                    : "bg-white border-slate-200/90 hover:border-slate-300 hover:bg-slate-50/80 shadow-[0_1px_3px_rgba(10,37,64,0.03)]"
                 }`}
               >
-                <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <div className={`w-8 h-8 rounded-lg ${item.iconBg} text-white flex items-center justify-center font-black text-xs font-mono shadow-2xs`}>
-                      {item.name.slice(0, 2).toUpperCase()}
-                    </div>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                      {item.badge}
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-extrabold text-[#0A2540] leading-snug">
-                    {item.name}
-                  </h3>
-                  <p className="text-[11px] text-[#425466] font-medium leading-tight mt-0.5">
-                    {item.tag}
-                  </p>
+                <div className={`w-5 h-5 rounded-md ${item.iconBg} text-white flex items-center justify-center font-bold text-[9px] font-mono shrink-0`}>
+                  {item.name.slice(0, 2).toUpperCase()}
                 </div>
-
-                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold">
-                  <span className={isSelected ? "text-[#2563EB]" : "text-slate-400"}>
-                    {isSelected ? "Active View" : "View Code"}
-                  </span>
-                  <ChevronRight size={13} className={isSelected ? "text-[#2563EB] translate-x-0.5" : "text-slate-400"} />
-                </div>
-              </div>
+                <span className={`text-xs sm:text-[13px] font-bold ${isSelected ? "text-[#1D4ED8]" : "text-[#0A2540] group-hover:text-[#2563EB]"}`}>
+                  {item.name}
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">
+                  {item.badge}
+                </span>
+              </button>
             );
           })}
         </div>
 
-        {/* ── INTERACTIVE 2-LINE QUICK INSTALL DRAWER ── */}
-        <div className="rounded-2xl sm:rounded-3xl bg-[#030712] border border-[#1C2E4A] p-5 sm:p-7 text-left shadow-xl relative overflow-hidden">
-          
-          {/* Subtle neon top line */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400" />
+        {/* ROW 2 (10 Items) */}
+        <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-1 pt-0.5">
+          {ROW_2_INTEGRATIONS.map((item) => {
+            const isSelected = activeIntegration.id === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveIntegration(item)}
+                className={`group py-2 px-3 sm:px-3.5 rounded-full border transition-all duration-150 flex items-center gap-2.5 shrink-0 cursor-pointer text-left whitespace-nowrap ${
+                  isSelected
+                    ? "bg-[#EFF6FF] border-[#2563EB] ring-2 ring-blue-500/20 shadow-xs"
+                    : "bg-white border-slate-200/90 hover:border-slate-300 hover:bg-slate-50/80 shadow-[0_1px_3px_rgba(10,37,64,0.03)]"
+                }`}
+              >
+                <div className={`w-5 h-5 rounded-md ${item.iconBg} text-white flex items-center justify-center font-bold text-[9px] font-mono shrink-0`}>
+                  {item.name.slice(0, 2).toUpperCase()}
+                </div>
+                <span className={`text-xs sm:text-[13px] font-bold ${isSelected ? "text-[#1D4ED8]" : "text-[#0A2540] group-hover:text-[#2563EB]"}`}>
+                  {item.name}
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">
+                  {item.badge}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-[#1C2E4A] mb-4">
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl ${activeIntegration.iconBg} text-white flex items-center justify-center font-black font-mono shadow-xs`}>
+      </div>
+
+      {/* ── FULL-WIDTH HORIZONTAL STRIPE (IMAGE 3 COLOR: #0A2944 / #0B3856) ── */}
+      <div className="w-full bg-gradient-to-r from-[#0A2540] via-[#0B3856] to-[#0A2944] border-t border-[#143B5E] py-5 sm:py-6 shadow-inner">
+        <div className="max-w-[1320px] mx-auto px-4 sm:px-10">
+          
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+            
+            {/* Left: Active Tech Info */}
+            <div className="flex items-center gap-3 shrink-0">
+              <div className={`w-9 h-9 rounded-xl ${activeIntegration.iconBg} text-white flex items-center justify-center font-black font-mono shadow-xs`}>
                 {activeIntegration.name.slice(0, 2).toUpperCase()}
               </div>
-              <div>
+              <div className="text-left">
                 <div className="flex items-center gap-2">
-                  <h4 className="text-base sm:text-lg font-black text-white">
-                    {activeIntegration.name} Quick Installation
-                  </h4>
-                  <span className="px-2.5 py-0.5 rounded-full bg-blue-900/60 text-blue-300 border border-blue-700/50 text-[10.5px] font-mono font-bold">
+                  <span className="text-sm sm:text-base font-extrabold text-white">
+                    {activeIntegration.name}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-mono font-bold">
                     {activeIntegration.badge}
                   </span>
                 </div>
-                <p className="text-xs sm:text-[13px] text-slate-400 font-normal mt-0.5">
+                <p className="text-[11.5px] sm:text-xs text-blue-100/70 font-normal leading-tight max-w-xs sm:max-w-md">
                   {activeIntegration.description}
                 </p>
               </div>
             </div>
 
-            <button
-              onClick={handleCopy}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
-                copied
-                  ? "bg-emerald-500 text-white shadow-md"
-                  : "bg-[#1C2E4A] hover:bg-[#273F63] text-white border border-slate-700 hover:border-slate-500"
-              }`}
-            >
-              {copied ? <CheckCheck size={14} /> : <Copy size={14} />}
-              <span>{copied ? "Copied Command!" : "Copy Code"}</span>
-            </button>
-          </div>
+            {/* Middle: 2-Line Monospace Terminal Strip */}
+            <div className="flex-1 min-w-0 bg-[#06182B]/95 rounded-xl border border-[#163D63] px-3.5 sm:px-4 py-2.5 flex items-center justify-between gap-3 overflow-x-auto text-left shadow-xs">
+              <div className="font-mono text-xs text-blue-200 whitespace-pre-wrap leading-relaxed select-all">
+                <code>{activeIntegration.command}</code>
+              </div>
 
-          {/* Terminal Code Display */}
-          <div className="relative rounded-xl bg-[#090D1A] p-3.5 sm:p-4 border border-[#17253D] font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto">
-            <pre className="whitespace-pre-wrap leading-relaxed text-blue-200">
-              <code>{activeIntegration.command}</code>
-            </pre>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-3.5 text-xs text-slate-400 font-mono">
-            <div className="flex items-center gap-2 text-emerald-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Zero-code overhead verified via eBPF probes</span>
+              {/* Copy Button */}
+              <button
+                onClick={handleCopy}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer shadow-xs ${
+                  copied
+                    ? "bg-emerald-500 text-white"
+                    : "bg-[#2563EB] hover:bg-[#1D4ED8] text-white"
+                }`}
+              >
+                {copied ? <CheckCheck size={13} /> : <Copy size={13} />}
+                <span>{copied ? "Copied!" : "Copy"}</span>
+              </button>
             </div>
-            <span>Protocol: OpenTelemetry v1.32+ Compatible</span>
+
+          </div>
+
+          {/* Bottom Indicators on the Stripe */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-3 text-[11px] font-mono text-blue-200/60 border-t border-[#123657] mt-3">
+            <div className="flex items-center gap-1.5 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>0.0% CPU penalty verified via eBPF probes</span>
+            </div>
+            <span>OpenTelemetry v1.32+ &amp; PromQL Native</span>
           </div>
 
         </div>
-
       </div>
+
     </section>
   );
 }
