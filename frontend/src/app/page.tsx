@@ -444,7 +444,7 @@ function StripeHeroSection() {
             <h1 className="font-sans text-[26px] sm:text-3xl md:text-[34px] lg:text-[38px] font-bold tracking-[-0.025em] text-[#0A2540] leading-[1.18] mb-2.5 sm:mb-3 text-left">
               Autonomous telemetry <br className="hidden sm:inline" />
               infrastructure for <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-[#635BFF] via-[#0073E6] to-[#00D4FF] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] bg-clip-text text-transparent">
                 modern cloud systems.
               </span>
             </h1>
