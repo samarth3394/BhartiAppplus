@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ChevronRight,
@@ -47,13 +46,13 @@ const HeroEcosystem3D = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[400px] sm:h-[460px] lg:h-[520px] bg-transparent flex items-center justify-center">
-        <div className="w-[98px] h-[98px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06)] flex flex-col items-center justify-center">
-          <span className="font-['Sora',sans-serif] text-[11.5px] sm:text-[13.5px] font-semibold tracking-[0.25em] text-[#0A2540] pl-[0.25em] leading-none">
+      <div className="w-full h-[350px] sm:h-[460px] lg:h-[520px] bg-transparent flex items-center justify-center">
+        <div className="w-[76px] h-[76px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06)] flex flex-col items-center justify-center">
+          <span className="font-['Sora',sans-serif] text-[9.5px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#0A2540] pl-[0.22em] sm:pl-[0.25em] leading-none">
             BREXAL
           </span>
-          <span className="w-5 h-[1.5px] my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
-          <span className="font-['Sora',sans-serif] text-[6px] sm:text-[6.5px] font-medium tracking-[0.16em] uppercase text-[#64748B] text-center max-w-[82px]">
+          <span className="w-4 sm:w-5 h-[1.5px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
+          <span className="font-['Sora',sans-serif] text-[4.8px] sm:text-[6.5px] font-medium tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#64748B] text-center max-w-[60px] sm:max-w-[82px]">
             INTELLIGENT OBSERVABILITY
           </span>
         </div>
@@ -442,9 +441,6 @@ function StripeColorGridCanvas() {
    2. STRIPE HERO SECTION WITH ICONIC ANGLED GRADIENT CANVAS
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
-  const prefersReducedMotion = useReducedMotion() ?? false;
-  const easeCurve: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
   return (
     <section className="relative pt-24 pb-10 sm:pt-28 sm:pb-12 md:pt-32 md:pb-14 px-4 sm:px-10 overflow-hidden bg-white">
       
@@ -460,11 +456,7 @@ function StripeHeroSection() {
           <div className="lg:col-span-5 flex flex-col items-start text-left">
             
             {/* Top Pill Eyebrow */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 12, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.55, delay: 0.05, ease: easeCurve }}
-            >
+            <div className="brexal-pop-up" style={{ animationDelay: "0.05s" }}>
               <Link 
                 href="#interactive-simulator" 
                 className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-3 sm:mb-4 hover:border-[#635BFF]/40 transition-colors"
@@ -475,48 +467,37 @@ function StripeHeroSection() {
                 </span>
                 <ChevronRight size={13} className="text-[#635BFF] group-hover:translate-x-0.5 transition-transform" />
               </Link>
-            </motion.div>
+            </div>
 
             {/* Refined Headline (Compact & Modern Sans) */}
-            <motion.h1
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 16, scale: 0.985 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.65, delay: 0.14, ease: easeCurve }}
-              className="font-sans text-[26px] sm:text-3xl md:text-[34px] lg:text-[38px] font-bold tracking-[-0.025em] text-[#0A2540] leading-[1.18] mb-2.5 sm:mb-3 text-left"
+            <h1
+              className="brexal-pop-up font-sans text-[26px] sm:text-3xl md:text-[34px] lg:text-[38px] font-bold tracking-[-0.025em] text-[#0A2540] leading-[1.18] mb-2.5 sm:mb-3 text-left"
+              style={{ animationDelay: "0.14s" }}
             >
               Autonomous telemetry <br className="hidden sm:inline" />
               infrastructure for <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] bg-clip-text text-transparent">
                 modern cloud systems.
               </span>
-            </motion.h1>
+            </h1>
 
             {/* Supporting Subhead */}
-            <motion.p
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.24, ease: easeCurve }}
-              className="text-[14.5px] sm:text-[16px] text-[#425466] font-normal leading-relaxed mb-4 sm:mb-5 text-left"
+            <p
+              className="brexal-pop-up text-[14.5px] sm:text-[16px] text-[#425466] font-normal leading-relaxed mb-4 sm:mb-5 text-left"
+              style={{ animationDelay: "0.24s" }}
             >
               Millions of requests across Kubernetes, microservices, and databases are monitored in real time with BREXAL. Synthesize logs, kernel traces, and metrics into self-healing incident intelligence.
-            </motion.p>
+            </p>
 
             {/* Instant Signup Card */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 14, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.65, delay: 0.34, ease: easeCurve }}
-              className="w-full"
-            >
+            <div className="brexal-pop-up w-full" style={{ animationDelay: "0.34s" }}>
               <HeroSignupCard />
-            </motion.div>
+            </div>
 
             {/* Reassurance Micro-Metrics */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.44, ease: easeCurve }}
-              className="flex flex-wrap items-center gap-3 sm:gap-5 text-[11.5px] sm:text-[12px] font-semibold text-[#425466] pt-0.5"
+            <div
+              className="brexal-pop-up flex flex-wrap items-center gap-3 sm:gap-5 text-[11.5px] sm:text-[12px] font-semibold text-[#425466] pt-0.5"
+              style={{ animationDelay: "0.44s" }}
             >
               <span className="flex items-center gap-1.5">
                 <Check size={14} className="text-emerald-600 font-bold shrink-0" /> Free developer tier
@@ -527,7 +508,7 @@ function StripeHeroSection() {
               <span className="flex items-center gap-1.5">
                 <Check size={14} className="text-emerald-600 font-bold shrink-0" /> SOC-2 Type II Certified
               </span>
-            </motion.div>
+            </div>
 
           </div>
 
@@ -1544,7 +1525,7 @@ function StripeFooter() {
    ═══════════════════════════════════════════════════════════════ */
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white text-[#0A2540] selection:bg-[#635BFF]/20 selection:text-[#0A2540] antialiased">
+    <div className="min-h-screen bg-white text-[#0A2540] selection:bg-[#635BFF]/20 selection:text-[#0A2540] antialiased overflow-x-hidden">
       <StripeNavbar />
       <main>
         <StripeHeroSection />

@@ -470,10 +470,11 @@ function CameraRig({
 
   useFrame(() => {
     const aspect = size.width > 0 && size.height > 0 ? size.width / size.height : 1.4;
+    const isPortraitOrNarrow = aspect < 1.1;
     const tanHalfFov = Math.tan(THREE.MathUtils.degToRad(40 / 2));
-    const neededZForWidth = 4.65 / (tanHalfFov * Math.min(aspect, 1.45));
+    const neededZForWidth = (isPortraitOrNarrow ? 4.35 : 4.65) / (tanHalfFov * Math.min(aspect, 1.45));
     const baseZ = Math.max(9.8, neededZForWidth);
-    const baseY = baseZ * 0.27;
+    const baseY = baseZ * (isPortraitOrNarrow ? 0.34 : 0.27);
 
     if (!initializedRef.current || reducedMotion) {
       camera.position.set(0, baseY, baseZ);
@@ -595,11 +596,11 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
   const isMobile = viewportWidth > 0 && viewportWidth < 640;
 
   return (
-    <motion.div
-      initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.94, y: 16 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative w-full h-[400px] sm:h-[460px] lg:h-[520px] bg-transparent overflow-visible ${className}`}
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setHoveredId(null);
+      }}
+      className={`relative w-full h-[350px] sm:h-[460px] lg:h-[520px] bg-transparent overflow-visible ${className}`}
     >
       <WebGLErrorBoundary fallback={<StaticEcosystemFallback />}>
         <Canvas
@@ -656,21 +657,19 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
             transform: "translate3d(0px, 0px, 0) translate(-50%, -50%)",
           }}
         >
-          <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.65, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex flex-col items-center justify-center w-[98px] h-[98px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06),0_2px_8px_rgba(37,99,235,0.05)]"
+          <div
+            className="brexal-node-pop relative flex flex-col items-center justify-center w-[76px] h-[76px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06),0_2px_8px_rgba(37,99,235,0.05)]"
+            style={{ animationDelay: "0.12s" }}
           >
-            <div className="absolute inset-[5px] rounded-full border border-slate-100 pointer-events-none" />
-            <span className="font-['Sora',sans-serif] text-[11.5px] sm:text-[13.5px] font-semibold tracking-[0.25em] text-[#0A2540] pl-[0.25em] leading-none">
+            <div className="absolute inset-[3.5px] sm:inset-[5px] rounded-full border border-slate-100 pointer-events-none" />
+            <span className="font-['Sora',sans-serif] text-[9.5px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#0A2540] pl-[0.22em] sm:pl-[0.25em] leading-none">
               BREXAL
             </span>
-            <span className="w-5 h-[1.5px] my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
-            <span className="font-['Sora',sans-serif] text-[6px] sm:text-[6.5px] font-medium tracking-[0.16em] leading-[1.3] uppercase text-[#64748B] text-center max-w-[78px] sm:max-w-[88px]">
+            <span className="w-4 sm:w-5 h-[1.5px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
+            <span className="font-['Sora',sans-serif] text-[4.8px] sm:text-[6.5px] font-medium tracking-[0.14em] sm:tracking-[0.16em] leading-[1.25] sm:leading-[1.3] uppercase text-[#64748B] text-center max-w-[60px] sm:max-w-[88px]">
               INTELLIGENT OBSERVABILITY
             </span>
-          </motion.div>
+          </div>
         </div>
 
         {/* 17 Unboxed Official SVG Technology Marks with Staggered Pop-up */}
@@ -686,31 +685,32 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
               ref={setNodeDomRef(node.id)}
               onMouseEnter={() => setHoveredId(node.id)}
               onMouseLeave={() => setHoveredId(null)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setHoveredId(isHovered ? null : node.id);
+              }}
               className="absolute top-0 left-0 pointer-events-auto select-none"
               style={{ zIndex: 20, opacity: 0 }}
             >
-              <motion.div
-                initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.6 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  duration: 0.52,
-                  delay: popDelay,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="relative flex items-center justify-center"
+              <div
+                className="brexal-node-pop relative flex items-center justify-center"
+                style={{ animationDelay: `${popDelay.toFixed(2)}s` }}
               >
                 {/* Editorial Minimal Tooltip */}
-                <div
-                  className={`pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-white text-[#0A2540] border border-slate-200/90 shadow-[0_6px_16px_rgba(15,23,42,0.08)] transition-all duration-200 ${
+                <motion.div
+                  initial={false}
+                  animate={
                     isHovered
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-1"
-                  }`}
+                      ? { opacity: 1, y: 0, scale: 1 }
+                      : { opacity: 0, y: 4, scale: 0.96 }
+                  }
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-white text-[#0A2540] border border-slate-200/90 shadow-[0_6px_16px_rgba(15,23,42,0.08)]"
                 >
                   <span className="font-['Sora',sans-serif] text-[11px] font-medium tracking-tight leading-none">
                     {node.name}
                   </span>
-                </div>
+                </motion.div>
 
                 {/* Unboxed Authentic SVG Mark */}
                 <div
@@ -719,7 +719,7 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
                   onFocus={() => setHoveredId(node.id)}
                   onBlur={() => setHoveredId(null)}
                   className={`cursor-pointer flex items-center justify-center transition-transform duration-300 ease-out focus:outline-none ${
-                    isMobile ? "w-6 h-6" : "w-7 h-7 sm:w-8 sm:h-8"
+                    isMobile ? "w-5 h-5" : "w-7 h-7 sm:w-8 sm:h-8"
                   } ${isHovered ? "scale-[1.24]" : "scale-100"}`}
                   style={{
                     filter: isHovered
@@ -735,12 +735,12 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
                     className="w-full h-full object-contain pointer-events-none"
                   />
                 </div>
-              </motion.div>
+              </div>
             </div>
           );
         })}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
