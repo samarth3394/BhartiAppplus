@@ -143,7 +143,7 @@ export function Stripe3DAnimation() {
     window.addEventListener("resize", handleResize);
 
     // 6. 3D Wave Animation Loop
-    let startTime = performance.now();
+    const startTime = performance.now();
     let animationFrameId: number;
 
     const animate = () => {

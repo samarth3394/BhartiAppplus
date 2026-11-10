@@ -18,6 +18,6 @@
   <line x1="26" y1="26" x2="42" y2="26" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
   
   <!-- Official Gold Seal Star -->
-  <circle cx="24" cy="58" r="4" fill="#FBBF24"/>
+  <circle cx="24" cy="58" r="4" fill="#dda30fff"/>
   <path d="M22 62 L20 68 L24 65 L28 68 L26 62" fill="#D97706"/>
 </svg>

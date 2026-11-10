@@ -678,7 +678,7 @@ function StripeArchitectureFlowSection() {
 
         {/* Subtitle */}
         <p className="text-sm sm:text-base text-[#425466] max-w-2xl mx-auto leading-relaxed mb-10 sm:mb-14">
-          See how telemetry flows from your Kubernetes workloads through eBPF and BREXAL's AI engine to the tools your team already uses.
+          See how telemetry flows from your Kubernetes workloads through eBPF and BREXAL&apos;s AI engine to the tools your team already uses.
         </p>
 
         {/* Interactive Simulation Trigger Button */}

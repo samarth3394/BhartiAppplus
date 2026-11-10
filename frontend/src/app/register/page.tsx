@@ -1,28 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, Suspense } from "react";
 import { ArrowRight, Mail, Lock, Eye, EyeOff, User, ShieldCheck } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/Logo";
 
-export default function Register() {
-  const [email, setEmail] = useState("");
+function RegisterContent() {
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState(() => searchParams?.get("email") || "");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const prefillEmail = searchParams?.get("email");
-    if (prefillEmail) {
-      setEmail(prefillEmail);
-    }
-  }, [searchParams]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,5 +208,13 @@ export default function Register() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function Register() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FAFBFD]" />}>
+      <RegisterContent />
+    </Suspense>
   );
 }

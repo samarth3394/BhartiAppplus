@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { User, Lock, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
-export default function AcceptInvitePage() {
+function AcceptInviteContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -15,18 +15,14 @@ export default function AcceptInvitePage() {
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    if (!token) {
-      setError("No invite token provided in the URL.");
-    }
-  }, [token]);
+  const error = submitError || (!token ? "No invite token provided in the URL." : "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setSubmitError("");
     setIsLoading(true);
 
     try {
@@ -46,8 +42,8 @@ export default function AcceptInvitePage() {
       setTimeout(() => {
         router.push("/dashboard");
       }, 1500);
-    } catch (err: any) {
-      setError(err.message || "An error occurred while accepting invite");
+    } catch (err: unknown) {
+      setSubmitError(err instanceof Error ? err.message : "An error occurred while accepting invite");
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +77,7 @@ export default function AcceptInvitePage() {
             </Link>
             <h1 className="text-xl font-bold tracking-tight text-[#0A2540] mb-1">Complete your profile</h1>
             <p className="text-xs sm:text-sm text-[#425466]">
-              You've been invited to join a collaborative engineering cluster on BREXAL.
+              You&apos;ve been invited to join a collaborative engineering cluster on BREXAL.
             </p>
           </div>
 
@@ -153,5 +149,13 @@ export default function AcceptInvitePage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function AcceptInvitePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FAFBFD]" />}>
+      <AcceptInviteContent />
+    </Suspense>
   );
 }
