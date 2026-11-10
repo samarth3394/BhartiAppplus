@@ -1,0 +1,747 @@
+"use client";
+
+import React, { Component, useCallback, useEffect, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { motion, useReducedMotion } from "framer-motion";
+import * as THREE from "three";
+import {
+  CORE_LINK_NODE_IDS,
+  ORBIT_RINGS,
+  SIGNAL_LINK_NODE_IDS,
+  TECH_NODES,
+  type OrbitRingConfig,
+  type TechNodeConfig,
+} from "./heroEcosystemData";
+
+interface HeroEcosystem3DProps {
+  className?: string;
+}
+
+interface NodePositionMap {
+  [id: string]: THREE.Vector3;
+}
+
+const CURVE_SEGMENTS = 28;
+
+function computeOrbitWorldPosition(
+  orbit: OrbitRingConfig,
+  angle: number,
+  floatY: number,
+  out: THREE.Vector3,
+  eulerScratch: THREE.Euler
+): THREE.Vector3 {
+  out.set(Math.cos(angle) * orbit.radius, floatY, Math.sin(angle) * orbit.radius);
+  eulerScratch.set(orbit.tilt[0], orbit.tilt[1], orbit.tilt[2]);
+  out.applyEuler(eulerScratch);
+  return out;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   1. REFINED 3D PRECISION RINGS SURROUNDING CENTRAL BREXAL CORE
+   ═══════════════════════════════════════════════════════════════ */
+function BrexalCoreRings({
+  reducedMotion,
+  hasHoveredNode,
+}: {
+  reducedMotion: boolean;
+  hasHoveredNode: boolean;
+}) {
+  const outerPrecisionRingRef = useRef<THREE.Mesh>(null);
+  const innerAccentRingRef = useRef<THREE.Mesh>(null);
+
+  useFrame(({ clock }) => {
+    if (reducedMotion) return;
+    const t = clock.getElapsedTime();
+
+    if (outerPrecisionRingRef.current) {
+      outerPrecisionRingRef.current.rotation.z = t * 0.08;
+    }
+    if (innerAccentRingRef.current) {
+      innerAccentRingRef.current.rotation.z = -t * 0.05;
+    }
+  });
+
+  return (
+    <group rotation={[0.5, 0, 0]}>
+      {/* Concentric Blue & Lavender 3D Precision Rings framing the BREXAL medallion */}
+      <mesh ref={outerPrecisionRingRef} rotation={[Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+        <ringGeometry args={[1.05, 1.066, 96]} />
+        <meshBasicMaterial
+          color="#93C5FD"
+          transparent
+          opacity={hasHoveredNode ? 0.7 : 0.45}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      <mesh ref={innerAccentRingRef} rotation={[Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
+        <ringGeometry args={[1.22, 1.232, 96]} />
+        <meshBasicMaterial
+          color="#C4B5FD"
+          transparent
+          opacity={hasHoveredNode ? 0.5 : 0.32}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. THREE HARMONIOUS ORBITAL TRACK RINGS
+   ═══════════════════════════════════════════════════════════════ */
+function OrbitTrackRing({ orbit }: { orbit: OrbitRingConfig }) {
+  return (
+    <group rotation={orbit.tilt}>
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[orbit.radius, 0.0075, 12, 160]} />
+        <meshBasicMaterial
+          color={orbit.ringColor}
+          transparent
+          opacity={orbit.ringOpacity}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. ORBITING 3D NODE ANCHOR + CAMERA-PROJECTED SVG SYNC
+   ═══════════════════════════════════════════════════════════════ */
+function OrbitNodeAnchor({
+  node,
+  positionsRef,
+  onSyncOverlay,
+  hoveredId,
+  reducedMotion,
+}: {
+  node: TechNodeConfig;
+  positionsRef: React.MutableRefObject<NodePositionMap>;
+  onSyncOverlay: (
+    id: string,
+    sx: number,
+    sy: number,
+    scale: number,
+    opacity: number,
+    zIdx: number
+  ) => void;
+  hoveredId: string | null;
+  reducedMotion: boolean;
+}) {
+  const anchorDotRef = useRef<THREE.Mesh>(null);
+  const scratchRef = useRef({
+    euler: new THREE.Euler(),
+    pos: new THREE.Vector3(),
+    projected: new THREE.Vector3(),
+  });
+
+  const isHovered = hoveredId === node.id;
+  const orbit = ORBIT_RINGS[node.orbitIndex];
+
+  useEffect(() => {
+    const { euler, pos } = scratchRef.current;
+    computeOrbitWorldPosition(
+      orbit,
+      node.angleOffset,
+      Math.sin(node.floatPhase) * 0.05,
+      pos,
+      euler
+    );
+    positionsRef.current[node.id] = pos.clone();
+  }, [node.angleOffset, node.floatPhase, node.id, orbit, positionsRef]);
+
+  useFrame(({ clock, camera, size }) => {
+    const t = reducedMotion ? 0 : clock.getElapsedTime();
+    const angle = node.angleOffset + t * orbit.speed;
+    const floatY = Math.sin(t * 0.85 + node.floatPhase) * 0.055;
+    const { euler, pos, projected } = scratchRef.current;
+
+    computeOrbitWorldPosition(orbit, angle, floatY, pos, euler);
+
+    if (!positionsRef.current[node.id]) {
+      positionsRef.current[node.id] = pos.clone();
+    } else {
+      positionsRef.current[node.id].copy(pos);
+    }
+
+    if (anchorDotRef.current) {
+      anchorDotRef.current.position.copy(pos);
+    }
+
+    if (size.width > 0 && size.height > 0) {
+      projected.copy(pos).project(camera);
+      const sx = (projected.x * 0.5 + 0.5) * size.width;
+      const sy = (-projected.y * 0.5 + 0.5) * size.height;
+
+      const normalizedDepth = THREE.MathUtils.clamp((pos.z + 4.2) / 8.4, 0, 1);
+      const depthScale = isHovered ? 1.0 : 0.85 + normalizedDepth * 0.18;
+      const depthOpacity = isHovered ? 1 : 0.68 + normalizedDepth * 0.32;
+      const zIdx = isHovered ? 120 : Math.round(15 + normalizedDepth * 40);
+
+      onSyncOverlay(node.id, sx, sy, depthScale, depthOpacity, zIdx);
+    }
+  });
+
+  return (
+    <mesh ref={anchorDotRef} visible={Boolean(node.hasCoreLink) || isHovered}>
+      <sphereGeometry args={[0.028, 10, 10]} />
+      <meshBasicMaterial
+        color={isHovered ? "#2563EB" : "#94A3B8"}
+        transparent
+        opacity={isHovered ? 0.65 : 0.35}
+      />
+    </mesh>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. CENTRAL CORE SCREEN-SPACE PROJECTION SYNC
+   ═══════════════════════════════════════════════════════════════ */
+function CoreOverlayProjector({
+  coreDomRef,
+}: {
+  coreDomRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const scratchRef = useRef(new THREE.Vector3());
+
+  useFrame(({ camera, size }) => {
+    const el = coreDomRef.current;
+    if (!el || size.width === 0 || size.height === 0) return;
+    const projected = scratchRef.current;
+    projected.set(0, 0, 0).project(camera);
+    const dx = projected.x * 0.5 * size.width;
+    const dy = -projected.y * 0.5 * size.height;
+    el.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) translate(-50%, -50%)`;
+  });
+
+  return null;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. ENGINEERED CONNECTION SYSTEM (SELECTED NODES -> BREXAL CORE)
+   ═══════════════════════════════════════════════════════════════ */
+function CoreConnectionSystem({
+  positionsRef,
+  hoveredId,
+  reducedMotion,
+}: {
+  positionsRef: React.MutableRefObject<NodePositionMap>;
+  hoveredId: string | null;
+  reducedMotion: boolean;
+}) {
+  const signalMeshRef = useRef<THREE.InstancedMesh>(null);
+  const linesGroupRef = useRef<THREE.Group>(null);
+
+  const scratchRef = useRef<{
+    dummy: THREE.Object3D;
+    control: THREE.Vector3;
+    pointOnCurve: THREE.Vector3;
+    coreAnchor: THREE.Vector3;
+    coreLines: Array<{
+      nodeId: string;
+      baseColor: string;
+      positions: Float32Array;
+      geometry: THREE.BufferGeometry;
+      material: THREE.LineBasicMaterial;
+      line: THREE.Line;
+    }>;
+    hoverLine: {
+      positions: Float32Array;
+      geometry: THREE.BufferGeometry;
+      material: THREE.LineBasicMaterial;
+      line: THREE.Line;
+    } | null;
+  }>({
+    dummy: new THREE.Object3D(),
+    control: new THREE.Vector3(),
+    pointOnCurve: new THREE.Vector3(),
+    coreAnchor: new THREE.Vector3(0, 0, 0),
+    coreLines: [],
+    hoverLine: null,
+  });
+
+  useEffect(() => {
+    const group = linesGroupRef.current;
+    const scratch = scratchRef.current;
+    if (!group) return;
+
+    const coreLines = CORE_LINK_NODE_IDS.map((nodeId, idx) => {
+      const node = TECH_NODES.find((n) => n.id === nodeId);
+      const baseColor = node?.linkColor || (idx % 2 === 0 ? "#CBD5E1" : "#BFDBFE");
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array((CURVE_SEGMENTS + 1) * 3);
+      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      const material = new THREE.LineBasicMaterial({
+        color: baseColor,
+        transparent: true,
+        opacity: 0.42,
+      });
+      const line = new THREE.Line(geometry, material);
+      group.add(line);
+      return { nodeId, baseColor, positions, geometry, material, line };
+    });
+
+    const hoverGeom = new THREE.BufferGeometry();
+    const hoverPos = new Float32Array((CURVE_SEGMENTS + 1) * 3);
+    hoverGeom.setAttribute("position", new THREE.BufferAttribute(hoverPos, 3));
+    const hoverMat = new THREE.LineBasicMaterial({
+      color: "#2563EB",
+      transparent: true,
+      opacity: 0.65,
+    });
+    const hoverLineObj = new THREE.Line(hoverGeom, hoverMat);
+    hoverLineObj.visible = false;
+    group.add(hoverLineObj);
+
+    scratch.coreLines = coreLines;
+    scratch.hoverLine = {
+      positions: hoverPos,
+      geometry: hoverGeom,
+      material: hoverMat,
+      line: hoverLineObj,
+    };
+
+    const signalMesh = signalMeshRef.current;
+    if (signalMesh) {
+      const c = new THREE.Color();
+      SIGNAL_LINK_NODE_IDS.forEach((_, idx) => {
+        c.set(idx % 2 === 0 ? "#2563EB" : "#7C3AED");
+        signalMesh.setColorAt(idx, c);
+      });
+      if (signalMesh.instanceColor) {
+        signalMesh.instanceColor.needsUpdate = true;
+      }
+    }
+
+    return () => {
+      coreLines.forEach((item) => {
+        group.remove(item.line);
+        item.geometry.dispose();
+        item.material.dispose();
+      });
+      group.remove(hoverLineObj);
+      hoverGeom.dispose();
+      hoverMat.dispose();
+      scratch.coreLines = [];
+      scratch.hoverLine = null;
+    };
+  }, []);
+
+  useFrame(({ clock }) => {
+    const t = reducedMotion ? 0 : clock.getElapsedTime();
+    const posMap = positionsRef.current;
+    const { dummy, control, pointOnCurve, coreAnchor, coreLines, hoverLine } =
+      scratchRef.current;
+
+    let signalIndex = 0;
+
+    for (let i = 0; i < coreLines.length; i++) {
+      const conn = coreLines[i];
+      const nodePos = posMap[conn.nodeId];
+      if (!nodePos) continue;
+
+      const isActive = hoveredId === conn.nodeId;
+      conn.material.color.set(isActive ? "#2563EB" : conn.baseColor);
+      conn.material.opacity = isActive ? 0.72 : 0.36;
+
+      control.copy(nodePos).multiplyScalar(0.5);
+      control.y += 0.55;
+
+      for (let s = 0; s <= CURVE_SEGMENTS; s++) {
+        const u = s / CURVE_SEGMENTS;
+        const inv = 1 - u;
+        pointOnCurve
+          .set(0, 0, 0)
+          .addScaledVector(nodePos, inv * inv)
+          .addScaledVector(control, 2 * inv * u)
+          .addScaledVector(coreAnchor, u * u);
+        conn.positions[s * 3] = pointOnCurve.x;
+        conn.positions[s * 3 + 1] = pointOnCurve.y;
+        conn.positions[s * 3 + 2] = pointOnCurve.z;
+      }
+      conn.geometry.attributes.position.needsUpdate = true;
+
+      if (signalMeshRef.current && SIGNAL_LINK_NODE_IDS.includes(conn.nodeId)) {
+        const u = reducedMotion ? 0.45 : (t * 0.22 + signalIndex * 0.27) % 1;
+        const inv = 1 - u;
+        pointOnCurve
+          .set(0, 0, 0)
+          .addScaledVector(nodePos, inv * inv)
+          .addScaledVector(control, 2 * inv * u)
+          .addScaledVector(coreAnchor, u * u);
+        dummy.position.copy(pointOnCurve);
+        const fade = Math.sin(u * Math.PI);
+        dummy.scale.setScalar(0.75 + fade * 0.45);
+        dummy.updateMatrix();
+        signalMeshRef.current.setMatrixAt(signalIndex, dummy.matrix);
+        signalIndex++;
+      }
+    }
+
+    if (signalMeshRef.current) {
+      signalMeshRef.current.instanceMatrix.needsUpdate = true;
+    }
+
+    if (hoverLine) {
+      const hoveredHasStaticLine = hoveredId
+        ? CORE_LINK_NODE_IDS.includes(hoveredId)
+        : false;
+      if (hoveredId && !hoveredHasStaticLine && posMap[hoveredId]) {
+        const target = posMap[hoveredId];
+        control.copy(target).multiplyScalar(0.5);
+        control.y += 0.52;
+
+        for (let s = 0; s <= CURVE_SEGMENTS; s++) {
+          const u = s / CURVE_SEGMENTS;
+          const inv = 1 - u;
+          pointOnCurve
+            .set(0, 0, 0)
+            .addScaledVector(target, inv * inv)
+            .addScaledVector(control, 2 * inv * u)
+            .addScaledVector(coreAnchor, u * u);
+          hoverLine.positions[s * 3] = pointOnCurve.x;
+          hoverLine.positions[s * 3 + 1] = pointOnCurve.y;
+          hoverLine.positions[s * 3 + 2] = pointOnCurve.z;
+        }
+        hoverLine.geometry.attributes.position.needsUpdate = true;
+        hoverLine.line.visible = true;
+      } else {
+        hoverLine.line.visible = false;
+      }
+    }
+  });
+
+  return (
+    <group>
+      <group ref={linesGroupRef} />
+      <instancedMesh
+        ref={signalMeshRef}
+        args={[undefined, undefined, SIGNAL_LINK_NODE_IDS.length]}
+      >
+        <sphereGeometry args={[0.032, 10, 10]} />
+        <meshBasicMaterial toneMapped={false} transparent opacity={0.85} />
+      </instancedMesh>
+    </group>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. SCENE ENTRANCE GROUP + COMPOSED ARCHITECTURAL CAMERA
+   ═══════════════════════════════════════════════════════════════ */
+function SceneEntranceWrapper({
+  reducedMotion,
+  children,
+}: {
+  reducedMotion: boolean;
+  children: React.ReactNode;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const startTimeRef = useRef<number | null>(null);
+
+  useFrame(({ clock }) => {
+    const group = groupRef.current;
+    if (!group) return;
+
+    if (reducedMotion) {
+      group.scale.setScalar(1);
+      return;
+    }
+
+    if (startTimeRef.current === null) {
+      startTimeRef.current = clock.getElapsedTime();
+    }
+    const elapsed = clock.getElapsedTime() - startTimeRef.current;
+    const progress = THREE.MathUtils.clamp(elapsed / 0.95, 0, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    group.scale.setScalar(0.88 + eased * 0.12);
+  });
+
+  return <group ref={groupRef}>{children}</group>;
+}
+
+function CameraRig({
+  reducedMotion,
+}: {
+  reducedMotion: boolean;
+}) {
+  const { camera, pointer, size } = useThree();
+  const initializedRef = useRef(false);
+  const targetVecRef = useRef(new THREE.Vector3());
+
+  useFrame(() => {
+    const aspect = size.width > 0 && size.height > 0 ? size.width / size.height : 1.4;
+    const tanHalfFov = Math.tan(THREE.MathUtils.degToRad(40 / 2));
+    const neededZForWidth = 4.65 / (tanHalfFov * Math.min(aspect, 1.45));
+    const baseZ = Math.max(9.8, neededZForWidth);
+    const baseY = baseZ * 0.27;
+
+    if (!initializedRef.current || reducedMotion) {
+      camera.position.set(0, baseY, baseZ);
+      camera.lookAt(0, -0.04, 0);
+      initializedRef.current = true;
+      return;
+    }
+
+    const targetX = pointer.x * 0.2;
+    const targetY = baseY + pointer.y * 0.14;
+
+    targetVecRef.current.set(targetX, targetY, baseZ);
+    camera.position.lerp(targetVecRef.current, 0.045);
+    camera.position.setZ(baseZ);
+    camera.lookAt(0, -0.04, 0);
+  });
+
+  return null;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. WEBGL FALLBACK BOUNDARY
+   ═══════════════════════════════════════════════════════════════ */
+class WebGLErrorBoundary extends Component<
+  { children: React.ReactNode; fallback: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; fallback: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
+function StaticEcosystemFallback() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-transparent">
+      <div className="w-28 h-28 rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06)] flex flex-col items-center justify-center mb-8 font-['Sora',sans-serif]">
+        <span className="text-sm font-semibold tracking-[0.26em] text-[#0A2540] pl-[0.26em]">
+          BREXAL
+        </span>
+        <span className="w-6 h-[1.5px] my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
+        <span className="text-[7px] font-medium tracking-[0.18em] uppercase text-[#64748B] text-center">
+          INTELLIGENT OBSERVABILITY
+        </span>
+      </div>
+      <div className="flex flex-wrap items-center justify-center gap-5 max-w-md">
+        {TECH_NODES.map((node) => (
+          <img
+            key={node.id}
+            src={node.logo}
+            alt={node.name}
+            title={node.name}
+            loading="lazy"
+            className="w-7 h-7 object-contain"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. MAIN EXPORTED COMPONENT (TRANSPARENT, BORDERLESS, STAGGERED POP-UP)
+   ═══════════════════════════════════════════════════════════════ */
+export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
+  const prefersReducedMotion = useReducedMotion() ?? false;
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [viewportWidth, setViewportWidth] = useState<number>(1280);
+  const positionsRef = useRef<NodePositionMap>({});
+  const coreDomRef = useRef<HTMLDivElement>(null);
+  const domNodeMapRef = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  useEffect(() => {
+    const updateWidth = () => setViewportWidth(window.innerWidth);
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
+
+  const setNodeDomRef = useCallback((id: string) => {
+    return (el: HTMLDivElement | null) => {
+      if (el) {
+        domNodeMapRef.current.set(id, el);
+      } else {
+        domNodeMapRef.current.delete(id);
+      }
+    };
+  }, []);
+
+  const syncNodeOverlay = useCallback(
+    (
+      id: string,
+      sx: number,
+      sy: number,
+      scale: number,
+      opacity: number,
+      zIdx: number
+    ) => {
+      const el = domNodeMapRef.current.get(id);
+      if (!el) return;
+      el.style.transform = `translate3d(${sx.toFixed(1)}px, ${sy.toFixed(1)}px, 0) translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+      el.style.opacity = `${opacity.toFixed(3)}`;
+      el.style.zIndex = `${zIdx}`;
+    },
+    []
+  );
+
+  const isMobile = viewportWidth > 0 && viewportWidth < 640;
+
+  return (
+    <motion.div
+      initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.94, y: 16 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+      className={`relative w-full h-[400px] sm:h-[460px] lg:h-[520px] bg-transparent overflow-visible ${className}`}
+    >
+      <WebGLErrorBoundary fallback={<StaticEcosystemFallback />}>
+        <Canvas
+          dpr={[1, 2]}
+          camera={{ position: [0, 2.65, 9.8], fov: 40, near: 0.1, far: 100 }}
+          gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+          style={{ background: "transparent" }}
+          className="w-full h-full"
+        >
+          <ambientLight intensity={1.35} color="#ffffff" />
+          <directionalLight position={[4, 8, 6]} intensity={0.85} color="#ffffff" />
+
+          <CameraRig reducedMotion={prefersReducedMotion} />
+          <CoreOverlayProjector coreDomRef={coreDomRef} />
+
+          <SceneEntranceWrapper reducedMotion={prefersReducedMotion}>
+            <BrexalCoreRings
+              reducedMotion={prefersReducedMotion}
+              hasHoveredNode={hoveredId !== null}
+            />
+
+            {ORBIT_RINGS.map((orbit) => (
+              <OrbitTrackRing key={orbit.index} orbit={orbit} />
+            ))}
+
+            <CoreConnectionSystem
+              positionsRef={positionsRef}
+              hoveredId={hoveredId}
+              reducedMotion={prefersReducedMotion}
+            />
+
+            {TECH_NODES.map((node) => (
+              <OrbitNodeAnchor
+                key={node.id}
+                node={node}
+                positionsRef={positionsRef}
+                onSyncOverlay={syncNodeOverlay}
+                hoveredId={hoveredId}
+                reducedMotion={prefersReducedMotion}
+              />
+            ))}
+          </SceneEntranceWrapper>
+        </Canvas>
+      </WebGLErrorBoundary>
+
+      {/* Camera-Projected Editorial SVG Layer */}
+      <div className="absolute inset-0 pointer-events-none overflow-visible">
+        {/* Central Architectural BREXAL Core Medallion */}
+        <div
+          ref={coreDomRef}
+          className="absolute top-1/2 left-1/2 select-none"
+          style={{
+            zIndex: 65,
+            transform: "translate3d(0px, 0px, 0) translate(-50%, -50%)",
+          }}
+        >
+          <motion.div
+            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.65, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="relative flex flex-col items-center justify-center w-[98px] h-[98px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06),0_2px_8px_rgba(37,99,235,0.05)]"
+          >
+            <div className="absolute inset-[5px] rounded-full border border-slate-100 pointer-events-none" />
+            <span className="font-['Sora',sans-serif] text-[11.5px] sm:text-[13.5px] font-semibold tracking-[0.25em] text-[#0A2540] pl-[0.25em] leading-none">
+              BREXAL
+            </span>
+            <span className="w-5 h-[1.5px] my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
+            <span className="font-['Sora',sans-serif] text-[6px] sm:text-[6.5px] font-medium tracking-[0.16em] leading-[1.3] uppercase text-[#64748B] text-center max-w-[78px] sm:max-w-[88px]">
+              INTELLIGENT OBSERVABILITY
+            </span>
+          </motion.div>
+        </div>
+
+        {/* 17 Unboxed Official SVG Technology Marks with Staggered Pop-up */}
+        {TECH_NODES.map((node, index) => {
+          const isHovered = hoveredId === node.id;
+          const layerBaseDelay =
+            node.orbitIndex === 0 ? 0.34 : node.orbitIndex === 1 ? 0.52 : 0.7;
+          const popDelay = layerBaseDelay + (index % 8) * 0.045;
+
+          return (
+            <div
+              key={node.id}
+              ref={setNodeDomRef(node.id)}
+              onMouseEnter={() => setHoveredId(node.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              className="absolute top-0 left-0 pointer-events-auto select-none"
+              style={{ zIndex: 20, opacity: 0 }}
+            >
+              <motion.div
+                initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.52,
+                  delay: popDelay,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="relative flex items-center justify-center"
+              >
+                {/* Editorial Minimal Tooltip */}
+                <div
+                  className={`pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-white text-[#0A2540] border border-slate-200/90 shadow-[0_6px_16px_rgba(15,23,42,0.08)] transition-all duration-200 ${
+                    isHovered
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-1"
+                  }`}
+                >
+                  <span className="font-['Sora',sans-serif] text-[11px] font-medium tracking-tight leading-none">
+                    {node.name}
+                  </span>
+                </div>
+
+                {/* Unboxed Authentic SVG Mark */}
+                <div
+                  tabIndex={0}
+                  aria-label={`${node.name} — ${node.category}`}
+                  onFocus={() => setHoveredId(node.id)}
+                  onBlur={() => setHoveredId(null)}
+                  className={`cursor-pointer flex items-center justify-center transition-transform duration-300 ease-out focus:outline-none ${
+                    isMobile ? "w-6 h-6" : "w-7 h-7 sm:w-8 sm:h-8"
+                  } ${isHovered ? "scale-[1.24]" : "scale-100"}`}
+                  style={{
+                    filter: isHovered
+                      ? "drop-shadow(0 6px 14px rgba(37, 99, 235, 0.22))"
+                      : "drop-shadow(0 3px 8px rgba(15, 23, 42, 0.08))",
+                  }}
+                >
+                  <img
+                    src={node.logo}
+                    alt={node.name}
+                    loading="lazy"
+                    draggable={false}
+                    className="w-full h-full object-contain pointer-events-none"
+                  />
+                </div>
+              </motion.div>
+            </div>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+}
+
+export default HeroEcosystem3D;

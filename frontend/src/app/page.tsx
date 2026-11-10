@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ChevronRight,
@@ -39,6 +41,26 @@ import { BrexalIntegrationsSection } from "@/components/landing/BrexalIntegratio
 import { BrexalComparisonSection } from "@/components/landing/BrexalComparisonSection";
 // BrexalTrustSecuritySection removed
 import { BrexalFaqSection } from "@/components/landing/BrexalFaqSection";
+
+const HeroEcosystem3D = dynamic(
+  () => import("@/components/landing/HeroEcosystem3D"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[400px] sm:h-[460px] lg:h-[520px] bg-transparent flex items-center justify-center">
+        <div className="w-[98px] h-[98px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06)] flex flex-col items-center justify-center">
+          <span className="font-['Sora',sans-serif] text-[11.5px] sm:text-[13.5px] font-semibold tracking-[0.25em] text-[#0A2540] pl-[0.25em] leading-none">
+            BREXAL
+          </span>
+          <span className="w-5 h-[1.5px] my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
+          <span className="font-['Sora',sans-serif] text-[6px] sm:text-[6.5px] font-medium tracking-[0.16em] uppercase text-[#64748B] text-center max-w-[82px]">
+            INTELLIGENT OBSERVABILITY
+          </span>
+        </div>
+      </div>
+    ),
+  }
+);
 
 /* ═══════════════════════════════════════════════════════════════
    1. STRIPE-STYLE NAVIGATION BAR
@@ -420,6 +442,9 @@ function StripeColorGridCanvas() {
    2. STRIPE HERO SECTION WITH ICONIC ANGLED GRADIENT CANVAS
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
+  const prefersReducedMotion = useReducedMotion() ?? false;
+  const easeCurve: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
   return (
     <section className="relative pt-24 pb-10 sm:pt-28 sm:pb-12 md:pt-32 md:pb-14 px-4 sm:px-10 overflow-hidden bg-white">
       
@@ -435,36 +460,64 @@ function StripeHeroSection() {
           <div className="lg:col-span-5 flex flex-col items-start text-left">
             
             {/* Top Pill Eyebrow */}
-            <Link 
-              href="#interactive-simulator" 
-              className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-3 sm:mb-4 hover:border-[#635BFF]/40 transition-colors"
+            <motion.div
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 12, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.55, delay: 0.05, ease: easeCurve }}
             >
-              <span className="flex h-2 w-2 rounded-full bg-[#635BFF] animate-pulse" />
-              <span className="text-[11px] sm:text-[12px] font-bold text-[#0A2540]">
-                Now in GA: Autonomous eBPF Telemetry Mesh 3.0
-              </span>
-              <ChevronRight size={13} className="text-[#635BFF] group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+              <Link 
+                href="#interactive-simulator" 
+                className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/90 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-3 sm:mb-4 hover:border-[#635BFF]/40 transition-colors"
+              >
+                <span className="flex h-2 w-2 rounded-full bg-[#635BFF] animate-pulse" />
+                <span className="text-[11px] sm:text-[12px] font-bold text-[#0A2540]">
+                  Now in GA: Autonomous eBPF Telemetry Mesh 3.0
+                </span>
+                <ChevronRight size={13} className="text-[#635BFF] group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </motion.div>
 
             {/* Refined Headline (Compact & Modern Sans) */}
-            <h1 className="font-sans text-[26px] sm:text-3xl md:text-[34px] lg:text-[38px] font-bold tracking-[-0.025em] text-[#0A2540] leading-[1.18] mb-2.5 sm:mb-3 text-left">
+            <motion.h1
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 16, scale: 0.985 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.65, delay: 0.14, ease: easeCurve }}
+              className="font-sans text-[26px] sm:text-3xl md:text-[34px] lg:text-[38px] font-bold tracking-[-0.025em] text-[#0A2540] leading-[1.18] mb-2.5 sm:mb-3 text-left"
+            >
               Autonomous telemetry <br className="hidden sm:inline" />
               infrastructure for <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] bg-clip-text text-transparent">
                 modern cloud systems.
               </span>
-            </h1>
+            </motion.h1>
 
             {/* Supporting Subhead */}
-            <p className="text-[14.5px] sm:text-[16px] text-[#425466] font-normal leading-relaxed mb-4 sm:mb-5 text-left">
+            <motion.p
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, delay: 0.24, ease: easeCurve }}
+              className="text-[14.5px] sm:text-[16px] text-[#425466] font-normal leading-relaxed mb-4 sm:mb-5 text-left"
+            >
               Millions of requests across Kubernetes, microservices, and databases are monitored in real time with BREXAL. Synthesize logs, kernel traces, and metrics into self-healing incident intelligence.
-            </p>
+            </motion.p>
 
             {/* Instant Signup Card */}
-            <HeroSignupCard />
+            <motion.div
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 14, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.65, delay: 0.34, ease: easeCurve }}
+              className="w-full"
+            >
+              <HeroSignupCard />
+            </motion.div>
 
             {/* Reassurance Micro-Metrics */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[11.5px] sm:text-[12px] font-semibold text-[#425466] pt-0.5">
+            <motion.div
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.44, ease: easeCurve }}
+              className="flex flex-wrap items-center gap-3 sm:gap-5 text-[11.5px] sm:text-[12px] font-semibold text-[#425466] pt-0.5"
+            >
               <span className="flex items-center gap-1.5">
                 <Check size={14} className="text-emerald-600 font-bold shrink-0" /> Free developer tier
               </span>
@@ -474,51 +527,13 @@ function StripeHeroSection() {
               <span className="flex items-center gap-1.5">
                 <Check size={14} className="text-emerald-600 font-bold shrink-0" /> SOC-2 Type II Certified
               </span>
-            </div>
+            </motion.div>
 
           </div>
 
-          {/* Right Column (7 cols): Layered Futuristic Visual Showcase (shot-3 + shot-1) */}
-          <div className="lg:col-span-7 relative w-full pt-2 lg:pt-0 pb-3 sm:pb-5 lg:pb-2">
-            
-            {/* Ambient Multi-Color Gradient Mesh Glow */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-[#635BFF]/30 via-[#00D4FF]/25 to-[#FF5894]/25 rounded-3xl blur-3xl opacity-75 -z-10" />
-            
-            {/* Main Background Window: shot-3.png (Console Dashboard Overview) */}
-            <BrowserFrame url="console.bhartinexus.io/dashboard" className="transition-transform duration-300 hover:scale-[1.01]">
-              <div className="relative">
-                <img
-                  src="/showcase/shot-3.png"
-                  alt="Bharti Nexus Telemetry Console Overview"
-                  className="w-full h-auto block select-none"
-                />
-                {/* Subtle Modern Futuristic Color Grading Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#635BFF]/5 via-transparent to-[#00D4FF]/5 pointer-events-none" />
-              </div>
-            </BrowserFrame>
-
-            {/* Overlapping Corner Card: shot-1.png (Live Telemetry Cockpit) */}
-            <div className="absolute -bottom-3 -left-2 sm:-bottom-5 sm:-left-5 w-[68%] sm:w-[54%] z-20 transition-transform duration-300 hover:-translate-y-1">
-              <div className="rounded-xl sm:rounded-2xl border-2 border-white/95 bg-white/95 backdrop-blur-md shadow-[0_20px_50px_-10px_rgba(10,37,64,0.28)] overflow-hidden ring-1 ring-slate-900/10">
-                <div className="px-2.5 sm:px-3 py-1.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[9.5px] sm:text-[10px] font-mono font-bold text-[#0A2540] uppercase tracking-wider">Live Mesh Ingress</span>
-                  </div>
-                  <span className="text-[8.5px] sm:text-[9.5px] font-mono font-extrabold text-[#635BFF]">0.84ms P99</span>
-                </div>
-                <div className="relative">
-                  <img
-                    src="/showcase/shot-1.png"
-                    alt="Live Telemetry Ingress Probe"
-                    className="w-full h-auto block select-none"
-                  />
-                  {/* Subtle Corner Vignette & Glow */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#635BFF]/10 via-transparent to-transparent pointer-events-none" />
-                </div>
-              </div>
-            </div>
-
+          {/* Right Column (7 cols): 3D Technology Ecosystem Visualization (Transparent, No Background Card) */}
+          <div className="lg:col-span-7 relative w-full pt-2 lg:pt-0">
+            <HeroEcosystem3D />
           </div>
 
         </div>
