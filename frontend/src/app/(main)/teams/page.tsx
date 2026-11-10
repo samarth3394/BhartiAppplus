@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Users, UserPlus, Shield, Activity, MoreHorizontal, CheckCircle2, Clock, Mail, Trash2 } from "lucide-react";
+import { getApiUrl } from "@/lib/api";
 
 const DEFAULT_MEMBERS = [
   {
@@ -156,8 +157,8 @@ export default function TeamsPage() {
   const fetchData = async () => {
     try {
       const [membersRes, activitiesRes] = await Promise.all([
-        fetch("http://localhost:5000/api/teams/members", { credentials: "include" }),
-        fetch("http://localhost:5000/api/teams/activity", { credentials: "include" })
+        fetch(getApiUrl("/api/teams/members"), { credentials: "include" }),
+        fetch(getApiUrl("/api/teams/activity"), { credentials: "include" })
       ]);
 
       let combinedMembers = [...DEFAULT_MEMBERS];
@@ -235,7 +236,7 @@ export default function TeamsPage() {
     setInviteEmail("");
 
     try {
-      await fetch("http://localhost:5000/api/teams/invite", {
+      await fetch(getApiUrl("/api/teams/invite"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -252,7 +253,7 @@ export default function TeamsPage() {
     if (!confirm("Are you sure you want to remove this member?")) return;
     setMembers(prev => prev.filter(m => m.id !== id));
     try {
-      await fetch(`http://localhost:5000/api/teams/members/${id}`, {
+      await fetch(getApiUrl(`/api/teams/members/${id}`), {
         method: "DELETE",
         credentials: "include",
       });

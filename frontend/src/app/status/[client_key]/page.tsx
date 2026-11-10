@@ -5,6 +5,7 @@ import { CheckCircle2, XCircle, AlertTriangle, Clock, Server, RefreshCw, ShieldC
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { getApiUrl } from "@/lib/api";
 
 export default function PublicStatusPage() {
   const params = useParams();
@@ -18,7 +19,7 @@ export default function PublicStatusPage() {
     const fetchStatus = async () => {
       if (!client_key) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/public/status/${client_key}`);
+        const res = await fetch(getApiUrl(`/api/public/status/${client_key}`));
         if (!res.ok) {
           setError(true);
           return;

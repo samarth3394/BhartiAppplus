@@ -32,10 +32,20 @@ from routes.notifications import router as notifications_router
 
 app = FastAPI(title="Nexvora", description="All-in-one intelligent app maintenance and monitoring platform.")
 
+import os
+
 # CORS
+allowed_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+for env_key in ("VERCEL_URL", "VERCEL_PROJECT_PRODUCTION_URL", "FRONTEND_URL"):
+    val = os.getenv(env_key)
+    if val:
+        origin = val if val.startswith("http") else f"https://{val}"
+        if origin not in allowed_origins:
+            allowed_origins.append(origin)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

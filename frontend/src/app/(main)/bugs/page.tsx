@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Bug, Search, Plus, Filter, AlertCircle, CheckCircle2, Clock, ShieldAlert, X } from "lucide-react";
+import { getApiUrl } from "@/lib/api";
 
 type BugItem = {
   id: string;
@@ -87,7 +88,7 @@ export default function BugsPage() {
 
   const fetchBugs = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/bugs", {
+      const res = await fetch(getApiUrl("/api/bugs"), {
         credentials: "include",
       });
       if (res.ok) {
@@ -125,7 +126,7 @@ export default function BugsPage() {
     setNewBug({ title: '', description: '', severity: 'medium' });
 
     try {
-      await fetch("http://localhost:5000/api/bugs", {
+      await fetch(getApiUrl("/api/bugs"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { CommandPalette } from "@/components/CommandPalette";
 import { Toaster } from "sonner";
+import { getApiUrl } from "@/lib/api";
 import { 
     LayoutDashboard, 
     Bug, 
@@ -66,29 +67,23 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const [notifications, setNotifications] = useState<any[]>([]);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30000); // poll every 30s
-    return () => clearInterval(interval);
-  }, []);
-
   const fetchData = async () => {
     try {
-      const wRes = await fetch("http://localhost:5000/api/workspaces", { credentials: "include" });
+      const wRes = await fetch(getApiUrl("/api/workspaces"), { credentials: "include" });
       if (wRes.ok) {
         const wData = await wRes.json();
         setWorkspaces(wData.workspaces || []);
         setCurrentWorkspaceId(wData.current_workspace_id);
       }
 
-      const aRes = await fetch("http://localhost:5000/api/apps", { credentials: "include" });
+      const aRes = await fetch(getApiUrl("/api/apps"), { credentials: "include" });
       if (aRes.ok) {
         const aData = await aRes.json();
         setApps(aData.apps || []);
         setCurrentAppId(aData.current_app_id);
       }
 
-      const nRes = await fetch("http://localhost:5000/api/notifications", { credentials: "include" });
+      const nRes = await fetch(getApiUrl("/api/notifications"), { credentials: "include" });
       if (nRes.ok) {
         const nData = await nRes.json();
         setNotifications(nData.notifications || []);
@@ -98,23 +93,29 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     }
   };
 
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 30000); // poll every 30s
+    return () => clearInterval(interval);
+  }, []);
+
   const markNotificationAsRead = async (id: string) => {
     try {
-      await fetch(`http://localhost:5000/api/notifications/${id}/read`, { method: "POST", credentials: "include" });
+      await fetch(getApiUrl(`/api/notifications/${id}/read`), { method: "POST", credentials: "include" });
       setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
     } catch (err) { console.error(err); }
   };
 
   const markAllNotificationsAsRead = async () => {
     try {
-      await fetch(`http://localhost:5000/api/notifications/read-all`, { method: "POST", credentials: "include" });
+      await fetch(getApiUrl("/api/notifications/read-all"), { method: "POST", credentials: "include" });
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
     } catch (err) { console.error(err); }
   };
 
   const switchWorkspace = async (workspaceId: string) => {
     try {
-      await fetch(`http://localhost:5000/api/workspaces/switch/${workspaceId}`, {
+      await fetch(getApiUrl(`/api/workspaces/switch/${workspaceId}`), {
         method: "POST",
         credentials: "include"
       });
@@ -126,7 +127,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   const switchApp = async (appId: string) => {
     try {
-      await fetch(`http://localhost:5000/api/apps/switch/${appId}`, {
+      await fetch(getApiUrl(`/api/apps/switch/${appId}`), {
         method: "POST",
         credentials: "include"
       });
@@ -140,7 +141,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   const handleSignOut = async () => {
     try {
-      await fetch("http://localhost:5000/api/auth/logout", {
+      await fetch(getApiUrl("/api/auth/logout"), {
         method: "POST",
         credentials: "include"
       });
@@ -154,7 +155,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const createWorkspace = async () => {
     if (!newName.trim()) return;
     try {
-      const res = await fetch("http://localhost:5000/api/workspaces", {
+      const res = await fetch(getApiUrl("/api/workspaces"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -175,7 +176,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const createApp = async () => {
     if (!newName.trim()) return;
     try {
-      const res = await fetch("http://localhost:5000/api/apps", {
+      const res = await fetch(getApiUrl("/api/apps"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

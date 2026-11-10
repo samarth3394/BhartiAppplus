@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { User, Lock, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { getApiUrl } from "@/lib/api";
 
 function AcceptInviteContent() {
   const router = useRouter();
@@ -26,7 +27,7 @@ function AcceptInviteContent() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/auth/accept-invite", {
+      const res = await fetch(getApiUrl("/api/auth/accept-invite"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, full_name: fullName, password }),

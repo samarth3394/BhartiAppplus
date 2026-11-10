@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Map, Plus, Target, Rocket, Lightbulb, Clock, MoreHorizontal, CheckCircle2, Circle, X } from "lucide-react";
+import { getApiUrl } from "@/lib/api";
 
 type RoadmapFeature = {
   id: string;
@@ -112,7 +113,7 @@ export default function RoadmapPage() {
 
   const fetchFeatures = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/roadmap", { credentials: "include" });
+      const res = await fetch(getApiUrl("/api/roadmap"), { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
         if (data.features && data.features.length > 0) {
@@ -152,7 +153,7 @@ export default function RoadmapPage() {
     setNewFeature({ title: '', description: '', status: 'planned', priority: 'medium' });
 
     try {
-      await fetch("http://localhost:5000/api/roadmap", {
+      await fetch(getApiUrl("/api/roadmap"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -166,7 +167,7 @@ export default function RoadmapPage() {
   const updateStatus = async (id: string, status: string) => {
     setFeatures(prev => prev.map(f => f.id === id ? { ...f, status } : f));
     try {
-      await fetch(`http://localhost:5000/api/roadmap/${id}`, {
+      await fetch(getApiUrl(`/api/roadmap/${id}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

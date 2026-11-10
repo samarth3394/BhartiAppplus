@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Plus, MoreHorizontal, Layout, CheckCircle2, Circle, Clock, MessageSquare, AlertCircle, Filter, Settings, X, Tag } from "lucide-react";
+import { getApiUrl } from "@/lib/api";
 
 type Issue = {
   id: string;
@@ -167,7 +168,7 @@ export default function KanbanPage() {
       if (filters.assignee) query.append("assignee_id", filters.assignee);
       if (filters.label) query.append("label", filters.label);
 
-      const res = await fetch(`http://localhost:5000/api/kanban/issues?${query.toString()}`, {
+      const res = await fetch(getApiUrl(`/api/kanban/issues?${query.toString()}`), {
         credentials: "include",
       });
       if (res.ok) {
@@ -206,7 +207,7 @@ export default function KanbanPage() {
     );
 
     try {
-      await fetch(`http://localhost:5000/api/kanban/issues/${draggedIssueId}`, {
+      await fetch(getApiUrl(`/api/kanban/issues/${draggedIssueId}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -238,7 +239,7 @@ export default function KanbanPage() {
     setNewTask({ title: '', description: '', type: 'task', priority: 'medium', parent_id: '', labels: '' });
 
     try {
-      await fetch("http://localhost:5000/api/kanban/issues", {
+      await fetch(getApiUrl("/api/kanban/issues"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

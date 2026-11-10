@@ -12,7 +12,8 @@ class Config:
     if db_url and db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
         
-    SQLALCHEMY_DATABASE_URI = db_url or f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'nexvora.db')}"
+    sqlite_path = "/tmp/nexvora.db" if os.getenv("VERCEL") else os.path.join(BASE_DIR, "instance", "nexvora.db")
+    SQLALCHEMY_DATABASE_URI = db_url or f"sqlite:///{sqlite_path}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Supabase Storage

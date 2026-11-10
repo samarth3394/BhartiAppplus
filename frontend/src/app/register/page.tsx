@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/Logo";
+import { getApiUrl } from "@/lib/api";
 
 function RegisterContent() {
   const searchParams = useSearchParams();
@@ -23,7 +24,7 @@ function RegisterContent() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch(getApiUrl("/api/auth/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
