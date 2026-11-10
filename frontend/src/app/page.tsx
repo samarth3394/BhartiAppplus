@@ -37,7 +37,7 @@ import {
 import { Logo } from "@/components/Logo";
 import { BrexalIntegrationsSection } from "@/components/landing/BrexalIntegrationsSection";
 import { BrexalComparisonSection } from "@/components/landing/BrexalComparisonSection";
-import { BrexalTrustSecuritySection } from "@/components/landing/BrexalTrustSecuritySection";
+// BrexalTrustSecuritySection removed
 import { BrexalFaqSection } from "@/components/landing/BrexalFaqSection";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1539,7 +1539,7 @@ export default function LandingPage() {
         <BrexalIntegrationsSection />
         <StripeDeveloperSandboxSection />
         <BrexalComparisonSection />
-        <BrexalTrustSecuritySection />
+        {/* BrexalTrustSecuritySection removed */}
         <StripeGlobalScaleSection />
         <StripePricingSection />
         <BrexalFaqSection />
