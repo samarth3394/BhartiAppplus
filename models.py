@@ -802,6 +802,72 @@ class Notification(Base):
             'created_at': self.created_at.isoformat() if self.created_at else None,
         }
 
+# ─── OpenTelemetry (OTLP) Signals ─────────────────────────────────────────
+
+class OtelTraceSpan(Base):
+    __tablename__ = 'otel_trace_spans'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False, index=True)
+    trace_id = Column(String(64), nullable=False, index=True)
+    span_id = Column(String(32), nullable=False)
+    parent_span_id = Column(String(32), default='')
+    service_name = Column(String(255), default='unknown-service')
+    span_name = Column(String(255), nullable=False)
+    kind = Column(Integer, default=1)
+    status_code = Column(Integer, default=0)  # 0=UNSET, 1=OK, 2=ERROR
+    status_message = Column(Text, default='')
+    duration_ms = Column(Float, default=0.0)
+    attributes_json = Column(JSON, default=dict)
+    timestamp = Column(DateTime, default=utc_now, index=True)
+
+    app = relationship('App')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'trace_id': self.trace_id,
+            'span_id': self.span_id,
+            'parent_span_id': self.parent_span_id,
+            'service_name': self.service_name,
+            'span_name': self.span_name,
+            'kind': self.kind,
+            'status_code': self.status_code,
+            'status_message': self.status_message,
+            'duration_ms': self.duration_ms,
+            'attributes': self.attributes_json or {},
+            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+        }
+
+
+class OtelMetricPoint(Base):
+    __tablename__ = 'otel_metric_points'
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    app_id = Column(String(36), ForeignKey('apps.id'), nullable=False, index=True)
+    service_name = Column(String(255), default='unknown-service')
+    metric_name = Column(String(255), nullable=False, index=True)
+    unit = Column(String(50), default='')
+    value = Column(Float, default=0.0)
+    attributes_json = Column(JSON, default=dict)
+    timestamp = Column(DateTime, default=utc_now, index=True)
+
+    app = relationship('App')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'app_id': self.app_id,
+            'service_name': self.service_name,
+            'metric_name': self.metric_name,
+            'unit': self.unit,
+            'value': self.value,
+            'attributes': self.attributes_json or {},
+            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+        }
+
+
 # ─── Database Setup ───────────────────────────────────────────────────────
 
 def init_db(db_uri):

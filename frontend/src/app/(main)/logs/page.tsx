@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { Terminal, Search, AlertCircle, Clock, Globe, Laptop, ChevronRight, X, AlertTriangle, Info, CheckCircle2, Copy, Check } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Search, X, Copy, Check, Activity } from "lucide-react";
+import { getApiUrl } from "@/lib/api";
 
 type LogEntry = {
   id: string;
@@ -67,12 +68,61 @@ const DEFAULT_LOGS: LogEntry[] = [
   }
 ];
 
+type TraceSpan = {
+  id: string;
+  trace_id: string;
+  span_id: string;
+  service_name: string;
+  span_name: string;
+  status_code: number;
+  duration_ms: number;
+  timestamp: string;
+  attributes?: Record<string, unknown>;
+};
+
 export default function LogsPage() {
   const [logs, setLogs] = useState<LogEntry[]>(DEFAULT_LOGS);
+  const [spans, setSpans] = useState<TraceSpan[]>([]);
+  const [viewMode, setViewMode] = useState<"logs" | "traces">("logs");
   const [search, setSearch] = useState("");
   const [levelFilter, setLevelFilter] = useState<string>("all");
   const [selectedLog, setSelectedLog] = useState<LogEntry | null>(DEFAULT_LOGS[0]);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const fetchTelemetry = async () => {
+      try {
+        const [logsRes, tracesRes] = await Promise.all([
+          fetch(getApiUrl("/api/logs"), { credentials: "include" }),
+          fetch(getApiUrl("/api/traces"), { credentials: "include" }),
+        ]);
+        if (logsRes.ok) {
+          const d = await logsRes.json();
+          if (d.logs && d.logs.length > 0) {
+            const mapped: LogEntry[] = d.logs.map((l: { id: string; message: string; stack_trace?: string; url?: string; timestamp?: string; metadata?: Record<string, unknown> }) => ({
+              id: l.id,
+              level: l.message.toLowerCase().includes("warn") ? "warn" : l.message.toLowerCase().includes("info") ? "info" : "error",
+              message: l.message,
+              stack: l.stack_trace || JSON.stringify(l.metadata || {}, null, 2),
+              url: l.url || "/api/ingest",
+              ip: String(l.metadata?.service || "runtime"),
+              timestamp: l.timestamp ? new Date(l.timestamp).toLocaleString() : "recent",
+              status_code: l.message.toLowerCase().includes("info") ? 200 : 500,
+            }));
+            setLogs(mapped);
+            setSelectedLog(mapped[0]);
+          }
+        }
+        if (tracesRes.ok) {
+          const t = await tracesRes.json();
+          if (t.spans) setSpans(t.spans);
+        }
+      } catch {
+        // Keep default fallback when unauthenticated
+      }
+    };
+    fetchTelemetry();
+  }, []);
 
   const filteredLogs = logs.filter(l => {
     const matchesSearch = l.message.toLowerCase().includes(search.toLowerCase()) ||
@@ -135,26 +185,103 @@ export default function LogsPage() {
           />
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
           <div className="flex bg-[#FAFBFD] p-1 rounded-xl border border-slate-200/90 text-xs font-semibold shadow-2xs">
-            {["all", "error", "warn", "info"].map((lvl) => (
-              <button
-                key={lvl}
-                onClick={() => setLevelFilter(lvl)}
-                className={`px-3 py-1.5 rounded-lg capitalize transition-all cursor-pointer ${
-                  levelFilter === lvl 
-                    ? "bg-white text-[#0A2540] font-bold shadow-xs border border-slate-200/60" 
-                    : "text-[#425466] hover:text-[#0A2540]"
-                }`}
-              >
-                {lvl}
-              </button>
-            ))}
+            <button
+              onClick={() => setViewMode("logs")}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                viewMode === "logs"
+                  ? "bg-white text-[#0A2540] font-bold shadow-xs border border-slate-200/60"
+                  : "text-[#425466] hover:text-[#0A2540]"
+              }`}
+            >
+              Logs ({logs.length})
+            </button>
+            <button
+              onClick={() => setViewMode("traces")}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer inline-flex items-center gap-1.5 ${
+                viewMode === "traces"
+                  ? "bg-white text-[#2563EB] font-bold shadow-xs border border-slate-200/60"
+                  : "text-[#425466] hover:text-[#0A2540]"
+              }`}
+            >
+              <Activity size={12} />
+              OTLP Spans ({spans.length})
+            </button>
           </div>
+
+          {viewMode === "logs" && (
+            <div className="flex bg-[#FAFBFD] p-1 rounded-xl border border-slate-200/90 text-xs font-semibold shadow-2xs">
+              {["all", "error", "warn", "info"].map((lvl) => (
+                <button
+                  key={lvl}
+                  onClick={() => setLevelFilter(lvl)}
+                  className={`px-3 py-1.5 rounded-lg capitalize transition-all cursor-pointer ${
+                    levelFilter === lvl
+                      ? "bg-white text-[#0A2540] font-bold shadow-xs border border-slate-200/60"
+                      : "text-[#425466] hover:text-[#0A2540]"
+                  }`}
+                >
+                  {lvl}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Logs Split View */}
+      {/* Logs / OTLP Spans View */}
+      {viewMode === "traces" ? (
+        <div className="flex-1 bg-white border border-slate-200/80 rounded-2xl overflow-auto shadow-[0_4px_20px_rgba(10,37,64,0.03)]">
+          {spans.length === 0 ? (
+            <div className="p-10 text-center space-y-3">
+              <p className="text-sm font-bold text-[#0A2540]">No OTLP Trace Spans Ingested Yet</p>
+              <p className="text-xs text-[#425466] max-w-lg mx-auto">
+                Point any OpenTelemetry SDK or Collector OTLP/HTTP JSON exporter to{" "}
+                <code className="px-1.5 py-0.5 bg-slate-100 rounded font-mono">/v1/traces</code> or{" "}
+                <code className="px-1.5 py-0.5 bg-slate-100 rounded font-mono">/v1/metrics</code> with{" "}
+                <code className="px-1.5 py-0.5 bg-slate-100 rounded font-mono">X-Nexvora-Key</code> /{" "}
+                <code className="px-1.5 py-0.5 bg-slate-100 rounded font-mono">Authorization: Bearer &lt;client_key&gt;</code>.
+              </p>
+            </div>
+          ) : (
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#FAFBFD] border-b border-slate-200 text-[11px] font-mono uppercase text-slate-500">
+                <tr>
+                  <th className="py-3 px-4">Service</th>
+                  <th className="py-3 px-4">Span Operation</th>
+                  <th className="py-3 px-4">Trace ID</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Duration</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {spans.map((sp) => (
+                  <tr key={sp.id} className="hover:bg-slate-50/70">
+                    <td className="py-3 px-4 font-bold text-[#0A2540]">{sp.service_name}</td>
+                    <td className="py-3 px-4 font-mono text-[#0A2540]">{sp.span_name}</td>
+                    <td className="py-3 px-4 font-mono text-slate-500">{sp.trace_id.slice(0, 16)}...</td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                          sp.status_code === 2
+                            ? "bg-rose-50 text-rose-700 border border-rose-200"
+                            : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        }`}
+                      >
+                        {sp.status_code === 2 ? "ERROR" : "OK"}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right font-mono font-bold text-[#0A2540]">
+                      {sp.duration_ms.toFixed(2)} ms
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      ) : (
       <div className="flex flex-1 gap-5 overflow-hidden">
         {/* Log Stream List */}
         <div className={`flex flex-col border border-slate-200/80 bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.03)] transition-all duration-200 ${selectedLog ? 'w-full lg:w-1/2' : 'w-full'}`}>
@@ -260,6 +387,7 @@ export default function LogsPage() {
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }

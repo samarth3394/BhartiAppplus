@@ -27,6 +27,12 @@
       }
     },
     {
+      "source": "/v1/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
       "source": "/(.*)",
       "destination": {
         "service": "frontend"

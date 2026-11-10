@@ -14,6 +14,8 @@ templates = Jinja2Templates(directory="templates")
 
 class AISettingsRequest(BaseModel):
     hourly_revenue: Optional[float] = 0.0
+    sla_target_pct: Optional[float] = 99.9
+    currency: Optional[str] = "USD"
 
 # Removed HTML Route
 @router.get("/api/ai-dashboard/summary")
@@ -39,7 +41,14 @@ async def get_ai_dashboard_settings(request: Request, user: User = Depends(get_c
         raise HTTPException(status_code=404, detail="App not found")
 
     settings = app.settings or {}
-    return {'hourly_revenue': settings.get('hourly_revenue', 0)}
+    from services.revenue_service import calculate_app_revenue_observability
+    revenue_observability = calculate_app_revenue_observability(db, app)
+    return {
+        'hourly_revenue': settings.get('hourly_revenue', 0),
+        'sla_target_pct': settings.get('sla_target_pct', 99.9),
+        'currency': settings.get('currency', 'USD'),
+        'revenue_impact': revenue_observability,
+    }
 
 @router.post("/api/ai-dashboard/settings")
 async def update_ai_dashboard_settings(data: AISettingsRequest, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -51,16 +60,27 @@ async def update_ai_dashboard_settings(data: AISettingsRequest, request: Request
     if not app:
         raise HTTPException(status_code=404, detail="App not found")
 
-    settings = app.settings or {}
+    settings = dict(app.settings or {})
     revenue = float(data.hourly_revenue or 0.0)
+    sla_target = min(99.999, max(90.0, float(data.sla_target_pct or 99.9)))
+    currency = (data.currency or "USD").upper()
         
     settings['hourly_revenue'] = revenue
+    settings['sla_target_pct'] = sla_target
+    settings['currency'] = currency
     app.settings = settings
     from sqlalchemy.orm.attributes import flag_modified
     flag_modified(app, 'settings')
     
     db.commit()
-    return {'message': 'Settings saved successfully', 'hourly_revenue': revenue}
+    from services.revenue_service import calculate_app_revenue_observability
+    return {
+        'message': 'Settings saved successfully',
+        'hourly_revenue': revenue,
+        'sla_target_pct': sla_target,
+        'currency': currency,
+        'revenue_impact': calculate_app_revenue_observability(db, app),
+    }
 
 @router.post("/api/predictions/run")
 async def run_prediction_api(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):

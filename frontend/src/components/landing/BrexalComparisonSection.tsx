@@ -83,8 +83,8 @@ const COMPARISON_ROWS: ComparisonRow[] = [
     context: "OTLP gRPC/HTTP ingest and standard pipelines",
     brexal: {
       summary:
-        "Not currently implemented (ingestion uses REST JSON endpoints with X-Nexvora-Key; OTLP 4317/4318 receiver not implemented).",
-      status: "not_implemented",
+        "Supports standard OTLP/HTTP JSON ingestion (/v1/metrics, /v1/traces, /v1/logs) alongside REST JSON APIs; OTLP gRPC (4317) not implemented.",
+      status: "partial",
     },
     datadog: {
       summary:
@@ -218,7 +218,7 @@ const COMPARISON_ROWS: ComparisonRow[] = [
     context: "Span collection and sampling controls",
     brexal: {
       summary:
-        "Captures application error stack traces and endpoint latency checks; distributed multi-service span tracing and tail sampling not implemented.",
+        "Ingests OTLP/HTTP trace spans (/v1/traces) and application error stack traces with automated self-healing fix diff drafts; tail-based sampling not implemented.",
       status: "partial",
     },
     datadog: {

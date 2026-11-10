@@ -122,6 +122,15 @@ async def dashboard_stats(request: Request, user: User = Depends(get_current_use
             if am:
                 current_user_role = am.role.value
 
+    from services.revenue_service import calculate_app_revenue_observability
+    from models import OtelTraceSpan, OtelMetricPoint
+    revenue_impact = calculate_app_revenue_observability(db, app, now=now)
+    otlp_spans_count = db.query(OtelTraceSpan).filter(OtelTraceSpan.app_id == app.id).count()
+    otlp_error_spans_count = db.query(OtelTraceSpan).filter(
+        OtelTraceSpan.app_id == app.id, OtelTraceSpan.status_code == 2
+    ).count()
+    otlp_metrics_count = db.query(OtelMetricPoint).filter(OtelMetricPoint.app_id == app.id).count()
+
     return {
         'has_app': True,
         'current_user_role': current_user_role,
@@ -129,6 +138,7 @@ async def dashboard_stats(request: Request, user: User = Depends(get_current_use
             'id': app.id,
             'name': app.name,
             'url': app.url,
+            'client_key': app.client_key,
         },
         'health_score': health,
         'bugs': {
@@ -154,7 +164,13 @@ async def dashboard_stats(request: Request, user: User = Depends(get_current_use
         },
         'incidents': {
             'active': active_incidents,
-        }
+        },
+        'revenue_impact': revenue_impact,
+        'otlp': {
+            'spans': otlp_spans_count,
+            'error_spans': otlp_error_spans_count,
+            'metrics': otlp_metrics_count,
+        },
     }
 
 @router.get("/api/dashboard/activity")
