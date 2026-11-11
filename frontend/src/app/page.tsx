@@ -46,13 +46,13 @@ const HeroEcosystem3D = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[350px] sm:h-[460px] lg:h-[520px] bg-transparent flex items-center justify-center">
-        <div className="w-[76px] h-[76px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06)] flex flex-col items-center justify-center">
-          <span className="font-['Sora',sans-serif] text-[9.5px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#0A2540] pl-[0.22em] sm:pl-[0.25em] leading-none">
+      <div className="w-full h-[255px] sm:h-[460px] lg:h-[520px] bg-transparent flex items-center justify-center">
+        <div className="w-[72px] h-[72px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06)] flex flex-col items-center justify-center">
+          <span className="font-['Sora',sans-serif] text-[9px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#0A2540] pl-[0.22em] sm:pl-[0.25em] leading-none">
             BREXAL
           </span>
           <span className="w-4 sm:w-5 h-[1.5px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
-          <span className="font-['Sora',sans-serif] text-[4.8px] sm:text-[6.5px] font-medium tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#64748B] text-center max-w-[60px] sm:max-w-[82px]">
+          <span className="font-['Sora',sans-serif] text-[4.5px] sm:text-[6.5px] font-medium tracking-[0.13em] sm:tracking-[0.16em] uppercase text-[#64748B] text-center max-w-[56px] sm:max-w-[82px]">
             INTELLIGENT OBSERVABILITY
           </span>
         </div>
@@ -442,7 +442,7 @@ function StripeColorGridCanvas() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative pt-24 pb-10 sm:pt-28 sm:pb-12 md:pt-32 md:pb-14 px-4 sm:px-10 overflow-hidden bg-white">
+    <section className="relative pt-22 pb-4 sm:pt-28 sm:pb-12 md:pt-32 md:pb-14 px-4 sm:px-10 overflow-hidden bg-white">
       
       {/* ── THE SIGNATURE STRIPE COLOR GRID CANVAS ── */}
       <StripeColorGridCanvas />
@@ -450,7 +450,7 @@ function StripeHeroSection() {
       <div className="max-w-[1320px] mx-auto text-left relative z-10">
         
         {/* TWO-COLUMN STRIPE LAYOUT */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-8 lg:gap-12 items-center">
           
           {/* Left Column (5 cols): Editorial Copy & Quick Signup */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
@@ -513,7 +513,7 @@ function StripeHeroSection() {
           </div>
 
           {/* Right Column (7 cols): 3D Technology Ecosystem Visualization (Transparent, No Background Card) */}
-          <div className="lg:col-span-7 relative w-full pt-2 lg:pt-0">
+          <div className="lg:col-span-7 relative w-full pt-0">
             <HeroEcosystem3D />
           </div>
 

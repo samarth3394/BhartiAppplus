@@ -470,11 +470,11 @@ function CameraRig({
 
   useFrame(() => {
     const aspect = size.width > 0 && size.height > 0 ? size.width / size.height : 1.4;
-    const isPortraitOrNarrow = aspect < 1.1;
+    const isNarrow = size.width > 0 && size.width < 640;
     const tanHalfFov = Math.tan(THREE.MathUtils.degToRad(40 / 2));
-    const neededZForWidth = (isPortraitOrNarrow ? 4.35 : 4.65) / (tanHalfFov * Math.min(aspect, 1.45));
-    const baseZ = Math.max(9.8, neededZForWidth);
-    const baseY = baseZ * (isPortraitOrNarrow ? 0.34 : 0.27);
+    const neededZForWidth = (isNarrow ? 4.4 : 4.65) / (tanHalfFov * Math.min(aspect, 1.45));
+    const baseZ = Math.max(isNarrow ? 10.2 : 9.8, neededZForWidth);
+    const baseY = baseZ * (isNarrow ? 0.34 : 0.27);
 
     if (!initializedRef.current || reducedMotion) {
       camera.position.set(0, baseY, baseZ);
@@ -600,7 +600,7 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
       onClick={(e) => {
         if (e.target === e.currentTarget) setHoveredId(null);
       }}
-      className={`relative w-full h-[350px] sm:h-[460px] lg:h-[520px] bg-transparent overflow-visible ${className}`}
+      className={`relative w-full h-[255px] sm:h-[460px] lg:h-[520px] bg-transparent overflow-visible ${className}`}
     >
       <WebGLErrorBoundary fallback={<StaticEcosystemFallback />}>
         <Canvas
@@ -658,15 +658,15 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
           }}
         >
           <div
-            className="brexal-node-pop relative flex flex-col items-center justify-center w-[76px] h-[76px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06),0_2px_8px_rgba(37,99,235,0.05)]"
+            className="brexal-node-pop relative flex flex-col items-center justify-center w-[72px] h-[72px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06),0_2px_8px_rgba(37,99,235,0.05)]"
             style={{ animationDelay: "0.12s" }}
           >
             <div className="absolute inset-[3.5px] sm:inset-[5px] rounded-full border border-slate-100 pointer-events-none" />
-            <span className="font-['Sora',sans-serif] text-[9.5px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#0A2540] pl-[0.22em] sm:pl-[0.25em] leading-none">
+            <span className="font-['Sora',sans-serif] text-[9px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#0A2540] pl-[0.22em] sm:pl-[0.25em] leading-none">
               BREXAL
             </span>
             <span className="w-4 sm:w-5 h-[1.5px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
-            <span className="font-['Sora',sans-serif] text-[4.8px] sm:text-[6.5px] font-medium tracking-[0.14em] sm:tracking-[0.16em] leading-[1.25] sm:leading-[1.3] uppercase text-[#64748B] text-center max-w-[60px] sm:max-w-[88px]">
+            <span className="font-['Sora',sans-serif] text-[4.5px] sm:text-[6.5px] font-medium tracking-[0.13em] sm:tracking-[0.16em] leading-[1.25] sm:leading-[1.3] uppercase text-[#64748B] text-center max-w-[56px] sm:max-w-[88px]">
               INTELLIGENT OBSERVABILITY
             </span>
           </div>
