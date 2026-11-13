@@ -344,37 +344,78 @@ function StripeHeroSection() {
 
             {/* Editorial Display Headline (Sora, Proportioned to Viewport) */}
             <h1
-              className="brexal-pop-up font-display text-[26px] sm:text-[34px] md:text-[38px] lg:text-[42px] xl:text-[46px] font-semibold tracking-[-0.035em] text-[#101114] leading-[1.12] mb-3 text-left"
+              className="brexal-pop-up font-display text-[26px] sm:text-[34px] md:text-[38px] lg:text-[40px] xl:text-[44px] font-semibold tracking-[-0.035em] text-[#101114] leading-[1.1] mb-2.5 sm:mb-3 text-left"
               style={{ animationDelay: "0.14s" }}
             >
               Autonomous telemetry <br className="hidden sm:inline" />
               infrastructure for <br className="hidden sm:inline" />
-              <span className="text-[#425CF5]">modern cloud systems.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#425CF5] via-[#7657E8] to-[#425CF5]">
+                modern cloud systems.
+              </span>
             </h1>
 
             {/* Supporting Subhead */}
             <p
-              className="brexal-pop-up text-[14px] sm:text-[15px] text-[#5B5F6B] font-normal leading-relaxed mb-4 sm:mb-5 text-left max-w-[440px]"
+              className="brexal-pop-up text-[13.5px] sm:text-[14.5px] text-[#5B5F6B] font-normal leading-relaxed mb-3 sm:mb-4 text-left max-w-[460px]"
               style={{ animationDelay: "0.22s" }}
             >
               Millions of requests across Kubernetes, microservices, and databases are monitored in real time with BREXAL. Synthesize logs, kernel traces, and metrics into self-healing incident intelligence.
             </p>
 
+            {/* ── HERO MICRO-BENTO TELEMETRY HUD (ENGINEERING RIGOR) ── */}
+            <div
+              className="brexal-pop-up grid grid-cols-3 gap-2 sm:gap-2.5 w-full max-w-[460px] mb-3.5 sm:mb-4"
+              style={{ animationDelay: "0.28s" }}
+            >
+              <div className="p-2 sm:p-2.5 rounded-xl bg-[#F7F6F2] border border-[#E2E4E9] hover:border-[#425CF5]/40 transition-colors">
+                <div className="flex items-center gap-1 text-[9.5px] sm:text-[10px] font-mono text-[#5B5F6B] mb-0.5">
+                  <Cpu size={11} className="text-[#425CF5] shrink-0" />
+                  <span className="truncate">eBPF Core</span>
+                </div>
+                <div className="text-[17px] sm:text-[19px] font-bold font-display text-[#101114] leading-tight">
+                  0.0%
+                </div>
+                <div className="text-[9px] text-[#8B8F9A] font-mono truncate">CPU overhead</div>
+              </div>
+
+              <div className="p-2 sm:p-2.5 rounded-xl bg-[#F7F6F2] border border-[#E2E4E9] hover:border-[#425CF5]/40 transition-colors">
+                <div className="flex items-center gap-1 text-[9.5px] sm:text-[10px] font-mono text-[#5B5F6B] mb-0.5">
+                  <Zap size={11} className="text-[#C8A96B] shrink-0" />
+                  <span className="truncate">AI MTTR</span>
+                </div>
+                <div className="text-[17px] sm:text-[19px] font-bold font-display text-[#101114] leading-tight">
+                  &lt; 90s
+                </div>
+                <div className="text-[9px] text-[#8B8F9A] font-mono truncate">Root cause</div>
+              </div>
+
+              <div className="p-2 sm:p-2.5 rounded-xl bg-[#F7F6F2] border border-[#E2E4E9] hover:border-[#425CF5]/40 transition-colors">
+                <div className="flex items-center gap-1 text-[9.5px] sm:text-[10px] font-mono text-[#5B5F6B] mb-0.5">
+                  <Activity size={11} className="text-[#059669] shrink-0" />
+                  <span className="truncate">Spans / s</span>
+                </div>
+                <div className="text-[17px] sm:text-[19px] font-bold font-display text-[#101114] leading-tight">
+                  250M+
+                </div>
+                <div className="text-[9px] text-[#8B8F9A] font-mono truncate">Kernel stream</div>
+              </div>
+            </div>
+
             {/* Elite Action CTAs Row */}
             <div
-              className="brexal-pop-up flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5 w-full sm:w-auto"
-              style={{ animationDelay: "0.32s" }}
+              className="brexal-pop-up flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 mb-3.5 sm:mb-4 w-full sm:w-auto"
+              style={{ animationDelay: "0.34s" }}
             >
               <Link
                 href="/register"
-                className="elite-btn-primary px-6 py-3 min-h-[44px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 group shadow-sm hover:shadow-md cursor-pointer"
+                className="elite-btn-primary px-6 py-2.5 min-h-[42px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 group shadow-sm hover:shadow-md cursor-pointer"
               >
                 <span>Start for free</span>
                 <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 href="#interactive-simulator"
-                className="elite-btn-secondary px-5 py-3 min-h-[44px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 cursor-pointer"
+                className="elite-btn-secondary px-5 py-2.5 min-h-[42px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Explore live radar</span>
                 <ChevronRight size={14} className="text-[#8B8F9A]" />

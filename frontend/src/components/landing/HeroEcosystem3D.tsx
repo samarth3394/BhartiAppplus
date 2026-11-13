@@ -548,7 +548,7 @@ function StaticEcosystemFallback() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   8. MAIN EXPORTED COMPONENT (TRANSPARENT, BORDERLESS, STAGGERED POP-UP)
+   8. MAIN EXPORTED COMPONENT (ARCHITECTURAL TELEMETRY OBSERVATORY)
    ═══════════════════════════════════════════════════════════════ */
 export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -600,185 +600,231 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
       onClick={(e) => {
         if (e.target === e.currentTarget) setHoveredId(null);
       }}
-      className={`relative w-full h-[255px] sm:h-[460px] lg:h-[520px] bg-transparent overflow-visible ${className}`}
+      className={`relative w-full rounded-2xl sm:rounded-3xl border border-[#D6D8DE] bg-gradient-to-b from-[#F7F6F2] via-white to-[#EEF2FF]/35 shadow-[0_20px_50px_rgba(16,28,53,0.07)] p-2 sm:p-4 overflow-hidden ${className}`}
     >
-      <WebGLErrorBoundary fallback={<StaticEcosystemFallback />}>
-        <Canvas
-          dpr={[1, 2]}
-          camera={{ position: [0, 2.65, 9.8], fov: 40, near: 0.1, far: 100 }}
-          gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-          style={{ background: "transparent" }}
-          className="w-full h-full"
-        >
-          <ambientLight intensity={1.35} color="#ffffff" />
-          <directionalLight position={[4, 8, 6]} intensity={0.85} color="#ffffff" />
+      {/* ── TOP OBSERVATORY HUD BAR ── */}
+      <div className="flex items-center justify-between px-2 sm:px-3 py-1.5 border-b border-[#E2E4E9] bg-white/80 backdrop-blur-xs rounded-xl mb-1 sm:mb-2 text-[10px] sm:text-[11px] font-mono">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse" />
+          <span className="font-semibold text-[#101114] uppercase tracking-wider">
+            Kernel Mesh 3.0
+          </span>
+        </div>
+        <div className="hidden sm:flex items-center gap-3 text-[#5B5F6B]">
+          <span>LATENCY: <strong className="text-[#101114]">0.12ms</strong></span>
+          <span>•</span>
+          <span>CLUSTER SYNC: <strong className="text-[#059669]">100%</strong></span>
+          <span>•</span>
+          <span>THROUGHPUT: <strong className="text-[#425CF5]">250M/s</strong></span>
+        </div>
+        <div className="flex items-center gap-1 text-[#425CF5] font-semibold">
+          <span className="hidden sm:inline text-[9px] uppercase tracking-wider bg-[#EEF2FF] px-2 py-0.5 rounded-full border border-[#C7BDF7]/50">
+            18 Nodes Active
+          </span>
+        </div>
+      </div>
 
-          <CameraRig reducedMotion={prefersReducedMotion} />
-          <CoreOverlayProjector coreDomRef={coreDomRef} />
+      {/* ── 3D CANVAS VIEWPORT ── */}
+      <div className="relative w-full h-[270px] sm:h-[400px] lg:h-[440px] bg-transparent overflow-visible">
+        <WebGLErrorBoundary fallback={<StaticEcosystemFallback />}>
+          <Canvas
+            dpr={[1, 2]}
+            camera={{ position: [0, 2.65, 9.8], fov: 40, near: 0.1, far: 100 }}
+            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+            style={{ background: "transparent" }}
+            className="w-full h-full"
+          >
+            <ambientLight intensity={1.35} color="#ffffff" />
+            <directionalLight position={[4, 8, 6]} intensity={0.85} color="#ffffff" />
 
-          <SceneEntranceWrapper reducedMotion={prefersReducedMotion}>
-            <BrexalCoreRings
-              reducedMotion={prefersReducedMotion}
-              hasHoveredNode={hoveredId !== null}
-            />
+            <CameraRig reducedMotion={prefersReducedMotion} />
+            <CoreOverlayProjector coreDomRef={coreDomRef} />
 
-            {ORBIT_RINGS.map((orbit) => (
-              <OrbitTrackRing key={orbit.index} orbit={orbit} />
-            ))}
+            <SceneEntranceWrapper reducedMotion={prefersReducedMotion}>
+              <BrexalCoreRings
+                reducedMotion={prefersReducedMotion}
+                hasHoveredNode={hoveredId !== null}
+              />
 
-            <CoreConnectionSystem
-              positionsRef={positionsRef}
-              hoveredId={hoveredId}
-              reducedMotion={prefersReducedMotion}
-            />
+              {ORBIT_RINGS.map((orbit) => (
+                <OrbitTrackRing key={orbit.index} orbit={orbit} />
+              ))}
 
-            {TECH_NODES.map((node) => (
-              <OrbitNodeAnchor
-                key={node.id}
-                node={node}
+              <CoreConnectionSystem
                 positionsRef={positionsRef}
-                onSyncOverlay={syncNodeOverlay}
                 hoveredId={hoveredId}
                 reducedMotion={prefersReducedMotion}
               />
-            ))}
-          </SceneEntranceWrapper>
-        </Canvas>
-      </WebGLErrorBoundary>
 
-      {/* Camera-Projected Editorial SVG & HUD Layer */}
-      <div className="absolute inset-0 pointer-events-none overflow-visible">
-        
-        {/* Subtle Architectural Telemetry Coordinates (Swiss Grid Accents) */}
-        <div className="hidden sm:block absolute top-2 left-3 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-75">
-          [01 // CLOUD INGRESS]
-        </div>
-        <div className="hidden sm:block absolute top-2 right-3 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-75">
-          [02 // INFRASTRUCTURE MESH]
-        </div>
-        <div className="hidden sm:block absolute bottom-2 left-3 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-75">
-          [03 // RUNTIME ENGINES]
-        </div>
-        <div className="hidden sm:block absolute bottom-2 right-3 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-75">
-          [04 // STATE & OBSERVABILITY]
-        </div>
+              {TECH_NODES.map((node) => (
+                <OrbitNodeAnchor
+                  key={node.id}
+                  node={node}
+                  positionsRef={positionsRef}
+                  onSyncOverlay={syncNodeOverlay}
+                  hoveredId={hoveredId}
+                  reducedMotion={prefersReducedMotion}
+                />
+              ))}
+            </SceneEntranceWrapper>
+          </Canvas>
+        </WebGLErrorBoundary>
 
-        {/* Central Architectural BREXAL Core Super-Medallion */}
-        <div
-          ref={coreDomRef}
-          className="absolute top-1/2 left-1/2 select-none"
-          style={{
-            zIndex: 65,
-            transform: "translate3d(0px, 0px, 0) translate(-50%, -50%)",
-          }}
-        >
-          <div
-            className="brexal-node-pop relative flex flex-col items-center justify-center w-[84px] h-[84px] sm:w-[122px] sm:h-[122px] rounded-full bg-white border border-[#E2E4E9] shadow-[0_16px_40px_rgba(16,17,20,0.08),0_0_28px_rgba(66,92,245,0.12)]"
-            style={{ animationDelay: "0.12s" }}
-          >
-            {/* Outer Rotating Concentric Telemetry Radar Ring */}
-            <div className="absolute -inset-2.5 sm:-inset-3.5 rounded-full border border-dashed border-[#425CF5]/35 animate-[spin_45s_linear_infinite] pointer-events-none" />
-            <div className="absolute -inset-1 sm:-inset-1.5 rounded-full border border-[#E2E4E9] pointer-events-none" />
-            
-            {/* Precision Radar Inner Bezel */}
-            <div className="absolute inset-[3px] sm:inset-[4.5px] rounded-full border border-[#F7F6F2] pointer-events-none" />
-            
-            {/* BREXAL Focal Typography */}
-            <span className="font-['Sora',sans-serif] text-[9.5px] sm:text-[14px] font-bold tracking-[0.24em] text-[#101114] pl-[0.24em] leading-none">
-              BREXAL
-            </span>
-            
-            {/* Active Core Gradient Spine */}
-            <span className="w-4.5 sm:w-6 h-[2px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#425CF5] via-[#7657E8] to-[#425CF5]" />
-            
-            <span className="font-['Sora',sans-serif] text-[4.5px] sm:text-[6.5px] font-semibold tracking-[0.15em] uppercase text-[#5B5F6B] text-center max-w-[62px] sm:max-w-[92px] leading-tight">
-              INTELLIGENT OBSERVABILITY
-            </span>
-
-            {/* Micro eBPF Telemetry Badge */}
-            <div className="mt-1 hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#EEF2FF] border border-[#C7BDF7]/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
-              <span className="text-[5.5px] font-mono font-bold text-[#425CF5] uppercase tracking-wider">
-                MESH ACTIVE
-              </span>
-            </div>
+        {/* Camera-Projected Editorial SVG & HUD Layer */}
+        <div className="absolute inset-0 pointer-events-none overflow-visible">
+          
+          {/* Subtle Architectural Telemetry Coordinates (Swiss Grid Accents) */}
+          <div className="hidden sm:block absolute top-1 left-2 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-80">
+            [01 // INGRESS]
           </div>
-        </div>
+          <div className="hidden sm:block absolute top-1 right-2 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-80">
+            [02 // MESH]
+          </div>
+          <div className="hidden sm:block absolute bottom-1 left-2 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-80">
+            [03 // RUNTIMES]
+          </div>
+          <div className="hidden sm:block absolute bottom-1 right-2 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-80">
+            [04 // TELEMETRY]
+          </div>
 
-        {/* 17 Engineered Architecture Medallion Technology Nodes */}
-        {TECH_NODES.map((node, index) => {
-          const isHovered = hoveredId === node.id;
-          const layerBaseDelay =
-            node.orbitIndex === 0 ? 0.34 : node.orbitIndex === 1 ? 0.52 : 0.7;
-          const popDelay = layerBaseDelay + (index % 8) * 0.045;
-
-          return (
+          {/* Central Architectural BREXAL Core — HIGH CONTRAST MIDNIGHT TITANIUM SUPERCORE */}
+          <div
+            ref={coreDomRef}
+            className="absolute top-1/2 left-1/2 select-none"
+            style={{
+              zIndex: 65,
+              transform: "translate3d(0px, 0px, 0) translate(-50%, -50%)",
+            }}
+          >
             <div
-              key={node.id}
-              ref={setNodeDomRef(node.id)}
-              onMouseEnter={() => setHoveredId(node.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              onClick={(e) => {
-                e.stopPropagation();
-                setHoveredId(isHovered ? null : node.id);
-              }}
-              className="absolute top-0 left-0 pointer-events-auto select-none"
-              style={{ zIndex: 20, opacity: 0 }}
+              className="brexal-node-pop relative flex flex-col items-center justify-center w-[92px] h-[92px] sm:w-[130px] sm:h-[130px] rounded-full bg-gradient-to-br from-[#101C35] via-[#101114] to-[#0A0D18] text-white border-2 border-[#425CF5]/70 shadow-[0_20px_50px_rgba(16,28,53,0.45),0_0_36px_rgba(66,92,245,0.35)]"
+              style={{ animationDelay: "0.12s" }}
             >
-              <div
-                className="brexal-node-pop relative flex items-center justify-center"
-                style={{ animationDelay: `${popDelay.toFixed(2)}s` }}
-              >
-                {/* High-Fidelity Editorial HUD Tooltip on Hover */}
-                <motion.div
-                  initial={false}
-                  animate={
-                    isHovered
-                      ? { opacity: 1, y: 0, scale: 1 }
-                      : { opacity: 0, y: 6, scale: 0.94 }
-                  }
-                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 rounded-lg bg-[#101C35] text-white border border-[#34363D] shadow-[0_10px_26px_rgba(0,0,0,0.35)] z-50 flex items-center gap-2"
-                >
-                  <span className="font-['Sora',sans-serif] text-[11px] font-semibold text-white">
-                    {node.name}
-                  </span>
-                  <span className="text-[9px] font-mono font-medium text-[#C7BDF7] bg-white/10 px-1.5 py-0.5 rounded">
-                    {node.category}
-                  </span>
-                  <span className="text-[9px] font-mono font-semibold text-[#059669]">
-                    ● Active
-                  </span>
-                </motion.div>
+              {/* Outer Rotating Concentric Telemetry Radar Ring with Gold & Cobalt Sparks */}
+              <div className="absolute -inset-2.5 sm:-inset-3.5 rounded-full border border-dashed border-[#425CF5]/50 animate-[spin_45s_linear_infinite] pointer-events-none" />
+              <div className="absolute -inset-1 sm:-inset-1.5 rounded-full border border-[#C8A96B]/30 pointer-events-none" />
+              
+              {/* Precision Titanium Degree Tick Marks */}
+              <div className="absolute top-1 text-[6px] font-mono font-bold text-[#C8A96B] tracking-widest">
+                0°
+              </div>
+              <div className="absolute bottom-1 text-[6px] font-mono font-bold text-[#8B8F9A] tracking-widest">
+                180°
+              </div>
 
-                {/* Tactile Architectural Glass Medallion with Authentic Brand SVG */}
-                <div
-                  tabIndex={0}
-                  aria-label={`${node.name} — ${node.category}`}
-                  onFocus={() => setHoveredId(node.id)}
-                  onBlur={() => setHoveredId(null)}
-                  className={`cursor-pointer relative flex items-center justify-center rounded-2xl bg-white/95 border border-[#E2E4E9] shadow-[0_6px_18px_rgba(16,17,20,0.06)] backdrop-blur-md transition-all duration-300 ease-out focus:outline-none ${
-                    isMobile ? "w-8 h-8 p-1.5" : "w-10 h-10 sm:w-11 sm:h-11 p-2"
-                  } ${
-                    isHovered
-                      ? "scale-[1.28] border-[#425CF5] shadow-[0_14px_34px_rgba(66,92,245,0.25)] ring-2 ring-[#425CF5]/25"
-                      : "hover:border-[#BFC3CC]"
-                  }`}
-                >
-                  <img
-                    src={node.logo}
-                    alt={node.name}
-                    loading="lazy"
-                    draggable={false}
-                    className="w-full h-full object-contain pointer-events-none"
-                  />
-                  {/* Micro Live Status Beacon */}
-                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#059669] ring-2 ring-white shadow-xs" />
-                </div>
+              {/* BREXAL Focal Typography in Crisp Pure White */}
+              <span className="font-['Sora',sans-serif] text-[11px] sm:text-[15px] font-bold tracking-[0.24em] text-white pl-[0.24em] leading-none drop-shadow-xs">
+                BREXAL
+              </span>
+              
+              {/* Active Core Gradient Spine */}
+              <span className="w-5 sm:w-7 h-[2px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#425CF5] via-[#C7BDF7] to-[#425CF5]" />
+              
+              <span className="font-['Sora',sans-serif] text-[5px] sm:text-[7px] font-semibold tracking-[0.16em] uppercase text-[#C7BDF7] text-center max-w-[68px] sm:max-w-[100px] leading-tight">
+                AUTONOMOUS MESH
+              </span>
+
+              {/* Micro eBPF Telemetry Badge with Glowing Beacon */}
+              <div className="mt-1 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-white/10 border border-white/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-ping" />
+                <span className="text-[5.5px] sm:text-[6.5px] font-mono font-bold text-[#6EE7B7] uppercase tracking-wider">
+                  MESH ONLINE
+                </span>
               </div>
             </div>
-          );
-        })}
+          </div>
+
+          {/* 17 Engineered Architecture Medallion Technology Nodes */}
+          {TECH_NODES.map((node, index) => {
+            const isHovered = hoveredId === node.id;
+            const layerBaseDelay =
+              node.orbitIndex === 0 ? 0.34 : node.orbitIndex === 1 ? 0.52 : 0.7;
+            const popDelay = layerBaseDelay + (index % 8) * 0.045;
+
+            return (
+              <div
+                key={node.id}
+                ref={setNodeDomRef(node.id)}
+                onMouseEnter={() => setHoveredId(node.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setHoveredId(isHovered ? null : node.id);
+                }}
+                className="absolute top-0 left-0 pointer-events-auto select-none"
+                style={{ zIndex: 20, opacity: 0 }}
+              >
+                <div
+                  className="brexal-node-pop relative flex items-center justify-center"
+                  style={{ animationDelay: `${popDelay.toFixed(2)}s` }}
+                >
+                  {/* High-Fidelity Editorial HUD Tooltip on Hover */}
+                  <motion.div
+                    initial={false}
+                    animate={
+                      isHovered
+                        ? { opacity: 1, y: 0, scale: 1 }
+                        : { opacity: 0, y: 6, scale: 0.94 }
+                    }
+                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 rounded-lg bg-[#101C35] text-white border border-[#425CF5]/50 shadow-[0_10px_26px_rgba(0,0,0,0.4)] z-50 flex items-center gap-2"
+                  >
+                    <span className="font-['Sora',sans-serif] text-[11px] font-semibold text-white">
+                      {node.name}
+                    </span>
+                    <span className="text-[9px] font-mono font-medium text-[#C7BDF7] bg-white/10 px-1.5 py-0.5 rounded">
+                      {node.category}
+                    </span>
+                    <span className="text-[9px] font-mono font-semibold text-[#10B981]">
+                      ● 0.1ms Sync
+                    </span>
+                  </motion.div>
+
+                  {/* Tactile High-Contrast Architectural Pod with Authentic Brand SVG */}
+                  <div
+                    tabIndex={0}
+                    aria-label={`${node.name} — ${node.category}`}
+                    onFocus={() => setHoveredId(node.id)}
+                    onBlur={() => setHoveredId(null)}
+                    className={`cursor-pointer relative flex items-center justify-center rounded-xl sm:rounded-2xl bg-white border-2 border-[#D6D8DE] shadow-[0_8px_20px_rgba(16,28,53,0.1)] transition-all duration-300 ease-out focus:outline-none ${
+                      isMobile ? "w-8 h-8 p-1.5" : "w-10 h-10 sm:w-11 sm:h-11 p-2"
+                    } ${
+                      isHovered
+                        ? "scale-[1.3] border-[#425CF5] shadow-[0_16px_36px_rgba(66,92,245,0.3)] ring-2 ring-[#425CF5]/30 z-30"
+                        : "hover:border-[#425CF5]/60 hover:shadow-md"
+                    }`}
+                  >
+                    <img
+                      src={node.logo}
+                      alt={node.name}
+                      loading="lazy"
+                      draggable={false}
+                      className="w-full h-full object-contain pointer-events-none"
+                    />
+                    {/* Micro Live Status Beacon */}
+                    <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#10B981] ring-2 ring-white shadow-xs" />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── BOTTOM OBSERVATORY TELEMETRY TICKER ── */}
+      <div className="mt-1 pt-1.5 border-t border-[#E2E4E9] flex items-center justify-between text-[9px] sm:text-[10px] font-mono text-[#5B5F6B] px-2">
+        <div className="flex items-center gap-2">
+          <span className="text-[#101114] font-semibold">SOCKET ADAPTER:</span>
+          <span className="text-[#425CF5]">eBPF_XDP_V4</span>
+        </div>
+        <div className="hidden sm:flex items-center gap-2">
+          <span>PACKET LOSS: <strong className="text-[#059669]">0.000%</strong></span>
+          <span>•</span>
+          <span>ROOT CAUSE: <strong className="text-[#C8A96B]">AUTOMATED</strong></span>
+        </div>
+        <div className="text-[#059669] font-semibold">
+          ● REAL-TIME TELEMETRY
+        </div>
       </div>
     </div>
   );
