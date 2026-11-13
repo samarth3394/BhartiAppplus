@@ -260,27 +260,27 @@ function StripeNavbar() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   2. FLOATING 3D PERSPECTIVE DARK CONSOLE MOCKUP (EXACT STATS & CHARTS)
+   2. FLOATING DARK CONSOLE MOCKUP (STATIC, CRISP, NO ANIMATION)
    ═══════════════════════════════════════════════════════════════ */
 function HeroConsole3D() {
   const [activeTab, setActiveTab] = useState("overview");
 
   return (
     <div className="relative w-full max-w-[620px] mx-auto lg:max-w-none">
-      {/* 3D Perspective Wrapper */}
-      <div className="relative transform lg:rotate-y-[-7deg] lg:rotate-x-[4deg] lg:rotate-z-[-2deg] transition-all duration-700 hover:rotate-0 hover:scale-[1.01] group">
+      {/* Static Perspective Frame (No Wobble / No Animation) */}
+      <div className="relative transform lg:rotate-y-[-6deg] lg:rotate-x-[3deg] lg:rotate-z-[-2deg]">
         
-        {/* Glow Behind Console */}
-        <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-[#7C3AED]/25 via-[#425CF5]/20 to-[#C8A96B]/15 blur-2xl opacity-75 group-hover:opacity-100 transition-opacity pointer-events-none" />
+        {/* Subtle Ambient Depth Glow */}
+        <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[#7C3AED]/20 via-[#425CF5]/15 to-[#C8A96B]/10 blur-xl opacity-70 pointer-events-none" />
 
         {/* Main Dark Console Window */}
-        <div className="relative rounded-2xl border border-white/12 bg-[#12141F]/95 backdrop-blur-xl shadow-[0_30px_90px_rgba(0,0,0,0.7),0_0_50px_rgba(124,58,237,0.18)] p-3 sm:p-4 text-white overflow-hidden">
+        <div className="relative rounded-2xl border border-white/12 bg-[#12141F] shadow-[0_25px_60px_rgba(0,0,0,0.45)] p-3.5 sm:p-4 text-white overflow-hidden">
           
           {/* Top Bar */}
           <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/8 text-xs">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11px] text-white">
-                <span className="text-[#C7BDF7] font-mono">//</span>
+                <span className="text-[#C7BDF7] font-mono font-bold">//</span>
                 <span>BREXAL</span>
               </div>
               <span className="text-white/20">|</span>
@@ -305,7 +305,7 @@ function HeroConsole3D() {
               <button
                 type="button"
                 onClick={() => setActiveTab("overview")}
-                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-colors text-left ${
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left ${
                   activeTab === "overview"
                     ? "bg-[#6366F1] text-white font-semibold shadow-xs"
                     : "text-white/60 hover:text-white hover:bg-white/5"
@@ -317,7 +317,7 @@ function HeroConsole3D() {
               <button
                 type="button"
                 onClick={() => setActiveTab("monitoring")}
-                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-colors text-left ${
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left ${
                   activeTab === "monitoring"
                     ? "bg-[#6366F1] text-white font-semibold shadow-xs"
                     : "text-white/60 hover:text-white hover:bg-white/5"
@@ -329,7 +329,7 @@ function HeroConsole3D() {
               <button
                 type="button"
                 onClick={() => setActiveTab("incidents")}
-                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-colors text-left ${
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left ${
                   activeTab === "incidents"
                     ? "bg-[#6366F1] text-white font-semibold shadow-xs"
                     : "text-white/60 hover:text-white hover:bg-white/5"
@@ -340,35 +340,35 @@ function HeroConsole3D() {
               </button>
               <button
                 type="button"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors text-left"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 text-left"
               >
                 <Network size={13} />
                 <span>Traces</span>
               </button>
               <button
                 type="button"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors text-left"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 text-left"
               >
                 <Terminal size={13} />
                 <span>Logs</span>
               </button>
               <button
                 type="button"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors text-left"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 text-left"
               >
                 <Server size={13} />
                 <span>Infrastructure</span>
               </button>
               <button
                 type="button"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors text-left mt-auto"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 text-left mt-auto"
               >
                 <Cpu size={13} />
                 <span>Settings</span>
               </button>
             </div>
 
-            {/* Right Main Dashboard Display (9 cols on sm+, 12 cols on mobile) */}
+            {/* Right Main Dashboard Display */}
             <div className="col-span-12 sm:col-span-9 flex flex-col gap-2.5">
               
               {/* 4 Top Metric Cards (EXACT VALUES FROM USER SPEC) */}
@@ -434,9 +434,9 @@ function HeroConsole3D() {
 
                   {/* SVG Wave Chart */}
                   <div className="relative w-full h-[95px] sm:h-[110px]">
-                    {/* Tooltip on peak: 1.24M reqs */}
-                    <div className="absolute top-1 right-[22%] -translate-x-1/2 px-2 py-0.5 rounded-md bg-[#101114] border border-[#6366F1] shadow-lg text-[9px] font-mono font-bold text-white z-10 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-ping" />
+                    {/* Tooltip on peak: 1.24M reqs (Static, No Ping) */}
+                    <div className="absolute top-1 right-[22%] -translate-x-1/2 px-2 py-0.5 rounded-md bg-[#101114] border border-[#6366F1] shadow-lg text-[9px] font-mono font-bold text-white z-10 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
                       <span>1.24M reqs</span>
                     </div>
 
@@ -570,40 +570,40 @@ function StripeHeroSection() {
         {/* TWO-COLUMN EDITORIAL COMPOSITION */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
           
-          {/* Left Column (5 cols): Editorial Headline & Copy */}
+          {/* Left Column (5 cols): Editorial Headline & Copy (Exact As in Design Spec) */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
             
             {/* Minimal High-Contrast Eyebrow Pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 border border-[#6366F1]/30 shadow-2xs mb-3.5 sm:mb-4">
-              <span className="w-2 h-2 rounded-full bg-[#4338CA] animate-pulse" />
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.18em] uppercase text-[#3730A3]">
-                AI MONITORING PLATFORM
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/95 border border-[#C4B5FD] shadow-2xs mb-4 sm:mb-5">
+              <span className="w-2 h-2 rounded-full bg-[#7C3AED]" />
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.16em] uppercase text-[#6B21A8]">
+                AI MONITORING &amp; INCIDENT PLATFORM
               </span>
             </div>
 
-            {/* Display Headline: "Intelligence, engineered to move." (High-Contrast Obsidian + Royal Indigo) */}
-            <h1 className="text-[32px] sm:text-[46px] md:text-[54px] lg:text-[58px] xl:text-[64px] font-bold tracking-[-0.035em] text-[#090A0F] leading-[1.08] sm:leading-[1.05] mb-3.5 sm:mb-4 text-left">
-              Intelligence, <br />
-              engineered <span className="font-editorial italic font-normal text-[#4338CA]">to move.</span>
+            {/* Display Headline: "Intelligence for modern infrastructure." */}
+            <h1 className="font-['Sora',sans-serif] text-[34px] sm:text-[46px] md:text-[54px] lg:text-[58px] xl:text-[64px] font-bold tracking-[-0.035em] text-[#0F1017] leading-[1.08] sm:leading-[1.05] mb-4 sm:mb-4.5 text-left">
+              Intelligence for <br />
+              modern <span className="font-editorial italic font-normal text-[#7E22CE]">infrastructure.</span>
             </h1>
 
-            {/* Supporting Subhead (Rich Dark Charcoal for Maximum Clarity) */}
-            <p className="text-[14px] sm:text-[15.5px] text-[#1E2230] font-normal leading-relaxed mb-6 sm:mb-7 max-w-[460px] text-left">
-              A modern monitoring and incident management platform that gives teams complete visibility, faster resolution and a more reliable system.
+            {/* Supporting Subhead */}
+            <p className="font-['Inter',sans-serif] text-[15px] sm:text-[16.5px] text-[#374151] font-normal leading-relaxed mb-6 sm:mb-8 max-w-[480px] text-left">
+              Real-time monitoring, AI-powered incident response, and proactive reliability for modern engineering teams.
             </p>
 
-            {/* Action CTAs Row (Full Width on Mobile, Row on Desktop) */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5 mb-6 sm:mb-8 w-full sm:w-auto">
+            {/* Action CTAs Row */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 sm:mb-8 w-full sm:w-auto">
               <Link
                 href="/register"
-                className="px-6 py-3 rounded-full bg-[#090A0F] text-white hover:bg-[#4338CA] text-[13.5px] sm:text-[14px] font-semibold transition-all shadow-[0_8px_22px_rgba(9,10,15,0.22)] hover:scale-105 flex items-center justify-center gap-2 group cursor-pointer"
+                className="px-7 py-3 rounded-full bg-[#1E1B4B] text-white hover:bg-[#2E1065] text-[14px] font-semibold transition-colors flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(30,27,75,0.2)]"
               >
                 <span>Start free trial</span>
-                <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight size={15} />
               </Link>
               <Link
                 href="#platform"
-                className="px-6 py-3 rounded-full bg-white/95 backdrop-blur-md border border-slate-300 text-[#090A0F] hover:bg-white hover:border-[#090A0F] text-[13.5px] sm:text-[14px] font-medium transition-all shadow-2xs flex items-center justify-center gap-2 cursor-pointer"
+                className="px-7 py-3 rounded-full bg-white/80 border border-[#7C3AED]/40 text-[#1E1B4B] hover:bg-white text-[14px] font-medium transition-colors flex items-center justify-center gap-2 shadow-2xs"
               >
                 <span>Book a demo</span>
               </Link>
@@ -612,23 +612,23 @@ function StripeHeroSection() {
             {/* 3 Micro Feature Callouts (Mobile Glass Cards) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 pt-4 sm:pt-6 border-t border-slate-300/70 w-full max-w-[500px]">
               <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
-                <Zap size={17} className="text-[#4338CA] shrink-0" />
+                <Zap size={17} className="text-[#7C3AED] shrink-0" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#090A0F]">Detect faster</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#0F1017]">Detect faster</div>
                   <div className="text-[11px] text-[#474A57]">AI-powered insights</div>
                 </div>
               </div>
               <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
-                <Layers size={17} className="text-[#4338CA] shrink-0" />
+                <Layers size={17} className="text-[#7C3AED] shrink-0" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#090A0F]">Resolve smarter</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#0F1017]">Resolve smarter</div>
                   <div className="text-[11px] text-[#474A57]">RCA in minutes</div>
                 </div>
               </div>
               <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
-                <ShieldCheck size={17} className="text-[#4338CA] shrink-0" />
+                <ShieldCheck size={17} className="text-[#7C3AED] shrink-0" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#090A0F]">Stay reliable</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#0F1017]">Stay reliable</div>
                   <div className="text-[11px] text-[#474A57]">High-uptime systems</div>
                 </div>
               </div>
