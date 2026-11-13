@@ -548,24 +548,25 @@ function StripeHeroSection() {
   return (
     <section className="relative bg-[#0A0C14] text-white pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24 px-4 sm:px-8 lg:px-12 overflow-hidden">
       
-      {/* ── ARCHITECTURAL LIGHTING: GOLD SLICING RAY & VIOLET HORIZON ── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden -z-0">
-        {/* Diagonal Golden Architectural Slicing Light Beam from Top Right */}
-        <div 
-          className="absolute -top-[20%] right-[-10%] w-[800px] h-[900px] bg-gradient-to-bl from-[#E2C385]/20 via-[#C8A96B]/5 to-transparent blur-[80px] pointer-events-none transform -rotate-12"
-        />
-        {/* Glowing razor gold line cutting across top right */}
-        <div 
-          className="absolute top-0 right-1/4 w-[500px] h-[1px] bg-gradient-to-r from-transparent via-[#C8A96B]/30 to-transparent transform -rotate-25 pointer-events-none"
+      {/* ── CINEMATIC ARCHITECTURAL MASTER BACKGROUND (USER MASTER ASSET) ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none -z-0">
+        {/* Master Architectural Wave Artwork from New folder (2) */}
+        <img
+          src="/hero-mesh.png"
+          alt="Luminous Architectural Wave"
+          className="absolute top-0 right-0 w-full sm:w-[90%] lg:w-[68%] xl:w-[62%] h-full object-cover object-right pointer-events-none opacity-95"
         />
 
-        {/* Sweeping Purple / Violet Curved Horizon Aurora */}
-        <div 
-          className="absolute bottom-[-15%] right-[-5%] w-[850px] h-[550px] rounded-full bg-gradient-to-t from-[#7C3AED]/25 via-[#6366F1]/15 to-transparent blur-[120px] pointer-events-none"
-        />
-        <div 
-          className="absolute bottom-[-10%] left-[20%] w-[500px] h-[350px] rounded-full bg-[#425CF5]/10 blur-[100px] pointer-events-none"
-        />
+        {/* Seamless Radial/Linear Left Blend Mask for Perfect Headline Readability */}
+        <div className="absolute inset-y-0 left-0 w-full lg:w-[52%] bg-gradient-to-r from-[#0A0C14] via-[#0A0C14] to-transparent pointer-events-none" />
+
+        {/* Atmospheric Ambient Lighting Accents */}
+        <div className="absolute top-0 right-0 w-1/3 h-1/2 bg-[#C8A96B]/5 blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-1/2 h-1/2 bg-[#7C3AED]/15 blur-[110px] pointer-events-none" />
+
+        {/* Top and Bottom Soft Transitions */}
+        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#0A0C14] to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0A0C14] to-transparent pointer-events-none" />
       </div>
 
       <div className="max-w-[1320px] mx-auto relative z-10">
