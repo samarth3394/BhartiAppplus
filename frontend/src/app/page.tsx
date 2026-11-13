@@ -260,293 +260,12 @@ function StripeNavbar() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   2. FLOATING DARK CONSOLE MOCKUP (STATIC, CRISP, NO ANIMATION)
-   ═══════════════════════════════════════════════════════════════ */
-function HeroConsole3D() {
-  const [activeTab, setActiveTab] = useState("overview");
-
-  return (
-    <div className="relative w-full max-w-[620px] mx-auto lg:max-w-none">
-      {/* Static Perspective Frame (No Wobble / No Animation) */}
-      <div className="relative transform lg:rotate-y-[-6deg] lg:rotate-x-[3deg] lg:rotate-z-[-2deg]">
-        
-        {/* Subtle Ambient Depth Glow */}
-        <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[#7C3AED]/20 via-[#425CF5]/15 to-[#C8A96B]/10 blur-xl opacity-70 pointer-events-none" />
-
-        {/* Main Dark Console Window */}
-        <div className="relative rounded-2xl border border-white/12 bg-[#12141F] shadow-[0_25px_60px_rgba(0,0,0,0.45)] p-3.5 sm:p-4 text-white overflow-hidden">
-          
-          {/* Top Bar */}
-          <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/8 text-xs">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11px] text-white">
-                <span className="text-[#C7BDF7] font-mono font-bold">//</span>
-                <span>BREXAL</span>
-              </div>
-              <span className="text-white/20">|</span>
-              <span className="text-white/80 font-medium text-[11px] hidden sm:inline">
-                System Overview
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10.5px] text-white/70 hover:text-white cursor-pointer transition-colors">
-                <span>Last 24 hours</span>
-                <ChevronDown size={11} className="text-white/50" />
-              </div>
-            </div>
-          </div>
-
-          {/* Console Body: Left Nav + Main Content */}
-          <div className="grid grid-cols-12 gap-3">
-            
-            {/* Left Nav (3 cols on sm+, hidden on mobile for space) */}
-            <div className="hidden sm:flex sm:col-span-3 flex-col gap-1 pr-1 border-r border-white/8 text-[11px]">
-              <button
-                type="button"
-                onClick={() => setActiveTab("overview")}
-                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left ${
-                  activeTab === "overview"
-                    ? "bg-[#6366F1] text-white font-semibold shadow-xs"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                <Layers size={13} />
-                <span>Overview</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("monitoring")}
-                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left ${
-                  activeTab === "monitoring"
-                    ? "bg-[#6366F1] text-white font-semibold shadow-xs"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                <Activity size={13} />
-                <span>Monitoring</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("incidents")}
-                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left ${
-                  activeTab === "incidents"
-                    ? "bg-[#6366F1] text-white font-semibold shadow-xs"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                <AlertTriangle size={13} />
-                <span>Incidents</span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 text-left"
-              >
-                <Network size={13} />
-                <span>Traces</span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 text-left"
-              >
-                <Terminal size={13} />
-                <span>Logs</span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 text-left"
-              >
-                <Server size={13} />
-                <span>Infrastructure</span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 text-left mt-auto"
-              >
-                <Cpu size={13} />
-                <span>Settings</span>
-              </button>
-            </div>
-
-            {/* Right Main Dashboard Display */}
-            <div className="col-span-12 sm:col-span-9 flex flex-col gap-2.5">
-              
-              {/* 4 Top Metric Cards (EXACT VALUES FROM USER SPEC) */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {/* Uptime */}
-                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
-                  <div className="text-[9.5px] text-white/50 font-mono mb-1">Uptime</div>
-                  <div className="text-[14px] sm:text-[16px] font-bold text-white leading-tight">
-                    99.98%
-                  </div>
-                  <div className="text-[9px] text-[#10B981] font-mono mt-0.5 flex items-center gap-0.5">
-                    <span>↑</span> +0.12%
-                  </div>
-                </div>
-
-                {/* Incidents */}
-                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
-                  <div className="text-[9.5px] text-white/50 font-mono mb-1">Incidents</div>
-                  <div className="text-[14px] sm:text-[16px] font-bold text-white leading-tight">
-                    3
-                  </div>
-                  <div className="text-[9px] text-[#C7BDF7] font-mono mt-0.5 flex items-center gap-0.5">
-                    <span>↓</span> -40%
-                  </div>
-                </div>
-
-                {/* MTTR */}
-                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
-                  <div className="text-[9.5px] text-white/50 font-mono mb-1">MTTR</div>
-                  <div className="text-[14px] sm:text-[16px] font-bold text-white leading-tight">
-                    4m 26s
-                  </div>
-                  <div className="text-[9px] text-[#C7BDF7] font-mono mt-0.5 flex items-center gap-0.5">
-                    <span>↓</span> -32%
-                  </div>
-                </div>
-
-                {/* Error Rate */}
-                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
-                  <div className="text-[9.5px] text-white/50 font-mono mb-1">Error Rate</div>
-                  <div className="text-[14px] sm:text-[16px] font-bold text-white leading-tight">
-                    0.12%
-                  </div>
-                  <div className="text-[9px] text-[#10B981] font-mono mt-0.5 flex items-center gap-0.5">
-                    <span>↑</span> +0.03%
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Row: Request Volume Area Chart (Left) + SLO Health Donut (Right) */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
-                
-                {/* Request Volume Chart (8 cols) */}
-                <div className="md:col-span-8 p-3 rounded-xl bg-white/[0.04] border border-white/8 flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[11px] font-semibold text-white/90">
-                      Request Volume
-                    </span>
-                    <span className="text-[9px] font-mono text-[#C7BDF7] bg-[#6366F1]/20 px-1.5 py-0.5 rounded">
-                      Live Telemetry
-                    </span>
-                  </div>
-
-                  {/* SVG Wave Chart */}
-                  <div className="relative w-full h-[95px] sm:h-[110px]">
-                    {/* Tooltip on peak: 1.24M reqs (Static, No Ping) */}
-                    <div className="absolute top-1 right-[22%] -translate-x-1/2 px-2 py-0.5 rounded-md bg-[#101114] border border-[#6366F1] shadow-lg text-[9px] font-mono font-bold text-white z-10 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-                      <span>1.24M reqs</span>
-                    </div>
-
-                    <svg viewBox="0 0 300 100" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="reqVolumeGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#818CF8" stopOpacity="0.45" />
-                          <stop offset="60%" stopColor="#6366F1" stopOpacity="0.18" />
-                          <stop offset="100%" stopColor="#6366F1" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-
-                      {/* Area Fill */}
-                      <path
-                        d="M 0 85 C 30 82, 50 65, 80 68 C 110 71, 130 50, 160 55 C 190 60, 210 20, 230 22 C 255 24, 275 48, 300 45 L 300 100 L 0 100 Z"
-                        fill="url(#reqVolumeGrad)"
-                      />
-
-                      {/* Stroke Line */}
-                      <path
-                        d="M 0 85 C 30 82, 50 65, 80 68 C 110 71, 130 50, 160 55 C 190 60, 210 20, 230 22 C 255 24, 275 48, 300 45"
-                        fill="none"
-                        stroke="#818CF8"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                      />
-
-                      {/* Peak Marker Dot */}
-                      <circle cx="230" cy="22" r="3.5" fill="#FFFFFF" stroke="#6366F1" strokeWidth="2.5" />
-                    </svg>
-                  </div>
-
-                  {/* X Axis Time Labels */}
-                  <div className="flex justify-between items-center text-[7.5px] sm:text-[8px] font-mono text-white/40 pt-1 border-t border-white/5">
-                    <span>12 AM</span>
-                    <span>3 AM</span>
-                    <span>6 AM</span>
-                    <span>9 AM</span>
-                    <span>12 PM</span>
-                    <span>3 PM</span>
-                    <span>6 PM</span>
-                    <span>9 PM</span>
-                  </div>
-                </div>
-
-                {/* SLO Health Donut Gauge (4 cols) */}
-                <div className="md:col-span-4 p-3 rounded-xl bg-white/[0.04] border border-white/8 flex flex-col items-center justify-between">
-                  <div className="text-[11px] font-semibold text-white/90 text-center w-full">
-                    SLO Health
-                  </div>
-
-                  {/* Circular Radial Gauge */}
-                  <div className="relative w-20 h-20 sm:w-22 sm:h-22 my-1 flex items-center justify-center">
-                    <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                      {/* Background Track */}
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="38"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.08)"
-                        strokeWidth="8"
-                      />
-                      {/* Active Arc (99.9%) */}
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="38"
-                        fill="none"
-                        stroke="#818CF8"
-                        strokeWidth="8"
-                        strokeDasharray={2 * Math.PI * 38}
-                        strokeDashoffset={(2 * Math.PI * 38) * (1 - 0.999)}
-                        strokeLinecap="round"
-                        className="drop-shadow-[0_0_8px_rgba(129,140,248,0.7)]"
-                      />
-                    </svg>
-                    
-                    {/* Center Text */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                      <span className="text-[14px] sm:text-[15px] font-bold text-white leading-none">
-                        99.9%
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="text-[8.5px] font-mono text-white/50 text-center">
-                    SLO Target Met
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   3. FULL-SCREEN LUMINOUS ARCHITECTURAL HERO SECTION (white.png)
+   2. FULL-SCREEN LUMINOUS ARCHITECTURAL HERO SECTION (white.png)
+      (CLEAN EDITORIAL TYPOGRAPHY — NO 3D CONSOLE / NO ANIMATIONS)
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center pt-20 pb-12 sm:pt-26 sm:pb-16 lg:pt-32 lg:pb-24 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#FBFBFE]">
+    <section className="relative min-h-[92vh] flex items-center pt-24 pb-14 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-28 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#FBFBFE]">
       
       {/* ── FULL SCREEN ARCHITECTURAL WAVE BACKGROUND (USER ASSET: white.png) ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none -z-0">
@@ -556,89 +275,79 @@ function StripeHeroSection() {
           className="w-full h-full object-cover object-[70%_center] sm:object-center pointer-events-none"
         />
         {/* Mobile Luminous Contrast Mask (guarantees crystal-clear readability on phones) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/50 to-white/90 pointer-events-none md:hidden" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/60 to-white/95 pointer-events-none md:hidden" />
         
         {/* Desktop Left-to-Right Subtle Reading Gradient */}
-        <div className="hidden md:block absolute inset-y-0 left-0 w-[55%] bg-gradient-to-r from-white/70 via-white/30 to-transparent pointer-events-none" />
+        <div className="hidden md:block absolute inset-y-0 left-0 w-[60%] bg-gradient-to-r from-white/80 via-white/40 to-transparent pointer-events-none" />
 
         {/* Soft bottom dissolve for seamless flow into next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/60 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-white via-white/70 to-transparent pointer-events-none" />
       </div>
 
       <div className="max-w-[1320px] mx-auto w-full relative z-10">
         
-        {/* TWO-COLUMN EDITORIAL COMPOSITION */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
+        {/* EDITORIAL HERO CONTENT (CLEAN, NO CONSOLE, NO DISTRACTING ANIMATIONS) */}
+        <div className="max-w-[820px] flex flex-col items-start text-left">
           
-          {/* Left Column (5 cols): Editorial Headline & Copy (Exact As in Design Spec) */}
-          <div className="lg:col-span-5 flex flex-col items-start text-left">
-            
-            {/* Minimal High-Contrast Eyebrow Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/95 border border-[#C4B5FD] shadow-2xs mb-4 sm:mb-5">
-              <span className="w-2 h-2 rounded-full bg-[#7C3AED]" />
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.16em] uppercase text-[#6B21A8]">
-                AI MONITORING &amp; INCIDENT PLATFORM
-              </span>
-            </div>
-
-            {/* Display Headline: "Intelligence for modern infrastructure." */}
-            <h1 className="font-['Sora',sans-serif] text-[34px] sm:text-[46px] md:text-[54px] lg:text-[58px] xl:text-[64px] font-bold tracking-[-0.035em] text-[#0F1017] leading-[1.08] sm:leading-[1.05] mb-4 sm:mb-4.5 text-left">
-              Intelligence for <br />
-              modern <span className="font-editorial italic font-normal text-[#7E22CE]">infrastructure.</span>
-            </h1>
-
-            {/* Supporting Subhead */}
-            <p className="font-['Inter',sans-serif] text-[15px] sm:text-[16.5px] text-[#374151] font-normal leading-relaxed mb-6 sm:mb-8 max-w-[480px] text-left">
-              Real-time monitoring, AI-powered incident response, and proactive reliability for modern engineering teams.
-            </p>
-
-            {/* Action CTAs Row */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6 sm:mb-8 w-full sm:w-auto">
-              <Link
-                href="/register"
-                className="px-7 py-3 rounded-full bg-[#1E1B4B] text-white hover:bg-[#2E1065] text-[14px] font-semibold transition-colors flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(30,27,75,0.2)]"
-              >
-                <span>Start free trial</span>
-                <ArrowRight size={15} />
-              </Link>
-              <Link
-                href="#platform"
-                className="px-7 py-3 rounded-full bg-white/80 border border-[#7C3AED]/40 text-[#1E1B4B] hover:bg-white text-[14px] font-medium transition-colors flex items-center justify-center gap-2 shadow-2xs"
-              >
-                <span>Book a demo</span>
-              </Link>
-            </div>
-
-            {/* 3 Micro Feature Callouts (Mobile Glass Cards) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 pt-4 sm:pt-6 border-t border-slate-300/70 w-full max-w-[500px]">
-              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
-                <Zap size={17} className="text-[#7C3AED] shrink-0" />
-                <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#0F1017]">Detect faster</div>
-                  <div className="text-[11px] text-[#474A57]">AI-powered insights</div>
-                </div>
-              </div>
-              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
-                <Layers size={17} className="text-[#7C3AED] shrink-0" />
-                <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#0F1017]">Resolve smarter</div>
-                  <div className="text-[11px] text-[#474A57]">RCA in minutes</div>
-                </div>
-              </div>
-              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
-                <ShieldCheck size={17} className="text-[#7C3AED] shrink-0" />
-                <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#0F1017]">Stay reliable</div>
-                  <div className="text-[11px] text-[#474A57]">High-uptime systems</div>
-                </div>
-              </div>
-            </div>
-
+          {/* Eyebrow Pill */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/95 border border-[#C4B5FD] shadow-2xs mb-5 sm:mb-6">
+            <span className="w-2 h-2 rounded-full bg-[#7C3AED]" />
+            <span className="text-[10.5px] sm:text-[11.5px] font-mono font-bold tracking-[0.16em] uppercase text-[#6B21A8]">
+              AI MONITORING &amp; INCIDENT PLATFORM
+            </span>
           </div>
 
-          {/* Right Column (7 cols): Floating 3D Perspective Console Mockup */}
-          <div className="lg:col-span-7 relative w-full pt-4 lg:pt-0">
-            <HeroConsole3D />
+          {/* Display Headline: "Intelligence for modern infrastructure." */}
+          <h1 className="font-['Sora',sans-serif] text-[38px] sm:text-[52px] md:text-[64px] lg:text-[72px] font-bold tracking-[-0.035em] text-[#0F1017] leading-[1.08] sm:leading-[1.04] mb-5 sm:mb-6 text-left">
+            Intelligence for <br />
+            modern <span className="font-editorial italic font-normal text-[#7E22CE]">infrastructure.</span>
+          </h1>
+
+          {/* Supporting Subhead */}
+          <p className="font-['Inter',sans-serif] text-[16px] sm:text-[18px] md:text-[19px] text-[#374151] font-normal leading-relaxed mb-8 sm:mb-10 max-w-[620px] text-left">
+            Real-time monitoring, AI-powered incident response, and proactive reliability for modern engineering teams.
+          </p>
+
+          {/* Action CTAs Row */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 mb-10 sm:mb-12 w-full sm:w-auto">
+            <Link
+              href="/register"
+              className="px-8 py-3.5 rounded-full bg-[#1E1B4B] text-white hover:bg-[#2E1065] text-[14.5px] font-semibold transition-colors flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(30,27,75,0.22)]"
+            >
+              <span>Start free trial</span>
+              <ArrowRight size={15} />
+            </Link>
+            <Link
+              href="#platform"
+              className="px-8 py-3.5 rounded-full bg-white/90 border border-[#7C3AED]/40 text-[#1E1B4B] hover:bg-white text-[14.5px] font-medium transition-colors flex items-center justify-center gap-2 shadow-2xs"
+            >
+              <span>Book a demo</span>
+            </Link>
+          </div>
+
+          {/* 3 Micro Feature Callouts */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 pt-6 sm:pt-8 border-t border-slate-300/70 w-full max-w-[620px]">
+            <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
+              <Zap size={18} className="text-[#7C3AED] shrink-0" />
+              <div>
+                <div className="text-[13px] sm:text-[13.5px] font-bold text-[#0F1017]">Detect faster</div>
+                <div className="text-[11.5px] text-[#474A57]">AI-powered insights</div>
+              </div>
+            </div>
+            <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
+              <Layers size={18} className="text-[#7C3AED] shrink-0" />
+              <div>
+                <div className="text-[13px] sm:text-[13.5px] font-bold text-[#0F1017]">Resolve smarter</div>
+                <div className="text-[11.5px] text-[#474A57]">RCA in minutes</div>
+              </div>
+            </div>
+            <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
+              <ShieldCheck size={18} className="text-[#7C3AED] shrink-0" />
+              <div>
+                <div className="text-[13px] sm:text-[13.5px] font-bold text-[#0F1017]">Stay reliable</div>
+                <div className="text-[11.5px] text-[#474A57]">High-uptime systems</div>
+              </div>
+            </div>
           </div>
 
         </div>
