@@ -62,7 +62,7 @@ const HeroEcosystem3D = dynamic(
 );
 
 /* ═══════════════════════════════════════════════════════════════
-   1. ELITE SWISS-STYLE NAVIGATION BAR
+   1. ELITE DARK EDITORIAL NAVIGATION BAR (EXACT AS SPECIFIED)
    ═══════════════════════════════════════════════════════════════ */
 function StripeNavbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -81,47 +81,46 @@ function StripeNavbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-3 sm:py-3.5 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md border-b border-[#E2E4E9] shadow-[0_2px_16px_rgba(16,17,20,0.03)]"
-          : "bg-white/80 backdrop-blur-xs border-b border-transparent"
+          ? "bg-[#0A0C14]/95 backdrop-blur-md border-b border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
+          : "bg-[#0A0C14]/80 backdrop-blur-xs border-b border-white/5"
       }`}
     >
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-10 flex items-center justify-between">
+      <div className="max-w-[1320px] mx-auto px-4 sm:px-8 lg:px-10 flex items-center justify-between">
         
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center group focus:outline-none shrink-0">
-          <Logo className="h-5 sm:h-5.5 text-[#101114] group-hover:text-[#425CF5] transition-colors" />
+        {/* Brand Logo with Double Diagonal Slash Icon */}
+        <Link href="/" className="flex items-center gap-2 group focus:outline-none shrink-0">
+          <div className="flex items-center gap-1.5 font-bold tracking-[0.16em] text-[15px] sm:text-[16px] text-white">
+            <span className="text-[#C7BDF7] font-mono text-base font-bold">//</span>
+            <span className="font-['Sora',sans-serif] tracking-[0.18em]">BREXAL</span>
+          </div>
         </Link>
 
         {/* Right Nav & Action CTAs Group */}
-        <div className="flex items-center gap-4 xl:gap-8 shrink-0">
+        <div className="flex items-center gap-5 xl:gap-8 shrink-0">
           {/* Desktop Navigation Menu */}
-          <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-[13.5px] xl:text-[14px] font-medium text-[#34363D] whitespace-nowrap">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-[13.5px] font-medium text-[#BFC3CC] whitespace-nowrap">
             <div 
-              className="relative cursor-pointer group flex items-center gap-1 hover:text-[#425CF5] transition-colors"
-              onMouseEnter={() => setActiveDropdown("products")}
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-white transition-colors"
+              onMouseEnter={() => setActiveDropdown("product")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <Link href="#architecture">Products</Link>
-              <ChevronDown size={14} className="opacity-50 group-hover:opacity-100 transition-opacity" />
+              <Link href="#platform">Product</Link>
+              <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
               
-              {activeDropdown === "products" && (
+              {activeDropdown === "product" && (
                 <div className="absolute top-full -left-4 w-72 pt-3">
-                  <div className="p-3.5 bg-white rounded-2xl border border-[#E2E4E9] shadow-[0_12px_36px_rgba(16,17,20,0.08)] space-y-2 text-left">
-                    <Link href="#architecture-flow" className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
-                      <div className="font-semibold text-xs text-[#101114]">Architecture Data Flow</div>
-                      <div className="text-[11px] text-[#5B5F6B]">Kernel sockets to Slack/PagerDuty in &lt; 90s</div>
+                  <div className="p-3.5 bg-[#12141F] rounded-2xl border border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.7)] space-y-2 text-left">
+                    <Link href="#platform" className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
+                      <div className="font-semibold text-xs text-white">Real-Time Monitoring</div>
+                      <div className="text-[11px] text-[#8B8F9A]">Full visibility into applications and mesh</div>
                     </Link>
-                    <Link href="#architecture" className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
-                      <div className="font-semibold text-xs text-[#101114]">eBPF Telemetry Mesh</div>
-                      <div className="text-[11px] text-[#5B5F6B]">Socket monitoring with 0% CPU overhead</div>
+                    <Link href="#interactive-simulator" className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
+                      <div className="font-semibold text-xs text-white">AI Incident Copilot</div>
+                      <div className="text-[11px] text-[#8B8F9A]">Root cause analysis & remediation in &lt; 90s</div>
                     </Link>
-                    <Link href="#interactive-simulator" className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
-                      <div className="font-semibold text-xs text-[#101114]">AI Incident Engine</div>
-                      <div className="text-[11px] text-[#5B5F6B]">Automated root-cause commit correlation</div>
-                    </Link>
-                    <Link href="#developer-sandbox" className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
-                      <div className="font-semibold text-xs text-[#101114]">Distributed Traces</div>
-                      <div className="text-[11px] text-[#5B5F6B]">Microsecond span waterfalls & graphs</div>
+                    <Link href="#architecture-flow" className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
+                      <div className="font-semibold text-xs text-white">eBPF Telemetry Mesh</div>
+                      <div className="text-[11px] text-[#8B8F9A]">0.0% CPU kernel-level socket observability</div>
                     </Link>
                   </div>
                 </div>
@@ -129,58 +128,73 @@ function StripeNavbar() {
             </div>
 
             <div 
-              className="relative cursor-pointer group flex items-center gap-1 hover:text-[#425CF5] transition-colors"
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-white transition-colors"
               onMouseEnter={() => setActiveDropdown("solutions")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <Link href="#comparison">Solutions</Link>
-              <ChevronDown size={14} className="opacity-50 group-hover:opacity-100 transition-opacity" />
+              <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
               
               {activeDropdown === "solutions" && (
                 <div className="absolute top-full -left-4 w-72 pt-3">
-                  <div className="p-3.5 bg-white rounded-2xl border border-[#E2E4E9] shadow-[0_12px_36px_rgba(16,17,20,0.08)] space-y-2 text-left">
-                    <div className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
-                      <div className="font-semibold text-xs text-[#101114]">Enterprise Kubernetes</div>
-                      <div className="text-[11px] text-[#5B5F6B]">Multi-cluster pod routing & ingress telemetry</div>
+                  <div className="p-3.5 bg-[#12141F] rounded-2xl border border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.7)] space-y-2 text-left">
+                    <div className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
+                      <div className="font-semibold text-xs text-white">Enterprise Kubernetes</div>
+                      <div className="text-[11px] text-[#8B8F9A]">Multi-cluster pod routing & ingress</div>
                     </div>
-                    <div className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
-                      <div className="font-semibold text-xs text-[#101114]">Fintech & High-Throughput</div>
-                      <div className="text-[11px] text-[#5B5F6B]">Sub-millisecond SLA enforcement & audits</div>
+                    <div className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
+                      <div className="font-semibold text-xs text-white">High-Throughput Fintech</div>
+                      <div className="text-[11px] text-[#8B8F9A]">Sub-millisecond SLA enforcement</div>
                     </div>
                   </div>
                 </div>
               )}
             </div>
 
-            <Link href="#developer-sandbox" className="hover:text-[#425CF5] transition-colors">
-              Developers
-            </Link>
-            <Link href="#pricing" className="hover:text-[#425CF5] transition-colors">
+            <div 
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-white transition-colors"
+              onMouseEnter={() => setActiveDropdown("developers")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link href="#developer-sandbox">Developers</Link>
+              <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+            </div>
+
+            <div 
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-white transition-colors"
+              onMouseEnter={() => setActiveDropdown("resources")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link href="#faq">Resources</Link>
+              <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
+            </div>
+
+            <Link href="#pricing" className="hover:text-white transition-colors">
               Pricing
             </Link>
           </nav>
 
-          {/* Action CTAs & Mobile Hamburger */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Action CTAs: Log in + Get started → */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             <Link
               href="/login"
-              className="text-[13px] sm:text-[13.5px] font-medium text-[#34363D] hover:text-[#425CF5] px-2.5 py-1.5 transition-colors whitespace-nowrap"
+              className="text-[13px] sm:text-[13.5px] font-medium text-[#BFC3CC] hover:text-white px-2 py-1.5 transition-colors whitespace-nowrap"
             >
-              Sign in
+              Log in
             </Link>
             <Link
               href="/register"
-              className="group px-4 py-2 sm:px-4.5 sm:py-2 rounded-full bg-[#101C35] hover:bg-[#425CF5] text-white text-[12.5px] sm:text-[13px] font-semibold transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 flex items-center gap-1.5 whitespace-nowrap"
+              className="group px-4.5 py-2 rounded-full bg-white text-[#0A0C14] hover:bg-neutral-100 text-[12.5px] sm:text-[13px] font-semibold transition-all shadow-[0_2px_12px_rgba(255,255,255,0.15)] hover:scale-105 flex items-center gap-1.5 whitespace-nowrap"
             >
-              <span>Start now</span>
-              <ChevronRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
+              <span>Get started</span>
+              <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
             {/* Mobile Hamburger Button */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-[#101114] hover:bg-[#F7F6F2] transition-colors focus:outline-none"
+              className="lg:hidden p-2 rounded-xl text-white hover:bg-white/10 transition-colors focus:outline-none"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -191,55 +205,52 @@ function StripeNavbar() {
 
       {/* Mobile Dropdown Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#E2E4E9] bg-white/98 backdrop-blur-xl px-4 py-5 space-y-4 shadow-xl text-left">
+        <div className="lg:hidden border-t border-white/10 bg-[#0A0C14]/98 backdrop-blur-xl px-4 py-5 space-y-4 shadow-2xl text-left">
           <div className="space-y-1">
-            <div className="text-[10px] font-mono font-semibold uppercase tracking-wider text-[#425CF5] px-3 py-1">
-              Navigation
-            </div>
             <Link
-              href="#architecture"
+              href="#platform"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-white hover:bg-white/10 transition-colors"
             >
-              eBPF Telemetry Mesh
+              Product
             </Link>
             <Link
-              href="#interactive-simulator"
+              href="#comparison"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-white hover:bg-white/10 transition-colors"
             >
-              AI Incident Radar
+              Solutions
             </Link>
             <Link
               href="#developer-sandbox"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-white hover:bg-white/10 transition-colors"
             >
-              Distributed Traces & Sandbox
+              Developers
             </Link>
             <Link
               href="#pricing"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-white hover:bg-white/10 transition-colors"
             >
-              Transparent Pricing
+              Pricing
             </Link>
           </div>
 
-          <div className="pt-3 border-t border-[#E2E4E9] flex flex-col gap-2">
+          <div className="pt-3 border-t border-white/10 flex flex-col gap-2">
             <Link
               href="/register"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-2.5 rounded-full bg-[#101C35] hover:bg-[#425CF5] text-white text-center font-semibold text-sm shadow-sm"
+              className="w-full py-2.5 rounded-full bg-white text-[#0A0C14] text-center font-semibold text-sm shadow-sm"
             >
-              Get Started Free
+              Get started free
             </Link>
             <Link
               href="/login"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-2.5 rounded-full border border-[#D6D8DE] bg-white text-center font-semibold text-sm text-[#101114]"
+              className="w-full py-2.5 rounded-full border border-white/20 bg-white/5 text-center font-semibold text-sm text-white"
             >
-              Sign In to Console
+              Log in to Console
             </Link>
           </div>
         </div>
@@ -249,200 +260,388 @@ function StripeNavbar() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BROWSER MOCKUP FRAME (ARCHITECTURAL SWISS WINDOW WITH URL BAR)
+   2. FLOATING 3D PERSPECTIVE DARK CONSOLE MOCKUP (EXACT STATS & CHARTS)
    ═══════════════════════════════════════════════════════════════ */
-interface BrowserFrameProps {
-  url?: string;
-  children: React.ReactNode;
-  className?: string;
-}
+function HeroConsole3D() {
+  const [activeTab, setActiveTab] = useState("overview");
 
-function BrowserFrame({ url = "console.bhartinexus.io", children, className = "" }: BrowserFrameProps) {
   return (
-    <div className={`rounded-xl sm:rounded-2xl border border-[#E2E4E9] bg-white shadow-[0_20px_50px_rgba(16,17,20,0.06)] overflow-hidden ${className}`}>
-      {/* Browser Bar */}
-      <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#F7F6F2] border-b border-[#E2E4E9]">
-        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FF5F56]/90 border border-[#E0443E]/40" />
-          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFBD2E]/90 border border-[#DEA123]/40" />
-          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#27C93F]/90 border border-[#1AAB29]/40" />
-        </div>
-        <div className="flex-1 max-w-[190px] sm:max-w-sm mx-auto flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-0.5 rounded-md bg-white border border-[#E2E4E9] text-[10px] sm:text-[11px] font-mono text-[#5B5F6B] font-medium truncate">
-          <Lock size={10} className="text-[#8B8F9A] shrink-0" />
-          <span className="truncate">{url}</span>
-        </div>
-      </div>
-      {/* Window Body */}
-      <div className="relative bg-white overflow-hidden">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ARCHITECTURAL HERO CANVAS (SUBTLE GEOMETRIC GRID & ACCENT)
-   ═══════════════════════════════════════════════════════════════ */
-function EliteArchitecturalHeroCanvas() {
-  return (
-    <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
-      {/* Subtle fine architectural grid - top-right hemisphere */}
-      <svg
-        className="absolute top-0 right-0 w-full sm:w-[85%] lg:w-[65%] h-[90%] opacity-[0.38]"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <pattern id="arch-grid" x="0" y="0" width="56" height="56" patternUnits="userSpaceOnUse">
-            <path d="M 56 0 L 0 0 0 56" fill="none" stroke="#D6D8DE" strokeWidth="0.5" />
-            <circle cx="0" cy="0" r="1" fill="#BFC3CC" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#arch-grid)" />
-      </svg>
-
-      {/* Atmospheric Soft Light: Electric Cobalt + Soft Lavender Ambient Glow */}
-      <div className="absolute -top-32 right-[5%] w-[680px] h-[580px] rounded-full bg-gradient-to-bl from-[#425CF5]/[0.055] via-[#C7BDF7]/[0.035] to-transparent blur-[110px] brexal-ambient-breathe pointer-events-none" />
-      <div className="absolute top-[20%] right-[30%] w-[380px] h-[380px] rounded-full bg-[#425CF5]/[0.025] blur-[90px] pointer-events-none" />
-
-      {/* Bottom Dissolve Mask */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   2. ELITE HERO SECTION WITH ARCHITECTURAL COMPOSITION
-   ═══════════════════════════════════════════════════════════════ */
-function StripeHeroSection() {
-  return (
-    <section className="relative pt-16 pb-6 sm:pt-20 sm:pb-8 md:pt-22 md:pb-10 px-4 sm:px-8 lg:px-10 overflow-hidden bg-white">
-      
-      {/* ── ARCHITECTURAL HERO CANVAS ── */}
-      <EliteArchitecturalHeroCanvas />
-
-      <div className="max-w-[1320px] mx-auto text-left relative z-10">
+    <div className="relative w-full max-w-[620px] mx-auto lg:max-w-none">
+      {/* 3D Perspective Wrapper */}
+      <div className="relative transform lg:rotate-y-[-7deg] lg:rotate-x-[4deg] lg:rotate-z-[-2deg] transition-all duration-700 hover:rotate-0 hover:scale-[1.01] group">
         
-        {/* TWO-COLUMN EDITORIAL COMPOSITION */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-12 items-center">
+        {/* Glow Behind Console */}
+        <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-[#7C3AED]/25 via-[#425CF5]/20 to-[#C8A96B]/15 blur-2xl opacity-75 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+        {/* Main Dark Console Window */}
+        <div className="relative rounded-2xl border border-white/12 bg-[#12141F]/95 backdrop-blur-xl shadow-[0_30px_90px_rgba(0,0,0,0.7),0_0_50px_rgba(124,58,237,0.18)] p-3 sm:p-4 text-white overflow-hidden">
           
-          {/* Left Column (5 cols): Editorial Copy & High-End CTAs */}
-          <div className="lg:col-span-5 flex flex-col items-start text-left">
+          {/* Top Bar */}
+          <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/8 text-xs">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11px] text-white">
+                <span className="text-[#C7BDF7] font-mono">//</span>
+                <span>BREXAL</span>
+              </div>
+              <span className="text-white/20">|</span>
+              <span className="text-white/80 font-medium text-[11px] hidden sm:inline">
+                System Overview
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10.5px] text-white/70 hover:text-white cursor-pointer transition-colors">
+                <span>Last 24 hours</span>
+                <ChevronDown size={11} className="text-white/50" />
+              </div>
+            </div>
+          </div>
+
+          {/* Console Body: Left Nav + Main Content */}
+          <div className="grid grid-cols-12 gap-3">
             
-            {/* Top Minimal Pill Eyebrow */}
-            <div className="brexal-pop-up" style={{ animationDelay: "0.05s" }}>
-              <Link 
-                href="#interactive-simulator" 
-                className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#E2E4E9] shadow-[0_2px_8px_rgba(16,17,20,0.03)] mb-3 hover:border-[#425CF5]/50 hover:bg-[#F7F6F2] transition-all"
+            {/* Left Nav (3 cols on sm+, hidden on mobile for space) */}
+            <div className="hidden sm:flex sm:col-span-3 flex-col gap-1 pr-1 border-r border-white/8 text-[11px]">
+              <button
+                type="button"
+                onClick={() => setActiveTab("overview")}
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-colors text-left ${
+                  activeTab === "overview"
+                    ? "bg-[#6366F1] text-white font-semibold shadow-xs"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
+                }`}
               >
-                <span className="flex h-2 w-2 rounded-full bg-[#425CF5] animate-pulse" />
-                <span className="text-[10px] sm:text-[11px] font-mono font-semibold tracking-[0.1em] uppercase text-[#34363D]">
-                  Now in GA: Autonomous eBPF Telemetry Mesh 3.0
-                </span>
-                <ChevronRight size={13} className="text-[#425CF5] group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+                <Layers size={13} />
+                <span>Overview</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("monitoring")}
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-colors text-left ${
+                  activeTab === "monitoring"
+                    ? "bg-[#6366F1] text-white font-semibold shadow-xs"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Activity size={13} />
+                <span>Monitoring</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("incidents")}
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-colors text-left ${
+                  activeTab === "incidents"
+                    ? "bg-[#6366F1] text-white font-semibold shadow-xs"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <AlertTriangle size={13} />
+                <span>Incidents</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors text-left"
+              >
+                <Network size={13} />
+                <span>Traces</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors text-left"
+              >
+                <Terminal size={13} />
+                <span>Logs</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors text-left"
+              >
+                <Server size={13} />
+                <span>Infrastructure</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors text-left mt-auto"
+              >
+                <Cpu size={13} />
+                <span>Settings</span>
+              </button>
             </div>
 
-            {/* Editorial Display Headline (Sora, Proportioned to Viewport) */}
-            <h1
-              className="brexal-pop-up font-display text-[26px] sm:text-[34px] md:text-[38px] lg:text-[40px] xl:text-[44px] font-semibold tracking-[-0.035em] text-[#101114] leading-[1.1] mb-2.5 sm:mb-3 text-left"
-              style={{ animationDelay: "0.14s" }}
-            >
-              Autonomous telemetry <br className="hidden sm:inline" />
-              infrastructure for <br className="hidden sm:inline" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#425CF5] via-[#7657E8] to-[#425CF5]">
-                modern cloud systems.
-              </span>
-            </h1>
-
-            {/* Supporting Subhead */}
-            <p
-              className="brexal-pop-up text-[13.5px] sm:text-[14.5px] text-[#5B5F6B] font-normal leading-relaxed mb-3 sm:mb-4 text-left max-w-[460px]"
-              style={{ animationDelay: "0.22s" }}
-            >
-              Millions of requests across Kubernetes, microservices, and databases are monitored in real time with BREXAL. Synthesize logs, kernel traces, and metrics into self-healing incident intelligence.
-            </p>
-
-            {/* ── HERO MICRO-BENTO TELEMETRY HUD (ENGINEERING RIGOR) ── */}
-            <div
-              className="brexal-pop-up grid grid-cols-3 gap-2 sm:gap-2.5 w-full max-w-[460px] mb-3.5 sm:mb-4"
-              style={{ animationDelay: "0.28s" }}
-            >
-              <div className="p-2 sm:p-2.5 rounded-xl bg-[#F7F6F2] border border-[#E2E4E9] hover:border-[#425CF5]/40 transition-colors">
-                <div className="flex items-center gap-1 text-[9.5px] sm:text-[10px] font-mono text-[#5B5F6B] mb-0.5">
-                  <Cpu size={11} className="text-[#425CF5] shrink-0" />
-                  <span className="truncate">eBPF Core</span>
+            {/* Right Main Dashboard Display (9 cols on sm+, 12 cols on mobile) */}
+            <div className="col-span-12 sm:col-span-9 flex flex-col gap-2.5">
+              
+              {/* 4 Top Metric Cards (EXACT VALUES FROM USER SPEC) */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {/* Uptime */}
+                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
+                  <div className="text-[9.5px] text-white/50 font-mono mb-1">Uptime</div>
+                  <div className="text-[14px] sm:text-[16px] font-bold text-white leading-tight">
+                    99.98%
+                  </div>
+                  <div className="text-[9px] text-[#10B981] font-mono mt-0.5 flex items-center gap-0.5">
+                    <span>↑</span> +0.12%
+                  </div>
                 </div>
-                <div className="text-[17px] sm:text-[19px] font-bold font-display text-[#101114] leading-tight">
-                  0.0%
+
+                {/* Incidents */}
+                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
+                  <div className="text-[9.5px] text-white/50 font-mono mb-1">Incidents</div>
+                  <div className="text-[14px] sm:text-[16px] font-bold text-white leading-tight">
+                    3
+                  </div>
+                  <div className="text-[9px] text-[#C7BDF7] font-mono mt-0.5 flex items-center gap-0.5">
+                    <span>↓</span> -40%
+                  </div>
                 </div>
-                <div className="text-[9px] text-[#8B8F9A] font-mono truncate">CPU overhead</div>
+
+                {/* MTTR */}
+                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
+                  <div className="text-[9.5px] text-white/50 font-mono mb-1">MTTR</div>
+                  <div className="text-[14px] sm:text-[16px] font-bold text-white leading-tight">
+                    4m 26s
+                  </div>
+                  <div className="text-[9px] text-[#C7BDF7] font-mono mt-0.5 flex items-center gap-0.5">
+                    <span>↓</span> -32%
+                  </div>
+                </div>
+
+                {/* Error Rate */}
+                <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
+                  <div className="text-[9.5px] text-white/50 font-mono mb-1">Error Rate</div>
+                  <div className="text-[14px] sm:text-[16px] font-bold text-white leading-tight">
+                    0.12%
+                  </div>
+                  <div className="text-[9px] text-[#10B981] font-mono mt-0.5 flex items-center gap-0.5">
+                    <span>↑</span> +0.03%
+                  </div>
+                </div>
               </div>
 
-              <div className="p-2 sm:p-2.5 rounded-xl bg-[#F7F6F2] border border-[#E2E4E9] hover:border-[#425CF5]/40 transition-colors">
-                <div className="flex items-center gap-1 text-[9.5px] sm:text-[10px] font-mono text-[#5B5F6B] mb-0.5">
-                  <Zap size={11} className="text-[#C8A96B] shrink-0" />
-                  <span className="truncate">AI MTTR</span>
+              {/* Bottom Row: Request Volume Area Chart (Left) + SLO Health Donut (Right) */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
+                
+                {/* Request Volume Chart (8 cols) */}
+                <div className="md:col-span-8 p-3 rounded-xl bg-white/[0.04] border border-white/8 flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[11px] font-semibold text-white/90">
+                      Request Volume
+                    </span>
+                    <span className="text-[9px] font-mono text-[#C7BDF7] bg-[#6366F1]/20 px-1.5 py-0.5 rounded">
+                      Live Telemetry
+                    </span>
+                  </div>
+
+                  {/* SVG Wave Chart */}
+                  <div className="relative w-full h-[95px] sm:h-[110px]">
+                    {/* Tooltip on peak: 1.24M reqs */}
+                    <div className="absolute top-1 right-[22%] -translate-x-1/2 px-2 py-0.5 rounded-md bg-[#101114] border border-[#6366F1] shadow-lg text-[9px] font-mono font-bold text-white z-10 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-ping" />
+                      <span>1.24M reqs</span>
+                    </div>
+
+                    <svg viewBox="0 0 300 100" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="reqVolumeGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#818CF8" stopOpacity="0.45" />
+                          <stop offset="60%" stopColor="#6366F1" stopOpacity="0.18" />
+                          <stop offset="100%" stopColor="#6366F1" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+
+                      {/* Area Fill */}
+                      <path
+                        d="M 0 85 C 30 82, 50 65, 80 68 C 110 71, 130 50, 160 55 C 190 60, 210 20, 230 22 C 255 24, 275 48, 300 45 L 300 100 L 0 100 Z"
+                        fill="url(#reqVolumeGrad)"
+                      />
+
+                      {/* Stroke Line */}
+                      <path
+                        d="M 0 85 C 30 82, 50 65, 80 68 C 110 71, 130 50, 160 55 C 190 60, 210 20, 230 22 C 255 24, 275 48, 300 45"
+                        fill="none"
+                        stroke="#818CF8"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+
+                      {/* Peak Marker Dot */}
+                      <circle cx="230" cy="22" r="3.5" fill="#FFFFFF" stroke="#6366F1" strokeWidth="2.5" />
+                    </svg>
+                  </div>
+
+                  {/* X Axis Time Labels */}
+                  <div className="flex justify-between items-center text-[7.5px] sm:text-[8px] font-mono text-white/40 pt-1 border-t border-white/5">
+                    <span>12 AM</span>
+                    <span>3 AM</span>
+                    <span>6 AM</span>
+                    <span>9 AM</span>
+                    <span>12 PM</span>
+                    <span>3 PM</span>
+                    <span>6 PM</span>
+                    <span>9 PM</span>
+                  </div>
                 </div>
-                <div className="text-[17px] sm:text-[19px] font-bold font-display text-[#101114] leading-tight">
-                  &lt; 90s
+
+                {/* SLO Health Donut Gauge (4 cols) */}
+                <div className="md:col-span-4 p-3 rounded-xl bg-white/[0.04] border border-white/8 flex flex-col items-center justify-between">
+                  <div className="text-[11px] font-semibold text-white/90 text-center w-full">
+                    SLO Health
+                  </div>
+
+                  {/* Circular Radial Gauge */}
+                  <div className="relative w-20 h-20 sm:w-22 sm:h-22 my-1 flex items-center justify-center">
+                    <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                      {/* Background Track */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.08)"
+                        strokeWidth="8"
+                      />
+                      {/* Active Arc (99.9%) */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="38"
+                        fill="none"
+                        stroke="#818CF8"
+                        strokeWidth="8"
+                        strokeDasharray={2 * Math.PI * 38}
+                        strokeDashoffset={(2 * Math.PI * 38) * (1 - 0.999)}
+                        strokeLinecap="round"
+                        className="drop-shadow-[0_0_8px_rgba(129,140,248,0.7)]"
+                      />
+                    </svg>
+                    
+                    {/* Center Text */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                      <span className="text-[14px] sm:text-[15px] font-bold text-white leading-none">
+                        99.9%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-[8.5px] font-mono text-white/50 text-center">
+                    SLO Target Met
+                  </div>
                 </div>
-                <div className="text-[9px] text-[#8B8F9A] font-mono truncate">Root cause</div>
+
               </div>
 
-              <div className="p-2 sm:p-2.5 rounded-xl bg-[#F7F6F2] border border-[#E2E4E9] hover:border-[#425CF5]/40 transition-colors">
-                <div className="flex items-center gap-1 text-[9.5px] sm:text-[10px] font-mono text-[#5B5F6B] mb-0.5">
-                  <Activity size={11} className="text-[#059669] shrink-0" />
-                  <span className="truncate">Spans / s</span>
-                </div>
-                <div className="text-[17px] sm:text-[19px] font-bold font-display text-[#101114] leading-tight">
-                  250M+
-                </div>
-                <div className="text-[9px] text-[#8B8F9A] font-mono truncate">Kernel stream</div>
-              </div>
-            </div>
-
-            {/* Elite Action CTAs Row */}
-            <div
-              className="brexal-pop-up flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 mb-3.5 sm:mb-4 w-full sm:w-auto"
-              style={{ animationDelay: "0.34s" }}
-            >
-              <Link
-                href="/register"
-                className="elite-btn-primary px-6 py-2.5 min-h-[42px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 group shadow-sm hover:shadow-md cursor-pointer"
-              >
-                <span>Start for free</span>
-                <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-              <Link
-                href="#interactive-simulator"
-                className="elite-btn-secondary px-5 py-2.5 min-h-[42px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>Explore live radar</span>
-                <ChevronRight size={14} className="text-[#8B8F9A]" />
-              </Link>
-            </div>
-
-            {/* Micro Trust Signals */}
-            <div
-              className="brexal-pop-up flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] sm:text-[11.5px] font-mono text-[#5B5F6B] pt-0.5"
-              style={{ animationDelay: "0.40s" }}
-            >
-              <span className="flex items-center gap-1.5">
-                <Check size={14} className="text-[#059669] font-bold shrink-0" /> Free developer tier
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Check size={14} className="text-[#059669] font-bold shrink-0" /> Zero bytecode injection
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Check size={14} className="text-[#059669] font-bold shrink-0" /> SOC-2 Type II Certified
-              </span>
             </div>
 
           </div>
 
-          {/* Right Column (7 cols): 3D Technology Ecosystem Visualization */}
-          <div className="lg:col-span-7 relative w-full pt-0">
-            <HeroEcosystem3D />
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. CINEMATIC DARK HERO SECTION (EXACT REFERENCE DESIGN)
+   ═══════════════════════════════════════════════════════════════ */
+function StripeHeroSection() {
+  return (
+    <section className="relative bg-[#0A0C14] text-white pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24 px-4 sm:px-8 lg:px-12 overflow-hidden">
+      
+      {/* ── ARCHITECTURAL LIGHTING: GOLD SLICING RAY & VIOLET HORIZON ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden -z-0">
+        {/* Diagonal Golden Architectural Slicing Light Beam from Top Right */}
+        <div 
+          className="absolute -top-[20%] right-[-10%] w-[800px] h-[900px] bg-gradient-to-bl from-[#E2C385]/20 via-[#C8A96B]/5 to-transparent blur-[80px] pointer-events-none transform -rotate-12"
+        />
+        {/* Glowing razor gold line cutting across top right */}
+        <div 
+          className="absolute top-0 right-1/4 w-[500px] h-[1px] bg-gradient-to-r from-transparent via-[#C8A96B]/30 to-transparent transform -rotate-25 pointer-events-none"
+        />
+
+        {/* Sweeping Purple / Violet Curved Horizon Aurora */}
+        <div 
+          className="absolute bottom-[-15%] right-[-5%] w-[850px] h-[550px] rounded-full bg-gradient-to-t from-[#7C3AED]/25 via-[#6366F1]/15 to-transparent blur-[120px] pointer-events-none"
+        />
+        <div 
+          className="absolute bottom-[-10%] left-[20%] w-[500px] h-[350px] rounded-full bg-[#425CF5]/10 blur-[100px] pointer-events-none"
+        />
+      </div>
+
+      <div className="max-w-[1320px] mx-auto relative z-10">
+        
+        {/* TWO-COLUMN EDITORIAL COMPOSITION */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
+          
+          {/* Left Column (5 cols): Editorial Headline & Copy */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left">
+            
+            {/* Minimal Gold Eyebrow */}
+            <div className="flex items-center gap-2.5 mb-4 sm:mb-5">
+              <span className="w-6 h-[1.5px] bg-[#C8A96B]" />
+              <span className="text-[11px] sm:text-[11.5px] font-mono font-semibold tracking-[0.2em] uppercase text-[#C8A96B]">
+                AI MONITORING PLATFORM
+              </span>
+            </div>
+
+            {/* Display Headline: "Intelligence, engineered to move." */}
+            <h1 className="text-[38px] sm:text-[50px] md:text-[56px] lg:text-[60px] xl:text-[66px] font-semibold tracking-[-0.035em] text-white leading-[1.05] mb-4 sm:mb-5 text-left">
+              Intelligence, <br />
+              engineered <span className="font-editorial italic font-normal text-[#C7BDF7]">to move.</span>
+            </h1>
+
+            {/* Supporting Subhead */}
+            <p className="text-[14.5px] sm:text-[15.5px] text-[#A1A5B4] font-normal leading-relaxed mb-6 sm:mb-7 max-w-[460px] text-left">
+              A modern monitoring and incident management platform that gives teams complete visibility, faster resolution and a more reliable system.
+            </p>
+
+            {/* Action CTAs Row */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-3.5 mb-8 sm:mb-10 w-full sm:w-auto">
+              <Link
+                href="/register"
+                className="px-6 py-3 rounded-full bg-white text-[#0A0C14] hover:bg-neutral-100 text-[13.5px] sm:text-[14px] font-semibold transition-all shadow-[0_4px_20px_rgba(255,255,255,0.18)] hover:scale-105 flex items-center gap-2 group cursor-pointer"
+              >
+                <span>Start free trial</span>
+                <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+              <Link
+                href="#interactive-simulator"
+                className="px-6 py-3 rounded-full bg-white/5 border border-white/15 text-white hover:bg-white/10 text-[13.5px] sm:text-[14px] font-medium transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <span>Book a demo</span>
+              </Link>
+            </div>
+
+            {/* 3 Micro Feature Callouts */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 pt-6 border-t border-white/10 w-full max-w-[500px]">
+              <div className="flex items-start gap-2.5">
+                <Zap size={17} className="text-[#C7BDF7] shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-[12.5px] sm:text-[13px] font-semibold text-white">Detect faster</div>
+                  <div className="text-[10.5px] sm:text-[11px] text-[#8B8F9A]">AI-powered insights</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <Layers size={17} className="text-[#C7BDF7] shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-[12.5px] sm:text-[13px] font-semibold text-white">Resolve smarter</div>
+                  <div className="text-[10.5px] sm:text-[11px] text-[#8B8F9A]">RCA in minutes</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <ShieldCheck size={17} className="text-[#C7BDF7] shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-[12.5px] sm:text-[13px] font-semibold text-white">Stay reliable</div>
+                  <div className="text-[10.5px] sm:text-[11px] text-[#8B8F9A]">High-uptime systems</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column (7 cols): Floating 3D Perspective Console Mockup */}
+          <div className="lg:col-span-7 relative w-full pt-4 lg:pt-0">
+            <HeroConsole3D />
           </div>
 
         </div>
@@ -453,38 +652,267 @@ function StripeHeroSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   3. ELITE CLIENT MARQUEE (TRUSTED INFRASTRUCTURE)
+   4. SOCIAL PROOF / CLIENT STRIP (EXACT AS IN REFERENCE)
    ═══════════════════════════════════════════════════════════════ */
 function StripeClientMarquee() {
-  const logos = [
-    { name: "Amazon AWS", code: "AWS" },
-    { name: "Google Cloud", code: "GCP" },
-    { name: "Cloudflare", code: "CF" },
-    { name: "Kubernetes", code: "K8S" },
-    { name: "Docker", code: "DCK" },
-    { name: "OpenAI", code: "OAI" },
-    { name: "Anthropic", code: "ANT" },
-    { name: "PostgreSQL", code: "PG" },
-    { name: "Redis", code: "RDS" },
+  const clients = [
+    { name: "Rivex", symbol: "∞" },
+    { name: "Cloudway", symbol: "☁" },
+    { name: "Nexora", symbol: "//" },
+    { name: "Taskly", symbol: "⊞" },
+    { name: "Aventra", symbol: "⬡" },
   ];
 
   return (
-    <section className="py-6 sm:py-7 border-t border-b border-[#E2E4E9] bg-[#F7F6F2] px-4 sm:px-10">
-      <div className="max-w-[1320px] mx-auto">
-        <p className="text-center font-mono text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B5F6B] mb-3 sm:mb-3.5">
-          Powering mission-critical platforms and distributed engineering teams
-        </p>
+    <section className="bg-[#0A0C14] border-t border-b border-white/10 py-5 sm:py-6 px-4 sm:px-10">
+      <div className="max-w-[1320px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
         
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-12 opacity-85 hover:opacity-100 transition-opacity">
-          {logos.map((lg, i) => (
-            <div key={i} className="flex items-center gap-1.5 sm:gap-2 group cursor-default">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#BFC3CC] group-hover:bg-[#425CF5] transition-colors" />
-              <span className="font-mono text-xs sm:text-[13.5px] font-bold text-[#34363D] group-hover:text-[#101114] tracking-wider uppercase transition-colors">
-                {lg.name}
+        {/* Left Trust Statement */}
+        <div className="flex items-center text-center md:text-left text-xs sm:text-[13px] font-medium text-[#8B8F9A] shrink-0">
+          <span>Trusted by <br className="hidden md:inline" /> engineering teams worldwide</span>
+          <span className="hidden md:block w-px h-8 bg-white/15 ml-8" />
+        </div>
+
+        {/* Right Client Logos */}
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-6 sm:gap-12 flex-1 opacity-90 hover:opacity-100 transition-opacity">
+          {clients.map((c, i) => (
+            <div key={i} className="flex items-center gap-2 group cursor-default">
+              <span className="text-white/40 group-hover:text-[#C7BDF7] font-mono text-base transition-colors">
+                {c.symbol}
+              </span>
+              <span className="font-['Sora',sans-serif] text-sm sm:text-[15px] font-semibold text-white/80 group-hover:text-white tracking-wide transition-colors">
+                {c.name}
               </span>
             </div>
           ))}
         </div>
+
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. "THE PLATFORM" SECTION (EXACT 2x2 BENTO GRID AS IN REFERENCE)
+   ═══════════════════════════════════════════════════════════════ */
+function PlatformOverviewSection() {
+  return (
+    <section id="platform" className="bg-[#FAFAFC] text-[#101114] py-18 sm:py-24 px-4 sm:px-8 lg:px-12 border-b border-[#E2E4E9]">
+      <div className="max-w-[1320px] mx-auto">
+        
+        {/* Section Grid: Left Intro + Right 2x2 Bento */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          
+          {/* Left Column (5 cols): Editorial Intro & CTA */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left lg:sticky lg:top-28">
+            
+            {/* Minimal Purple Eyebrow */}
+            <div className="flex items-center gap-2.5 mb-4">
+              <span className="w-5 h-[2px] bg-[#7C3AED]" />
+              <span className="text-[11px] sm:text-[12px] font-mono font-bold tracking-[0.2em] uppercase text-[#7C3AED]">
+                THE PLATFORM
+              </span>
+            </div>
+
+            {/* Display Headline */}
+            <h2 className="text-[32px] sm:text-[42px] lg:text-[46px] font-bold text-[#101114] tracking-[-0.03em] leading-[1.12] mb-4 sm:mb-5 text-left">
+              Everything you need to <br />
+              keep your systems reliable.
+            </h2>
+
+            {/* Description */}
+            <p className="text-[14.5px] sm:text-[15.5px] text-[#5B5F6B] font-normal leading-relaxed mb-6 sm:mb-8 max-w-[420px] text-left">
+              From real-time monitoring and intelligent incident management to automated remediation, BREXAL brings the entire reliability stack in one place.
+            </p>
+
+            {/* CTA Button */}
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#101114] text-white hover:bg-[#425CF5] text-[13.5px] sm:text-[14px] font-semibold transition-all shadow-sm hover:scale-105 group"
+            >
+              <span>Explore the platform</span>
+              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+
+          </div>
+
+          {/* Right Column (7 cols): 2x2 Bento Cards with Custom Visual Art */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+            
+            {/* ── CARD 1: REAL-TIME MONITORING ── */}
+            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#818CF8]/50 transition-all">
+              {/* Abstract Wave Ribbon Graphic */}
+              <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <defs>
+                    <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.85" />
+                      <stop offset="50%" stopColor="#818CF8" stopOpacity="0.65" />
+                      <stop offset="100%" stopColor="#4338CA" stopOpacity="0.9" />
+                    </linearGradient>
+                    <linearGradient id="waveGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="#312E81" stopOpacity="0.85" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M 40 180 C 60 120, 100 80, 180 60 C 200 120, 160 180, 40 180 Z" fill="url(#waveGrad1)" />
+                  <path d="M 60 200 C 90 140, 130 100, 200 90 C 210 150, 170 200, 60 200 Z" fill="url(#waveGrad2)" opacity="0.75" />
+                  <path d="M 30 160 Q 90 100 170 50" stroke="#FFFFFF" strokeWidth="1.5" fill="none" opacity="0.5" />
+                  <path d="M 45 175 Q 105 115 185 65" stroke="#C7D2FE" strokeWidth="1.5" fill="none" opacity="0.4" />
+                </svg>
+              </div>
+
+              <div className="relative z-10 text-left">
+                <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#6366F1] mb-3.5 shadow-2xs">
+                  <Layers size={19} />
+                </div>
+                <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                  Real-Time Monitoring
+                </h3>
+                <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
+                  Get full visibility into your applications, infrastructure and services.
+                </p>
+              </div>
+
+              <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#425CF5] font-semibold text-sm transition-colors">
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* ── CARD 2: AI INCIDENT COPILOT ── */}
+            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#FFFBEB]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#C8A96B]/50 transition-all">
+              {/* Golden Radial Architectural Fins Graphic */}
+              <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <defs>
+                    <linearGradient id="goldFinGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#E2C385" stopOpacity="0.9" />
+                      <stop offset="50%" stopColor="#C8A96B" stopOpacity="0.75" />
+                      <stop offset="100%" stopColor="#85581A" stopOpacity="0.85" />
+                    </linearGradient>
+                  </defs>
+                  {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+                    <path
+                      key={i}
+                      d={`M ${60 + i * 14} 200 C ${80 + i * 12} ${130 - i * 6}, ${120 + i * 8} ${80 - i * 5}, 200 ${50 + i * 12} L 200 200 Z`}
+                      fill="url(#goldFinGrad)"
+                      opacity={0.35 + i * 0.08}
+                    />
+                  ))}
+                </svg>
+              </div>
+
+              <div className="relative z-10 text-left">
+                <div className="w-9 h-9 rounded-xl bg-[#FEF3C7]/60 flex items-center justify-center text-[#D97706] mb-3.5 shadow-2xs">
+                  <Zap size={19} />
+                </div>
+                <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                  AI Incident Copilot
+                </h3>
+                <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
+                  Detect, analyze and resolve incidents with the power of AI.
+                </p>
+              </div>
+
+              <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#C8A96B] font-semibold text-sm transition-colors">
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* ── CARD 3: PREDICTIVE MAINTENANCE ── */}
+            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#F5F3FF]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#8B5CF6]/50 transition-all">
+              {/* Lavender Curved Arch / Tube Graphic */}
+              <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <defs>
+                    <linearGradient id="archGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#DDD6FE" stopOpacity="0.9" />
+                      <stop offset="60%" stopColor="#8B5CF6" stopOpacity="0.75" />
+                      <stop offset="100%" stopColor="#4C1D95" stopOpacity="0.95" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M 50 200 C 60 110, 120 70, 200 70 L 200 130 C 145 130, 105 155, 100 200 Z"
+                    fill="url(#archGrad)"
+                  />
+                  <path
+                    d="M 75 200 C 85 135, 135 105, 200 105 L 200 155 C 160 155, 125 170, 120 200 Z"
+                    fill="#A78BFA"
+                    opacity="0.5"
+                  />
+                </svg>
+              </div>
+
+              <div className="relative z-10 text-left">
+                <div className="w-9 h-9 rounded-xl bg-[#F5F3FF] flex items-center justify-center text-[#7C3AED] mb-3.5 shadow-2xs">
+                  <Activity size={19} />
+                </div>
+                <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                  Predictive Maintenance
+                </h3>
+                <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
+                  Identify risks early and prevent outages before they happen.
+                </p>
+              </div>
+
+              <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#7C3AED] font-semibold text-sm transition-colors">
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+            {/* ── CARD 4: AUTOMATED BUG TRACKING ── */}
+            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#4F46E5]/50 transition-all">
+              {/* Geometric Isometric 3D Steps Graphic */}
+              <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <defs>
+                    <linearGradient id="stepTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#C4B5FD" />
+                      <stop offset="100%" stopColor="#818CF8" />
+                    </linearGradient>
+                    <linearGradient id="stepSide1" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#6366F1" />
+                      <stop offset="100%" stopColor="#3730A3" />
+                    </linearGradient>
+                    <linearGradient id="stepSide2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#4F46E5" />
+                      <stop offset="100%" stopColor="#1E1B4B" />
+                    </linearGradient>
+                  </defs>
+                  <g transform="translate(45, 45)">
+                    {/* Top block */}
+                    <polygon points="100,40 140,60 100,80 60,60" fill="url(#stepTop)" />
+                    <polygon points="60,60 100,80 100,120 60,100" fill="url(#stepSide1)" />
+                    <polygon points="100,80 140,60 140,100 100,120" fill="url(#stepSide2)" />
+                    {/* Middle block */}
+                    <polygon points="60,80 100,100 60,120 20,100" fill="url(#stepTop)" opacity="0.85" />
+                    <polygon points="20,100 60,120 60,160 20,140" fill="url(#stepSide1)" opacity="0.85" />
+                    <polygon points="60,120 100,100 100,140 60,160" fill="url(#stepSide2)" opacity="0.85" />
+                  </g>
+                </svg>
+              </div>
+
+              <div className="relative z-10 text-left">
+                <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#4F46E5] mb-3.5 shadow-2xs">
+                  <Database size={19} />
+                </div>
+                <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                  Automated Bug Tracking
+                </h3>
+                <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
+                  Capture, group and prioritize issues across your stack.
+                </p>
+              </div>
+
+              <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#4F46E5] font-semibold text-sm transition-colors">
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
     </section>
   );
@@ -788,6 +1216,38 @@ function StripeArchitectureFlowSection() {
 
       </div>
     </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BROWSER MOCKUP FRAME (ARCHITECTURAL SWISS WINDOW WITH URL BAR)
+   ═══════════════════════════════════════════════════════════════ */
+interface BrowserFrameProps {
+  url?: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+function BrowserFrame({ url = "console.bhartinexus.io", children, className = "" }: BrowserFrameProps) {
+  return (
+    <div className={`rounded-xl sm:rounded-2xl border border-[#E2E4E9] bg-white shadow-[0_20px_50px_rgba(16,17,20,0.06)] overflow-hidden ${className}`}>
+      {/* Browser Bar */}
+      <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#F7F6F2] border-b border-[#E2E4E9]">
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FF5F56]/90 border border-[#E0443E]/40" />
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFBD2E]/90 border border-[#DEA123]/40" />
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#27C93F]/90 border border-[#1AAB29]/40" />
+        </div>
+        <div className="flex-1 max-w-[190px] sm:max-w-sm mx-auto flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-0.5 rounded-md bg-white border border-[#E2E4E9] text-[10px] sm:text-[11px] font-mono text-[#5B5F6B] font-medium truncate">
+          <Lock size={10} className="text-[#8B8F9A] shrink-0" />
+          <span className="truncate">{url}</span>
+        </div>
+      </div>
+      {/* Window Body */}
+      <div className="relative bg-white overflow-hidden">
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -1445,6 +1905,7 @@ export default function LandingPage() {
       <main>
         <StripeHeroSection />
         <StripeClientMarquee />
+        <PlatformOverviewSection />
         <StripeArchitectureFlowSection />
         <StripeProductShowcaseSection />
         <BrexalIntegrationsSection />
