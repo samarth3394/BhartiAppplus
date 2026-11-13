@@ -33,7 +33,13 @@ import {
   Brain,
   Bell,
   RotateCcw,
-  MessageSquare
+  MessageSquare,
+  GitPullRequest,
+  Bug,
+  FolderKanban,
+  Box,
+  AlertCircle,
+  BarChart3
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { BrexalComparisonSection } from "@/components/landing/BrexalComparisonSection";
@@ -934,235 +940,546 @@ function StripeArchitectureFlowSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BROWSER MOCKUP FRAME (ARCHITECTURAL SWISS WINDOW WITH URL BAR)
+   4. SHOWCASE 1: ENGINEERING WORKSPACE MOCKUP (LIGHT THEME)
    ═══════════════════════════════════════════════════════════════ */
-interface BrowserFrameProps {
-  url?: string;
-  children: React.ReactNode;
-  className?: string;
-}
-
-function BrowserFrame({ url = "console.bhartinexus.io", children, className = "" }: BrowserFrameProps) {
+function EngineeringWorkspaceMockup() {
   return (
-    <div className={`rounded-xl sm:rounded-2xl border border-[#E2E4E9] bg-white shadow-[0_20px_50px_rgba(16,17,20,0.06)] overflow-hidden ${className}`}>
-      {/* Browser Bar */}
-      <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#F7F6F2] border-b border-[#E2E4E9]">
-        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FF5F56]/90 border border-[#E0443E]/40" />
-          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFBD2E]/90 border border-[#DEA123]/40" />
-          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#27C93F]/90 border border-[#1AAB29]/40" />
+    <div className="relative rounded-2xl border border-[#E2E4E9] bg-white shadow-[0_20px_50px_rgba(15,23,42,0.08)] p-3.5 sm:p-5 text-[#101114] overflow-hidden text-left">
+      <div className="grid grid-cols-12 gap-3 sm:gap-4 items-start">
+        
+        {/* Left Sidebar (3 cols on sm+, compact on mobile) */}
+        <div className="hidden sm:flex sm:col-span-3 flex-col gap-1 pr-2 border-r border-[#E2E4E9] text-xs">
+          <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11.5px] text-[#101114] mb-3">
+            <span className="text-[#7C3AED] font-mono font-bold">//</span>
+            <span>BREXAL</span>
+          </div>
+          
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
+            <FolderKanban size={13} className="text-slate-400 shrink-0" />
+            <span>Workspace</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#6366F1] text-white font-semibold text-[11.5px] shadow-xs">
+            <Layers size={13} className="shrink-0" />
+            <span>Sprints</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
+            <GitPullRequest size={13} className="text-slate-400 shrink-0" />
+            <span>Pull Requests</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
+            <AlertCircle size={13} className="text-slate-400 shrink-0" />
+            <span>Issues</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
+            <GitCommit size={13} className="text-slate-400 shrink-0" />
+            <span>Commits</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
+            <Box size={13} className="text-slate-400 shrink-0" />
+            <span>Releases</span>
+          </div>
         </div>
-        <div className="flex-1 max-w-[190px] sm:max-w-sm mx-auto flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-0.5 rounded-md bg-white border border-[#E2E4E9] text-[10px] sm:text-[11px] font-mono text-[#5B5F6B] font-medium truncate">
-          <Lock size={10} className="text-[#8B8F9A] shrink-0" />
-          <span className="truncate">{url}</span>
+
+        {/* Right Main Body (9 cols) */}
+        <div className="col-span-12 sm:col-span-9 space-y-3">
+          
+          {/* Top Bar: Engineering Workspace + Sprint 24 Dropdown */}
+          <div className="flex items-center justify-between">
+            <h4 className="font-bold text-[13px] sm:text-[14px] text-[#101114]">
+              Engineering Workspace
+            </h4>
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#F7F6F2] border border-[#E2E4E9] text-[10px] text-slate-600 font-mono font-medium">
+              <span>Sprint 24 (Nov 11 - Nov 25)</span>
+              <ChevronDown size={11} className="text-slate-400" />
+            </div>
+          </div>
+
+          {/* 3 Metric Cards Row */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-[#F0FDF4] border border-emerald-100 flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center shrink-0">
+                <Check size={12} className="stroke-[2.5]" />
+              </div>
+              <div>
+                <div className="text-[13px] sm:text-[15px] font-bold text-[#101114] leading-none">08</div>
+                <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium">Completed</div>
+              </div>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-[#F5F3FF] border border-[#DDD6FE] flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-[#7C3AED]/15 text-[#7C3AED] flex items-center justify-center shrink-0">
+                <RotateCcw size={12} className="stroke-[2.5]" />
+              </div>
+              <div>
+                <div className="text-[13px] sm:text-[15px] font-bold text-[#101114] leading-none">04</div>
+                <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium">In Progress</div>
+              </div>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-[#FEF2F2] border border-rose-100 flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-rose-500/15 text-rose-600 flex items-center justify-center shrink-0">
+                <Bug size={12} className="stroke-[2.5]" />
+              </div>
+              <div>
+                <div className="text-[13px] sm:text-[15px] font-bold text-[#101114] leading-none">02</div>
+                <div className="text-[9px] sm:text-[10px] text-slate-500 font-medium">Critical Bugs</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sprint Board Columns */}
+          <div>
+            <div className="text-[11px] font-bold text-[#101114] mb-1.5">Sprint Board</div>
+            <div className="grid grid-cols-3 gap-2">
+              {/* To Do */}
+              <div className="rounded-xl bg-[#F8FAFC] border border-[#E2E4E9] p-2 space-y-1.5">
+                <div className="flex items-center justify-between text-[10px] font-bold text-slate-600 pb-1 border-b border-slate-200/60">
+                  <span>To Do</span>
+                  <span className="font-mono text-slate-400">4</span>
+                </div>
+                <div className="p-1.5 rounded-lg bg-white border border-[#E2E4E9] shadow-3xs flex items-center justify-between text-[9.5px]">
+                  <span className="text-slate-800 font-medium truncate">API testing</span>
+                  <span className="text-slate-400 font-mono text-[8.5px]">#421</span>
+                </div>
+                <div className="p-1.5 rounded-lg bg-white border border-[#E2E4E9] shadow-3xs flex items-center justify-between text-[9.5px]">
+                  <span className="text-slate-800 font-medium truncate">UI fixes</span>
+                  <span className="text-slate-400 font-mono text-[8.5px]">#422</span>
+                </div>
+              </div>
+
+              {/* In Progress */}
+              <div className="rounded-xl bg-[#FAF5FF] border border-[#DDD6FE]/60 p-2 space-y-1.5">
+                <div className="flex items-center justify-between text-[10px] font-bold text-[#6B21A8] pb-1 border-b border-[#DDD6FE]/60">
+                  <span>In Progress</span>
+                  <span className="font-mono text-[#7C3AED]">3</span>
+                </div>
+                <div className="p-1.5 rounded-lg bg-white border border-[#E2E4E9] shadow-3xs flex items-center justify-between text-[9.5px]">
+                  <span className="text-slate-800 font-medium truncate">Auth service refactor</span>
+                  <span className="text-slate-400 font-mono text-[8.5px]">#418</span>
+                </div>
+                <div className="p-1.5 rounded-lg bg-white border border-[#E2E4E9] shadow-3xs flex items-center justify-between text-[9.5px]">
+                  <span className="text-slate-800 font-medium truncate">Add monitoring SDK</span>
+                  <span className="text-slate-400 font-mono text-[8.5px]">#419</span>
+                </div>
+              </div>
+
+              {/* Done */}
+              <div className="rounded-xl bg-[#F0FDF4] border border-emerald-200/60 p-2 space-y-1.5">
+                <div className="flex items-center justify-between text-[10px] font-bold text-emerald-700 pb-1 border-b border-emerald-200/60">
+                  <span>Done</span>
+                  <span className="font-mono text-emerald-600">8</span>
+                </div>
+                <div className="p-1.5 rounded-lg bg-white border border-[#E2E4E9] shadow-3xs flex items-center justify-between text-[9.5px]">
+                  <span className="text-slate-800 font-medium flex items-center gap-1 truncate">
+                    <Check size={10} className="text-emerald-500 shrink-0" />
+                    Bug fixes
+                  </span>
+                  <span className="text-slate-400 font-mono text-[8.5px]">#415</span>
+                </div>
+                <div className="p-1.5 rounded-lg bg-white border border-[#E2E4E9] shadow-3xs flex items-center justify-between text-[9.5px]">
+                  <span className="text-slate-800 font-medium flex items-center gap-1 truncate">
+                    <Check size={10} className="text-emerald-500 shrink-0" />
+                    Release v1.4.2
+                  </span>
+                  <span className="text-slate-400 font-mono text-[8.5px]">#416</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="pt-2 border-t border-slate-100">
+            <div className="text-[11px] font-bold text-[#101114] mb-1.5">Recent Activity</div>
+            <div className="space-y-1.5">
+              <div className="p-2 rounded-xl bg-[#F8FAFC] border border-[#E2E4E9] flex items-center justify-between gap-2 text-[10px]">
+                <div className="flex items-center gap-2 truncate">
+                  <div className="w-5 h-5 rounded-md bg-slate-200 flex items-center justify-center shrink-0">
+                    <GitPullRequest size={11} className="text-slate-700" />
+                  </div>
+                  <div className="truncate">
+                    <span className="font-bold text-slate-800">PR #248 — Authentication update</span>
+                    <span className="text-slate-400 font-mono ml-2 hidden sm:inline">Linked to commit 9f3e2d1 • 2 hours ago</span>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 text-[9px] font-mono font-bold shrink-0">
+                  Merged
+                </span>
+              </div>
+
+              <div className="p-2 rounded-xl bg-[#FEF2F2]/60 border border-rose-100 flex items-center justify-between gap-2 text-[10px]">
+                <div className="flex items-center gap-2 truncate">
+                  <div className="w-5 h-5 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                    <Bug size={11} className="text-rose-600" />
+                  </div>
+                  <div className="truncate">
+                    <span className="font-bold text-slate-800">Production regression detected</span>
+                    <span className="text-slate-400 font-mono ml-2 hidden sm:inline">auth.bhartinexus.io • P1 (Critical) • 14 minutes ago</span>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-[9px] font-mono font-bold shrink-0">
+                  Critical
+                </span>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
-      {/* Window Body */}
-      <div className="relative bg-white overflow-hidden">
-        {children}
+
       </div>
     </div>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   4. LAYERED PRODUCT SHOWCASES (ARCHITECTURAL PANELS)
+   5. SHOWCASE 2: INFRASTRUCTURE & GOVERNANCE MOCKUP (DARK THEME)
    ═══════════════════════════════════════════════════════════════ */
-function StripeProductShowcaseSection() {
+function InfrastructureGovernanceMockup() {
   return (
-    <section id="architecture" className="py-10 sm:py-14 md:py-18 px-4 sm:px-10 bg-white border-b border-[#E2E4E9] relative overflow-hidden">
-      
-      {/* Ambient subtle color grading meshes behind the showcases */}
-      <div className="absolute top-1/4 -right-40 w-[600px] h-[600px] bg-gradient-to-bl from-[#425CF5]/[0.05] via-[#C7BDF7]/[0.04] to-transparent rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-40 w-[600px] h-[600px] bg-gradient-to-tr from-[#425CF5]/[0.03] via-[#059669]/[0.03] to-transparent rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="max-w-[1320px] mx-auto space-y-12 sm:space-y-16 md:space-y-20">
-
-        {/* ── SHOWCASE A: SPRINT VELOCITY & LIVE BUG RADAR ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
+    <div className="relative rounded-2xl border border-white/12 bg-[#121422] shadow-[0_25px_60px_rgba(0,0,0,0.55)] p-3.5 sm:p-5 text-white overflow-hidden text-left">
+      <div className="grid grid-cols-12 gap-3 sm:gap-4 items-start">
+        
+        {/* Left Dark Sidebar (3 cols on sm+, hidden on mobile) */}
+        <div className="hidden sm:flex sm:col-span-3 flex-col gap-1 pr-2 border-r border-white/8 text-[11px]">
+          <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11.5px] text-white mb-3">
+            <span className="text-[#C7BDF7] font-mono font-bold">//</span>
+            <span>BREXAL</span>
+          </div>
           
-          {/* Editorial Left */}
-          <div className="lg:col-span-5 flex flex-col items-start text-left">
-            <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#425CF5] uppercase tracking-[0.16em] mb-2">
-              Engineering Velocity
-            </div>
-            <h2 className="font-display text-2xl sm:text-4xl md:text-[38px] font-semibold tracking-[-0.03em] text-[#101114] leading-[1.15] mb-3 sm:mb-3.5">
-              Agile sprint pipelines with autonomous bug watchdogs.
-            </h2>
-            <p className="text-sm sm:text-base text-[#5B5F6B] leading-relaxed mb-4 sm:mb-5 font-normal">
-              Track multi-engineer sprint deliverables in lockstep with automated production regression feeds. Critical runtime anomalies are mapped directly to git commits before impacting customers.
-            </p>
-
-            <div className="space-y-2.5 mb-4 sm:mb-5 w-full">
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#425CF5]/10 text-[#425CF5] flex items-center justify-center shrink-0 mt-0.5">
-                  <Check size={13} className="font-bold" />
-                </div>
-                <div className="text-xs sm:text-sm text-[#101114] font-medium">
-                  Live Kanban boards synchronized with GitHub and GitLab pull requests
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#425CF5]/10 text-[#425CF5] flex items-center justify-center shrink-0 mt-0.5">
-                  <Check size={13} className="font-bold" />
-                </div>
-                <div className="text-xs sm:text-sm text-[#101114] font-medium">
-                  Zero-latency regression radar with automated issue severity tags
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#425CF5]/10 text-[#425CF5] flex items-center justify-center shrink-0 mt-0.5">
-                  <Check size={13} className="font-bold" />
-                </div>
-                <div className="text-xs sm:text-sm text-[#101114] font-medium">
-                  Automated commit correlation & fast rollback recommendations
-                </div>
-              </div>
-            </div>
-
-            <Link
-              href="/register"
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-[#425CF5] hover:text-[#101114] transition-colors"
-            >
-              <span>Explore engineering workflows</span>
-              <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Layers size={13} />
+            <span>Overview</span>
           </div>
-
-          {/* Layered Visual Right: shot-4 (Kanban Board) + shot-5 (Issues & Bugs) */}
-          <div className="lg:col-span-7 relative w-full pt-2 lg:pt-0 pb-3 sm:pb-5 lg:pb-2">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-[#425CF5]/10 via-[#C7BDF7]/10 to-transparent rounded-3xl blur-2xl opacity-60 -z-10" />
-            
-            {/* Background Browser Window: shot-4.png */}
-            <BrowserFrame url="git.bhartinexus.io/sprints/active" className="transition-transform duration-300 hover:scale-[1.01]">
-              <div className="relative">
-                <img
-                  src="/showcase/shot-4.png"
-                  alt="Engineering Sprint Kanban Board"
-                  className="w-full h-auto block select-none"
-                />
-              </div>
-            </BrowserFrame>
-
-            {/* Overlapping Corner Card: shot-5.png */}
-            <div className="absolute -bottom-3 -left-2 sm:-bottom-5 sm:-left-5 w-[75%] sm:w-[60%] z-20 transition-transform duration-300 hover:-translate-y-1">
-              <div className="rounded-xl sm:rounded-2xl border border-[#E2E4E9] bg-white/95 backdrop-blur-md shadow-[0_20px_50px_-10px_rgba(16,17,20,0.14)] overflow-hidden">
-                <div className="px-2.5 sm:px-3.5 py-1.5 bg-[#F7F6F2] border-b border-[#E2E4E9] flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-rose-500 animate-ping" />
-                    <span className="text-[9px] sm:text-[10px] font-mono font-medium text-[#101114] uppercase tracking-wider">AI Watchdog</span>
-                  </div>
-                  <span className="text-[8.5px] sm:text-[9.5px] font-mono font-semibold text-rose-600 bg-rose-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-rose-200">
-                    2 Critical
-                  </span>
-                </div>
-                <div className="relative">
-                  <img
-                    src="/showcase/shot-5.png"
-                    alt="Active Issues and Bug Traces"
-                    className="w-full h-auto block select-none"
-                  />
-                </div>
-              </div>
-            </div>
-
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#6366F1] text-white font-semibold text-[11px] shadow-xs">
+            <Server size={13} />
+            <span>Infrastructure</span>
           </div>
-
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Cpu size={13} />
+            <span>Clusters</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Network size={13} />
+            <span>Nodes</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <ShieldCheck size={13} />
+            <span>Governance</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Terminal size={13} />
+            <span>Audit Logs</span>
+          </div>
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px] mt-4">
+            <Cpu size={13} />
+            <span>Settings</span>
+          </div>
         </div>
 
-        {/* ── SHOWCASE B: TEAM GOVERNANCE & MULTI-CLUSTER INFRASTRUCTURE ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
+        {/* Right Dashboard Content (9 cols) */}
+        <div className="col-span-12 sm:col-span-9 space-y-3">
           
-          {/* Layered Visual Left: shot-2 (Team Access) + shot-6 (Infrastructure Nodes) */}
-          <div className="lg:col-span-7 relative w-full order-2 lg:order-1 pt-2 lg:pt-0 pb-3 sm:pb-5 lg:pb-2">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-[#7C3AED]/10 via-[#C8A96B]/10 to-transparent rounded-3xl blur-2xl opacity-60 -z-10" />
-            
-            {/* Background Browser Window: shot-2.png */}
-            <BrowserFrame url="auth.bhartinexus.io/organization/members" className="transition-transform duration-300 hover:scale-[1.01]">
-              <div className="relative">
-                <img
-                  src="/showcase/shot-2.png"
-                  alt="Team Governance and Access Control"
-                  className="w-full h-auto block select-none"
-                />
-              </div>
-            </BrowserFrame>
-
-            {/* Overlapping Corner Card: shot-6.png */}
-            <div className="absolute -bottom-3 -right-2 sm:-bottom-5 sm:-right-5 w-[72%] sm:w-[58%] z-20 transition-transform duration-300 hover:-translate-y-1">
-              <div className="rounded-xl sm:rounded-2xl border border-[#E2E4E9] bg-white/95 backdrop-blur-md shadow-[0_20px_50px_-10px_rgba(16,17,20,0.14)] overflow-hidden">
-                <div className="px-2.5 sm:px-3.5 py-1.5 bg-[#F7F6F2] border-b border-[#E2E4E9] flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#7C3AED]" />
-                    <span className="text-[9px] sm:text-[10px] font-mono font-medium text-[#101114] uppercase tracking-wider">Cluster Telemetry</span>
-                  </div>
-                  <span className="text-[8.5px] sm:text-[9.5px] font-mono font-semibold text-[#7C3AED] bg-[#F5F3FF] px-1.5 sm:px-2 py-0.5 rounded-full border border-[#DDD6FE]">
-                    99.99% Uptime
-                  </span>
-                </div>
-                <div className="relative">
-                  <img
-                    src="/showcase/shot-6.png"
-                    alt="Active Worker Nodes and Hardware Telemetry"
-                    className="w-full h-auto block select-none"
-                  />
-                </div>
-              </div>
+          {/* Top Bar: Cluster Telemetry + Healthy badge + Last 24 hours */}
+          <div className="flex items-center justify-between pb-2 border-b border-white/8">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-[13px] sm:text-[14px] text-white">
+                Cluster Telemetry
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-[9.5px] font-mono font-bold text-emerald-400 flex items-center gap-1">
+                <span>◆</span> Healthy
+              </span>
             </div>
-
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] text-white/70 font-mono">
+              <span>Last 24 hours</span>
+              <ChevronDown size={11} className="text-white/40" />
+            </div>
           </div>
 
-          {/* Editorial Right */}
-          <div className="lg:col-span-5 flex flex-col items-start text-left order-1 lg:order-2">
-            <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#7C3AED] uppercase tracking-[0.16em] mb-2">
-              Infrastructure &amp; Governance
-            </div>
-            <h2 className="font-display text-2xl sm:text-4xl md:text-[38px] font-semibold tracking-[-0.03em] text-[#101114] leading-[1.15] mb-3 sm:mb-3.5">
-              Enterprise team controls with hardware node telemetry.
-            </h2>
-            <p className="text-sm sm:text-base text-[#5B5F6B] leading-relaxed mb-4 sm:mb-5 font-normal">
-              Manage architectural ownership, RBAC permissions, and multi-tenant audit logs alongside live CPU, memory, NVMe disk, and network throughput across every cloud cluster.
-            </p>
-
-            <div className="space-y-2.5 mb-4 sm:mb-5 w-full">
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5">
-                  <Check size={13} className="font-bold" />
-                </div>
-                <div className="text-xs sm:text-sm text-[#101114] font-medium">
-                  Granular role-based access control (RBAC) with audit verification
-                </div>
+          {/* 4 Stat Metric Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
+              <div className="flex items-center gap-1 text-[9.5px] text-white/50 font-mono mb-1">
+                <Cpu size={11} className="text-[#818CF8]" />
+                <span>CPU Usage</span>
               </div>
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5">
-                  <Check size={13} className="font-bold" />
-                </div>
-                <div className="text-xs sm:text-sm text-[#101114] font-medium">
-                  Microsecond node metrics: 34.8% CPU, 58.2% RAM, 1.8 Gbps network
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5">
-                  <Check size={13} className="font-bold" />
-                </div>
-                <div className="text-xs sm:text-sm text-[#101114] font-medium">
-                  Automated security audit log streams and team invite workflows
-                </div>
-              </div>
+              <div className="text-[14px] sm:text-[16px] font-bold text-white">34.8%</div>
+              <div className="text-[9px] text-[#C7BDF7] font-mono mt-0.5">↓ -2.1%</div>
             </div>
 
-            <Link
-              href="/dashboard"
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-[#7C3AED] hover:text-[#101114] transition-colors"
-            >
-              <span>View cluster architecture</span>
-              <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+            <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
+              <div className="flex items-center gap-1 text-[9.5px] text-white/50 font-mono mb-1">
+                <Layers size={11} className="text-[#818CF8]" />
+                <span>Memory</span>
+              </div>
+              <div className="text-[14px] sm:text-[16px] font-bold text-white">58.2%</div>
+              <div className="text-[9px] text-emerald-400 font-mono mt-0.5">↑ +3.4%</div>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
+              <div className="flex items-center gap-1 text-[9.5px] text-white/50 font-mono mb-1">
+                <Activity size={11} className="text-[#818CF8]" />
+                <span>Network</span>
+              </div>
+              <div className="text-[14px] sm:text-[16px] font-bold text-white">1.8 Gbps</div>
+              <div className="text-[9px] text-emerald-400 font-mono mt-0.5">↑ +12.6%</div>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.04] border border-white/8">
+              <div className="flex items-center gap-1 text-[9.5px] text-white/50 font-mono mb-1">
+                <ShieldCheck size={11} className="text-emerald-400" />
+                <span>Uptime</span>
+              </div>
+              <div className="text-[14px] sm:text-[16px] font-bold text-white">99.99%</div>
+              <div className="text-[9px] text-emerald-400 font-mono mt-0.5 flex items-center gap-0.5">
+                <span>●</span> Operational
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Row: Node Resource Usage (Wave Area Chart) + Security Audit Stream */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-2 pt-1">
+            
+            {/* Chart (7 cols) */}
+            <div className="md:col-span-7 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/8 flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[10.5px] font-semibold text-white/90">Node Resource Usage</span>
+                <div className="flex items-center gap-2 text-[8px] font-mono text-white/60">
+                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#818CF8]" /> CPU</span>
+                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#C7BDF7]" /> RAM</span>
+                </div>
+              </div>
+
+              {/* SVG Curve Chart */}
+              <div className="relative w-full h-[75px] sm:h-[85px] my-1">
+                <svg viewBox="0 0 300 80" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="cpuWaveGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#818CF8" stopOpacity="0.45" />
+                      <stop offset="100%" stopColor="#6366F1" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M 0 65 C 40 60, 70 70, 110 50 C 150 30, 180 55, 220 35 C 260 20, 280 40, 300 30 L 300 80 L 0 80 Z"
+                    fill="url(#cpuWaveGrad)"
+                  />
+                  <path
+                    d="M 0 65 C 40 60, 70 70, 110 50 C 150 30, 180 55, 220 35 C 260 20, 280 40, 300 30"
+                    fill="none"
+                    stroke="#818CF8"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+
+              <div className="flex justify-between items-center text-[7.5px] font-mono text-white/40 pt-1 border-t border-white/5">
+                <span>12 AM</span>
+                <span>3 AM</span>
+                <span>6 AM</span>
+                <span>9 AM</span>
+                <span>12 PM</span>
+                <span>3 PM</span>
+                <span>6 PM</span>
+                <span>9 PM</span>
+              </div>
+            </div>
+
+            {/* Audit Stream (5 cols) */}
+            <div className="md:col-span-5 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/8 flex flex-col justify-between">
+              <div className="text-[10.5px] font-semibold text-white/90 mb-2">
+                Security Audit Stream
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="p-1.5 rounded-lg bg-white/[0.03] border border-white/6 flex items-center justify-between text-[9px]">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <ShieldCheck size={11} className="text-emerald-400 shrink-0" />
+                    <span className="text-white/80 truncate">Admin permission updated</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono text-[8px] font-bold shrink-0">
+                    Verified
+                  </span>
+                </div>
+
+                <div className="p-1.5 rounded-lg bg-white/[0.03] border border-white/6 flex items-center justify-between text-[9px]">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <Box size={11} className="text-[#818CF8] shrink-0" />
+                    <span className="text-white/80 truncate">New service deployed</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 rounded bg-[#6366F1]/20 text-[#C7BDF7] font-mono text-[8px] font-bold shrink-0">
+                    Logged
+                  </span>
+                </div>
+
+                <div className="p-1.5 rounded-lg bg-white/[0.03] border border-white/6 flex items-center justify-between text-[9px]">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <Layers size={11} className="text-[#C4B5FD] shrink-0" />
+                    <span className="text-white/80 truncate">Access policy changed</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 rounded bg-purple-500/20 text-[#C4B5FD] font-mono text-[8px] font-bold shrink-0">
+                    Audited
+                  </span>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
 
       </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. DUAL PRODUCT SHOWCASES (AS SHOWN IN REFERENCE SPEC IMAGE)
+   ═══════════════════════════════════════════════════════════════ */
+function StripeProductShowcaseSection() {
+  return (
+    <section id="architecture" className="relative overflow-hidden font-sans">
+      
+      {/* ── SHOWCASE 1: ENGINEERING VELOCITY (LIGHT SECTION) ── */}
+      <div className="py-14 sm:py-20 md:py-24 px-4 sm:px-10 bg-[#FAFAFC] border-b border-[#E2E4E9]">
+        <div className="max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          {/* Left: Text & Features */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-5 h-[2px] bg-[#7C3AED]" />
+              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-[#7C3AED]">
+                ENGINEERING VELOCITY
+              </span>
+            </div>
+
+            <h2 className="font-['Sora',sans-serif] text-[32px] sm:text-[40px] md:text-[44px] font-bold text-[#101114] tracking-[-0.03em] leading-[1.12] mb-3">
+              Engineering Velocity
+            </h2>
+
+            <p className="text-[15px] sm:text-[16px] font-bold text-[#101114] leading-snug mb-3">
+              Agile sprint pipelines with autonomous bug watchdogs.
+            </p>
+
+            <p className="text-[13.5px] sm:text-[14px] text-[#5B5F6B] leading-relaxed mb-6 max-w-[480px]">
+              Track multi-engineer sprint deliverables in lockstep with automated production regression feeds. Critical runtime anomalies are mapped directly to git commits before impacting customers.
+            </p>
+
+            {/* 3 Circular Icon Feature Items */}
+            <div className="space-y-3.5 mb-7 w-full">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#F5F3FF] border border-[#DDD6FE] text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5 shadow-3xs">
+                  <GitPullRequest size={15} />
+                </div>
+                <div className="text-xs sm:text-[13px] text-[#101114] font-medium leading-relaxed pt-1">
+                  Live Kanban boards synchronized with GitHub and GitLab pull requests
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#F5F3FF] border border-[#DDD6FE] text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5 shadow-3xs">
+                  <Activity size={15} />
+                </div>
+                <div className="text-xs sm:text-[13px] text-[#101114] font-medium leading-relaxed pt-1">
+                  Real-time regression detection with automated issue severity tags
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#F5F3FF] border border-[#DDD6FE] text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5 shadow-3xs">
+                  <GitCommit size={15} />
+                </div>
+                <div className="text-xs sm:text-[13px] text-[#101114] font-medium leading-relaxed pt-1">
+                  Automated commit correlation &amp; fast rollback recommendations
+                </div>
+              </div>
+            </div>
+
+            {/* Purple CTA Button */}
+            <Link
+              href="/register"
+              className="px-6 py-3 rounded-full bg-[#6366F1] hover:bg-[#4F46E5] text-white text-[13.5px] font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2 group cursor-pointer"
+            >
+              <span>Explore engineering workflows</span>
+              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Right: Engineering Workspace Light Mockup */}
+          <div className="lg:col-span-7 relative w-full pt-4 lg:pt-0">
+            <EngineeringWorkspaceMockup />
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── SHOWCASE 2: INFRASTRUCTURE & GOVERNANCE (DARK SECTION) ── */}
+      <div className="py-14 sm:py-20 md:py-24 px-4 sm:px-10 bg-[#0B0D17] text-white border-b border-[#1E2338] relative overflow-hidden">
+        {/* Ambient Dark Atmospheric Glow */}
+        <div className="absolute top-1/2 left-0 w-[550px] h-[550px] bg-gradient-to-r from-[#7C3AED]/15 via-[#6366F1]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
+
+        <div className="max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+          
+          {/* Left: Dark Infrastructure Mockup */}
+          <div className="lg:col-span-7 relative w-full order-2 lg:order-1 pt-4 lg:pt-0">
+            <InfrastructureGovernanceMockup />
+          </div>
+
+          {/* Right: Text & Features */}
+          <div className="lg:col-span-5 flex flex-col items-start text-left order-1 lg:order-2">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-5 h-[2px] bg-[#A78BFA]" />
+              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-[#A78BFA]">
+                INFRASTRUCTURE &amp; GOVERNANCE
+              </span>
+            </div>
+
+            <h2 className="font-['Sora',sans-serif] text-[32px] sm:text-[40px] md:text-[44px] font-bold text-white tracking-[-0.03em] leading-[1.12] mb-3">
+              Infrastructure &amp; <br />
+              Governance
+            </h2>
+
+            <p className="text-[15px] sm:text-[16px] font-bold text-white/95 leading-snug mb-3">
+              Enterprise team controls with hardware node telemetry.
+            </p>
+
+            <p className="text-[13.5px] sm:text-[14px] text-white/60 leading-relaxed mb-6 max-w-[480px]">
+              Manage architectural ownership, RBAC permissions, and multi-tenant audit logs alongside live CPU, memory, NVMe disk, and network throughput across every cloud cluster.
+            </p>
+
+            {/* 3 Circular Icon Feature Items */}
+            <div className="space-y-3.5 mb-7 w-full">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#7C3AED]/20 border border-[#7C3AED]/40 text-[#A78BFA] flex items-center justify-center shrink-0 mt-0.5 shadow-3xs">
+                  <ShieldCheck size={15} />
+                </div>
+                <div className="text-xs sm:text-[13px] text-white/90 font-medium leading-relaxed pt-1">
+                  Granular role-based access control (RBAC) with audit verification
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#7C3AED]/20 border border-[#7C3AED]/40 text-[#A78BFA] flex items-center justify-center shrink-0 mt-0.5 shadow-3xs">
+                  <BarChart3 size={15} />
+                </div>
+                <div className="text-xs sm:text-[13px] text-white/90 font-medium leading-relaxed pt-1">
+                  High-resolution node metrics: 34.8% CPU, 58.2% RAM, 1.8 Gbps network
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#7C3AED]/20 border border-[#7C3AED]/40 text-[#A78BFA] flex items-center justify-center shrink-0 mt-0.5 shadow-3xs">
+                  <Database size={15} />
+                </div>
+                <div className="text-xs sm:text-[13px] text-white/90 font-medium leading-relaxed pt-1">
+                  Automated security audit log stream
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
     </section>
   );
 }
