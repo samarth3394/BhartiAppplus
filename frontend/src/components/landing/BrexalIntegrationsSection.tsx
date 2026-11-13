@@ -448,13 +448,13 @@ export function BrexalIntegrationsSection() {
                   <h3 className="text-lg sm:text-xl font-extrabold text-[#0A2540]">
                     {activeItem.name}
                   </h3>
-                  <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#2563EB] border border-blue-200/80 text-[10.5px] font-mono font-bold">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#F5F3FF] text-[#7C3AED] border border-[#DDD6FE] text-[10.5px] font-mono font-bold">
                     {activeItem.badge}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs font-mono text-emerald-600 font-bold flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-mono text-[#7C3AED] font-bold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#7C3AED]" />
                     eBPF Kernel Socket Verified
                   </span>
                   <span className="text-slate-300">•</span>
@@ -486,7 +486,7 @@ export function BrexalIntegrationsSection() {
               </div>
 
               <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200/80 text-center min-w-[95px]">
-                <div className="text-xs sm:text-sm font-black text-emerald-600 font-mono">
+                <div className="text-xs sm:text-sm font-black text-[#7C3AED] font-mono">
                   {activeItem.metrics.latency}
                 </div>
                 <div className="text-[9.5px] text-slate-500 font-mono mt-0.5">
@@ -501,17 +501,17 @@ export function BrexalIntegrationsSection() {
           <div className="mt-5">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-mono text-[#0A2540] font-bold flex items-center gap-2">
-                <Terminal size={14} className="text-[#2563EB]" />
+                <Terminal size={14} className="text-[#7C3AED]" />
                 <span>Zero-Code 1-Command Installation:</span>
               </span>
               <button
                 type="button"
                 onClick={handleCopy}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all duration-150 shadow-xs cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1E1B4B] hover:bg-[#2E1065] text-white text-xs font-mono font-bold transition-all duration-150 shadow-xs cursor-pointer"
               >
                 {copied ? (
                   <>
-                    <Check size={13} className="text-emerald-200" />
+                    <Check size={13} className="text-[#C4B5FD]" />
                     <span>Copied!</span>
                   </>
                 ) : (
@@ -531,8 +531,8 @@ export function BrexalIntegrationsSection() {
           {/* Bottom Row inside Stripe */}
           <div className="mt-4 pt-3.5 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs text-slate-500">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-mono text-emerald-600 font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#7C3AED]" />
+              <span className="font-mono text-[#7C3AED] font-bold">
                 0.0% CPU penalty verified via eBPF probes
               </span>
             </div>

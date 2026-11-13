@@ -654,29 +654,29 @@ function EbpfLogo({ className = "w-11 h-11" }: { className?: string }) {
 
 function NeuralEngineLogo({ className = "w-11 h-11" }: { className?: string }) {
   return (
-    <div className={`${className} rounded-xl bg-[#EEF2FF] border border-[#C7BDF7]/60 flex items-center justify-center p-2 shadow-2xs shrink-0`}>
-      <svg viewBox="0 0 32 32" fill="none" className="w-7 h-7 text-[#425CF5]">
+    <div className={`${className} rounded-xl bg-[#F5F3FF] border border-[#DDD6FE] flex items-center justify-center p-2 shadow-2xs shrink-0`}>
+      <svg viewBox="0 0 32 32" fill="none" className="w-7 h-7 text-[#7C3AED]">
         {/* Microchip Body */}
-        <rect x="7" y="7" width="18" height="18" rx="4" stroke="#425CF5" strokeWidth="2" fill="#C7BDF7" fillOpacity="0.25" />
+        <rect x="7" y="7" width="18" height="18" rx="4" stroke="#7C3AED" strokeWidth="2" fill="#C7BDF7" fillOpacity="0.25" />
         {/* Top Pins */}
-        <line x1="11" y1="3" x2="11" y2="7" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
-        <line x1="16" y1="3" x2="16" y2="7" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
-        <line x1="21" y1="3" x2="21" y2="7" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
+        <line x1="11" y1="3" x2="11" y2="7" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+        <line x1="16" y1="3" x2="16" y2="7" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+        <line x1="21" y1="3" x2="21" y2="7" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
         {/* Bottom Pins */}
-        <line x1="11" y1="25" x2="11" y2="29" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
-        <line x1="16" y1="25" x2="16" y2="29" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
-        <line x1="21" y1="25" x2="21" y2="29" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
+        <line x1="11" y1="25" x2="11" y2="29" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+        <line x1="16" y1="25" x2="16" y2="29" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+        <line x1="21" y1="25" x2="21" y2="29" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
         {/* Left Pins */}
-        <line x1="3" y1="11" x2="7" y2="11" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
-        <line x1="3" y1="16" x2="7" y2="16" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
-        <line x1="3" y1="21" x2="7" y2="21" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
+        <line x1="3" y1="11" x2="7" y2="11" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+        <line x1="3" y1="16" x2="7" y2="16" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+        <line x1="3" y1="21" x2="7" y2="21" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
         {/* Right Pins */}
-        <line x1="25" y1="11" x2="29" y2="11" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
-        <line x1="25" y1="16" x2="29" y2="16" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
-        <line x1="25" y1="21" x2="29" y2="21" stroke="#425CF5" strokeWidth="2" strokeLinecap="round" />
+        <line x1="25" y1="11" x2="29" y2="11" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+        <line x1="25" y1="16" x2="29" y2="16" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
+        <line x1="25" y1="21" x2="29" y2="21" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" />
         {/* Neural Synapse */}
-        <circle cx="16" cy="13.5" r="1.2" fill="#425CF5" />
-        <circle cx="16" cy="18.5" r="1.2" fill="#425CF5" />
+        <circle cx="16" cy="13.5" r="1.2" fill="#7C3AED" />
+        <circle cx="16" cy="18.5" r="1.2" fill="#7C3AED" />
       </svg>
     </div>
   );
@@ -692,7 +692,7 @@ function SlackLogo({ className = "w-11 h-11" }: { className?: string }) {
 
 function PagerDutyLogo({ className = "w-11 h-11" }: { className?: string }) {
   return (
-    <div className={`${className} rounded-xl bg-[#F0FDF4] border border-emerald-100 flex items-center justify-center p-2 shadow-2xs shrink-0`}>
+    <div className={`${className} rounded-xl bg-[#F5F3FF] border border-[#DDD6FE] flex items-center justify-center p-2 shadow-2xs shrink-0`}>
       <img src="/pagerduty-logo.svg" alt="PagerDuty" className="w-6 h-6 object-contain" />
     </div>
   );
@@ -723,14 +723,14 @@ function StripeArchitectureFlowSection() {
     <section id="architecture-flow" className="py-16 sm:py-20 md:py-24 px-4 sm:px-10 bg-white border-b border-[#E2E4E9] relative overflow-hidden font-sans">
       
       {/* Subtle ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-gradient-to-r from-[#425CF5]/[0.035] via-[#C7BDF7]/[0.025] to-transparent rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-gradient-to-r from-[#7C3AED]/[0.04] via-[#C7BDF7]/[0.03] to-transparent rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-[1320px] mx-auto text-center relative z-10">
         
         {/* Eyebrow */}
         <div className="flex items-center justify-center gap-3 mb-3">
           <span className="w-8 h-[1px] bg-[#E2E4E9]" />
-          <span className="text-[10.5px] sm:text-[11.5px] font-mono font-medium uppercase tracking-[0.16em] text-[#5B5F6B]">
+          <span className="text-[10.5px] sm:text-[11.5px] font-mono font-medium uppercase tracking-[0.16em] text-[#7C3AED]">
             ARCHITECTURE FLOW
           </span>
           <span className="w-8 h-[1px] bg-[#E2E4E9]" />
@@ -738,7 +738,7 @@ function StripeArchitectureFlowSection() {
 
         {/* Title */}
         <h2 className="font-display text-3xl sm:text-4xl md:text-[42px] font-semibold tracking-[-0.03em] text-[#101114] mb-3 leading-tight">
-          From Your Workload <span className="text-[#425CF5]">to Action</span>
+          From Your Workload <span className="font-editorial italic font-normal text-[#7E22CE]">to Action</span>
         </h2>
 
         {/* Subtitle */}
@@ -753,11 +753,11 @@ function StripeArchitectureFlowSection() {
             disabled={simulating}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold transition-all shadow-xs cursor-pointer ${
               simulating
-                ? "bg-[#EEF2FF] text-[#425CF5] border border-[#C7BDF7]"
-                : "bg-white hover:bg-[#F7F6F2] text-[#101114] border border-[#D6D8DE] hover:border-[#425CF5] hover:shadow-sm"
+                ? "bg-[#F5F3FF] text-[#7C3AED] border border-[#DDD6FE]"
+                : "bg-white hover:bg-[#F5F3FF] text-[#101114] border border-[#D6D8DE] hover:border-[#7C3AED] hover:shadow-sm"
             }`}
           >
-            <span className={`w-2 h-2 rounded-full ${simulating ? "bg-[#425CF5] animate-ping" : "bg-[#425CF5]"}`} />
+            <span className={`w-2 h-2 rounded-full ${simulating ? "bg-[#7C3AED] animate-ping" : "bg-[#7C3AED]"}`} />
             <span>{simulating ? "Simulating Telemetry Pipeline Flow..." : "Test Interactive Data Flow"}</span>
           </button>
         </div>
@@ -769,7 +769,7 @@ function StripeArchitectureFlowSection() {
           <div
             className={`w-full lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 ${
               activeStep === 1
-                ? "border-[#425CF5] ring-2 ring-[#425CF5]/20 shadow-lg -translate-y-1"
+                ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-1"
                 : "border-[#E2E4E9] hover:border-[#BFC3CC]"
             }`}
           >
@@ -785,13 +785,13 @@ function StripeArchitectureFlowSection() {
           </div>
 
           {/* Arrow 1 */}
-          <div className="hidden lg:flex items-center justify-center text-[#425CF5] w-8 xl:w-10 shrink-0">
+          <div className="hidden lg:flex items-center justify-center text-[#7C3AED] w-8 xl:w-10 shrink-0">
             <svg viewBox="0 0 36 16" className="w-9 h-4 stroke-current fill-none">
               <line x1="0" y1="8" x2="28" y2="8" strokeWidth="1.8" strokeDasharray={activeStep === 1 ? "3 3" : "none"} />
               <polyline points="24,4 30,8 24,12" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <div className="lg:hidden flex items-center justify-center text-[#425CF5]">
+          <div className="lg:hidden flex items-center justify-center text-[#7C3AED]">
             <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
               <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
               <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -802,7 +802,7 @@ function StripeArchitectureFlowSection() {
           <div
             className={`w-full lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 ${
               activeStep === 2
-                ? "border-[#425CF5] ring-2 ring-[#425CF5]/20 shadow-lg -translate-y-1"
+                ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-1"
                 : "border-[#E2E4E9] hover:border-[#BFC3CC]"
             }`}
           >
@@ -818,13 +818,13 @@ function StripeArchitectureFlowSection() {
           </div>
 
           {/* Arrow 2 */}
-          <div className="hidden lg:flex items-center justify-center text-[#425CF5] w-8 xl:w-10 shrink-0">
+          <div className="hidden lg:flex items-center justify-center text-[#7C3AED] w-8 xl:w-10 shrink-0">
             <svg viewBox="0 0 36 16" className="w-9 h-4 stroke-current fill-none">
               <line x1="0" y1="8" x2="28" y2="8" strokeWidth="1.8" strokeDasharray={activeStep === 2 ? "3 3" : "none"} />
               <polyline points="24,4 30,8 24,12" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <div className="lg:hidden flex items-center justify-center text-[#425CF5]">
+          <div className="lg:hidden flex items-center justify-center text-[#7C3AED]">
             <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
               <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
               <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -833,15 +833,15 @@ function StripeArchitectureFlowSection() {
 
           {/* 3. BREXAL Neural Engine (Featured Center Card) */}
           <div
-            className={`w-full lg:w-[275px] xl:w-[295px] relative rounded-2xl border p-5 sm:p-5.5 text-left transition-all duration-300 shadow-[0_8px_24px_rgba(66,92,245,0.08)] shrink-0 ${
+            className={`w-full lg:w-[275px] xl:w-[295px] relative rounded-2xl border p-5 sm:p-5.5 text-left transition-all duration-300 shadow-[0_8px_24px_rgba(124,58,237,0.1)] shrink-0 ${
               activeStep === 3
-                ? "bg-[#EEF2FF] border-[#425CF5] ring-2 ring-[#425CF5]/25 shadow-xl -translate-y-1"
+                ? "bg-[#F5F3FF] border-[#7C3AED] ring-2 ring-[#7C3AED]/25 shadow-xl -translate-y-1"
                 : "bg-[#F7F6F2] border-[#C7BDF7]"
             }`}
           >
             {/* Top Right AI Engine Badge */}
-            <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-[#425CF5] text-[10.5px] font-semibold font-mono border border-[#C7BDF7]/50">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#425CF5]" />
+            <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-[#7C3AED] text-[10.5px] font-semibold font-mono border border-[#DDD6FE]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" />
               <span>AI Engine</span>
             </div>
 
@@ -860,7 +860,7 @@ function StripeArchitectureFlowSection() {
 
           {/* Branching Connector 3 */}
           <div className="hidden lg:block w-12 xl:w-14 h-40 relative shrink-0">
-            <svg viewBox="0 0 54 160" className="w-full h-full stroke-[#425CF5] fill-none overflow-visible">
+            <svg viewBox="0 0 54 160" className="w-full h-full stroke-[#7C3AED] fill-none overflow-visible">
               <path
                 d="M 0 80 C 24 80, 24 35, 46 35"
                 strokeWidth="1.8"
@@ -877,7 +877,7 @@ function StripeArchitectureFlowSection() {
             </svg>
           </div>
 
-          <div className="lg:hidden flex items-center justify-center text-[#425CF5]">
+          <div className="lg:hidden flex items-center justify-center text-[#7C3AED]">
             <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
               <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
               <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -891,7 +891,7 @@ function StripeArchitectureFlowSection() {
             <div
               className={`bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${
                 activeStep === 4
-                  ? "border-[#425CF5] ring-2 ring-[#425CF5]/20 shadow-lg -translate-y-0.5"
+                  ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-0.5"
                 : "border-[#E2E4E9] hover:border-[#BFC3CC]"
               }`}
             >
@@ -910,7 +910,7 @@ function StripeArchitectureFlowSection() {
             <div
               className={`bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${
                 activeStep === 4
-                  ? "border-[#425CF5] ring-2 ring-[#425CF5]/20 shadow-lg -translate-y-0.5"
+                  ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-0.5"
                 : "border-[#E2E4E9] hover:border-[#BFC3CC]"
               }`}
             >
@@ -1076,7 +1076,7 @@ function StripeProductShowcaseSection() {
           
           {/* Layered Visual Left: shot-2 (Team Access) + shot-6 (Infrastructure Nodes) */}
           <div className="lg:col-span-7 relative w-full order-2 lg:order-1 pt-2 lg:pt-0 pb-3 sm:pb-5 lg:pb-2">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-[#059669]/10 via-[#425CF5]/10 to-transparent rounded-3xl blur-2xl opacity-60 -z-10" />
+            <div className="absolute -inset-4 bg-gradient-to-tr from-[#7C3AED]/10 via-[#C8A96B]/10 to-transparent rounded-3xl blur-2xl opacity-60 -z-10" />
             
             {/* Background Browser Window: shot-2.png */}
             <BrowserFrame url="auth.bhartinexus.io/organization/members" className="transition-transform duration-300 hover:scale-[1.01]">
@@ -1094,10 +1094,10 @@ function StripeProductShowcaseSection() {
               <div className="rounded-xl sm:rounded-2xl border border-[#E2E4E9] bg-white/95 backdrop-blur-md shadow-[0_20px_50px_-10px_rgba(16,17,20,0.14)] overflow-hidden">
                 <div className="px-2.5 sm:px-3.5 py-1.5 bg-[#F7F6F2] border-b border-[#E2E4E9] flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#059669]" />
+                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#7C3AED]" />
                     <span className="text-[9px] sm:text-[10px] font-mono font-medium text-[#101114] uppercase tracking-wider">Cluster Telemetry</span>
                   </div>
-                  <span className="text-[8.5px] sm:text-[9.5px] font-mono font-semibold text-[#059669] bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full border border-emerald-200">
+                  <span className="text-[8.5px] sm:text-[9.5px] font-mono font-semibold text-[#7C3AED] bg-[#F5F3FF] px-1.5 sm:px-2 py-0.5 rounded-full border border-[#DDD6FE]">
                     99.99% Uptime
                   </span>
                 </div>
@@ -1115,8 +1115,8 @@ function StripeProductShowcaseSection() {
 
           {/* Editorial Right */}
           <div className="lg:col-span-5 flex flex-col items-start text-left order-1 lg:order-2">
-            <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#059669] uppercase tracking-[0.16em] mb-2">
-              Infrastructure & Governance
+            <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#7C3AED] uppercase tracking-[0.16em] mb-2">
+              Infrastructure &amp; Governance
             </div>
             <h2 className="font-display text-2xl sm:text-4xl md:text-[38px] font-semibold tracking-[-0.03em] text-[#101114] leading-[1.15] mb-3 sm:mb-3.5">
               Enterprise team controls with hardware node telemetry.
@@ -1127,7 +1127,7 @@ function StripeProductShowcaseSection() {
 
             <div className="space-y-2.5 mb-4 sm:mb-5 w-full">
               <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#059669]/10 text-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5">
                   <Check size={13} className="font-bold" />
                 </div>
                 <div className="text-xs sm:text-sm text-[#101114] font-medium">
@@ -1135,7 +1135,7 @@ function StripeProductShowcaseSection() {
                 </div>
               </div>
               <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#059669]/10 text-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5">
                   <Check size={13} className="font-bold" />
                 </div>
                 <div className="text-xs sm:text-sm text-[#101114] font-medium">
@@ -1143,7 +1143,7 @@ function StripeProductShowcaseSection() {
                 </div>
               </div>
               <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#059669]/10 text-[#059669] flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center shrink-0 mt-0.5">
                   <Check size={13} className="font-bold" />
                 </div>
                 <div className="text-xs sm:text-sm text-[#101114] font-medium">
@@ -1154,7 +1154,7 @@ function StripeProductShowcaseSection() {
 
             <Link
               href="/dashboard"
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-[#059669] hover:text-[#101114] transition-colors"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-[#7C3AED] hover:text-[#101114] transition-colors"
             >
               <span>View cluster architecture</span>
               <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" />
@@ -1277,7 +1277,7 @@ helm install brexal-agent brexal/ebpf-mesh \\
                   onClick={handleCopy}
                   className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors text-[11px] sm:text-xs shrink-0 border border-white/10 cursor-pointer"
                 >
-                  {copied ? <CheckCheck size={13} className="text-[#059669]" /> : <Copy size={13} />}
+                  {copied ? <CheckCheck size={13} className="text-[#A78BFA]" /> : <Copy size={13} />}
                   <span>{copied ? "Copied" : "Copy"}</span>
                 </button>
               </div>
@@ -1302,10 +1302,10 @@ helm install brexal-agent brexal/ebpf-mesh \\
             <div>
               <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-[#1E2D4A] mb-3 sm:mb-4 text-[#BFC3CC]">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-[#A78BFA] animate-pulse" />
                   <span className="font-semibold text-white uppercase text-[11px] sm:text-xs">Live Ingestion</span>
                 </div>
-                <span className="text-[#059669] font-semibold text-[11px] sm:text-xs">200 OK (0.84ms)</span>
+                <span className="text-[#A78BFA] font-semibold text-[11px] sm:text-xs">200 OK (0.84ms)</span>
               </div>
 
               <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#060A14] border border-[#1E2D4A] text-[11px] sm:text-[12px] text-white/90 space-y-1.5 overflow-x-auto">
@@ -1323,7 +1323,7 @@ helm install brexal-agent brexal/ebpf-mesh \\
             <div className="pt-3 sm:pt-4 border-t border-[#1E2D4A] mt-3 sm:mt-4">
               <div className="flex items-center justify-between text-[#BFC3CC] text-[10.5px] sm:text-[11.5px]">
                 <span>Kernel eBPF Filter: OK</span>
-                <span className="text-[#059669] font-semibold">0.0% CPU penalty</span>
+                <span className="text-[#A78BFA] font-semibold">0.0% CPU penalty</span>
               </div>
             </div>
           </div>
@@ -1352,7 +1352,7 @@ function StripeGlobalScaleSection() {
         
         {/* Section Header */}
         <div className="max-w-2xl mb-6 sm:mb-8">
-          <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#425CF5] uppercase tracking-[0.16em] mb-2">
+          <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#7C3AED] uppercase tracking-[0.16em] mb-2">
             Global Scale
           </div>
           <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.035em] text-[#101114] leading-tight mb-2.5 sm:mb-3">
@@ -1370,7 +1370,7 @@ function StripeGlobalScaleSection() {
               <div className="font-display text-2xl sm:text-4xl md:text-5xl font-bold text-[#101114] tracking-tight mb-1 sm:mb-2">
                 {st.number}
               </div>
-              <div className="text-xs sm:text-[13px] font-semibold text-[#425CF5] uppercase tracking-wider mb-1 sm:mb-2 font-mono">
+              <div className="text-xs sm:text-[13px] font-semibold text-[#7C3AED] uppercase tracking-wider mb-1 sm:mb-2 font-mono">
                 {st.label}
               </div>
               <p className="text-[#5B5F6B] text-xs sm:text-sm leading-relaxed">
@@ -1425,7 +1425,7 @@ function StripePricingSection() {
         
         {/* Section Header */}
         <div className="max-w-2xl mb-6 sm:mb-8">
-          <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#425CF5] uppercase tracking-[0.16em] mb-2">
+          <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#7C3AED] uppercase tracking-[0.16em] mb-2">
             Transparent Pricing
           </div>
           <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.035em] text-[#101114] leading-tight mb-2.5 sm:mb-3">
@@ -1443,13 +1443,13 @@ function StripePricingSection() {
               key={idx}
               className={`p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-white border transition-all flex flex-col justify-between ${
                 t.highlight
-                  ? "border-[#425CF5] shadow-[0_16px_48px_rgba(66,92,245,0.12)] md:-translate-y-2 relative ring-1 ring-[#425CF5]/30"
+                  ? "border-[#7C3AED] shadow-[0_16px_48px_rgba(124,58,237,0.12)] md:-translate-y-2 relative ring-1 ring-[#7C3AED]/30"
                   : "border-[#E2E4E9] shadow-xs hover:border-[#BFC3CC]"
               }`}
             >
               <div>
                 {t.highlight && (
-                  <span className="inline-block px-3 py-1 rounded-full bg-[#425CF5] text-white text-[10px] sm:text-[11px] font-mono font-semibold tracking-wider uppercase mb-2.5 sm:mb-3">
+                  <span className="inline-block px-3 py-1 rounded-full bg-[#7C3AED] text-white text-[10px] sm:text-[11px] font-mono font-semibold tracking-wider uppercase mb-2.5 sm:mb-3">
                     MOST POPULAR
                   </span>
                 )}
@@ -1463,7 +1463,7 @@ function StripePricingSection() {
                 <div className="space-y-2.5 pt-3.5 sm:pt-4 border-t border-[#E2E4E9] text-xs sm:text-sm text-[#101114] font-medium">
                   {t.features.map((f, i) => (
                     <div key={i} className="flex items-center gap-2.5">
-                      <Check size={15} className="text-[#425CF5] font-bold shrink-0" />
+                      <Check size={15} className="text-[#7C3AED] font-bold shrink-0" />
                       <span>{f}</span>
                     </div>
                   ))}
@@ -1475,8 +1475,8 @@ function StripePricingSection() {
                   href="/register"
                   className={`w-full py-3 min-h-[44px] rounded-full text-center text-sm font-semibold transition-all flex items-center justify-center cursor-pointer ${
                     t.highlight
-                      ? "bg-[#425CF5] text-white hover:bg-[#344ED0] shadow-md hover:shadow-lg"
-                      : "bg-[#101C35] text-white hover:bg-[#425CF5] shadow-xs"
+                      ? "bg-[#7C3AED] text-white hover:bg-[#6D28D9] shadow-md hover:shadow-lg"
+                      : "bg-[#101C35] text-white hover:bg-[#7C3AED] shadow-xs"
                   }`}
                 >
                   {t.cta}
@@ -1525,8 +1525,8 @@ function StripeFinalCtaSection() {
         </div>
 
         <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[11px] sm:text-[12px] font-mono text-[#5B5F6B] pt-4 sm:pt-5 border-t border-[#E2E4E9] w-full">
-          <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-[#059669] shrink-0" /> SOC-2 Type II Certified</span>
-          <span className="flex items-center gap-1.5"><Zap size={14} className="text-[#425CF5] shrink-0" /> 5-Minute Zero-Downtime Deployment</span>
+          <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-[#7C3AED] shrink-0" /> SOC-2 Type II Certified</span>
+          <span className="flex items-center gap-1.5"><Zap size={14} className="text-[#7C3AED] shrink-0" /> 5-Minute Zero-Downtime Deployment</span>
           <span className="flex items-center gap-1.5"><Lock size={14} className="text-[#101114] shrink-0" /> Non-Custodial eBPF Telemetry</span>
         </div>
       </div>
@@ -1554,7 +1554,7 @@ function StripeFooter() {
             
             {/* India Region Selector */}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-[#E2E4E9] text-xs font-mono font-medium text-[#101114]">
-              <Globe size={14} className="text-[#425CF5]" />
+              <Globe size={14} className="text-[#7C3AED]" />
               <span>India (English)</span>
             </div>
           </div>
@@ -1564,10 +1564,10 @@ function StripeFooter() {
             <span className="font-mono text-[11px] sm:text-[11.5px] font-bold text-[#101114] uppercase tracking-wider mb-1 sm:mb-2">
               Products
             </span>
-            <Link href="#architecture" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">eBPF Telemetry</Link>
-            <Link href="#interactive-simulator" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">AI Incident Engine</Link>
-            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">Distributed Tracing</Link>
-            <Link href="#pricing" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">Pricing</Link>
+            <Link href="#architecture" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">eBPF Telemetry</Link>
+            <Link href="#interactive-simulator" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">AI Incident Engine</Link>
+            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Distributed Tracing</Link>
+            <Link href="#pricing" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Pricing</Link>
           </div>
 
           {/* Column 2: Solutions */}
@@ -1575,10 +1575,10 @@ function StripeFooter() {
             <span className="font-mono text-[11px] sm:text-[11.5px] font-bold text-[#101114] uppercase tracking-wider mb-1 sm:mb-2">
               Solutions
             </span>
-            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">Kubernetes Mesh</Link>
-            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">Cloud Ingress & CDN</Link>
-            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">PostgreSQL Monitoring</Link>
-            <Link href="/teams" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">Engineering Team</Link>
+            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Kubernetes Mesh</Link>
+            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Cloud Ingress & CDN</Link>
+            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">PostgreSQL Monitoring</Link>
+            <Link href="/teams" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Engineering Team</Link>
           </div>
 
           {/* Column 3: Developers */}
@@ -1586,10 +1586,10 @@ function StripeFooter() {
             <span className="font-mono text-[11px] sm:text-[11.5px] font-bold text-[#101114] uppercase tracking-wider mb-1 sm:mb-2">
               Developers
             </span>
-            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">Documentation</Link>
-            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">API Reference</Link>
-            <Link href="/roadmap" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">Product Roadmap</Link>
-            <Link href="/logs" className="text-[#5B5F6B] font-medium hover:text-[#425CF5] transition-colors">Audit & System Logs</Link>
+            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Documentation</Link>
+            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">API Reference</Link>
+            <Link href="/roadmap" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Product Roadmap</Link>
+            <Link href="/logs" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Audit & System Logs</Link>
           </div>
 
         </div>
@@ -1600,8 +1600,8 @@ function StripeFooter() {
             © 2026 Bharti Nexus Technologies Inc. All rights reserved.
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
-            <Link href="/maintenance" className="hover:text-[#425CF5] transition-colors">System Status: 99.999% SLA</Link>
-            <Link href="/login" className="hover:text-[#425CF5] transition-colors">Privacy & Terms</Link>
+            <Link href="/maintenance" className="hover:text-[#7C3AED] transition-colors">System Status: 99.999% SLA</Link>
+            <Link href="/login" className="hover:text-[#7C3AED] transition-colors">Privacy & Terms</Link>
           </div>
         </div>
 
@@ -1615,7 +1615,7 @@ function StripeFooter() {
    ═══════════════════════════════════════════════════════════════ */
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white text-[#101114] selection:bg-[#425CF5]/15 selection:text-[#101114] antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-white text-[#101114] selection:bg-[#7C3AED]/20 selection:text-[#101114] antialiased overflow-x-hidden">
       <StripeNavbar />
       <main>
         <StripeHeroSection />
