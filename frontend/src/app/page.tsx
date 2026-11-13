@@ -39,7 +39,11 @@ import {
   FolderKanban,
   Box,
   AlertCircle,
-  BarChart3
+  BarChart3,
+  LayoutGrid,
+  Users,
+  Wrench,
+  Map
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { BrexalComparisonSection } from "@/components/landing/BrexalComparisonSection";
@@ -947,36 +951,79 @@ function EngineeringWorkspaceMockup() {
     <div className="relative rounded-2xl border border-[#E2E4E9] bg-white shadow-[0_20px_50px_rgba(15,23,42,0.08)] p-3.5 sm:p-5 text-[#101114] overflow-hidden text-left">
       <div className="grid grid-cols-12 gap-3 sm:gap-4 items-start">
         
-        {/* Left Sidebar (3 cols on sm+, compact on mobile) */}
-        <div className="hidden sm:flex sm:col-span-3 flex-col gap-1 pr-2 border-r border-[#E2E4E9] text-xs">
-          <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11.5px] text-[#101114] mb-3">
+        {/* Left Sidebar (3 cols on sm+, compact on mobile) with Real Product Features List */}
+        <div className="hidden sm:flex sm:col-span-3 flex-col gap-0.5 pr-2.5 border-r border-[#E2E4E9] text-[11px]">
+          <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11.5px] text-[#101114] mb-2">
             <span className="text-[#7C3AED] font-mono font-bold">//</span>
             <span>BREXAL</span>
           </div>
-          
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
-            <FolderKanban size={13} className="text-slate-400 shrink-0" />
-            <span>Workspace</span>
+
+          {/* OVERVIEW */}
+          <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider px-2 pt-1 flex items-center justify-between">
+            <span>OVERVIEW</span>
+            <ChevronDown size={10} className="text-slate-300" />
           </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#6366F1] text-white font-semibold text-[11.5px] shadow-xs">
-            <Layers size={13} className="shrink-0" />
-            <span>Sprints</span>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-[#EDE9FE] text-[#6366F1] font-semibold text-[11px]">
+            <LayoutGrid size={12} className="shrink-0 text-[#6366F1]" />
+            <span>Dashboard</span>
           </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
-            <GitPullRequest size={13} className="text-slate-400 shrink-0" />
-            <span>Pull Requests</span>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <Zap size={12} className="text-slate-400 shrink-0" />
+            <span>AI Copilot</span>
           </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
-            <AlertCircle size={13} className="text-slate-400 shrink-0" />
-            <span>Issues</span>
+
+          {/* COMMUNICATION */}
+          <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider px-2 pt-1.5 flex items-center justify-between">
+            <span>COMMUNICATION</span>
+            <ChevronDown size={10} className="text-slate-300" />
           </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
-            <GitCommit size={13} className="text-slate-400 shrink-0" />
-            <span>Commits</span>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <MessageSquare size={12} className="text-slate-400 shrink-0" />
+            <span>Inbox</span>
           </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11.5px]">
-            <Box size={13} className="text-slate-400 shrink-0" />
-            <span>Releases</span>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <Users size={12} className="text-slate-400 shrink-0" />
+            <span>Teams</span>
+          </div>
+
+          {/* PLANNING */}
+          <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider px-2 pt-1.5 flex items-center justify-between">
+            <span>PLANNING</span>
+            <ChevronDown size={10} className="text-slate-300" />
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <FolderKanban size={12} className="text-slate-400 shrink-0" />
+            <span>Kanban</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <Bug size={12} className="text-slate-400 shrink-0" />
+            <span>Issues &amp; Bugs</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <Map size={12} className="text-slate-400 shrink-0" />
+            <span>Roadmap</span>
+          </div>
+
+          {/* OPERATIONS */}
+          <div className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider px-2 pt-1.5 flex items-center justify-between">
+            <span>OPERATIONS</span>
+            <ChevronDown size={10} className="text-slate-300" />
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <Activity size={12} className="text-slate-400 shrink-0" />
+            <span>Uptime</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <Server size={12} className="text-slate-400 shrink-0" />
+            <span>Infrastructure</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <Terminal size={12} className="text-slate-400 shrink-0" />
+            <span>Logs</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors text-[11px]">
+            <Wrench size={12} className="text-slate-400 shrink-0" />
+            <span>Maintenance</span>
           </div>
         </div>
 
@@ -1138,40 +1185,79 @@ function InfrastructureGovernanceMockup() {
     <div className="relative rounded-2xl border border-white/12 bg-[#121422] shadow-[0_25px_60px_rgba(0,0,0,0.55)] p-3.5 sm:p-5 text-white overflow-hidden text-left">
       <div className="grid grid-cols-12 gap-3 sm:gap-4 items-start">
         
-        {/* Left Dark Sidebar (3 cols on sm+, hidden on mobile) */}
-        <div className="hidden sm:flex sm:col-span-3 flex-col gap-1 pr-2 border-r border-white/8 text-[11px]">
-          <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11.5px] text-white mb-3">
+        {/* Left Dark Sidebar (3 cols on sm+, hidden on mobile) with Real Product Features List */}
+        <div className="hidden sm:flex sm:col-span-3 flex-col gap-0.5 pr-2.5 border-r border-white/8 text-[11px]">
+          <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11.5px] text-white mb-2">
             <span className="text-[#C7BDF7] font-mono font-bold">//</span>
             <span>BREXAL</span>
           </div>
-          
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
-            <Layers size={13} />
-            <span>Overview</span>
+
+          {/* OVERVIEW */}
+          <div className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-wider px-2 pt-1 flex items-center justify-between">
+            <span>OVERVIEW</span>
+            <ChevronDown size={10} className="text-white/30" />
           </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#6366F1] text-white font-semibold text-[11px] shadow-xs">
-            <Server size={13} />
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <LayoutGrid size={12} className="text-white/40 shrink-0" />
+            <span>Dashboard</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Zap size={12} className="text-white/40 shrink-0" />
+            <span>AI Copilot</span>
+          </div>
+
+          {/* COMMUNICATION */}
+          <div className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-wider px-2 pt-1.5 flex items-center justify-between">
+            <span>COMMUNICATION</span>
+            <ChevronDown size={10} className="text-white/30" />
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <MessageSquare size={12} className="text-white/40 shrink-0" />
+            <span>Inbox</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Users size={12} className="text-white/40 shrink-0" />
+            <span>Teams</span>
+          </div>
+
+          {/* PLANNING */}
+          <div className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-wider px-2 pt-1.5 flex items-center justify-between">
+            <span>PLANNING</span>
+            <ChevronDown size={10} className="text-white/30" />
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <FolderKanban size={12} className="text-white/40 shrink-0" />
+            <span>Kanban</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Bug size={12} className="text-white/40 shrink-0" />
+            <span>Issues &amp; Bugs</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Map size={12} className="text-white/40 shrink-0" />
+            <span>Roadmap</span>
+          </div>
+
+          {/* OPERATIONS */}
+          <div className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-wider px-2 pt-1.5 flex items-center justify-between">
+            <span>OPERATIONS</span>
+            <ChevronDown size={10} className="text-white/30" />
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Activity size={12} className="text-white/40 shrink-0" />
+            <span>Uptime</span>
+          </div>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-[#6366F1] text-white font-semibold text-[11px] shadow-xs">
+            <Server size={12} className="shrink-0" />
             <span>Infrastructure</span>
           </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
-            <Cpu size={13} />
-            <span>Clusters</span>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Terminal size={12} className="text-white/40 shrink-0" />
+            <span>Logs</span>
           </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
-            <Network size={13} />
-            <span>Nodes</span>
-          </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
-            <ShieldCheck size={13} />
-            <span>Governance</span>
-          </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
-            <Terminal size={13} />
-            <span>Audit Logs</span>
-          </div>
-          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px] mt-4">
-            <Cpu size={13} />
-            <span>Settings</span>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/5 cursor-pointer transition-colors text-[11px]">
+            <Wrench size={12} className="text-white/40 shrink-0" />
+            <span>Maintenance</span>
           </div>
         </div>
 
