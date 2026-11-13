@@ -161,7 +161,7 @@ function StripeNavbar() {
               onMouseEnter={() => setActiveDropdown("developers")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <Link href="#developer-sandbox">Developers</Link>
+              <Link href="/dashboard">Developers</Link>
               <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
             </div>
 
@@ -227,7 +227,7 @@ function StripeNavbar() {
               Solutions
             </Link>
             <Link
-              href="#developer-sandbox"
+              href="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
             >
@@ -1485,174 +1485,7 @@ function StripeProductShowcaseSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   5. ELITE DEVELOPER SECTION (MIDNIGHT NAVY IDE / PLAYGROUND)
-   ═══════════════════════════════════════════════════════════════ */
-function StripeDeveloperSandboxSection() {
-  const [activeLang, setActiveLang] = useState<"curl" | "python" | "go" | "helm">("curl");
-  const [copied, setCopied] = useState(false);
-
-  const codeSnippets = {
-    curl: `curl -X POST https://api.bhartinexus.com/v1/telemetry/probes \\
-  -H "Authorization: Bearer bx_live_9f82a17b" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "cluster": "k8s-us-east-prod",
-    "ebpf_filter": "socket.latency > 15ms",
-    "sampling_rate": 1.0,
-    "auto_mitigation": true
-  }'`,
-    python: `from brexal import TelemetryEngine
-
-# Zero-overhead eBPF initialization
-client = TelemetryEngine(api_key="bx_live_9f82a17b")
-
-@client.watch_cluster("k8s-us-east-prod")
-def on_anomaly_detected(incident):
-    print(f"P0 Alert: {incident.root_cause_commit}")
-    incident.auto_mitigate(strategy="canary_rollback")`,
-    go: `package main
-
-import (
-	"context"
-	"github.com/bhartinexus/brexal-go"
-)
-
-func main() {
-	mesh := brexal.NewMeshClient("bx_live_9f82a17b")
-	mesh.AttachKernelProbe(context.Background(), &brexal.ProbeConfig{
-		Cluster: "k8s-us-east-prod",
-		Tracing: brexal.MicrosecondWaterfalls,
-	})
-}`,
-    helm: `helm repo add brexal https://charts.bhartinexus.com
-helm install brexal-agent brexal/ebpf-mesh \\
-  --set apiKey="bx_live_9f82a17b" \\
-  --set clusterName="k8s-us-east-prod" \\
-  --set autoDiscovery=true`
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(codeSnippets[activeLang]);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <section id="developer-sandbox" className="relative py-12 sm:py-16 md:py-20 px-4 sm:px-10 bg-[#101C35] text-white overflow-hidden">
-      {/* Background Subtle Gradient & Mesh Glow */}
-      <div className="absolute top-0 right-1/4 w-[600px] h-[400px] bg-gradient-to-br from-[#425CF5]/15 via-[#C7BDF7]/10 to-transparent rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 left-10 w-[500px] h-[350px] bg-gradient-to-tr from-[#425CF5]/10 via-transparent to-transparent rounded-full blur-[90px] pointer-events-none" />
-
-      <div className="max-w-[1320px] mx-auto text-left relative z-10">
-        
-        {/* Section Header */}
-        <div className="max-w-2xl mb-6 sm:mb-8 text-left">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="font-mono text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.18em] text-[#C7BDF7]">
-              Designed for
-            </span>
-            <span className="font-mono text-[10.5px] sm:text-[11.5px] font-semibold uppercase tracking-wider text-white px-2.5 py-0.5 rounded-md bg-white/10 border border-white/15">
-              Developers
-            </span>
-          </div>
-
-          <h2 className="font-display text-2xl sm:text-4xl md:text-[40px] font-semibold tracking-[-0.03em] text-white leading-[1.18] mb-3">
-            The world’s most powerful and developer-friendly telemetry engine.
-          </h2>
-
-          <p className="text-sm sm:text-base text-[#BFC3CC] font-normal leading-relaxed">
-            We obsess over developer experience. Instrument your entire distributed system in two lines of code without rebuilding Docker containers.
-          </p>
-        </div>
-
-        {/* Split Sandbox Editor */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
-          
-          {/* Left: Code Snippet Panel */}
-          <div className="lg:col-span-7 bg-[#0B1324] rounded-2xl sm:rounded-3xl border border-[#1E2D4A] p-4 sm:p-6 md:p-7 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.4)] overflow-hidden">
-            <div>
-              {/* Language Switcher Tabs */}
-              <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-[#1E2D4A] mb-3 sm:mb-4 font-mono text-xs gap-2">
-                <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 max-w-full">
-                  {(["curl", "python", "go", "helm"] as const).map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => setActiveLang(lang)}
-                      className={`px-3 py-1.5 rounded-lg font-semibold transition-all uppercase text-[11px] sm:text-xs shrink-0 cursor-pointer ${
-                        activeLang === lang
-                          ? "bg-[#425CF5] text-white shadow-xs"
-                          : "text-[#BFC3CC] hover:text-white hover:bg-white/5"
-                      }`}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={handleCopy}
-                  className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition-colors text-[11px] sm:text-xs shrink-0 border border-white/10 cursor-pointer"
-                >
-                  {copied ? <CheckCheck size={13} className="text-[#A78BFA]" /> : <Copy size={13} />}
-                  <span>{copied ? "Copied" : "Copy"}</span>
-                </button>
-              </div>
-
-              {/* Code Pre Block */}
-              <pre className="font-mono text-xs sm:text-[13px] leading-relaxed text-white/90 overflow-x-auto whitespace-pre p-1">
-                <code>{codeSnippets[activeLang]}</code>
-              </pre>
-            </div>
-
-            <div className="pt-3 sm:pt-4 border-t border-[#1E2D4A] mt-3 sm:mt-4 flex flex-col sm:flex-row sm:items-center justify-between text-xs font-mono text-[#BFC3CC] gap-2">
-              <span>Client SDK v3.2.0 • Zero dependencies</span>
-              <Link href="/dashboard" className="text-[#C7BDF7] hover:text-white font-semibold flex items-center gap-1 transition-colors">
-                <span>View Full API Reference</span>
-                <ChevronRight size={13} />
-              </Link>
-            </div>
-          </div>
-
-          {/* Right: Simulated Real-Time Response Payload */}
-          <div className="lg:col-span-5 bg-[#0B1324] rounded-2xl sm:rounded-3xl border border-[#1E2D4A] p-4 sm:p-6 md:p-7 flex flex-col justify-between shadow-[0_20px_60px_rgba(0,0,0,0.4)] font-mono text-xs overflow-hidden">
-            <div>
-              <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-[#1E2D4A] mb-3 sm:mb-4 text-[#BFC3CC]">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#A78BFA] animate-pulse" />
-                  <span className="font-semibold text-white uppercase text-[11px] sm:text-xs">Live Ingestion</span>
-                </div>
-                <span className="text-[#A78BFA] font-semibold text-[11px] sm:text-xs">200 OK (0.84ms)</span>
-              </div>
-
-              <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#060A14] border border-[#1E2D4A] text-[11px] sm:text-[12px] text-white/90 space-y-1.5 overflow-x-auto">
-                <div className="text-[#C7BDF7]">&#123;</div>
-                <div className="pl-3 sm:pl-4 text-white/90">&quot;status&quot;: &quot;MESH_ACTIVE&quot;,</div>
-                <div className="pl-3 sm:pl-4 text-white/90">&quot;cluster_id&quot;: &quot;k8s-us-east-prod&quot;,</div>
-                <div className="pl-3 sm:pl-4 text-white/90">&quot;ebpf_socket_probes&quot;: 14,</div>
-                <div className="pl-3 sm:pl-4 text-white/90">&quot;p99_latency_ms&quot;: 0.84,</div>
-                <div className="pl-3 sm:pl-4 text-white/90">&quot;anomaly_detection_model&quot;: &quot;brexal-v3&quot;,</div>
-                <div className="pl-3 sm:pl-4 text-white/90">&quot;auto_mitigation_ready&quot;: true</div>
-                <div className="text-[#C7BDF7]">&#125;</div>
-              </div>
-            </div>
-
-            <div className="pt-3 sm:pt-4 border-t border-[#1E2D4A] mt-3 sm:mt-4">
-              <div className="flex items-center justify-between text-[#BFC3CC] text-[10.5px] sm:text-[11.5px]">
-                <span>Kernel eBPF Filter: OK</span>
-                <span className="text-[#A78BFA] font-semibold">0.0% CPU penalty</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   6. ELITE GLOBAL SCALE & RELIABILITY NUMBERS
+   5. ELITE GLOBAL SCALE & RELIABILITY NUMBERS
    ═══════════════════════════════════════════════════════════════ */
 function StripeGlobalScaleSection() {
   const stats = [
@@ -1878,7 +1711,7 @@ function StripeFooter() {
             </span>
             <Link href="#architecture" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">eBPF Telemetry</Link>
             <Link href="#interactive-simulator" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">AI Incident Engine</Link>
-            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Distributed Tracing</Link>
+            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Distributed Tracing</Link>
             <Link href="#pricing" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Pricing</Link>
           </div>
 
@@ -1898,8 +1731,8 @@ function StripeFooter() {
             <span className="font-mono text-[11px] sm:text-[11.5px] font-bold text-[#101114] uppercase tracking-wider mb-1 sm:mb-2">
               Developers
             </span>
-            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Documentation</Link>
-            <Link href="#developer-sandbox" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">API Reference</Link>
+            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Documentation</Link>
+            <Link href="/dashboard" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">API Reference</Link>
             <Link href="/roadmap" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Product Roadmap</Link>
             <Link href="/logs" className="text-[#5B5F6B] font-medium hover:text-[#7C3AED] transition-colors">Audit & System Logs</Link>
           </div>
@@ -1935,7 +1768,6 @@ export default function LandingPage() {
         <PlatformOverviewSection />
         <StripeArchitectureFlowSection />
         <StripeProductShowcaseSection />
-        <StripeDeveloperSandboxSection />
         <BrexalComparisonSection />
         {/* BrexalTrustSecuritySection removed */}
         <StripeGlobalScaleSection />
