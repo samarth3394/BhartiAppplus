@@ -546,20 +546,26 @@ function HeroConsole3D() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-24 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#FBFBFE]">
+    <section className="relative min-h-screen flex items-center pt-20 pb-12 sm:pt-26 sm:pb-16 lg:pt-32 lg:pb-24 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#FBFBFE]">
       
       {/* ── FULL SCREEN ARCHITECTURAL WAVE BACKGROUND (USER ASSET: white.png) ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none -z-0">
         <img
           src="/white.png"
           alt="Luminous Architectural Wave"
-          className="w-full h-full object-cover object-center pointer-events-none"
+          className="w-full h-full object-cover object-[70%_center] sm:object-center pointer-events-none"
         />
+        {/* Mobile Luminous Contrast Mask (guarantees crystal-clear readability on phones) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/50 to-white/90 pointer-events-none md:hidden" />
+        
+        {/* Desktop Left-to-Right Subtle Reading Gradient */}
+        <div className="hidden md:block absolute inset-y-0 left-0 w-[55%] bg-gradient-to-r from-white/70 via-white/30 to-transparent pointer-events-none" />
+
         {/* Soft bottom dissolve for seamless flow into next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/60 to-transparent pointer-events-none" />
       </div>
 
-      <div className="max-w-[1320px] mx-auto relative z-10">
+      <div className="max-w-[1320px] mx-auto w-full relative z-10">
         
         {/* TWO-COLUMN EDITORIAL COMPOSITION */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center">
@@ -567,63 +573,63 @@ function StripeHeroSection() {
           {/* Left Column (5 cols): Editorial Headline & Copy */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
             
-            {/* Minimal Eyebrow */}
-            <div className="flex items-center gap-2.5 mb-4 sm:mb-5">
-              <span className="w-6 h-[1.5px] bg-[#6366F1]" />
-              <span className="text-[11px] sm:text-[11.5px] font-mono font-bold tracking-[0.2em] uppercase text-[#6366F1]">
+            {/* Minimal High-Contrast Eyebrow Pill */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 border border-[#6366F1]/30 shadow-2xs mb-3.5 sm:mb-4">
+              <span className="w-2 h-2 rounded-full bg-[#4338CA] animate-pulse" />
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.18em] uppercase text-[#3730A3]">
                 AI MONITORING PLATFORM
               </span>
             </div>
 
-            {/* Display Headline: "Intelligence, engineered to move." */}
-            <h1 className="text-[38px] sm:text-[50px] md:text-[56px] lg:text-[60px] xl:text-[66px] font-semibold tracking-[-0.035em] text-[#101114] leading-[1.05] mb-4 sm:mb-5 text-left">
+            {/* Display Headline: "Intelligence, engineered to move." (High-Contrast Obsidian + Royal Indigo) */}
+            <h1 className="text-[32px] sm:text-[46px] md:text-[54px] lg:text-[58px] xl:text-[64px] font-bold tracking-[-0.035em] text-[#090A0F] leading-[1.08] sm:leading-[1.05] mb-3.5 sm:mb-4 text-left">
               Intelligence, <br />
-              engineered <span className="font-editorial italic font-normal text-[#6366F1]">to move.</span>
+              engineered <span className="font-editorial italic font-normal text-[#4338CA]">to move.</span>
             </h1>
 
-            {/* Supporting Subhead */}
-            <p className="text-[14.5px] sm:text-[15.5px] text-[#474A57] font-normal leading-relaxed mb-6 sm:mb-7 max-w-[460px] text-left">
+            {/* Supporting Subhead (Rich Dark Charcoal for Maximum Clarity) */}
+            <p className="text-[14px] sm:text-[15.5px] text-[#1E2230] font-normal leading-relaxed mb-6 sm:mb-7 max-w-[460px] text-left">
               A modern monitoring and incident management platform that gives teams complete visibility, faster resolution and a more reliable system.
             </p>
 
-            {/* Action CTAs Row */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-3.5 mb-8 sm:mb-10 w-full sm:w-auto">
+            {/* Action CTAs Row (Full Width on Mobile, Row on Desktop) */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5 mb-6 sm:mb-8 w-full sm:w-auto">
               <Link
                 href="/register"
-                className="px-6 py-3 rounded-full bg-[#101114] text-white hover:bg-[#425CF5] text-[13.5px] sm:text-[14px] font-semibold transition-all shadow-[0_10px_25px_rgba(16,17,20,0.18)] hover:scale-105 flex items-center gap-2 group cursor-pointer"
+                className="px-6 py-3 rounded-full bg-[#090A0F] text-white hover:bg-[#4338CA] text-[13.5px] sm:text-[14px] font-semibold transition-all shadow-[0_8px_22px_rgba(9,10,15,0.22)] hover:scale-105 flex items-center justify-center gap-2 group cursor-pointer"
               >
                 <span>Start free trial</span>
                 <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 href="#platform"
-                className="px-6 py-3 rounded-full bg-white/80 backdrop-blur-md border border-[#D6D8DE] text-[#101114] hover:bg-white hover:border-[#101114] text-[13.5px] sm:text-[14px] font-medium transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+                className="px-6 py-3 rounded-full bg-white/95 backdrop-blur-md border border-slate-300 text-[#090A0F] hover:bg-white hover:border-[#090A0F] text-[13.5px] sm:text-[14px] font-medium transition-all shadow-2xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Book a demo</span>
               </Link>
             </div>
 
-            {/* 3 Micro Feature Callouts */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 pt-6 border-t border-[#D6D8DE]/70 w-full max-w-[500px]">
-              <div className="flex items-start gap-2.5">
-                <Zap size={17} className="text-[#6366F1] shrink-0 mt-0.5" />
+            {/* 3 Micro Feature Callouts (Mobile Glass Cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 pt-4 sm:pt-6 border-t border-slate-300/70 w-full max-w-[500px]">
+              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
+                <Zap size={17} className="text-[#4338CA] shrink-0" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#101114]">Detect faster</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#5B5F6B]">AI-powered insights</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#090A0F]">Detect faster</div>
+                  <div className="text-[11px] text-[#474A57]">AI-powered insights</div>
                 </div>
               </div>
-              <div className="flex items-start gap-2.5">
-                <Layers size={17} className="text-[#6366F1] shrink-0 mt-0.5" />
+              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
+                <Layers size={17} className="text-[#4338CA] shrink-0" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#101114]">Resolve smarter</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#5B5F6B]">RCA in minutes</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#090A0F]">Resolve smarter</div>
+                  <div className="text-[11px] text-[#474A57]">RCA in minutes</div>
                 </div>
               </div>
-              <div className="flex items-start gap-2.5">
-                <ShieldCheck size={17} className="text-[#6366F1] shrink-0 mt-0.5" />
+              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-white/60 sm:border-0 shadow-3xs sm:shadow-none">
+                <ShieldCheck size={17} className="text-[#4338CA] shrink-0" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#101114]">Stay reliable</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#5B5F6B]">High-uptime systems</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#090A0F]">Stay reliable</div>
+                  <div className="text-[11px] text-[#474A57]">High-uptime systems</div>
                 </div>
               </div>
             </div>
