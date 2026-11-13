@@ -658,15 +658,15 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
           }}
         >
           <div
-            className="brexal-node-pop relative flex flex-col items-center justify-center w-[72px] h-[72px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06),0_2px_8px_rgba(37,99,235,0.05)]"
+            className="brexal-node-pop relative flex flex-col items-center justify-center w-[72px] h-[72px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-[#E2E4E9] shadow-[0_12px_36px_rgba(16,17,20,0.06),0_2px_10px_rgba(66,92,245,0.06)]"
             style={{ animationDelay: "0.12s" }}
           >
-            <div className="absolute inset-[3.5px] sm:inset-[5px] rounded-full border border-slate-100 pointer-events-none" />
-            <span className="font-['Sora',sans-serif] text-[9px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#0A2540] pl-[0.22em] sm:pl-[0.25em] leading-none">
+            <div className="absolute inset-[3.5px] sm:inset-[5px] rounded-full border border-[#F7F6F2] pointer-events-none" />
+            <span className="font-['Sora',sans-serif] text-[9px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#101114] pl-[0.22em] sm:pl-[0.25em] leading-none">
               BREXAL
             </span>
-            <span className="w-4 sm:w-5 h-[1.5px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
-            <span className="font-['Sora',sans-serif] text-[4.5px] sm:text-[6.5px] font-medium tracking-[0.13em] sm:tracking-[0.16em] leading-[1.25] sm:leading-[1.3] uppercase text-[#64748B] text-center max-w-[56px] sm:max-w-[88px]">
+            <span className="w-4 sm:w-5 h-[1.5px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#425CF5] to-[#7657E8]" />
+            <span className="font-['Sora',sans-serif] text-[4.5px] sm:text-[6.5px] font-medium tracking-[0.13em] sm:tracking-[0.16em] leading-[1.25] sm:leading-[1.3] uppercase text-[#5B5F6B] text-center max-w-[56px] sm:max-w-[88px]">
               INTELLIGENT OBSERVABILITY
             </span>
           </div>
@@ -705,9 +705,9 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
                       : { opacity: 0, y: 4, scale: 0.96 }
                   }
                   transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-white text-[#0A2540] border border-slate-200/90 shadow-[0_6px_16px_rgba(15,23,42,0.08)]"
+                  className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-[#101114] text-white border border-[#34363D] shadow-[0_6px_20px_rgba(0,0,0,0.2)]"
                 >
-                  <span className="font-['Sora',sans-serif] text-[11px] font-medium tracking-tight leading-none">
+                  <span className="font-['Sora',sans-serif] text-[10.5px] font-medium tracking-tight leading-none">
                     {node.name}
                   </span>
                 </motion.div>
@@ -723,8 +723,8 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
                   } ${isHovered ? "scale-[1.24]" : "scale-100"}`}
                   style={{
                     filter: isHovered
-                      ? "drop-shadow(0 6px 14px rgba(37, 99, 235, 0.22))"
-                      : "drop-shadow(0 3px 8px rgba(15, 23, 42, 0.08))",
+                      ? "drop-shadow(0 6px 16px rgba(66, 92, 245, 0.28))"
+                      : "drop-shadow(0 3px 8px rgba(16, 17, 20, 0.08))",
                   }}
                 >
                   <img

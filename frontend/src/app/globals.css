@@ -2,19 +2,33 @@
 
 @theme {
   --font-display: var(--font-sora), system-ui, sans-serif;
-  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-sans: var(--font-inter), var(--font-manrope), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;
   --font-space: var(--font-space-grotesk), system-ui, sans-serif;
 
+  /* 02. ELITE PREMIUM COLOR PALETTE */
+  --color-obsidian: #101114;
+  --color-midnight-navy: #101C35;
+  --color-pure-white: #FFFFFF;
+  --color-soft-ivory: #F7F6F2;
+  --color-graphite: #34363D;
+  --color-muted-silver: #BFC3CC;
+
+  /* Accent Palette */
+  --color-electric-cobalt: #425CF5;
+  --color-deep-violet: #7657E8;
+  --color-champagne-gold: #C8A96B;
+  --color-soft-lavender: #C7BDF7;
+
+  /* Surface & Semantic Tokens */
   --color-bg-base: #FFFFFF;
-  --color-bg-subtle: #F6F9FC;
+  --color-bg-subtle: #F7F6F2;
   --color-bg-elevated: #FFFFFF;
-  --color-border-subtle: #E2E8F0;
-  --color-text-primary: #000000;
-  --color-text-secondary: #000000;
-  --color-accent-indigo: #635BFF;
-  --color-accent-blue: #0073E6;
-  --color-accent-cyan: #00D4FF;
+  --color-border-subtle: #E2E4E9;
+  --color-border-strong: #101114;
+  --color-text-primary: #101114;
+  --color-text-secondary: #5B5F6B;
+  --color-text-muted: #8B8F9A;
   --color-status-green: #059669;
   --color-status-amber: #D97706;
   --color-status-red: #DC2626;
@@ -22,11 +36,17 @@
 
 :root {
   --background: #FFFFFF;
-  --foreground: #000000;
+  --foreground: #101114;
   --font-sora: "Sora", system-ui, sans-serif;
+  --font-inter: "Inter", system-ui, sans-serif;
   --font-manrope: "Manrope", system-ui, sans-serif;
   --font-jetbrains-mono: "JetBrains Mono", monospace;
   --font-space-grotesk: "Space Grotesk", system-ui, sans-serif;
+
+  /* Elite Easing Curves */
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 html {
@@ -36,17 +56,19 @@ html {
 
 body {
   background-color: #FFFFFF;
-  color: #000000;
-  font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #101114;
+  font-family: var(--font-inter), var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Stripe-inspired Typography Rules */
+/* 03. EDITORIAL TYPOGRAPHY RULES */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sora), var(--font-manrope), sans-serif;
+  font-family: var(--font-sora), sans-serif;
   color: inherit;
   text-wrap: balance;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
 }
 
 p {
@@ -55,73 +77,218 @@ p {
   line-height: 1.65;
 }
 
-/* Minimal Scrollbar for Light Theme */
+/* Minimal Architectural Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F6F9FC; 
+  background: #F7F6F2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1; 
-  border-radius: 4px;
+  background: #BFC3CC;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8; 
+  background: #8B8F9A;
 }
 
-/* Stripe-inspired Selection */
+/* Elite Selection */
 ::selection {
-  background-color: rgba(99, 91, 255, 0.18);
-  color: #0A2540;
+  background-color: rgba(66, 92, 245, 0.14);
+  color: #101114;
 }
 
 .font-display {
   font-family: var(--font-sora), sans-serif;
 }
 
+.font-sans-inter {
+  font-family: var(--font-inter), sans-serif;
+}
+
 .font-mono {
   font-family: var(--font-jetbrains-mono), monospace;
 }
 
-@keyframes brexalPopUp {
+/* ═══════════════════════════════════════════════════════════════
+   07. PREMIUM MOTION DESIGN KEYFRAMES & UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Editorial Upward Reveal */
+@keyframes editorialReveal {
   0% {
     opacity: 0;
-    transform: translate3d(0, 14px, 0) scale(0.97);
+    transform: translate3d(0, 24px, 0);
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes brexalNodePop {
+/* Node/Card Scale Reveal */
+@keyframes editorialScaleIn {
   0% {
     opacity: 0;
-    transform: scale(0.68);
+    transform: scale(0.92) translate3d(0, 8px, 0);
   }
   100% {
     opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+/* Subtle Ambient Orb Breathe (24s cycle) */
+@keyframes ambientBreathe {
+  0%, 100% {
+    opacity: 0.45;
     transform: scale(1);
   }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
 }
 
+/* Architectural Grid Subtle Drift */
+@keyframes architecturalDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(12px, -8px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Particle Signal Pulse along curve */
+@keyframes signalPulse {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* Marquee Infinite Track */
+@keyframes editorialMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* CSS Animation Classes */
 .brexal-pop-up {
-  animation: brexalPopUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: editorialReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .brexal-node-pop {
-  animation: brexalNodePop 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: editorialScaleIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.brexal-ambient-breathe {
+  animation: ambientBreathe 24s ease-in-out infinite;
+}
+
+.brexal-grid-drift {
+  animation: architecturalDrift 30s ease-in-out infinite;
+}
+
+.editorial-marquee {
+  animation: editorialMarquee 32s linear infinite;
+}
+
+.editorial-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   08. PREMIUM COMPONENT UTILITIES (CARDS, BUTTONS, BENTO)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Elite Card Elevation & Border Transition */
+.elite-card {
+  border: 1px solid #E2E4E9;
+  border-radius: 16px;
+  background-color: #FFFFFF;
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.28s ease;
+}
+
+.elite-card:hover {
+  transform: translateY(-3px);
+  border-color: #BFC3CC;
+  box-shadow: 0 16px 40px -10px rgba(16, 17, 20, 0.08);
+}
+
+/* Elite Action Button */
+.elite-btn-primary {
+  background-color: #101C35;
+  color: #FFFFFF;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: background-color 0.24s ease,
+              transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.24s ease;
+}
+
+.elite-btn-primary:hover {
+  background-color: #425CF5;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(66, 92, 245, 0.22);
+}
+
+.elite-btn-secondary {
+  border: 1px solid #D6D8DE;
+  background-color: #FFFFFF;
+  color: #101114;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: border-color 0.24s ease,
+              color 0.24s ease,
+              transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.24s ease;
+}
+
+.elite-btn-secondary:hover {
+  border-color: #101114;
+  background-color: #F7F6F2;
+  transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. REDUCED MOTION ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   .brexal-pop-up,
-  .brexal-node-pop {
+  .brexal-node-pop,
+  .brexal-ambient-breathe,
+  .brexal-grid-drift,
+  .editorial-marquee,
+  .elite-card,
+  .elite-btn-primary,
+  .elite-btn-secondary {
     animation: none !important;
+    transition: none !important;
     opacity: 1 !important;
     transform: none !important;
   }
