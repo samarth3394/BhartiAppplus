@@ -646,9 +646,24 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
         </Canvas>
       </WebGLErrorBoundary>
 
-      {/* Camera-Projected Editorial SVG Layer */}
+      {/* Camera-Projected Editorial SVG & HUD Layer */}
       <div className="absolute inset-0 pointer-events-none overflow-visible">
-        {/* Central Architectural BREXAL Core Medallion */}
+        
+        {/* Subtle Architectural Telemetry Coordinates (Swiss Grid Accents) */}
+        <div className="hidden sm:block absolute top-2 left-3 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-75">
+          [01 // CLOUD INGRESS]
+        </div>
+        <div className="hidden sm:block absolute top-2 right-3 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-75">
+          [02 // INFRASTRUCTURE MESH]
+        </div>
+        <div className="hidden sm:block absolute bottom-2 left-3 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-75">
+          [03 // RUNTIME ENGINES]
+        </div>
+        <div className="hidden sm:block absolute bottom-2 right-3 font-mono text-[9px] font-semibold text-[#8B8F9A] tracking-wider uppercase opacity-75">
+          [04 // STATE & OBSERVABILITY]
+        </div>
+
+        {/* Central Architectural BREXAL Core Super-Medallion */}
         <div
           ref={coreDomRef}
           className="absolute top-1/2 left-1/2 select-none"
@@ -658,21 +673,39 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
           }}
         >
           <div
-            className="brexal-node-pop relative flex flex-col items-center justify-center w-[72px] h-[72px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-[#E2E4E9] shadow-[0_12px_36px_rgba(16,17,20,0.06),0_2px_10px_rgba(66,92,245,0.06)]"
+            className="brexal-node-pop relative flex flex-col items-center justify-center w-[84px] h-[84px] sm:w-[122px] sm:h-[122px] rounded-full bg-white border border-[#E2E4E9] shadow-[0_16px_40px_rgba(16,17,20,0.08),0_0_28px_rgba(66,92,245,0.12)]"
             style={{ animationDelay: "0.12s" }}
           >
-            <div className="absolute inset-[3.5px] sm:inset-[5px] rounded-full border border-[#F7F6F2] pointer-events-none" />
-            <span className="font-['Sora',sans-serif] text-[9px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#101114] pl-[0.22em] sm:pl-[0.25em] leading-none">
+            {/* Outer Rotating Concentric Telemetry Radar Ring */}
+            <div className="absolute -inset-2.5 sm:-inset-3.5 rounded-full border border-dashed border-[#425CF5]/35 animate-[spin_45s_linear_infinite] pointer-events-none" />
+            <div className="absolute -inset-1 sm:-inset-1.5 rounded-full border border-[#E2E4E9] pointer-events-none" />
+            
+            {/* Precision Radar Inner Bezel */}
+            <div className="absolute inset-[3px] sm:inset-[4.5px] rounded-full border border-[#F7F6F2] pointer-events-none" />
+            
+            {/* BREXAL Focal Typography */}
+            <span className="font-['Sora',sans-serif] text-[9.5px] sm:text-[14px] font-bold tracking-[0.24em] text-[#101114] pl-[0.24em] leading-none">
               BREXAL
             </span>
-            <span className="w-4 sm:w-5 h-[1.5px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#425CF5] to-[#7657E8]" />
-            <span className="font-['Sora',sans-serif] text-[4.5px] sm:text-[6.5px] font-medium tracking-[0.13em] sm:tracking-[0.16em] leading-[1.25] sm:leading-[1.3] uppercase text-[#5B5F6B] text-center max-w-[56px] sm:max-w-[88px]">
+            
+            {/* Active Core Gradient Spine */}
+            <span className="w-4.5 sm:w-6 h-[2px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#425CF5] via-[#7657E8] to-[#425CF5]" />
+            
+            <span className="font-['Sora',sans-serif] text-[4.5px] sm:text-[6.5px] font-semibold tracking-[0.15em] uppercase text-[#5B5F6B] text-center max-w-[62px] sm:max-w-[92px] leading-tight">
               INTELLIGENT OBSERVABILITY
             </span>
+
+            {/* Micro eBPF Telemetry Badge */}
+            <div className="mt-1 hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#EEF2FF] border border-[#C7BDF7]/60">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
+              <span className="text-[5.5px] font-mono font-bold text-[#425CF5] uppercase tracking-wider">
+                MESH ACTIVE
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* 17 Unboxed Official SVG Technology Marks with Staggered Pop-up */}
+        {/* 17 Engineered Architecture Medallion Technology Nodes */}
         {TECH_NODES.map((node, index) => {
           const isHovered = hoveredId === node.id;
           const layerBaseDelay =
@@ -696,36 +729,41 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
                 className="brexal-node-pop relative flex items-center justify-center"
                 style={{ animationDelay: `${popDelay.toFixed(2)}s` }}
               >
-                {/* Editorial Minimal Tooltip */}
+                {/* High-Fidelity Editorial HUD Tooltip on Hover */}
                 <motion.div
                   initial={false}
                   animate={
                     isHovered
                       ? { opacity: 1, y: 0, scale: 1 }
-                      : { opacity: 0, y: 4, scale: 0.96 }
+                      : { opacity: 0, y: 6, scale: 0.94 }
                   }
-                  transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-[#101114] text-white border border-[#34363D] shadow-[0_6px_20px_rgba(0,0,0,0.2)]"
+                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 rounded-lg bg-[#101C35] text-white border border-[#34363D] shadow-[0_10px_26px_rgba(0,0,0,0.35)] z-50 flex items-center gap-2"
                 >
-                  <span className="font-['Sora',sans-serif] text-[10.5px] font-medium tracking-tight leading-none">
+                  <span className="font-['Sora',sans-serif] text-[11px] font-semibold text-white">
                     {node.name}
+                  </span>
+                  <span className="text-[9px] font-mono font-medium text-[#C7BDF7] bg-white/10 px-1.5 py-0.5 rounded">
+                    {node.category}
+                  </span>
+                  <span className="text-[9px] font-mono font-semibold text-[#059669]">
+                    ● Active
                   </span>
                 </motion.div>
 
-                {/* Unboxed Authentic SVG Mark */}
+                {/* Tactile Architectural Glass Medallion with Authentic Brand SVG */}
                 <div
                   tabIndex={0}
                   aria-label={`${node.name} — ${node.category}`}
                   onFocus={() => setHoveredId(node.id)}
                   onBlur={() => setHoveredId(null)}
-                  className={`cursor-pointer flex items-center justify-center transition-transform duration-300 ease-out focus:outline-none ${
-                    isMobile ? "w-5 h-5" : "w-7 h-7 sm:w-8 sm:h-8"
-                  } ${isHovered ? "scale-[1.24]" : "scale-100"}`}
-                  style={{
-                    filter: isHovered
-                      ? "drop-shadow(0 6px 16px rgba(66, 92, 245, 0.28))"
-                      : "drop-shadow(0 3px 8px rgba(16, 17, 20, 0.08))",
-                  }}
+                  className={`cursor-pointer relative flex items-center justify-center rounded-2xl bg-white/95 border border-[#E2E4E9] shadow-[0_6px_18px_rgba(16,17,20,0.06)] backdrop-blur-md transition-all duration-300 ease-out focus:outline-none ${
+                    isMobile ? "w-8 h-8 p-1.5" : "w-10 h-10 sm:w-11 sm:h-11 p-2"
+                  } ${
+                    isHovered
+                      ? "scale-[1.28] border-[#425CF5] shadow-[0_14px_34px_rgba(66,92,245,0.25)] ring-2 ring-[#425CF5]/25"
+                      : "hover:border-[#BFC3CC]"
+                  }`}
                 >
                   <img
                     src={node.logo}
@@ -734,6 +772,8 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
                     draggable={false}
                     className="w-full h-full object-contain pointer-events-none"
                   />
+                  {/* Micro Live Status Beacon */}
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#059669] ring-2 ring-white shadow-xs" />
                 </div>
               </div>
             </div>

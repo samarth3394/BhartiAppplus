@@ -315,7 +315,7 @@ function EliteArchitecturalHeroCanvas() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative pt-22 pb-4 sm:pt-28 sm:pb-12 md:pt-32 md:pb-14 px-4 sm:px-10 overflow-hidden bg-white">
+    <section className="relative pt-16 pb-6 sm:pt-20 sm:pb-8 md:pt-22 md:pb-10 px-4 sm:px-8 lg:px-10 overflow-hidden bg-white">
       
       {/* ── ARCHITECTURAL HERO CANVAS ── */}
       <EliteArchitecturalHeroCanvas />
@@ -323,7 +323,7 @@ function StripeHeroSection() {
       <div className="max-w-[1320px] mx-auto text-left relative z-10">
         
         {/* TWO-COLUMN EDITORIAL COMPOSITION */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-12 items-center">
           
           {/* Left Column (5 cols): Editorial Copy & High-End CTAs */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
@@ -332,19 +332,19 @@ function StripeHeroSection() {
             <div className="brexal-pop-up" style={{ animationDelay: "0.05s" }}>
               <Link 
                 href="#interactive-simulator" 
-                className="group inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-[#E2E4E9] shadow-[0_2px_8px_rgba(16,17,20,0.03)] mb-3 sm:mb-4 hover:border-[#425CF5]/40 transition-colors"
+                className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#E2E4E9] shadow-[0_2px_8px_rgba(16,17,20,0.03)] mb-3 hover:border-[#425CF5]/50 hover:bg-[#F7F6F2] transition-all"
               >
-                <span className="flex h-1.5 w-1.5 rounded-full bg-[#425CF5]" />
-                <span className="text-[10.5px] sm:text-[11.5px] font-mono font-medium tracking-[0.08em] uppercase text-[#34363D]">
+                <span className="flex h-2 w-2 rounded-full bg-[#425CF5] animate-pulse" />
+                <span className="text-[10px] sm:text-[11px] font-mono font-semibold tracking-[0.1em] uppercase text-[#34363D]">
                   Now in GA: Autonomous eBPF Telemetry Mesh 3.0
                 </span>
                 <ChevronRight size={13} className="text-[#425CF5] group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
 
-            {/* Editorial Display Headline (Sora, Controlled Balance) */}
+            {/* Editorial Display Headline (Sora, Proportioned to Viewport) */}
             <h1
-              className="brexal-pop-up font-display text-[27px] sm:text-[36px] md:text-[42px] lg:text-[48px] font-semibold tracking-[-0.035em] text-[#101114] leading-[1.12] mb-3 text-left"
+              className="brexal-pop-up font-display text-[26px] sm:text-[34px] md:text-[38px] lg:text-[42px] xl:text-[46px] font-semibold tracking-[-0.035em] text-[#101114] leading-[1.12] mb-3 text-left"
               style={{ animationDelay: "0.14s" }}
             >
               Autonomous telemetry <br className="hidden sm:inline" />
@@ -352,29 +352,29 @@ function StripeHeroSection() {
               <span className="text-[#425CF5]">modern cloud systems.</span>
             </h1>
 
-            {/* Supporting Subhead (Inter, Generous Line Height) */}
+            {/* Supporting Subhead */}
             <p
-              className="brexal-pop-up text-[14.5px] sm:text-[16px] text-[#5B5F6B] font-normal leading-relaxed mb-5 sm:mb-6 text-left max-w-[460px]"
-              style={{ animationDelay: "0.24s" }}
+              className="brexal-pop-up text-[14px] sm:text-[15px] text-[#5B5F6B] font-normal leading-relaxed mb-4 sm:mb-5 text-left max-w-[440px]"
+              style={{ animationDelay: "0.22s" }}
             >
               Millions of requests across Kubernetes, microservices, and databases are monitored in real time with BREXAL. Synthesize logs, kernel traces, and metrics into self-healing incident intelligence.
             </p>
 
             {/* Elite Action CTAs Row */}
             <div
-              className="brexal-pop-up flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 mb-5 sm:mb-6 w-full sm:w-auto"
-              style={{ animationDelay: "0.34s" }}
+              className="brexal-pop-up flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5 w-full sm:w-auto"
+              style={{ animationDelay: "0.32s" }}
             >
               <Link
                 href="/register"
-                className="elite-btn-primary px-6 py-3 min-h-[44px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 group shadow-xs hover:shadow-md"
+                className="elite-btn-primary px-6 py-3 min-h-[44px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 group shadow-sm hover:shadow-md cursor-pointer"
               >
                 <span>Start for free</span>
                 <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 href="#interactive-simulator"
-                className="elite-btn-secondary px-5 py-3 min-h-[44px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2"
+                className="elite-btn-secondary px-5 py-3 min-h-[44px] text-[13.5px] sm:text-[14px] flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Explore live radar</span>
                 <ChevronRight size={14} className="text-[#8B8F9A]" />
@@ -383,8 +383,8 @@ function StripeHeroSection() {
 
             {/* Micro Trust Signals */}
             <div
-              className="brexal-pop-up flex flex-wrap items-center gap-3 sm:gap-5 text-[11px] sm:text-[12px] font-mono text-[#5B5F6B] pt-0.5"
-              style={{ animationDelay: "0.44s" }}
+              className="brexal-pop-up flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] sm:text-[11.5px] font-mono text-[#5B5F6B] pt-0.5"
+              style={{ animationDelay: "0.40s" }}
             >
               <span className="flex items-center gap-1.5">
                 <Check size={14} className="text-[#059669] font-bold shrink-0" /> Free developer tier
@@ -399,7 +399,7 @@ function StripeHeroSection() {
 
           </div>
 
-          {/* Right Column (7 cols): 3D Technology Ecosystem Visualization (Transparent, No Background Card) */}
+          {/* Right Column (7 cols): 3D Technology Ecosystem Visualization */}
           <div className="lg:col-span-7 relative w-full pt-0">
             <HeroEcosystem3D />
           </div>
