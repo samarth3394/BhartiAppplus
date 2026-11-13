@@ -36,7 +36,6 @@ import {
   MessageSquare
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
-import { BrexalIntegrationsSection } from "@/components/landing/BrexalIntegrationsSection";
 import { BrexalComparisonSection } from "@/components/landing/BrexalComparisonSection";
 // BrexalTrustSecuritySection removed
 import { BrexalFaqSection } from "@/components/landing/BrexalFaqSection";
@@ -1385,9 +1384,7 @@ function StripeGlobalScaleSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   7. ELITE TRANSPARENT PRICING
-   ═══════════════════════════════════════════════════════════════ */
+
 function StripePricingSection() {
   const tiers = [
     {
@@ -1491,9 +1488,7 @@ function StripePricingSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   8. ELITE READY TO GET STARTED (FINAL CTA)
-   ═══════════════════════════════════════════════════════════════ */
+
 function StripeFinalCtaSection() {
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-10 bg-white border-b border-[#E2E4E9]">
@@ -1623,7 +1618,6 @@ export default function LandingPage() {
         <PlatformOverviewSection />
         <StripeArchitectureFlowSection />
         <StripeProductShowcaseSection />
-        <BrexalIntegrationsSection />
         <StripeDeveloperSandboxSection />
         <BrexalComparisonSection />
         {/* BrexalTrustSecuritySection removed */}
