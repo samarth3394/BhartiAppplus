@@ -62,7 +62,7 @@ const HeroEcosystem3D = dynamic(
 );
 
 /* ═══════════════════════════════════════════════════════════════
-   1. ELITE DARK EDITORIAL NAVIGATION BAR (EXACT AS SPECIFIED)
+   1. ELITE EDITORIAL NAVIGATION BAR (LIGHT HERO ADAPTATION)
    ═══════════════════════════════════════════════════════════════ */
 function StripeNavbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -81,16 +81,16 @@ function StripeNavbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-3 sm:py-3.5 ${
         scrolled
-          ? "bg-[#0A0C14]/95 backdrop-blur-md border-b border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
-          : "bg-[#0A0C14]/80 backdrop-blur-xs border-b border-white/5"
+          ? "bg-white/90 backdrop-blur-md border-b border-[#E2E4E9] shadow-[0_2px_16px_rgba(16,17,20,0.04)]"
+          : "bg-white/50 backdrop-blur-xs border-b border-black/5"
       }`}
     >
       <div className="max-w-[1320px] mx-auto px-4 sm:px-8 lg:px-10 flex items-center justify-between">
         
         {/* Brand Logo with Double Diagonal Slash Icon */}
         <Link href="/" className="flex items-center gap-2 group focus:outline-none shrink-0">
-          <div className="flex items-center gap-1.5 font-bold tracking-[0.16em] text-[15px] sm:text-[16px] text-white">
-            <span className="text-[#C7BDF7] font-mono text-base font-bold">//</span>
+          <div className="flex items-center gap-1.5 font-bold tracking-[0.16em] text-[15px] sm:text-[16px] text-[#101114]">
+            <span className="text-[#6366F1] font-mono text-base font-bold">//</span>
             <span className="font-['Sora',sans-serif] tracking-[0.18em]">BREXAL</span>
           </div>
         </Link>
@@ -98,9 +98,9 @@ function StripeNavbar() {
         {/* Right Nav & Action CTAs Group */}
         <div className="flex items-center gap-5 xl:gap-8 shrink-0">
           {/* Desktop Navigation Menu */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-[13.5px] font-medium text-[#BFC3CC] whitespace-nowrap">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-[13.5px] font-medium text-[#34363D] whitespace-nowrap">
             <div 
-              className="relative cursor-pointer group flex items-center gap-1 hover:text-white transition-colors"
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-[#101114] transition-colors"
               onMouseEnter={() => setActiveDropdown("product")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
@@ -109,18 +109,18 @@ function StripeNavbar() {
               
               {activeDropdown === "product" && (
                 <div className="absolute top-full -left-4 w-72 pt-3">
-                  <div className="p-3.5 bg-[#12141F] rounded-2xl border border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.7)] space-y-2 text-left">
-                    <Link href="#platform" className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
-                      <div className="font-semibold text-xs text-white">Real-Time Monitoring</div>
-                      <div className="text-[11px] text-[#8B8F9A]">Full visibility into applications and mesh</div>
+                  <div className="p-3.5 bg-white rounded-2xl border border-[#E2E4E9] shadow-[0_16px_40px_rgba(0,0,0,0.08)] space-y-2 text-left">
+                    <Link href="#platform" className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
+                      <div className="font-semibold text-xs text-[#101114]">Real-Time Monitoring</div>
+                      <div className="text-[11px] text-[#5B5F6B]">Full visibility into applications and mesh</div>
                     </Link>
-                    <Link href="#interactive-simulator" className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
-                      <div className="font-semibold text-xs text-white">AI Incident Copilot</div>
-                      <div className="text-[11px] text-[#8B8F9A]">Root cause analysis & remediation in &lt; 90s</div>
+                    <Link href="#interactive-simulator" className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
+                      <div className="font-semibold text-xs text-[#101114]">AI Incident Copilot</div>
+                      <div className="text-[11px] text-[#5B5F6B]">Root cause analysis & remediation in &lt; 90s</div>
                     </Link>
-                    <Link href="#architecture-flow" className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
-                      <div className="font-semibold text-xs text-white">eBPF Telemetry Mesh</div>
-                      <div className="text-[11px] text-[#8B8F9A]">0.0% CPU kernel-level socket observability</div>
+                    <Link href="#architecture-flow" className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
+                      <div className="font-semibold text-xs text-[#101114]">eBPF Telemetry Mesh</div>
+                      <div className="text-[11px] text-[#5B5F6B]">0.0% CPU kernel-level socket observability</div>
                     </Link>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ function StripeNavbar() {
             </div>
 
             <div 
-              className="relative cursor-pointer group flex items-center gap-1 hover:text-white transition-colors"
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-[#101114] transition-colors"
               onMouseEnter={() => setActiveDropdown("solutions")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
@@ -137,14 +137,14 @@ function StripeNavbar() {
               
               {activeDropdown === "solutions" && (
                 <div className="absolute top-full -left-4 w-72 pt-3">
-                  <div className="p-3.5 bg-[#12141F] rounded-2xl border border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.7)] space-y-2 text-left">
-                    <div className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
-                      <div className="font-semibold text-xs text-white">Enterprise Kubernetes</div>
-                      <div className="text-[11px] text-[#8B8F9A]">Multi-cluster pod routing & ingress</div>
+                  <div className="p-3.5 bg-white rounded-2xl border border-[#E2E4E9] shadow-[0_16px_40px_rgba(0,0,0,0.08)] space-y-2 text-left">
+                    <div className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
+                      <div className="font-semibold text-xs text-[#101114]">Enterprise Kubernetes</div>
+                      <div className="text-[11px] text-[#5B5F6B]">Multi-cluster pod routing & ingress</div>
                     </div>
-                    <div className="block p-2 rounded-xl hover:bg-white/5 transition-colors">
-                      <div className="font-semibold text-xs text-white">High-Throughput Fintech</div>
-                      <div className="text-[11px] text-[#8B8F9A]">Sub-millisecond SLA enforcement</div>
+                    <div className="block p-2 rounded-xl hover:bg-[#F7F6F2] transition-colors">
+                      <div className="font-semibold text-xs text-[#101114]">High-Throughput Fintech</div>
+                      <div className="text-[11px] text-[#5B5F6B]">Sub-millisecond SLA enforcement</div>
                     </div>
                   </div>
                 </div>
@@ -152,7 +152,7 @@ function StripeNavbar() {
             </div>
 
             <div 
-              className="relative cursor-pointer group flex items-center gap-1 hover:text-white transition-colors"
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-[#101114] transition-colors"
               onMouseEnter={() => setActiveDropdown("developers")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
@@ -161,7 +161,7 @@ function StripeNavbar() {
             </div>
 
             <div 
-              className="relative cursor-pointer group flex items-center gap-1 hover:text-white transition-colors"
+              className="relative cursor-pointer group flex items-center gap-1 hover:text-[#101114] transition-colors"
               onMouseEnter={() => setActiveDropdown("resources")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
@@ -169,7 +169,7 @@ function StripeNavbar() {
               <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
             </div>
 
-            <Link href="#pricing" className="hover:text-white transition-colors">
+            <Link href="#pricing" className="hover:text-[#101114] transition-colors">
               Pricing
             </Link>
           </nav>
@@ -178,13 +178,13 @@ function StripeNavbar() {
           <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             <Link
               href="/login"
-              className="text-[13px] sm:text-[13.5px] font-medium text-[#BFC3CC] hover:text-white px-2 py-1.5 transition-colors whitespace-nowrap"
+              className="text-[13px] sm:text-[13.5px] font-medium text-[#34363D] hover:text-[#101114] px-2 py-1.5 transition-colors whitespace-nowrap"
             >
               Log in
             </Link>
             <Link
               href="/register"
-              className="group px-4.5 py-2 rounded-full bg-white text-[#0A0C14] hover:bg-neutral-100 text-[12.5px] sm:text-[13px] font-semibold transition-all shadow-[0_2px_12px_rgba(255,255,255,0.15)] hover:scale-105 flex items-center gap-1.5 whitespace-nowrap"
+              className="group px-4.5 py-2 rounded-full bg-[#101114] text-white hover:bg-[#425CF5] text-[12.5px] sm:text-[13px] font-semibold transition-all shadow-sm hover:scale-105 flex items-center gap-1.5 whitespace-nowrap"
             >
               <span>Get started</span>
               <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
@@ -194,7 +194,7 @@ function StripeNavbar() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-white hover:bg-white/10 transition-colors focus:outline-none"
+              className="lg:hidden p-2 rounded-xl text-[#101114] hover:bg-black/5 transition-colors focus:outline-none"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -205,50 +205,50 @@ function StripeNavbar() {
 
       {/* Mobile Dropdown Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-white/10 bg-[#0A0C14]/98 backdrop-blur-xl px-4 py-5 space-y-4 shadow-2xl text-left">
+        <div className="lg:hidden border-t border-[#E2E4E9] bg-white/98 backdrop-blur-xl px-4 py-5 space-y-4 shadow-xl text-left">
           <div className="space-y-1">
             <Link
               href="#platform"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
             >
               Product
             </Link>
             <Link
               href="#comparison"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
             >
               Solutions
             </Link>
             <Link
               href="#developer-sandbox"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
             >
               Developers
             </Link>
             <Link
               href="#pricing"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-[#101114] hover:bg-[#F7F6F2] transition-colors"
             >
               Pricing
             </Link>
           </div>
 
-          <div className="pt-3 border-t border-white/10 flex flex-col gap-2">
+          <div className="pt-3 border-t border-[#E2E4E9] flex flex-col gap-2">
             <Link
               href="/register"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-2.5 rounded-full bg-white text-[#0A0C14] text-center font-semibold text-sm shadow-sm"
+              className="w-full py-2.5 rounded-full bg-[#101114] text-white text-center font-semibold text-sm shadow-sm"
             >
               Get started free
             </Link>
             <Link
               href="/login"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-2.5 rounded-full border border-white/20 bg-white/5 text-center font-semibold text-sm text-white"
+              className="w-full py-2.5 rounded-full border border-[#D6D8DE] bg-white text-center font-semibold text-sm text-[#101114]"
             >
               Log in to Console
             </Link>
@@ -542,31 +542,21 @@ function HeroConsole3D() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   3. CINEMATIC DARK HERO SECTION (EXACT REFERENCE DESIGN)
+   3. FULL-SCREEN LUMINOUS ARCHITECTURAL HERO SECTION (white.png)
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative bg-[#0A0C14] text-white pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24 px-4 sm:px-8 lg:px-12 overflow-hidden">
+    <section className="relative min-h-screen flex items-center pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-24 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#FBFBFE]">
       
-      {/* ── CINEMATIC ARCHITECTURAL MASTER BACKGROUND (USER MASTER ASSET) ── */}
+      {/* ── FULL SCREEN ARCHITECTURAL WAVE BACKGROUND (USER ASSET: white.png) ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none -z-0">
-        {/* Master Architectural Wave Artwork from New folder (2) */}
         <img
-          src="/hero-mesh.png"
+          src="/white.png"
           alt="Luminous Architectural Wave"
-          className="absolute top-0 right-0 w-full sm:w-[90%] lg:w-[68%] xl:w-[62%] h-full object-cover object-right pointer-events-none opacity-95"
+          className="w-full h-full object-cover object-center pointer-events-none"
         />
-
-        {/* Seamless Radial/Linear Left Blend Mask for Perfect Headline Readability */}
-        <div className="absolute inset-y-0 left-0 w-full lg:w-[52%] bg-gradient-to-r from-[#0A0C14] via-[#0A0C14] to-transparent pointer-events-none" />
-
-        {/* Atmospheric Ambient Lighting Accents */}
-        <div className="absolute top-0 right-0 w-1/3 h-1/2 bg-[#C8A96B]/5 blur-[90px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-1/2 h-1/2 bg-[#7C3AED]/15 blur-[110px] pointer-events-none" />
-
-        {/* Top and Bottom Soft Transitions */}
-        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#0A0C14] to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0A0C14] to-transparent pointer-events-none" />
+        {/* Soft bottom dissolve for seamless flow into next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
       </div>
 
       <div className="max-w-[1320px] mx-auto relative z-10">
@@ -577,22 +567,22 @@ function StripeHeroSection() {
           {/* Left Column (5 cols): Editorial Headline & Copy */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
             
-            {/* Minimal Gold Eyebrow */}
+            {/* Minimal Eyebrow */}
             <div className="flex items-center gap-2.5 mb-4 sm:mb-5">
-              <span className="w-6 h-[1.5px] bg-[#C8A96B]" />
-              <span className="text-[11px] sm:text-[11.5px] font-mono font-semibold tracking-[0.2em] uppercase text-[#C8A96B]">
+              <span className="w-6 h-[1.5px] bg-[#6366F1]" />
+              <span className="text-[11px] sm:text-[11.5px] font-mono font-bold tracking-[0.2em] uppercase text-[#6366F1]">
                 AI MONITORING PLATFORM
               </span>
             </div>
 
             {/* Display Headline: "Intelligence, engineered to move." */}
-            <h1 className="text-[38px] sm:text-[50px] md:text-[56px] lg:text-[60px] xl:text-[66px] font-semibold tracking-[-0.035em] text-white leading-[1.05] mb-4 sm:mb-5 text-left">
+            <h1 className="text-[38px] sm:text-[50px] md:text-[56px] lg:text-[60px] xl:text-[66px] font-semibold tracking-[-0.035em] text-[#101114] leading-[1.05] mb-4 sm:mb-5 text-left">
               Intelligence, <br />
-              engineered <span className="font-editorial italic font-normal text-[#C7BDF7]">to move.</span>
+              engineered <span className="font-editorial italic font-normal text-[#6366F1]">to move.</span>
             </h1>
 
             {/* Supporting Subhead */}
-            <p className="text-[14.5px] sm:text-[15.5px] text-[#A1A5B4] font-normal leading-relaxed mb-6 sm:mb-7 max-w-[460px] text-left">
+            <p className="text-[14.5px] sm:text-[15.5px] text-[#474A57] font-normal leading-relaxed mb-6 sm:mb-7 max-w-[460px] text-left">
               A modern monitoring and incident management platform that gives teams complete visibility, faster resolution and a more reliable system.
             </p>
 
@@ -600,40 +590,40 @@ function StripeHeroSection() {
             <div className="flex flex-wrap items-center gap-3 sm:gap-3.5 mb-8 sm:mb-10 w-full sm:w-auto">
               <Link
                 href="/register"
-                className="px-6 py-3 rounded-full bg-white text-[#0A0C14] hover:bg-neutral-100 text-[13.5px] sm:text-[14px] font-semibold transition-all shadow-[0_4px_20px_rgba(255,255,255,0.18)] hover:scale-105 flex items-center gap-2 group cursor-pointer"
+                className="px-6 py-3 rounded-full bg-[#101114] text-white hover:bg-[#425CF5] text-[13.5px] sm:text-[14px] font-semibold transition-all shadow-[0_10px_25px_rgba(16,17,20,0.18)] hover:scale-105 flex items-center gap-2 group cursor-pointer"
               >
                 <span>Start free trial</span>
                 <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
-                href="#interactive-simulator"
-                className="px-6 py-3 rounded-full bg-white/5 border border-white/15 text-white hover:bg-white/10 text-[13.5px] sm:text-[14px] font-medium transition-all flex items-center gap-2 cursor-pointer"
+                href="#platform"
+                className="px-6 py-3 rounded-full bg-white/80 backdrop-blur-md border border-[#D6D8DE] text-[#101114] hover:bg-white hover:border-[#101114] text-[13.5px] sm:text-[14px] font-medium transition-all shadow-xs flex items-center gap-2 cursor-pointer"
               >
                 <span>Book a demo</span>
               </Link>
             </div>
 
             {/* 3 Micro Feature Callouts */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 pt-6 border-t border-white/10 w-full max-w-[500px]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 pt-6 border-t border-[#D6D8DE]/70 w-full max-w-[500px]">
               <div className="flex items-start gap-2.5">
-                <Zap size={17} className="text-[#C7BDF7] shrink-0 mt-0.5" />
+                <Zap size={17} className="text-[#6366F1] shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-semibold text-white">Detect faster</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#8B8F9A]">AI-powered insights</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#101114]">Detect faster</div>
+                  <div className="text-[10.5px] sm:text-[11px] text-[#5B5F6B]">AI-powered insights</div>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
-                <Layers size={17} className="text-[#C7BDF7] shrink-0 mt-0.5" />
+                <Layers size={17} className="text-[#6366F1] shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-semibold text-white">Resolve smarter</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#8B8F9A]">RCA in minutes</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#101114]">Resolve smarter</div>
+                  <div className="text-[10.5px] sm:text-[11px] text-[#5B5F6B]">RCA in minutes</div>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
-                <ShieldCheck size={17} className="text-[#C7BDF7] shrink-0 mt-0.5" />
+                <ShieldCheck size={17} className="text-[#6366F1] shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-[12.5px] sm:text-[13px] font-semibold text-white">Stay reliable</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#8B8F9A]">High-uptime systems</div>
+                  <div className="text-[12.5px] sm:text-[13px] font-bold text-[#101114]">Stay reliable</div>
+                  <div className="text-[10.5px] sm:text-[11px] text-[#5B5F6B]">High-uptime systems</div>
                 </div>
               </div>
             </div>
@@ -653,7 +643,7 @@ function StripeHeroSection() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   4. SOCIAL PROOF / CLIENT STRIP (EXACT AS IN REFERENCE)
+   4. SOCIAL PROOF / CLIENT STRIP (LIGHT TRANSITION BAND)
    ═══════════════════════════════════════════════════════════════ */
 function StripeClientMarquee() {
   const clients = [
@@ -665,23 +655,23 @@ function StripeClientMarquee() {
   ];
 
   return (
-    <section className="bg-[#0A0C14] border-t border-b border-white/10 py-5 sm:py-6 px-4 sm:px-10">
+    <section className="bg-white border-t border-b border-[#E2E4E9] py-5 sm:py-6 px-4 sm:px-10">
       <div className="max-w-[1320px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
         
         {/* Left Trust Statement */}
-        <div className="flex items-center text-center md:text-left text-xs sm:text-[13px] font-medium text-[#8B8F9A] shrink-0">
+        <div className="flex items-center text-center md:text-left text-xs sm:text-[13px] font-medium text-[#5B5F6B] shrink-0">
           <span>Trusted by <br className="hidden md:inline" /> engineering teams worldwide</span>
-          <span className="hidden md:block w-px h-8 bg-white/15 ml-8" />
+          <span className="hidden md:block w-px h-8 bg-[#E2E4E9] ml-8" />
         </div>
 
         {/* Right Client Logos */}
-        <div className="flex flex-wrap items-center justify-center md:justify-end gap-6 sm:gap-12 flex-1 opacity-90 hover:opacity-100 transition-opacity">
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-6 sm:gap-12 flex-1">
           {clients.map((c, i) => (
             <div key={i} className="flex items-center gap-2 group cursor-default">
-              <span className="text-white/40 group-hover:text-[#C7BDF7] font-mono text-base transition-colors">
+              <span className="text-[#8B8F9A] group-hover:text-[#6366F1] font-mono text-base transition-colors">
                 {c.symbol}
               </span>
-              <span className="font-['Sora',sans-serif] text-sm sm:text-[15px] font-semibold text-white/80 group-hover:text-white tracking-wide transition-colors">
+              <span className="font-['Sora',sans-serif] text-sm sm:text-[15px] font-semibold text-[#34363D] group-hover:text-[#101114] tracking-wide transition-colors">
                 {c.name}
               </span>
             </div>
