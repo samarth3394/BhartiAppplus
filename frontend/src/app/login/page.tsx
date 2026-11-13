@@ -67,7 +67,7 @@ export default function Login() {
         {/* Brand Header */}
         <div className="flex flex-col items-center justify-center mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2 group mb-2">
-            <Logo className="h-5 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
+            <Logo className="text-[#0A2540] group-hover:text-[#635BFF] transition-colors text-lg sm:text-xl" />
           </Link>
           <span className="text-[10px] font-mono tracking-widest text-[#425466] uppercase font-bold">
             Autonomous Telemetry Console

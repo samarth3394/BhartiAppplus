@@ -235,9 +235,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   ];
 
   const DEFAULT_DEMO_APPS = [
-    { id: "app-bharti-nexus", name: "Bharti Nexus", role: "ADMIN", url: "https://bhartinexus.com" },
-    { id: "app-cloud-core", name: "Cloud Core Engine", role: "PROD", url: "https://api.bhartinexus.com" },
-    { id: "app-ai-copilot", name: "AI Ops Copilot", role: "STAGING", url: "https://copilot.bhartinexus.com" }
+    { id: "app-brexal", name: "BREXAL", role: "ADMIN", url: "https://brexal.io" },
+    { id: "app-cloud-core", name: "Cloud Core Engine", role: "PROD", url: "https://api.brexal.io" },
+    { id: "app-ai-copilot", name: "AI Ops Copilot", role: "STAGING", url: "https://copilot.brexal.io" }
   ];
 
   const displayedApps = apps.length > 0 ? apps : DEFAULT_DEMO_APPS;
@@ -263,7 +263,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       `}>
         <div className="px-5 py-3.5 flex items-center justify-between h-14 border-b border-slate-200/80 bg-white">
           <Link href="/" className="flex items-center gap-2 group">
-            <Logo className="h-4 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
+            <Logo className="text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
           </Link>
           <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-indigo-50 text-[#635BFF] border border-indigo-100 uppercase tracking-wider">
             CONSOLE
@@ -347,7 +347,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               >
                 <span className="text-slate-500 font-medium">{currentWorkspace ? currentWorkspace.name : "Personal"}</span>
                 <span className="text-slate-300">/</span> 
-                <span className="font-semibold text-[#0F172A]">{currentApp ? currentApp.name : "Bharti Nexus"}</span>
+                <span className="font-semibold text-[#0F172A]">{currentApp ? currentApp.name : "BREXAL"}</span>
                 {currentApp && currentApp.role && (
                   <span className="ml-1 px-1.5 py-0.5 rounded text-[9.5px] bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wider font-bold">
                     {currentApp.role}

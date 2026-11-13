@@ -523,9 +523,10 @@ function StaticEcosystemFallback() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-transparent">
       <div className="w-28 h-28 rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06)] flex flex-col items-center justify-center mb-8 font-['Sora',sans-serif]">
-        <span className="text-sm font-semibold tracking-[0.26em] text-[#0A2540] pl-[0.26em]">
-          BREXAL
-        </span>
+        <div className="flex items-center gap-1 text-sm font-bold tracking-[0.18em] text-[#0A2540] leading-none">
+          <span className="text-[#6366F1] font-mono font-bold text-base">//</span>
+          <span>BREXAL</span>
+        </div>
         <span className="w-6 h-[1.5px] my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
         <span className="text-[7px] font-medium tracking-[0.18em] uppercase text-[#64748B] text-center">
           INTELLIGENT OBSERVABILITY
@@ -712,10 +713,11 @@ export function HeroEcosystem3D({ className = "" }: HeroEcosystem3DProps) {
                 180°
               </div>
 
-              {/* BREXAL Focal Typography in Crisp Pure White */}
-              <span className="font-['Sora',sans-serif] text-[11px] sm:text-[15px] font-bold tracking-[0.24em] text-white pl-[0.24em] leading-none drop-shadow-xs">
-                BREXAL
-              </span>
+              {/* BREXAL Focal Typography with // in Crisp Pure White */}
+              <div className="flex items-center gap-1 font-['Sora',sans-serif] text-[11px] sm:text-[15px] font-bold tracking-[0.2em] text-white leading-none drop-shadow-xs">
+                <span className="text-[#818CF8] font-mono font-bold text-[1.15em]">//</span>
+                <span>BREXAL</span>
+              </div>
               
               {/* Active Core Gradient Spine */}
               <span className="w-5 sm:w-7 h-[2px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#425CF5] via-[#C7BDF7] to-[#425CF5]" />

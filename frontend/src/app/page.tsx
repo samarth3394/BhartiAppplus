@@ -57,9 +57,10 @@ const HeroEcosystem3D = dynamic(
     loading: () => (
       <div className="w-full h-[255px] sm:h-[460px] lg:h-[520px] bg-transparent flex items-center justify-center">
         <div className="w-[72px] h-[72px] sm:w-[114px] sm:h-[114px] rounded-full bg-white border border-slate-200/90 shadow-[0_12px_32px_rgba(15,23,42,0.06)] flex flex-col items-center justify-center">
-          <span className="font-['Sora',sans-serif] text-[9px] sm:text-[13.5px] font-semibold tracking-[0.22em] sm:tracking-[0.25em] text-[#0A2540] pl-[0.22em] sm:pl-[0.25em] leading-none">
-            BREXAL
-          </span>
+          <div className="flex items-center gap-1 font-['Sora',sans-serif] text-[9px] sm:text-[13px] font-bold tracking-[0.18em] text-[#0A2540] leading-none">
+            <span className="text-[#6366F1] font-mono font-bold text-[1.1em]">//</span>
+            <span>BREXAL</span>
+          </div>
           <span className="w-4 sm:w-5 h-[1.5px] my-1 sm:my-1.5 rounded-full bg-gradient-to-r from-[#2563EB] to-[#7C3AED]" />
           <span className="font-['Sora',sans-serif] text-[4.5px] sm:text-[6.5px] font-medium tracking-[0.13em] sm:tracking-[0.16em] uppercase text-[#64748B] text-center max-w-[56px] sm:max-w-[82px]">
             INTELLIGENT OBSERVABILITY
@@ -98,10 +99,7 @@ function StripeNavbar() {
         
         {/* Brand Logo with Double Diagonal Slash Icon */}
         <Link href="/" className="flex items-center gap-2 group focus:outline-none shrink-0">
-          <div className="flex items-center gap-1.5 font-bold tracking-[0.16em] text-[15px] sm:text-[16px] text-[#101114]">
-            <span className="text-[#6366F1] font-mono text-base font-bold">//</span>
-            <span className="font-['Sora',sans-serif] tracking-[0.18em]">BREXAL</span>
-          </div>
+          <Logo className="text-[#101114]" />
         </Link>
 
         {/* Right Nav & Action CTAs Group */}
@@ -1777,10 +1775,10 @@ function StripeFooter() {
           {/* Brand & Country Selector */}
           <div className="col-span-2 flex flex-col items-start text-left">
             <div className="flex flex-col mb-2.5 sm:mb-3">
-              <Logo className="h-5 sm:h-5.5 text-[#101114]" />
+              <Logo className="text-[#101114] text-base sm:text-lg" />
             </div>
             <p className="text-[12px] sm:text-[13px] text-[#5B5F6B] font-medium leading-relaxed max-w-sm mb-4">
-              Autonomous telemetry infrastructure and AI incident intelligence engineered by Bharti Nexus Technologies.
+              Autonomous telemetry infrastructure and AI incident intelligence engineered by BREXAL Technologies.
             </p>
             
             {/* India Region Selector */}
@@ -1828,7 +1826,7 @@ function StripeFooter() {
         {/* Bottom Bar */}
         <div className="pt-4 sm:pt-6 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-[#5B5F6B] gap-3 sm:gap-4 text-center sm:text-left">
           <div>
-            © 2026 Bharti Nexus Technologies Inc. All rights reserved.
+            © 2026 BREXAL Technologies Inc. All rights reserved.
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
             <Link href="/maintenance" className="hover:text-[#7C3AED] transition-colors">System Status: 99.999% SLA</Link>

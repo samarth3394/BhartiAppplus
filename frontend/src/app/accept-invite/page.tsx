@@ -74,7 +74,7 @@ function AcceptInviteContent() {
           {/* Brand Header */}
           <div className="flex flex-col items-center mb-6 text-center">
             <Link href="/" className="inline-flex items-center gap-2 group mb-4">
-              <Logo className="h-5 text-[#0A2540] group-hover:text-[#635BFF] transition-colors" />
+              <Logo className="text-[#0A2540] group-hover:text-[#635BFF] transition-colors text-lg sm:text-xl" />
             </Link>
             <h1 className="text-xl font-bold tracking-tight text-[#0A2540] mb-1">Complete your profile</h1>
             <p className="text-xs sm:text-sm text-[#425466]">
