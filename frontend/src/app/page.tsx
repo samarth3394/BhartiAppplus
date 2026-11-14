@@ -89,14 +89,13 @@ function StripeNavbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-3 sm:py-3.5 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-3 sm:py-3.5 ${scrolled
           ? "bg-white/90 backdrop-blur-md border-b border-[#E2E4E9] shadow-[0_2px_16px_rgba(16,17,20,0.04)]"
           : "bg-white/50 backdrop-blur-xs border-b border-black/5"
-      }`}
+        }`}
     >
       <div className="max-w-[1320px] mx-auto px-4 sm:px-8 lg:px-10 flex items-center justify-between">
-        
+
         {/* Brand Logo with Double Diagonal Slash Icon */}
         <Link href="/" className="flex items-center gap-2 group focus:outline-none shrink-0">
           <Logo className="text-[#101114]" />
@@ -106,14 +105,14 @@ function StripeNavbar() {
         <div className="flex items-center gap-5 xl:gap-8 shrink-0">
           {/* Desktop Navigation Menu */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-[13.5px] font-medium text-[#34363D] whitespace-nowrap">
-            <div 
+            <div
               className="relative cursor-pointer group flex items-center gap-1 hover:text-[#101114] transition-colors"
               onMouseEnter={() => setActiveDropdown("product")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <Link href="#platform">Product</Link>
               <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
-              
+
               {activeDropdown === "product" && (
                 <div className="absolute top-full -left-4 w-72 pt-3">
                   <div className="p-3.5 bg-white rounded-2xl border border-[#E2E4E9] shadow-[0_16px_40px_rgba(0,0,0,0.08)] space-y-2 text-left">
@@ -134,14 +133,14 @@ function StripeNavbar() {
               )}
             </div>
 
-            <div 
+            <div
               className="relative cursor-pointer group flex items-center gap-1 hover:text-[#101114] transition-colors"
               onMouseEnter={() => setActiveDropdown("solutions")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <Link href="#comparison">Solutions</Link>
               <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
-              
+
               {activeDropdown === "solutions" && (
                 <div className="absolute top-full -left-4 w-72 pt-3">
                   <div className="p-3.5 bg-white rounded-2xl border border-[#E2E4E9] shadow-[0_16px_40px_rgba(0,0,0,0.08)] space-y-2 text-left">
@@ -158,7 +157,7 @@ function StripeNavbar() {
               )}
             </div>
 
-            <div 
+            <div
               className="relative cursor-pointer group flex items-center gap-1 hover:text-[#101114] transition-colors"
               onMouseEnter={() => setActiveDropdown("developers")}
               onMouseLeave={() => setActiveDropdown(null)}
@@ -167,7 +166,7 @@ function StripeNavbar() {
               <ChevronDown size={13} className="opacity-60 group-hover:opacity-100 transition-opacity" />
             </div>
 
-            <div 
+            <div
               className="relative cursor-pointer group flex items-center gap-1 hover:text-[#101114] transition-colors"
               onMouseEnter={() => setActiveDropdown("resources")}
               onMouseLeave={() => setActiveDropdown(null)}
@@ -273,7 +272,7 @@ function StripeNavbar() {
 function StripeHeroSection() {
   return (
     <section className="relative min-h-[90vh] sm:min-h-screen flex items-center pt-20 pb-12 sm:pt-28 sm:pb-20 lg:pt-36 lg:pb-28 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#FBFBFE]">
-      
+
       {/* ── FULL SCREEN ARCHITECTURAL WAVE BACKGROUND (USER ASSET: white.png) ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none -z-0">
         <img
@@ -283,7 +282,7 @@ function StripeHeroSection() {
         />
         {/* Mobile Contrast Layer: subtle gradient so text is razor-sharp while architectural backdrop remains visible */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/45 to-white/85 pointer-events-none md:hidden" />
-        
+
         {/* Desktop Left-to-Right Subtle Reading Gradient */}
         <div className="hidden md:block absolute inset-y-0 left-0 w-[55%] bg-gradient-to-r from-white/80 via-white/35 to-transparent pointer-events-none" />
 
@@ -292,10 +291,10 @@ function StripeHeroSection() {
       </div>
 
       <div className="max-w-[1320px] mx-auto w-full relative z-10">
-        
+
         {/* EDITORIAL HERO CONTENT (CLEAN, NO CONSOLE, FULLY RESPONSIVE) */}
         <div className="max-w-[820px] flex flex-col items-start text-left">
-          
+
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-white/95 border border-[#C4B5FD] shadow-2xs mb-4 sm:mb-6 max-w-full">
             <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#7C3AED] shrink-0" />
@@ -388,7 +387,7 @@ function StripeClientMarquee() {
   return (
     <section className="bg-white border-t border-b border-[#E2E4E9] py-5 sm:py-6 px-4 sm:px-10">
       <div className="max-w-[1320px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
-        
+
         {/* Left Trust Statement */}
         <div className="flex items-center text-center md:text-left text-xs sm:text-[13px] font-medium text-[#5B5F6B] shrink-0">
           <span>Trusted by <br className="hidden md:inline" /> engineering teams worldwide</span>
@@ -421,13 +420,13 @@ function PlatformOverviewSection() {
   return (
     <section id="platform" className="bg-[#FAFAFC] text-[#101114] py-18 sm:py-24 px-4 sm:px-8 lg:px-12 border-b border-[#E2E4E9]">
       <div className="max-w-[1320px] mx-auto">
-        
+
         {/* Section Grid: Left Intro + Right 2x2 Bento */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          
+
           {/* Left Column (5 cols): Editorial Intro & CTA */}
           <div className="lg:col-span-5 flex flex-col items-start text-left lg:sticky lg:top-28">
-            
+
             {/* Minimal Purple Eyebrow */}
             <div className="flex items-center gap-2.5 mb-4">
               <span className="w-5 h-[2px] bg-[#7C3AED]" />
@@ -461,176 +460,176 @@ function PlatformOverviewSection() {
           {/* Right Column (7 cols): 2x2 Bento Cards with Custom Visual Art (Horizontally Scrollable on Mobile) */}
           <div className="lg:col-span-7 flex flex-col">
             <div className="flex overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-2 sm:overflow-visible gap-4 sm:gap-5 pb-3 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 no-scrollbar [scroll-padding-left:1rem]">
-            
-            {/* ── CARD 1: REAL-TIME MONITORING ── */}
-            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#818CF8]/50 transition-all">
-              {/* Abstract Wave Ribbon Graphic */}
-              <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
-                <svg viewBox="0 0 200 200" className="w-full h-full">
-                  <defs>
-                    <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.85" />
-                      <stop offset="50%" stopColor="#818CF8" stopOpacity="0.65" />
-                      <stop offset="100%" stopColor="#4338CA" stopOpacity="0.9" />
-                    </linearGradient>
-                    <linearGradient id="waveGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.6" />
-                      <stop offset="100%" stopColor="#312E81" stopOpacity="0.85" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M 40 180 C 60 120, 100 80, 180 60 C 200 120, 160 180, 40 180 Z" fill="url(#waveGrad1)" />
-                  <path d="M 60 200 C 90 140, 130 100, 200 90 C 210 150, 170 200, 60 200 Z" fill="url(#waveGrad2)" opacity="0.75" />
-                  <path d="M 30 160 Q 90 100 170 50" stroke="#FFFFFF" strokeWidth="1.5" fill="none" opacity="0.5" />
-                  <path d="M 45 175 Q 105 115 185 65" stroke="#C7D2FE" strokeWidth="1.5" fill="none" opacity="0.4" />
-                </svg>
-              </div>
 
-              <div className="relative z-10 text-left">
-                <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#6366F1] mb-3.5 shadow-2xs">
-                  <Layers size={19} />
+              {/* ── CARD 1: REAL-TIME MONITORING ── */}
+              <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#818CF8]/50 transition-all">
+                {/* Abstract Wave Ribbon Graphic */}
+                <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+                  <svg viewBox="0 0 200 200" className="w-full h-full">
+                    <defs>
+                      <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.85" />
+                        <stop offset="50%" stopColor="#818CF8" stopOpacity="0.65" />
+                        <stop offset="100%" stopColor="#4338CA" stopOpacity="0.9" />
+                      </linearGradient>
+                      <linearGradient id="waveGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.6" />
+                        <stop offset="100%" stopColor="#312E81" stopOpacity="0.85" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M 40 180 C 60 120, 100 80, 180 60 C 200 120, 160 180, 40 180 Z" fill="url(#waveGrad1)" />
+                    <path d="M 60 200 C 90 140, 130 100, 200 90 C 210 150, 170 200, 60 200 Z" fill="url(#waveGrad2)" opacity="0.75" />
+                    <path d="M 30 160 Q 90 100 170 50" stroke="#FFFFFF" strokeWidth="1.5" fill="none" opacity="0.5" />
+                    <path d="M 45 175 Q 105 115 185 65" stroke="#C7D2FE" strokeWidth="1.5" fill="none" opacity="0.4" />
+                  </svg>
                 </div>
-                <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
-                  Real-Time Monitoring
-                </h3>
-                <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
-                  Get full visibility into your applications, infrastructure and services.
-                </p>
+
+                <div className="relative z-10 text-left">
+                  <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#6366F1] mb-3.5 shadow-2xs">
+                    <Layers size={19} />
+                  </div>
+                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                    Real-Time Monitoring
+                  </h3>
+                  <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
+                    Get full visibility into your applications, infrastructure and services.
+                  </p>
+                </div>
+
+                <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#425CF5] font-semibold text-sm transition-colors">
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
 
-              <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#425CF5] font-semibold text-sm transition-colors">
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
+              {/* ── CARD 2: AI INCIDENT COPILOT ── */}
+              <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#FFFBEB]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#C8A96B]/50 transition-all">
+                {/* Golden Radial Architectural Fins Graphic */}
+                <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+                  <svg viewBox="0 0 200 200" className="w-full h-full">
+                    <defs>
+                      <linearGradient id="goldFinGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#E2C385" stopOpacity="0.9" />
+                        <stop offset="50%" stopColor="#C8A96B" stopOpacity="0.75" />
+                        <stop offset="100%" stopColor="#85581A" stopOpacity="0.85" />
+                      </linearGradient>
+                    </defs>
+                    {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+                      <path
+                        key={i}
+                        d={`M ${60 + i * 14} 200 C ${80 + i * 12} ${130 - i * 6}, ${120 + i * 8} ${80 - i * 5}, 200 ${50 + i * 12} L 200 200 Z`}
+                        fill="url(#goldFinGrad)"
+                        opacity={0.35 + i * 0.08}
+                      />
+                    ))}
+                  </svg>
+                </div>
 
-            {/* ── CARD 2: AI INCIDENT COPILOT ── */}
-            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#FFFBEB]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#C8A96B]/50 transition-all">
-              {/* Golden Radial Architectural Fins Graphic */}
-              <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
-                <svg viewBox="0 0 200 200" className="w-full h-full">
-                  <defs>
-                    <linearGradient id="goldFinGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#E2C385" stopOpacity="0.9" />
-                      <stop offset="50%" stopColor="#C8A96B" stopOpacity="0.75" />
-                      <stop offset="100%" stopColor="#85581A" stopOpacity="0.85" />
-                    </linearGradient>
-                  </defs>
-                  {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <div className="relative z-10 text-left">
+                  <div className="w-9 h-9 rounded-xl bg-[#FEF3C7]/60 flex items-center justify-center text-[#D97706] mb-3.5 shadow-2xs">
+                    <Zap size={19} />
+                  </div>
+                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                    AI Incident Copilot
+                  </h3>
+                  <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
+                    Detect, analyze and resolve incidents with the power of AI.
+                  </p>
+                </div>
+
+                <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#C8A96B] font-semibold text-sm transition-colors">
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+
+              {/* ── CARD 3: PREDICTIVE MAINTENANCE ── */}
+              <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#F5F3FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#8B5CF6]/50 transition-all">
+                {/* Lavender Curved Arch / Tube Graphic */}
+                <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+                  <svg viewBox="0 0 200 200" className="w-full h-full">
+                    <defs>
+                      <linearGradient id="archGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#DDD6FE" stopOpacity="0.9" />
+                        <stop offset="60%" stopColor="#8B5CF6" stopOpacity="0.75" />
+                        <stop offset="100%" stopColor="#4C1D95" stopOpacity="0.95" />
+                      </linearGradient>
+                    </defs>
                     <path
-                      key={i}
-                      d={`M ${60 + i * 14} 200 C ${80 + i * 12} ${130 - i * 6}, ${120 + i * 8} ${80 - i * 5}, 200 ${50 + i * 12} L 200 200 Z`}
-                      fill="url(#goldFinGrad)"
-                      opacity={0.35 + i * 0.08}
+                      d="M 50 200 C 60 110, 120 70, 200 70 L 200 130 C 145 130, 105 155, 100 200 Z"
+                      fill="url(#archGrad)"
                     />
-                  ))}
-                </svg>
-              </div>
-
-              <div className="relative z-10 text-left">
-                <div className="w-9 h-9 rounded-xl bg-[#FEF3C7]/60 flex items-center justify-center text-[#D97706] mb-3.5 shadow-2xs">
-                  <Zap size={19} />
+                    <path
+                      d="M 75 200 C 85 135, 135 105, 200 105 L 200 155 C 160 155, 125 170, 120 200 Z"
+                      fill="#A78BFA"
+                      opacity="0.5"
+                    />
+                  </svg>
                 </div>
-                <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
-                  AI Incident Copilot
-                </h3>
-                <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
-                  Detect, analyze and resolve incidents with the power of AI.
-                </p>
-              </div>
 
-              <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#C8A96B] font-semibold text-sm transition-colors">
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            {/* ── CARD 3: PREDICTIVE MAINTENANCE ── */}
-            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#F5F3FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#8B5CF6]/50 transition-all">
-              {/* Lavender Curved Arch / Tube Graphic */}
-              <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
-                <svg viewBox="0 0 200 200" className="w-full h-full">
-                  <defs>
-                    <linearGradient id="archGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#DDD6FE" stopOpacity="0.9" />
-                      <stop offset="60%" stopColor="#8B5CF6" stopOpacity="0.75" />
-                      <stop offset="100%" stopColor="#4C1D95" stopOpacity="0.95" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M 50 200 C 60 110, 120 70, 200 70 L 200 130 C 145 130, 105 155, 100 200 Z"
-                    fill="url(#archGrad)"
-                  />
-                  <path
-                    d="M 75 200 C 85 135, 135 105, 200 105 L 200 155 C 160 155, 125 170, 120 200 Z"
-                    fill="#A78BFA"
-                    opacity="0.5"
-                  />
-                </svg>
-              </div>
-
-              <div className="relative z-10 text-left">
-                <div className="w-9 h-9 rounded-xl bg-[#F5F3FF] flex items-center justify-center text-[#7C3AED] mb-3.5 shadow-2xs">
-                  <Activity size={19} />
+                <div className="relative z-10 text-left">
+                  <div className="w-9 h-9 rounded-xl bg-[#F5F3FF] flex items-center justify-center text-[#7C3AED] mb-3.5 shadow-2xs">
+                    <Activity size={19} />
+                  </div>
+                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                    Predictive Maintenance
+                  </h3>
+                  <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
+                    Identify risks early and prevent outages before they happen.
+                  </p>
                 </div>
-                <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
-                  Predictive Maintenance
-                </h3>
-                <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
-                  Identify risks early and prevent outages before they happen.
-                </p>
-              </div>
 
-              <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#7C3AED] font-semibold text-sm transition-colors">
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            {/* ── CARD 4: AUTOMATED BUG TRACKING ── */}
-            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#4F46E5]/50 transition-all">
-              {/* Geometric Isometric 3D Steps Graphic */}
-              <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
-                <svg viewBox="0 0 200 200" className="w-full h-full">
-                  <defs>
-                    <linearGradient id="stepTop" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#C4B5FD" />
-                      <stop offset="100%" stopColor="#818CF8" />
-                    </linearGradient>
-                    <linearGradient id="stepSide1" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#6366F1" />
-                      <stop offset="100%" stopColor="#3730A3" />
-                    </linearGradient>
-                    <linearGradient id="stepSide2" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#4F46E5" />
-                      <stop offset="100%" stopColor="#1E1B4B" />
-                    </linearGradient>
-                  </defs>
-                  <g transform="translate(45, 45)">
-                    {/* Top block */}
-                    <polygon points="100,40 140,60 100,80 60,60" fill="url(#stepTop)" />
-                    <polygon points="60,60 100,80 100,120 60,100" fill="url(#stepSide1)" />
-                    <polygon points="100,80 140,60 140,100 100,120" fill="url(#stepSide2)" />
-                    {/* Middle block */}
-                    <polygon points="60,80 100,100 60,120 20,100" fill="url(#stepTop)" opacity="0.85" />
-                    <polygon points="20,100 60,120 60,160 20,140" fill="url(#stepSide1)" opacity="0.85" />
-                    <polygon points="60,120 100,100 100,140 60,160" fill="url(#stepSide2)" opacity="0.85" />
-                  </g>
-                </svg>
-              </div>
-
-              <div className="relative z-10 text-left">
-                <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#4F46E5] mb-3.5 shadow-2xs">
-                  <Database size={19} />
+                <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#7C3AED] font-semibold text-sm transition-colors">
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </div>
-                <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
-                  Automated Bug Tracking
-                </h3>
-                <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
-                  Capture, group and prioritize issues across your stack.
-                </p>
               </div>
 
-              <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#4F46E5] font-semibold text-sm transition-colors">
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              {/* ── CARD 4: AUTOMATED BUG TRACKING ── */}
+              <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#4F46E5]/50 transition-all">
+                {/* Geometric Isometric 3D Steps Graphic */}
+                <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+                  <svg viewBox="0 0 200 200" className="w-full h-full">
+                    <defs>
+                      <linearGradient id="stepTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#C4B5FD" />
+                        <stop offset="100%" stopColor="#818CF8" />
+                      </linearGradient>
+                      <linearGradient id="stepSide1" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#6366F1" />
+                        <stop offset="100%" stopColor="#3730A3" />
+                      </linearGradient>
+                      <linearGradient id="stepSide2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#4F46E5" />
+                        <stop offset="100%" stopColor="#1E1B4B" />
+                      </linearGradient>
+                    </defs>
+                    <g transform="translate(45, 45)">
+                      {/* Top block */}
+                      <polygon points="100,40 140,60 100,80 60,60" fill="url(#stepTop)" />
+                      <polygon points="60,60 100,80 100,120 60,100" fill="url(#stepSide1)" />
+                      <polygon points="100,80 140,60 140,100 100,120" fill="url(#stepSide2)" />
+                      {/* Middle block */}
+                      <polygon points="60,80 100,100 60,120 20,100" fill="url(#stepTop)" opacity="0.85" />
+                      <polygon points="20,100 60,120 60,160 20,140" fill="url(#stepSide1)" opacity="0.85" />
+                      <polygon points="60,120 100,100 100,140 60,160" fill="url(#stepSide2)" opacity="0.85" />
+                    </g>
+                  </svg>
+                </div>
+
+                <div className="relative z-10 text-left">
+                  <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#4F46E5] mb-3.5 shadow-2xs">
+                    <Database size={19} />
+                  </div>
+                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                    Automated Bug Tracking
+                  </h3>
+                  <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
+                    Capture, group and prioritize issues across your stack.
+                  </p>
+                </div>
+
+                <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#4F46E5] font-semibold text-sm transition-colors">
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
-            </div>
 
             </div>
 
@@ -739,12 +738,12 @@ function StripeArchitectureFlowSection() {
 
   return (
     <section id="architecture-flow" className="py-16 sm:py-20 md:py-24 px-4 sm:px-10 bg-white border-b border-[#E2E4E9] relative overflow-hidden font-sans">
-      
+
       {/* Subtle ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-gradient-to-r from-[#7C3AED]/[0.04] via-[#C7BDF7]/[0.03] to-transparent rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-[1320px] mx-auto text-center relative z-10">
-        
+
         {/* Eyebrow */}
         <div className="flex items-center justify-center gap-3 mb-3">
           <span className="w-8 h-[1px] bg-[#E2E4E9]" />
@@ -769,11 +768,10 @@ function StripeArchitectureFlowSection() {
           <button
             onClick={handleTriggerFlow}
             disabled={simulating}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold transition-all shadow-xs cursor-pointer ${
-              simulating
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold transition-all shadow-xs cursor-pointer ${simulating
                 ? "bg-[#F5F3FF] text-[#7C3AED] border border-[#DDD6FE]"
                 : "bg-white hover:bg-[#F5F3FF] text-[#101114] border border-[#D6D8DE] hover:border-[#7C3AED] hover:shadow-sm"
-            }`}
+              }`}
           >
             <span className={`w-2 h-2 rounded-full ${simulating ? "bg-[#7C3AED] animate-ping" : "bg-[#7C3AED]"}`} />
             <span>{simulating ? "Simulating Telemetry Pipeline Flow..." : "Test Interactive Data Flow"}</span>
@@ -783,14 +781,13 @@ function StripeArchitectureFlowSection() {
         {/* ── DIAGRAM CONTAINER (HORIZONTAL PIPELINE ON MOBILE & DESKTOP) ── */}
         <div className="flex flex-col items-center max-w-[1240px] mx-auto w-full">
           <div className="flex overflow-x-auto lg:overflow-visible items-center lg:justify-center gap-2.5 sm:gap-3 xl:gap-4 w-full no-scrollbar snap-x snap-mandatory py-3 pb-4 sm:pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 [scroll-padding-left:1rem]">
-            
+
             {/* 1. Your Kubernetes Pod */}
             <div
-              className={`w-[230px] sm:w-[245px] lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 snap-start ${
-                activeStep === 1
+              className={`w-[230px] sm:w-[245px] lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 snap-start ${activeStep === 1
                   ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-1"
                   : "border-[#E2E4E9] hover:border-[#BFC3CC]"
-              }`}
+                }`}
             >
               <KubernetesLogo />
               <div>
@@ -813,11 +810,10 @@ function StripeArchitectureFlowSection() {
 
             {/* 2. eBPF Kernel Probe */}
             <div
-              className={`w-[230px] sm:w-[245px] lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 snap-start ${
-                activeStep === 2
+              className={`w-[230px] sm:w-[245px] lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 snap-start ${activeStep === 2
                   ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-1"
                   : "border-[#E2E4E9] hover:border-[#BFC3CC]"
-              }`}
+                }`}
             >
               <EbpfLogo />
               <div>
@@ -840,11 +836,10 @@ function StripeArchitectureFlowSection() {
 
             {/* 3. BREXAL Neural Engine (Featured Center Card) */}
             <div
-              className={`w-[260px] sm:w-[280px] lg:w-[275px] xl:w-[295px] relative rounded-2xl border p-4 sm:p-5 text-left transition-all duration-300 shadow-[0_8px_24px_rgba(124,58,237,0.1)] shrink-0 snap-start ${
-                activeStep === 3
+              className={`w-[260px] sm:w-[280px] lg:w-[275px] xl:w-[295px] relative rounded-2xl border p-4 sm:p-5 text-left transition-all duration-300 shadow-[0_8px_24px_rgba(124,58,237,0.1)] shrink-0 snap-start ${activeStep === 3
                   ? "bg-[#F5F3FF] border-[#7C3AED] ring-2 ring-[#7C3AED]/25 shadow-xl -translate-y-1"
                   : "bg-[#F7F6F2] border-[#C7BDF7]"
-              }`}
+                }`}
             >
               {/* Top Right AI Engine Badge */}
               <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white text-[#7C3AED] text-[10px] font-semibold font-mono border border-[#DDD6FE]">
@@ -874,7 +869,7 @@ function StripeArchitectureFlowSection() {
                   strokeDasharray={activeStep === 4 ? "3 3" : "none"}
                 />
                 <polyline points="40,30 48,35 40,40" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                
+
                 <path
                   d="M 0 80 C 24 80, 24 125, 46 125"
                   strokeWidth="1.8"
@@ -886,14 +881,13 @@ function StripeArchitectureFlowSection() {
 
             {/* 4 & 5. Right Column Stack (Slack & PagerDuty) */}
             <div className="flex flex-col gap-2.5 sm:gap-3.5 w-[220px] sm:w-[240px] lg:w-[230px] xl:w-[245px] shrink-0 snap-start">
-              
+
               {/* Slack */}
               <div
-                className={`bg-white rounded-2xl border p-3.5 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${
-                  activeStep === 4
+                className={`bg-white rounded-2xl border p-3.5 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${activeStep === 4
                     ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-0.5"
                     : "border-[#E2E4E9] hover:border-[#BFC3CC]"
-                }`}
+                  }`}
               >
                 <SlackLogo />
                 <div>
@@ -908,11 +902,10 @@ function StripeArchitectureFlowSection() {
 
               {/* PagerDuty */}
               <div
-                className={`bg-white rounded-2xl border p-3.5 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${
-                  activeStep === 4
+                className={`bg-white rounded-2xl border p-3.5 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${activeStep === 4
                     ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-0.5"
                     : "border-[#E2E4E9] hover:border-[#BFC3CC]"
-                }`}
+                  }`}
               >
                 <PagerDutyLogo />
                 <div>
@@ -951,7 +944,59 @@ function EngineeringWorkspaceMockup() {
   return (
     <div className="relative rounded-2xl border border-[#E2E4E9] bg-white shadow-[0_20px_50px_rgba(15,23,42,0.08)] p-3.5 sm:p-5 text-[#101114] overflow-hidden text-left">
       <div className="grid grid-cols-12 gap-3 sm:gap-4 items-start">
-        
+
+        {/* Mobile Horizontal Navigation Strip (Visible on mobile, preserves all 11 features) */}
+        <div className="sm:hidden col-span-12 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2.5 mb-1 border-b border-[#E2E4E9] text-[11px] -mx-1 px-1">
+          <div className="flex items-center gap-1 font-bold text-[#101114] pr-1.5 shrink-0">
+            <span className="text-[#6366F1] font-mono font-bold">//</span>
+            <span>BREXAL</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#EDE9FE] text-[#6366F1] font-semibold text-[11px] shrink-0">
+            <LayoutGrid size={12} className="text-[#6366F1]" />
+            <span>Dashboard</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <Zap size={12} className="text-slate-400" />
+            <span>AI Copilot</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <MessageSquare size={12} className="text-slate-400" />
+            <span>Inbox</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <Users size={12} className="text-slate-400" />
+            <span>Teams</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <FolderKanban size={12} className="text-slate-400" />
+            <span>Kanban</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <Bug size={12} className="text-slate-400" />
+            <span>Issues</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <Map size={12} className="text-slate-400" />
+            <span>Roadmap</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <Activity size={12} className="text-slate-400" />
+            <span>Uptime</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <Server size={12} className="text-slate-400" />
+            <span>Infrastructure</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <Terminal size={12} className="text-slate-400" />
+            <span>Logs</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-slate-600 bg-slate-50 text-[11px] shrink-0">
+            <Wrench size={12} className="text-slate-400" />
+            <span>Maintenance</span>
+          </div>
+        </div>
+
         {/* Left Sidebar (3 cols on sm+, compact on mobile) with Real Product Features List */}
         <div className="hidden sm:flex sm:col-span-3 flex-col gap-0.5 pr-2.5 border-r border-[#E2E4E9] text-[11px]">
           <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11.5px] text-[#101114] mb-2">
@@ -1030,7 +1075,7 @@ function EngineeringWorkspaceMockup() {
 
         {/* Right Main Body (9 cols) */}
         <div className="col-span-12 sm:col-span-9 space-y-3">
-          
+
           {/* Top Bar: Engineering Workspace + Sprint 24 Dropdown */}
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-[13px] sm:text-[14px] text-[#101114]">
@@ -1077,10 +1122,13 @@ function EngineeringWorkspaceMockup() {
 
           {/* Sprint Board Columns */}
           <div>
-            <div className="text-[11px] font-bold text-[#101114] mb-1.5">Sprint Board</div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="flex items-center justify-between text-[11px] font-bold text-[#101114] mb-1.5">
+              <span>Sprint Board</span>
+              <span className="sm:hidden text-[9px] font-normal text-slate-400">Swipe columns →</span>
+            </div>
+            <div className="flex overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-3 gap-2 pb-1 sm:pb-0 -mx-1 px-1 sm:mx-0 sm:px-0 no-scrollbar">
               {/* To Do */}
-              <div className="rounded-xl bg-[#F8FAFC] border border-[#E2E4E9] p-2 space-y-1.5">
+              <div className="w-[68vw] max-w-[210px] sm:w-auto sm:max-w-none shrink-0 snap-start rounded-xl bg-[#F8FAFC] border border-[#E2E4E9] p-2 space-y-1.5">
                 <div className="flex items-center justify-between text-[10px] font-bold text-slate-600 pb-1 border-b border-slate-200/60">
                   <span>To Do</span>
                   <span className="font-mono text-slate-400">4</span>
@@ -1096,7 +1144,7 @@ function EngineeringWorkspaceMockup() {
               </div>
 
               {/* In Progress */}
-              <div className="rounded-xl bg-[#FAF5FF] border border-[#DDD6FE]/60 p-2 space-y-1.5">
+              <div className="w-[68vw] max-w-[210px] sm:w-auto sm:max-w-none shrink-0 snap-start rounded-xl bg-[#FAF5FF] border border-[#DDD6FE]/60 p-2 space-y-1.5">
                 <div className="flex items-center justify-between text-[10px] font-bold text-[#6B21A8] pb-1 border-b border-[#DDD6FE]/60">
                   <span>In Progress</span>
                   <span className="font-mono text-[#7C3AED]">3</span>
@@ -1112,7 +1160,7 @@ function EngineeringWorkspaceMockup() {
               </div>
 
               {/* Done */}
-              <div className="rounded-xl bg-[#F0FDF4] border border-emerald-200/60 p-2 space-y-1.5">
+              <div className="w-[68vw] max-w-[210px] sm:w-auto sm:max-w-none shrink-0 snap-start rounded-xl bg-[#F0FDF4] border border-emerald-200/60 p-2 space-y-1.5">
                 <div className="flex items-center justify-between text-[10px] font-bold text-emerald-700 pb-1 border-b border-emerald-200/60">
                   <span>Done</span>
                   <span className="font-mono text-emerald-600">8</span>
@@ -1185,7 +1233,59 @@ function InfrastructureGovernanceMockup() {
   return (
     <div className="relative rounded-2xl border border-white/12 bg-[#121422] shadow-[0_25px_60px_rgba(0,0,0,0.55)] p-3.5 sm:p-5 text-white overflow-hidden text-left">
       <div className="grid grid-cols-12 gap-3 sm:gap-4 items-start">
-        
+
+        {/* Mobile Horizontal Navigation Strip (Visible on mobile for dark mockup) */}
+        <div className="sm:hidden col-span-12 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2.5 mb-1 border-b border-white/8 text-[11px] -mx-1 px-1">
+          <div className="flex items-center gap-1 font-bold text-white pr-1.5 shrink-0">
+            <span className="text-[#C7BDF7] font-mono font-bold">//</span>
+            <span>BREXAL</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <LayoutGrid size={12} className="text-white/40" />
+            <span>Dashboard</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <Zap size={12} className="text-white/40" />
+            <span>AI Copilot</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <MessageSquare size={12} className="text-white/40" />
+            <span>Inbox</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <Users size={12} className="text-white/40" />
+            <span>Teams</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <FolderKanban size={12} className="text-white/40" />
+            <span>Kanban</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <Bug size={12} className="text-white/40" />
+            <span>Issues</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <Map size={12} className="text-white/40" />
+            <span>Roadmap</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <Activity size={12} className="text-white/40" />
+            <span>Uptime</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#6366F1] text-white font-semibold text-[11px] shadow-xs shrink-0">
+            <Server size={12} />
+            <span>Infrastructure</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <Terminal size={12} className="text-white/40" />
+            <span>Logs</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 bg-white/5 text-[11px] shrink-0">
+            <Wrench size={12} className="text-white/40" />
+            <span>Maintenance</span>
+          </div>
+        </div>
+
         {/* Left Dark Sidebar (3 cols on sm+, hidden on mobile) with Real Product Features List */}
         <div className="hidden sm:flex sm:col-span-3 flex-col gap-0.5 pr-2.5 border-r border-white/8 text-[11px]">
           <div className="flex items-center gap-1.5 font-bold tracking-wider text-[11.5px] text-white mb-2">
@@ -1264,7 +1364,7 @@ function InfrastructureGovernanceMockup() {
 
         {/* Right Dashboard Content (9 cols) */}
         <div className="col-span-12 sm:col-span-9 space-y-3">
-          
+
           {/* Top Bar: Cluster Telemetry + Healthy badge + Last 24 hours */}
           <div className="flex items-center justify-between pb-2 border-b border-white/8">
             <div className="flex items-center gap-2">
@@ -1324,7 +1424,7 @@ function InfrastructureGovernanceMockup() {
 
           {/* Bottom Row: Node Resource Usage (Wave Area Chart) + Security Audit Stream */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-2 pt-1">
-            
+
             {/* Chart (7 cols) */}
             <div className="md:col-span-7 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/8 flex flex-col justify-between">
               <div className="flex items-center justify-between mb-1">
@@ -1424,11 +1524,11 @@ function InfrastructureGovernanceMockup() {
 function StripeProductShowcaseSection() {
   return (
     <section id="architecture" className="relative overflow-hidden font-sans">
-      
+
       {/* ── SHOWCASE 1: ENGINEERING VELOCITY (LIGHT SECTION) ── */}
       <div className="py-14 sm:py-20 md:py-24 px-4 sm:px-10 bg-[#FAFAFC] border-b border-[#E2E4E9]">
         <div className="max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
+
           {/* Left: Text & Features */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
             <div className="flex items-center gap-2 mb-3">
@@ -1504,7 +1604,7 @@ function StripeProductShowcaseSection() {
         <div className="absolute top-1/2 left-0 w-[550px] h-[550px] bg-gradient-to-r from-[#7C3AED]/15 via-[#6366F1]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-          
+
           {/* Left: Dark Infrastructure Mockup */}
           <div className="lg:col-span-7 relative w-full order-2 lg:order-1 pt-4 lg:pt-0">
             <InfrastructureGovernanceMockup />
@@ -1585,7 +1685,7 @@ function StripeGlobalScaleSection() {
   return (
     <section className="py-10 sm:py-14 md:py-18 px-4 sm:px-10 bg-white border-b border-[#E2E4E9]">
       <div className="max-w-[1320px] mx-auto text-left">
-        
+
         {/* Section Header */}
         <div className="max-w-2xl mb-6 sm:mb-8">
           <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#7C3AED] uppercase tracking-[0.16em] mb-2">
@@ -1656,7 +1756,7 @@ function StripePricingSection() {
   return (
     <section id="pricing" className="py-10 sm:py-14 md:py-18 px-4 sm:px-10 bg-[#F7F6F2] border-b border-[#E2E4E9]">
       <div className="max-w-[1320px] mx-auto text-left">
-        
+
         {/* Section Header */}
         <div className="max-w-2xl mb-6 sm:mb-8">
           <div className="text-[10.5px] sm:text-[11.5px] font-mono font-medium text-[#7C3AED] uppercase tracking-[0.16em] mb-2">
@@ -1675,11 +1775,10 @@ function StripePricingSection() {
           {tiers.map((t, idx) => (
             <div
               key={idx}
-              className={`p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-white border transition-all flex flex-col justify-between ${
-                t.highlight
+              className={`p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-white border transition-all flex flex-col justify-between ${t.highlight
                   ? "border-[#7C3AED] shadow-[0_16px_48px_rgba(124,58,237,0.12)] md:-translate-y-2 relative ring-1 ring-[#7C3AED]/30"
                   : "border-[#E2E4E9] shadow-xs hover:border-[#BFC3CC]"
-              }`}
+                }`}
             >
               <div>
                 {t.highlight && (
@@ -1707,11 +1806,10 @@ function StripePricingSection() {
               <div className="pt-5 sm:pt-6">
                 <Link
                   href="/register"
-                  className={`w-full py-3 min-h-[44px] rounded-full text-center text-sm font-semibold transition-all flex items-center justify-center cursor-pointer ${
-                    t.highlight
+                  className={`w-full py-3 min-h-[44px] rounded-full text-center text-sm font-semibold transition-all flex items-center justify-center cursor-pointer ${t.highlight
                       ? "bg-[#7C3AED] text-white hover:bg-[#6D28D9] shadow-md hover:shadow-lg"
                       : "bg-[#101C35] text-white hover:bg-[#7C3AED] shadow-xs"
-                  }`}
+                    }`}
                 >
                   {t.cta}
                 </Link>
@@ -1730,7 +1828,7 @@ function StripeFinalCtaSection() {
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-10 bg-white border-b border-[#E2E4E9]">
       <div className="max-w-[1320px] mx-auto text-left flex flex-col items-start">
-        
+
         <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.035em] text-[#101114] leading-tight mb-2.5 sm:mb-3">
           Ready to get started?
         </h2>
@@ -1774,7 +1872,7 @@ function StripeFooter() {
     <footer className="py-8 sm:py-12 px-4 sm:px-10 bg-[#F7F6F2] text-[#101114] font-sans">
       <div className="max-w-[1320px] mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8 pb-8 sm:pb-10 border-b border-[#E2E4E9]">
-          
+
           {/* Brand & Country Selector */}
           <div className="col-span-2 flex flex-col items-start text-left">
             <div className="flex flex-col mb-2.5 sm:mb-3">
@@ -1783,7 +1881,7 @@ function StripeFooter() {
             <p className="text-[12px] sm:text-[13px] text-[#5B5F6B] font-medium leading-relaxed max-w-sm mb-4">
               Autonomous telemetry infrastructure and AI incident intelligence engineered by BREXAL Technologies.
             </p>
-            
+
             {/* India Region Selector */}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-[#E2E4E9] text-xs font-mono font-medium text-[#101114]">
               <Globe size={14} className="text-[#7C3AED]" />
