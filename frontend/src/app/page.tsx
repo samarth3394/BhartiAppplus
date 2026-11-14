@@ -780,171 +780,163 @@ function StripeArchitectureFlowSection() {
           </button>
         </div>
 
-        {/* ── DIAGRAM CONTAINER ── */}
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-5 lg:gap-3 xl:gap-4 max-w-[1240px] mx-auto">
-          
-          {/* 1. Your Kubernetes Pod */}
-          <div
-            className={`w-full lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 ${
-              activeStep === 1
-                ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-1"
-                : "border-[#E2E4E9] hover:border-[#BFC3CC]"
-            }`}
-          >
-            <KubernetesLogo />
-            <div>
-              <h3 className="text-[13.5px] sm:text-[14px] font-semibold text-[#101114] leading-snug mb-1">
-                Your Kubernetes Pod
-              </h3>
-              <p className="text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                Application, logs, metrics and network events
-              </p>
-            </div>
-          </div>
-
-          {/* Arrow 1 */}
-          <div className="hidden lg:flex items-center justify-center text-[#7C3AED] w-8 xl:w-10 shrink-0">
-            <svg viewBox="0 0 36 16" className="w-9 h-4 stroke-current fill-none">
-              <line x1="0" y1="8" x2="28" y2="8" strokeWidth="1.8" strokeDasharray={activeStep === 1 ? "3 3" : "none"} />
-              <polyline points="24,4 30,8 24,12" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <div className="lg:hidden flex items-center justify-center text-[#7C3AED]">
-            <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
-              <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
-              <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-
-          {/* 2. eBPF Kernel Probe */}
-          <div
-            className={`w-full lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 ${
-              activeStep === 2
-                ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-1"
-                : "border-[#E2E4E9] hover:border-[#BFC3CC]"
-            }`}
-          >
-            <EbpfLogo />
-            <div>
-              <h3 className="text-[13.5px] sm:text-[14px] font-semibold text-[#101114] leading-snug mb-1">
-                eBPF Kernel Probe
-              </h3>
-              <p className="text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                Kernel-level telemetry with minimal overhead
-              </p>
-            </div>
-          </div>
-
-          {/* Arrow 2 */}
-          <div className="hidden lg:flex items-center justify-center text-[#7C3AED] w-8 xl:w-10 shrink-0">
-            <svg viewBox="0 0 36 16" className="w-9 h-4 stroke-current fill-none">
-              <line x1="0" y1="8" x2="28" y2="8" strokeWidth="1.8" strokeDasharray={activeStep === 2 ? "3 3" : "none"} />
-              <polyline points="24,4 30,8 24,12" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <div className="lg:hidden flex items-center justify-center text-[#7C3AED]">
-            <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
-              <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
-              <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-
-          {/* 3. BREXAL Neural Engine (Featured Center Card) */}
-          <div
-            className={`w-full lg:w-[275px] xl:w-[295px] relative rounded-2xl border p-5 sm:p-5.5 text-left transition-all duration-300 shadow-[0_8px_24px_rgba(124,58,237,0.1)] shrink-0 ${
-              activeStep === 3
-                ? "bg-[#F5F3FF] border-[#7C3AED] ring-2 ring-[#7C3AED]/25 shadow-xl -translate-y-1"
-                : "bg-[#F7F6F2] border-[#C7BDF7]"
-            }`}
-          >
-            {/* Top Right AI Engine Badge */}
-            <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-[#7C3AED] text-[10.5px] font-semibold font-mono border border-[#DDD6FE]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" />
-              <span>AI Engine</span>
-            </div>
-
-            <div className="flex items-center gap-3.5 pt-2 sm:pt-1">
-              <NeuralEngineLogo />
-              <div className="pr-1">
-                <h3 className="text-[14.5px] sm:text-[15px] font-bold text-[#101114] leading-snug mb-1">
-                  BREXAL Neural Engine
-                </h3>
-                <p className="text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                  AI-driven analysis, anomaly detection and root cause
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Branching Connector 3 */}
-          <div className="hidden lg:block w-12 xl:w-14 h-40 relative shrink-0">
-            <svg viewBox="0 0 54 160" className="w-full h-full stroke-[#7C3AED] fill-none overflow-visible">
-              <path
-                d="M 0 80 C 24 80, 24 35, 46 35"
-                strokeWidth="1.8"
-                strokeDasharray={activeStep === 4 ? "3 3" : "none"}
-              />
-              <polyline points="40,30 48,35 40,40" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-              
-              <path
-                d="M 0 80 C 24 80, 24 125, 46 125"
-                strokeWidth="1.8"
-                strokeDasharray={activeStep === 4 ? "3 3" : "none"}
-              />
-              <polyline points="40,120 48,125 40,130" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-
-          <div className="lg:hidden flex items-center justify-center text-[#7C3AED]">
-            <svg viewBox="0 0 16 28" className="w-4 h-7 stroke-current fill-none">
-              <line x1="8" y1="0" x2="8" y2="22" strokeWidth="1.8" />
-              <polyline points="4,18 8,24 12,18" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-
-          {/* 4 & 5. Right Column Stack (Slack & PagerDuty) */}
-          <div className="flex flex-col gap-3.5 w-full lg:w-[230px] xl:w-[245px] shrink-0">
+        {/* ── DIAGRAM CONTAINER (HORIZONTAL PIPELINE ON MOBILE & DESKTOP) ── */}
+        <div className="flex flex-col items-center max-w-[1240px] mx-auto w-full">
+          <div className="flex overflow-x-auto lg:overflow-visible items-center lg:justify-center gap-2.5 sm:gap-3 xl:gap-4 w-full no-scrollbar snap-x snap-mandatory py-3 pb-4 sm:pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 [scroll-padding-left:1rem]">
             
-            {/* Slack */}
+            {/* 1. Your Kubernetes Pod */}
             <div
-              className={`bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${
-                activeStep === 4
-                  ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-0.5"
-                : "border-[#E2E4E9] hover:border-[#BFC3CC]"
+              className={`w-[230px] sm:w-[245px] lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 snap-start ${
+                activeStep === 1
+                  ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-1"
+                  : "border-[#E2E4E9] hover:border-[#BFC3CC]"
               }`}
             >
-              <SlackLogo />
+              <KubernetesLogo />
               <div>
-                <h3 className="text-[13.5px] sm:text-[14px] font-semibold text-[#101114] leading-snug mb-1">
-                  Slack
+                <h3 className="text-[13px] sm:text-[14px] font-semibold text-[#101114] leading-snug mb-0.5">
+                  Your Kubernetes Pod
                 </h3>
-                <p className="text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                  Real-time alerts and updates to your team
+                <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
+                  Application, logs, metrics and network events
                 </p>
               </div>
             </div>
 
-            {/* PagerDuty */}
+            {/* Horizontal Arrow 1 */}
+            <div className="flex items-center justify-center text-[#7C3AED] w-7 sm:w-8 xl:w-10 shrink-0">
+              <svg viewBox="0 0 36 16" className="w-7 sm:w-9 h-4 stroke-current fill-none">
+                <line x1="0" y1="8" x2="28" y2="8" strokeWidth="1.8" strokeDasharray={activeStep === 1 ? "3 3" : "none"} />
+                <polyline points="24,4 30,8 24,12" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+
+            {/* 2. eBPF Kernel Probe */}
             <div
-              className={`bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3.5 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${
-                activeStep === 4
-                  ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-0.5"
-                : "border-[#E2E4E9] hover:border-[#BFC3CC]"
+              className={`w-[230px] sm:w-[245px] lg:w-[230px] xl:w-[245px] bg-white rounded-2xl border p-4 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] shrink-0 snap-start ${
+                activeStep === 2
+                  ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-1"
+                  : "border-[#E2E4E9] hover:border-[#BFC3CC]"
               }`}
             >
-              <PagerDutyLogo />
+              <EbpfLogo />
               <div>
-                <h3 className="text-[13.5px] sm:text-[14px] font-semibold text-[#101114] leading-snug mb-1">
-                  PagerDuty
+                <h3 className="text-[13px] sm:text-[14px] font-semibold text-[#101114] leading-snug mb-0.5">
+                  eBPF Kernel Probe
                 </h3>
-                <p className="text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                  Critical incident alerts and on-call escalation
+                <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
+                  Kernel-level telemetry with minimal overhead
                 </p>
               </div>
+            </div>
+
+            {/* Horizontal Arrow 2 */}
+            <div className="flex items-center justify-center text-[#7C3AED] w-7 sm:w-8 xl:w-10 shrink-0">
+              <svg viewBox="0 0 36 16" className="w-7 sm:w-9 h-4 stroke-current fill-none">
+                <line x1="0" y1="8" x2="28" y2="8" strokeWidth="1.8" strokeDasharray={activeStep === 2 ? "3 3" : "none"} />
+                <polyline points="24,4 30,8 24,12" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+
+            {/* 3. BREXAL Neural Engine (Featured Center Card) */}
+            <div
+              className={`w-[260px] sm:w-[280px] lg:w-[275px] xl:w-[295px] relative rounded-2xl border p-4 sm:p-5 text-left transition-all duration-300 shadow-[0_8px_24px_rgba(124,58,237,0.1)] shrink-0 snap-start ${
+                activeStep === 3
+                  ? "bg-[#F5F3FF] border-[#7C3AED] ring-2 ring-[#7C3AED]/25 shadow-xl -translate-y-1"
+                  : "bg-[#F7F6F2] border-[#C7BDF7]"
+              }`}
+            >
+              {/* Top Right AI Engine Badge */}
+              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white text-[#7C3AED] text-[10px] font-semibold font-mono border border-[#DDD6FE]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" />
+                <span>AI Engine</span>
+              </div>
+
+              <div className="flex items-center gap-3 pt-2 sm:pt-1">
+                <NeuralEngineLogo />
+                <div className="pr-1">
+                  <h3 className="text-[13.5px] sm:text-[15px] font-bold text-[#101114] leading-snug mb-0.5">
+                    BREXAL Neural Engine
+                  </h3>
+                  <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
+                    AI-driven analysis, anomaly detection and root cause
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Branching Connector 3 */}
+            <div className="w-10 sm:w-12 xl:w-14 h-36 sm:h-40 relative shrink-0 flex items-center">
+              <svg viewBox="0 0 54 160" className="w-full h-full stroke-[#7C3AED] fill-none overflow-visible">
+                <path
+                  d="M 0 80 C 24 80, 24 35, 46 35"
+                  strokeWidth="1.8"
+                  strokeDasharray={activeStep === 4 ? "3 3" : "none"}
+                />
+                <polyline points="40,30 48,35 40,40" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                
+                <path
+                  d="M 0 80 C 24 80, 24 125, 46 125"
+                  strokeWidth="1.8"
+                  strokeDasharray={activeStep === 4 ? "3 3" : "none"}
+                />
+                <polyline points="40,120 48,125 40,130" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+
+            {/* 4 & 5. Right Column Stack (Slack & PagerDuty) */}
+            <div className="flex flex-col gap-2.5 sm:gap-3.5 w-[220px] sm:w-[240px] lg:w-[230px] xl:w-[245px] shrink-0 snap-start">
+              
+              {/* Slack */}
+              <div
+                className={`bg-white rounded-2xl border p-3.5 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${
+                  activeStep === 4
+                    ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-0.5"
+                    : "border-[#E2E4E9] hover:border-[#BFC3CC]"
+                }`}
+              >
+                <SlackLogo />
+                <div>
+                  <h3 className="text-[13px] sm:text-[14px] font-semibold text-[#101114] leading-snug mb-0.5">
+                    Slack
+                  </h3>
+                  <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
+                    Real-time alerts and updates to your team
+                  </p>
+                </div>
+              </div>
+
+              {/* PagerDuty */}
+              <div
+                className={`bg-white rounded-2xl border p-3.5 sm:p-5 flex items-center gap-3 text-left transition-all duration-300 shadow-[0_2px_12px_rgba(16,17,20,0.03)] ${
+                  activeStep === 4
+                    ? "border-[#7C3AED] ring-2 ring-[#7C3AED]/20 shadow-lg -translate-y-0.5"
+                    : "border-[#E2E4E9] hover:border-[#BFC3CC]"
+                }`}
+              >
+                <PagerDutyLogo />
+                <div>
+                  <h3 className="text-[13px] sm:text-[14px] font-semibold text-[#101114] leading-snug mb-0.5">
+                    PagerDuty
+                  </h3>
+                  <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
+                    Critical incident alerts and on-call escalation
+                  </p>
+                </div>
+              </div>
+
             </div>
 
           </div>
 
+          {/* Mobile Swipe Hint Indicator */}
+          <div className="flex lg:hidden items-center justify-center gap-1.5 pt-2 text-[11px] text-slate-400 font-medium">
+            <span className={`h-1.5 rounded-full transition-all ${activeStep === 1 ? "bg-[#7C3AED] w-4" : "bg-slate-300 w-1.5"}`} />
+            <span className={`h-1.5 rounded-full transition-all ${activeStep === 2 ? "bg-[#7C3AED] w-4" : "bg-slate-300 w-1.5"}`} />
+            <span className={`h-1.5 rounded-full transition-all ${activeStep === 3 ? "bg-[#7C3AED] w-4" : "bg-slate-300 w-1.5"}`} />
+            <span className={`h-1.5 rounded-full transition-all ${activeStep === 4 ? "bg-[#7C3AED] w-4" : "bg-slate-300 w-1.5"}`} />
+            <span className="ml-1 text-[10.5px] text-slate-400 font-sans">Swipe pipeline →</span>
+          </div>
         </div>
 
       </div>
