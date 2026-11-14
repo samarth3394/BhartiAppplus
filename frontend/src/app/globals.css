@@ -101,6 +101,16 @@ p {
   background: #8B8F9A;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 /* Elite Selection */
 ::selection {
   background-color: rgba(66, 92, 245, 0.14);

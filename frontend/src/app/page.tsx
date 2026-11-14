@@ -458,11 +458,12 @@ function PlatformOverviewSection() {
 
           </div>
 
-          {/* Right Column (7 cols): 2x2 Bento Cards with Custom Visual Art */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+          {/* Right Column (7 cols): 2x2 Bento Cards with Custom Visual Art (Horizontally Scrollable on Mobile) */}
+          <div className="lg:col-span-7 flex flex-col">
+            <div className="flex overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-2 sm:overflow-visible gap-4 sm:gap-5 pb-3 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 no-scrollbar [scroll-padding-left:1rem]">
             
             {/* ── CARD 1: REAL-TIME MONITORING ── */}
-            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#818CF8]/50 transition-all">
+            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#818CF8]/50 transition-all">
               {/* Abstract Wave Ribbon Graphic */}
               <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
                 <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -502,7 +503,7 @@ function PlatformOverviewSection() {
             </div>
 
             {/* ── CARD 2: AI INCIDENT COPILOT ── */}
-            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#FFFBEB]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#C8A96B]/50 transition-all">
+            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#FFFBEB]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#C8A96B]/50 transition-all">
               {/* Golden Radial Architectural Fins Graphic */}
               <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
                 <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -542,7 +543,7 @@ function PlatformOverviewSection() {
             </div>
 
             {/* ── CARD 3: PREDICTIVE MAINTENANCE ── */}
-            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#F5F3FF]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#8B5CF6]/50 transition-all">
+            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#F5F3FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#8B5CF6]/50 transition-all">
               {/* Lavender Curved Arch / Tube Graphic */}
               <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
                 <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -583,7 +584,7 @@ function PlatformOverviewSection() {
             </div>
 
             {/* ── CARD 4: AUTOMATED BUG TRACKING ── */}
-            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#4F46E5]/50 transition-all">
+            <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] w-[84vw] max-w-[320px] shrink-0 snap-start sm:w-auto sm:max-w-none sm:shrink flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#4F46E5]/50 transition-all">
               {/* Geometric Isometric 3D Steps Graphic */}
               <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
                 <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -631,6 +632,16 @@ function PlatformOverviewSection() {
               </div>
             </div>
 
+            </div>
+
+            {/* Mobile Scroll Indicator (visible only on mobile) */}
+            <div className="flex sm:hidden items-center justify-center gap-1.5 pt-2 text-[11px] text-slate-400 font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+              <span className="ml-1 text-[10.5px] text-slate-400 font-sans">Swipe to explore →</span>
+            </div>
           </div>
 
         </div>
