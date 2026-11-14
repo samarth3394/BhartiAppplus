@@ -53,31 +53,32 @@ function AcceptInviteContent() {
   if (!token && !error) return null;
 
   return (
-    <div className="min-h-screen bg-[#FAFBFD] text-[#0A2540] flex items-center justify-center p-4 selection:bg-[#635BFF]/15 font-sans relative overflow-hidden">
-      {/* Background Subtle Gradient & Grid */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[350px] bg-gradient-to-br from-[#635BFF]/10 via-[#00D4FF]/10 to-transparent rounded-full blur-[90px] pointer-events-none" />
-      <div 
-        className="absolute inset-0 opacity-[0.035] pointer-events-none"
-        style={{
-          backgroundImage: "radial-gradient(#0A2540 1px, transparent 1px)",
-          backgroundSize: "24px 24px"
-        }}
-      />
+    <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-6 overflow-hidden bg-[#FAFBFD] font-sans">
+      {/* ── FULL SCREEN LUMINOUS ARCHITECTURAL BACKGROUND (white.png) ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none -z-0">
+        <img
+          src="/white.png"
+          alt="Architectural Wave Background"
+          className="w-full h-full object-cover object-[center_right] sm:object-center pointer-events-none"
+        />
+        {/* Subtle Ambient Contrast Layer */}
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px] pointer-events-none" />
+      </div>
 
-      <div className="w-full max-w-[420px] z-10">
+      <div className="relative z-10 w-full max-w-[420px]">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-white border border-slate-200/90 p-6 sm:p-8 rounded-2xl shadow-[0_16px_48px_rgba(10,37,64,0.06)]"
+          className="bg-white rounded-3xl p-8 sm:p-10 shadow-[0_25px_70px_rgba(79,70,229,0.12),0_10px_30px_rgba(0,0,0,0.04)] border border-slate-100/90 text-left"
         >
           {/* Brand Header */}
           <div className="flex flex-col items-center mb-6 text-center">
             <Link href="/" className="inline-flex items-center gap-2 group mb-4">
-              <Logo className="text-[#0A2540] group-hover:text-[#635BFF] transition-colors text-lg sm:text-xl" />
+              <Logo className="text-[#101114] text-xl" />
             </Link>
-            <h1 className="text-xl font-bold tracking-tight text-[#0A2540] mb-1">Complete your profile</h1>
-            <p className="text-xs sm:text-sm text-[#425466]">
+            <h1 className="text-2xl font-bold tracking-tight text-[#101114] font-['Sora',sans-serif] mb-1">Complete your profile</h1>
+            <p className="text-xs sm:text-sm text-slate-500">
               You&apos;ve been invited to join a collaborative engineering cluster on BREXAL.
             </p>
           </div>
@@ -135,7 +136,7 @@ function AcceptInviteContent() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-[#0A2540] hover:bg-[#635BFF] text-white py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed mt-4 min-h-[44px]"
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#6366F1] to-[#4338CA] hover:from-[#5558E6] hover:to-[#3730A3] text-white font-semibold text-sm transition-all shadow-[0_4px_16px_rgba(99,102,241,0.35)] hover:shadow-[0_6px_22px_rgba(99,102,241,0.45)] active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer mt-4"
               >
                 {isLoading ? "Setting up..." : "Activate & Continue"}
                 {!isLoading && <ArrowRight size={15} />}
