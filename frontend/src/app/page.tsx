@@ -413,15 +413,33 @@ function StripeClientMarquee() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   4.5. HOW BREXAL WORKS (3 SIMPLE STEPS - REALISTIC MINI VISUALS)
+   4.5. HOW BREXAL WORKS (MINIMAL LINEAR-STYLE CLEAN TIMELINE)
    ═══════════════════════════════════════════════════════════════ */
 function HowItWorksSection() {
+  const steps = [
+    {
+      num: "01",
+      title: "Connect in 60 seconds",
+      desc: "Run a single helm or docker command on your cluster. Zero SDK imports and no complicated configuration.",
+    },
+    {
+      num: "02",
+      title: "Live metrics & bugs sync",
+      desc: "CPU, memory, API latency, and sprint bugs automatically stream into one unified real-time dashboard.",
+    },
+    {
+      num: "03",
+      title: "Resolve outages with AI",
+      desc: "When an anomaly occurs, AI isolates the exact failing commit or database query in under 90 seconds.",
+    },
+  ];
+
   return (
     <section id="how-it-works" className="py-14 sm:py-20 px-4 sm:px-8 lg:px-12 bg-white border-b border-[#E2E4E9]">
       <div className="max-w-[1320px] mx-auto text-left">
         
         {/* Header */}
-        <div className="flex flex-col items-start max-w-2xl mb-10 sm:mb-12">
+        <div className="flex flex-col items-start max-w-2xl mb-12 sm:mb-16">
           <div className="flex items-center gap-2 mb-2.5">
             <span className="w-5 h-[2px] bg-[#7C3AED]" />
             <span className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-[#7C3AED]">
@@ -436,132 +454,23 @@ function HowItWorksSection() {
           </p>
         </div>
 
-        {/* 3 Step Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-
-          {/* ── STEP 1: REAL MINI-TERMINAL WINDOW ── */}
-          <div className="rounded-2xl border border-[#E2E4E9] bg-gradient-to-b from-[#FBFBFE] to-white p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-[#C4B5FD] transition-all">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="px-2.5 py-1 rounded-full text-[10.5px] font-mono font-bold tracking-wider bg-[#F5F3FF] text-[#7C3AED] border border-[#DDD6FE]">
-                  STEP 01
-                </span>
-                <span className="text-2xl font-mono font-bold text-slate-200">
-                  01
+        {/* Minimal Linear Timeline Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 relative">
+          {steps.map((st, i) => (
+            <div key={i} className="flex flex-col items-start relative group">
+              <div className="w-full pb-6 border-b border-slate-200 group-hover:border-[#7C3AED] transition-colors mb-6">
+                <span className="font-['Sora',sans-serif] text-4xl sm:text-5xl font-extrabold text-[#7C3AED] font-mono tracking-tight">
+                  {st.num}
                 </span>
               </div>
-              <h3 className="font-['Sora',sans-serif] text-[18px] sm:text-[19px] font-bold text-[#101114] mb-2 leading-snug">
-                Connect in 60 Seconds
+              <h3 className="font-['Sora',sans-serif] text-[18px] sm:text-[20px] font-bold text-[#101114] mb-2.5 leading-snug">
+                {st.title}
               </h3>
-              <p className="text-[13px] sm:text-[13.5px] text-[#5B5F6B] leading-relaxed">
-                Run a single command on your cluster or host. No SDK imports or complicated configuration.
+              <p className="text-[13.5px] sm:text-[14px] text-[#5B5F6B] leading-relaxed">
+                {st.desc}
               </p>
             </div>
-
-            {/* Realistic Mini Terminal */}
-            <div className="mt-6 rounded-xl bg-[#0B0D17] border border-white/10 p-3.5 shadow-inner text-left font-mono text-[11px]">
-              <div className="flex items-center gap-1.5 pb-2 mb-2 border-b border-white/10">
-                <span className="w-2 h-2 rounded-full bg-rose-500/80" />
-                <span className="w-2 h-2 rounded-full bg-amber-500/80" />
-                <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
-                <span className="ml-2 text-[9.5px] text-slate-400 font-sans">bash — cluster-agent</span>
-              </div>
-              <div className="text-slate-200 truncate">
-                <span className="text-[#818CF8]">$</span> helm install brexal-agent brexal/mesh
-              </div>
-              <div className="text-emerald-400 text-[10px] pt-1.5 flex items-center gap-1.5 font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>Connected to 14 nodes (0.8ms latency)</span>
-              </div>
-            </div>
-          </div>
-
-          {/* ── STEP 2: REAL LIVE TELEMETRY PULSE & METRICS ── */}
-          <div className="rounded-2xl border border-[#E2E4E9] bg-gradient-to-b from-[#FBFBFE] to-white p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-[#BFDBFE] transition-all">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="px-2.5 py-1 rounded-full text-[10.5px] font-mono font-bold tracking-wider bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]">
-                  STEP 02
-                </span>
-                <span className="text-2xl font-mono font-bold text-slate-200">
-                  02
-                </span>
-              </div>
-              <h3 className="font-['Sora',sans-serif] text-[18px] sm:text-[19px] font-bold text-[#101114] mb-2 leading-snug">
-                Live Metrics &amp; Bug Sync
-              </h3>
-              <p className="text-[13px] sm:text-[13.5px] text-[#5B5F6B] leading-relaxed">
-                CPU, RAM, API latencies, and sprint bugs automatically stream into one real-time dashboard.
-              </p>
-            </div>
-
-            {/* Realistic Live Telemetry Card */}
-            <div className="mt-6 rounded-xl bg-[#F8FAFC] border border-[#E2E4E9] p-3.5 shadow-inner text-left text-[11px]">
-              <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-200/80">
-                <div className="flex items-center gap-2 font-bold text-[#101114]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                  </span>
-                  <span>Production Mesh</span>
-                </div>
-                <span className="font-mono text-[9.5px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  99.99% Uptime
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-2 text-center font-mono text-[10px]">
-                <div className="bg-white p-1.5 rounded-lg border border-slate-200/80 shadow-3xs">
-                  <div className="text-slate-400 text-[8.5px] font-sans">CPU</div>
-                  <div className="font-bold text-slate-800 text-[11px]">34.8%</div>
-                </div>
-                <div className="bg-white p-1.5 rounded-lg border border-slate-200/80 shadow-3xs">
-                  <div className="text-slate-400 text-[8.5px] font-sans">RAM</div>
-                  <div className="font-bold text-slate-800 text-[11px]">58.2%</div>
-                </div>
-                <div className="bg-white p-1.5 rounded-lg border border-slate-200/80 shadow-3xs">
-                  <div className="text-slate-400 text-[8.5px] font-sans">BUGS</div>
-                  <div className="font-bold text-[#6366F1] text-[11px]">02 Open</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ── STEP 3: REAL AI COPILOT RESOLUTION CARD ── */}
-          <div className="rounded-2xl border border-[#E2E4E9] bg-gradient-to-b from-[#FBFBFE] to-white p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md hover:border-[#DDD6FE] transition-all">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="px-2.5 py-1 rounded-full text-[10.5px] font-mono font-bold tracking-wider bg-[#FAF5FF] text-[#6D28D9] border border-[#E9D5FF]">
-                  STEP 03
-                </span>
-                <span className="text-2xl font-mono font-bold text-slate-200">
-                  03
-                </span>
-              </div>
-              <h3 className="font-['Sora',sans-serif] text-[18px] sm:text-[19px] font-bold text-[#101114] mb-2 leading-snug">
-                Resolve Outages with AI
-              </h3>
-              <p className="text-[13px] sm:text-[13.5px] text-[#5B5F6B] leading-relaxed">
-                When an anomaly occurs, AI isolates the exact failing git commit or query in &lt; 90 seconds.
-              </p>
-            </div>
-
-            {/* Realistic AI Resolution Badge */}
-            <div className="mt-6 rounded-xl bg-[#FAF5FF] border border-[#DDD6FE] p-3.5 shadow-inner text-left text-[11px] space-y-1.5">
-              <div className="flex items-center justify-between pb-1 border-b border-[#DDD6FE]/60">
-                <div className="flex items-center gap-1.5 font-bold text-[#6D28D9]">
-                  <Sparkles size={13} className="text-[#7C3AED]" />
-                  <span>AI Copilot Watchdog</span>
-                </div>
-                <span className="text-[9px] font-mono text-emerald-700 font-bold bg-white px-2 py-0.5 rounded-full border border-emerald-200 shadow-3xs">
-                  Fixed in 42s
-                </span>
-              </div>
-              <p className="text-[10.5px] text-slate-700 leading-snug pt-0.5">
-                Root cause: Connection pool exhaustion on <code className="bg-white px-1 py-0.5 rounded text-[#7C3AED] font-mono text-[9.5px] border border-purple-200">auth-svc</code>. Auto-scaled pool size to 50.
-              </p>
-            </div>
-          </div>
-
+          ))}
         </div>
 
       </div>
