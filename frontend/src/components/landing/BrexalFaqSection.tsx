@@ -17,52 +17,52 @@ export function BrexalFaqSection() {
 
   const faqs: FaqItem[] = [
     {
-      questionMarathi: "माझ्या सर्व्हरवर CPU लोड वाढेल का?",
+      questionMarathi: "सर्व्हरवर CPU लोड वाढेल का?",
       questionEnglish: "Will CPU overhead increase on our production servers?",
       category: "Performance & Overhead",
       answer:
-        "नाही. पारंपारिक APM टूल्स (जसे की Datadog किंवा New Relic) सर्व्हरवर 4% ते 8% CPU आणि अतिरिक्त मेमरी वाया घालवतात. BREXAL हे आधुनिक eBPF (Extended Berkeley Packet Filter) तंत्रज्ञानावर चालते, जे थेट Linux कर्नल लेव्हलवरून अत्यंत हलक्या सँडबॉक्समध्ये टेलिमेट्री गोळा करते. यामुळे CPU चा लोड 0.8% पेक्षा कमी आणि मेमरी अवघी 40MB लागते. या '0% CPU Penalty' मुळे तुमचे सर्व्हर कायम सुपरफास्ट आणि हलके राहतात.",
-      technicalBullet: "Benchmark: < 0.8% CPU utilization under 120,000 req/sec on Linux kernel 5.15+."
+        "नाही. BREXAL हे लिनक्स कर्नल लेव्हल eBPF तंत्रज्ञानावर चालते. यामुळे CPU चा वापर 0.8% पेक्षा कमी राहतो आणि सर्व्हर्स जलद चालतात.",
+      technicalBullet: "< 0.8% CPU utilization under 120k req/sec benchmark."
     },
     {
       questionMarathi: "डेटा आमच्याच क्लाउड VPC मध्ये सुरक्षित राहील का?",
       questionEnglish: "Will telemetry data remain strictly inside our own cloud VPC?",
       category: "Security & Sovereignty",
       answer:
-        "होय, १००% सुरक्षित. BREXAL मध्ये 'Bring Your Own Cloud' (BYOC) आणि 'Self-Hosted VPC' पर्याय उपलब्ध आहे. तुमचे सर्व ऑडिट लॉग्स, नेटवर्क ट्रेसेस आणि कस्टमर टेलिमेट्री थेट तुमच्या स्वतःच्या AWS, GCP किंवा Azure Private VPC मध्ये राहतात. कोणताही कच्चा PII (Personal Identifiable Information) किंवा संवेदनशील डेटा तुमच्या नेटवर्कच्या बाहेर जात नाही. याशिवाय सर्व डेटा AES-256 GCM ने एन्क्रिप्टेड राहतो.",
-      technicalBullet: "Guarantees: SOC-2 Type II audited, HIPAA BAA compliant, and zero cross-border telemetry egress."
+        "होय, १००% सुरक्षित. Bring Your Own Cloud (BYOC) मुळे तुमचे सर्व लॉग्स, ट्रेसेस आणि डेटा तुमच्या स्वतःच्या AWS, GCP किंवा Azure Private VPC मध्येच सुरक्षित राहतात.",
+      technicalBullet: "SOC-2 Type II audited, AES-256 GCM encrypted, zero data egress."
     },
     {
-      questionMarathi: "जुने Prometheus/Grafana एजंट्स रिप्लेस करावे लागतील का?",
+      questionMarathi: "जुने Prometheus / Grafana एजंट्स रिप्लेस करावे लागतील का?",
       questionEnglish: "Do we need to replace our existing Prometheus / Grafana agents?",
       category: "Ecosystem & Migration",
       answer:
-        "मुळीच नाही. BREXAL हे १००% OpenTelemetry (OTel) आणि Prometheus Native आहे. तुमचे सध्याचे PromQL डॅशबोर्ड्स, ग्राफाना व्हिज्युअलायझेशन्स आणि ॲलर्ट रूल्स थेट BREXAL च्या हाय-स्पीड टाइम-सिरीज इंजिनला जोडले जातात. तुम्हाला कोणतीही जुनी इन्फ्रास्ट्रक्चर मोडून काढण्याची गरज नाही; पहिल्याच दिवशी 'Zero Disruption' सह BREXAL चे AI फीचर्स सुरू करता येतात.",
-      technicalBullet: "Drop-in: 100% PromQL syntax compatibility + native OTLP v1.32 gRPC/HTTP endpoints."
+        "मुळीच नाही. BREXAL हे OpenTelemetry आणि PromQL-native आहे. तुमचे सध्याचे Grafana डॅशबोर्ड्स आणि Prometheus ॲलर्ट्स थेट काम करतात.",
+      technicalBullet: "100% PromQL & OTLP v1.32 drop-in compatibility."
     },
     {
-      questionMarathi: "BREXAL चे AI फॉल्स ॲलर्ट्स (Alert Fatigue) कसे थांबवते?",
+      questionMarathi: "BREXAL फॉल्स ॲलर्ट्स (Alert Fatigue) कसे थांबवते?",
       questionEnglish: "How does the AI Neural Engine eliminate false alert fatigue?",
       category: "AI & Root Cause",
       answer:
-        "पारंपारिक थ्रेशोल्ड ॲलर्ट्स (उदा. 'CPU > 80%') शेकडो अनावश्यक नोटिफिकेशन्स पाठवून ऑन-कॉल इंजिनिअर्सना हैराण करतात. BREXAL चे न्यूरल इंजिन मायक्रोसर्व्हिसेसची 'Dynamic Topology Causal Graph' तयार करते. इन्सिडंट घडल्यास 100 वेगवेगळे ॲलर्ट्स पाठवण्याऐवजी AI नेमके मूळ कारण (Root Cause - उदा. 'Database Connection Pool Exhaustion on Pod auth-svc-78f') शोधून फक्त १ ॲक्शनेबल Slack किंवा PagerDuty इन्सिडंट पाठवते.",
-      technicalBullet: "Efficacy: 95% reduction in notification noise with sub-90-second automated root cause isolation."
+        "BREXAL चे AI मायक्रोसर्व्हिसेसचा कॉजल ग्राफ तयार करते. १०० वेगवेगळे ॲलर्ट्स पाठवण्याऐवजी नेमके मूळ कारण शोधून फक्त १ ॲक्शनेबल नोटिफिकेशन पाठवते.",
+      technicalBullet: "95% noise reduction with sub-90-second root cause isolation."
     },
     {
-      questionMarathi: "सेटअप करण्यासाठी किती वेळ लागतो आणि कोड बदलावा लागतो का?",
+      questionMarathi: "सेटअपसाठी किती वेळ लागतो आणि कोड बदलावा लागतो का?",
       questionEnglish: "How long does setup take and are code modifications required?",
       category: "Developer Experience",
       answer:
-        "सेटअप पूर्ण होण्यासाठी फक्त ३ मिनिटे लागतात! BREXAL च्या eBPF ऑटो-इन्स्ट्रुमेंटेशनमुळे कोणत्याही सोर्स कोडमध्ये बदल (No SDK imports, no bytecode manipulation) करण्याची गरज नाही. तुमच्या कुबरनेटीस क्लस्टरमध्ये फक्त १ साधा 'helm install' चालवल्यास सर्व पॉड्स, नेटवर्क कॉल्स, एरर्स आणि ट्रेसेस त्वरित आपोआप डिटेक्ट होतात.",
-      technicalBullet: "Installation: Single Helm command or Docker daemonset with immediate zero-code trace discovery."
+        "फक्त ३ मिनिटे लागतात. eBPF मुळे कोडमध्ये कोणताही बदल न करता एका 'helm install' कमांडने सर्व पॉड्स आणि ट्रेसेस त्वरित कनेक्ट होतात.",
+      technicalBullet: "Single Helm command, zero code changes required."
     },
     {
       questionMarathi: "Datadog किंवा New Relic मधून मायग्रेट कसे करावे?",
       questionEnglish: "How seamless is migrating away from Datadog or New Relic?",
       category: "Switching & Billing",
       answer:
-        "तुम्ही BREXAL तुमच्या विद्यमान Datadog किंवा New Relic सोबत समांतर (Side-by-Side) चालवून चाचणी घेऊ शकता. दोन्हीचा परफॉर्मन्स आणि 10x कमी खर्चाची खात्री पटल्यानंतर तुम्ही जुने महागडे एजंट्स कधीही बंद करू शकता. आमच्याकडे 1-क्लिक OTel डेटा इनजेशन आणि स्वयंचलित डॅशबोर्ड इम्पोर्टर उपलब्ध आहे.",
-      technicalBullet: "Flexibility: Parallel side-by-side trial with automated Grafana and PromQL dashboard imports."
+        "तुम्ही BREXAL विद्यमान टूल्ससोबत समांतर (side-by-side) चालवून पाहू शकता. खात्री पटल्यानंतर १-क्लिकमध्ये जुने एजंट्स बंद करता येतात.",
+      technicalBullet: "Parallel trial with automated Grafana and PromQL dashboard import."
     }
   ];
 

@@ -443,7 +443,7 @@ function PlatformOverviewSection() {
 
             {/* Description */}
             <p className="text-[14.5px] sm:text-[15.5px] text-[#5B5F6B] font-normal leading-relaxed mb-6 sm:mb-8 max-w-[420px] text-left">
-              From real-time monitoring and intelligent incident management to automated remediation, BREXAL brings the entire reliability stack in one place.
+              Real-time monitoring, intelligent incident management, and automated remediation in one unified platform.
             </p>
 
             {/* CTA Button */}
@@ -488,11 +488,11 @@ function PlatformOverviewSection() {
                   <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#6366F1] mb-3.5 shadow-2xs">
                     <Layers size={19} />
                   </div>
-                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-1.5 leading-snug">
                     Real-Time Monitoring
                   </h3>
                   <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
-                    Get full visibility into your applications, infrastructure and services.
+                    Full visibility into applications, infrastructure, and mesh.
                   </p>
                 </div>
 
@@ -528,11 +528,11 @@ function PlatformOverviewSection() {
                   <div className="w-9 h-9 rounded-xl bg-[#FEF3C7]/60 flex items-center justify-center text-[#D97706] mb-3.5 shadow-2xs">
                     <Zap size={19} />
                   </div>
-                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-1.5 leading-snug">
                     AI Incident Copilot
                   </h3>
                   <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
-                    Detect, analyze and resolve incidents with the power of AI.
+                    Detect, analyze, and resolve incidents with AI.
                   </p>
                 </div>
 
@@ -569,11 +569,11 @@ function PlatformOverviewSection() {
                   <div className="w-9 h-9 rounded-xl bg-[#F5F3FF] flex items-center justify-center text-[#7C3AED] mb-3.5 shadow-2xs">
                     <Activity size={19} />
                   </div>
-                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-1.5 leading-snug">
                     Predictive Maintenance
                   </h3>
                   <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
-                    Identify risks early and prevent outages before they happen.
+                    Prevent outages before they impact users.
                   </p>
                 </div>
 
@@ -618,11 +618,11 @@ function PlatformOverviewSection() {
                   <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#4F46E5] mb-3.5 shadow-2xs">
                     <Database size={19} />
                   </div>
-                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-1.5 leading-snug">
                     Automated Bug Tracking
                   </h3>
                   <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[200px]">
-                    Capture, group and prioritize issues across your stack.
+                    Group, prioritize, and triage issues across your stack.
                   </p>
                 </div>
 
@@ -760,7 +760,7 @@ function StripeArchitectureFlowSection() {
 
         {/* Subtitle */}
         <p className="text-sm sm:text-base text-[#5B5F6B] max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10 font-normal">
-          See how telemetry flows from your Kubernetes workloads through eBPF and BREXAL&apos;s AI engine to the tools your team already uses.
+          Telemetry flows from Kubernetes workloads through eBPF to your team&apos;s tools.
         </p>
 
         {/* Interactive Simulation Trigger Button */}
@@ -795,7 +795,7 @@ function StripeArchitectureFlowSection() {
                   Your Kubernetes Pod
                 </h3>
                 <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                  Application, logs, metrics and network events
+                  Pod logs, metrics &amp; network events
                 </p>
               </div>
             </div>
@@ -821,7 +821,7 @@ function StripeArchitectureFlowSection() {
                   eBPF Kernel Probe
                 </h3>
                 <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                  Kernel-level telemetry with minimal overhead
+                  Zero-overhead kernel telemetry
                 </p>
               </div>
             </div>
@@ -854,7 +854,7 @@ function StripeArchitectureFlowSection() {
                     BREXAL Neural Engine
                   </h3>
                   <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                    AI-driven analysis, anomaly detection and root cause
+                    Autonomous anomaly &amp; root cause detection
                   </p>
                 </div>
               </div>
@@ -895,7 +895,7 @@ function StripeArchitectureFlowSection() {
                     Slack
                   </h3>
                   <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                    Real-time alerts and updates to your team
+                    Real-time team alerts
                   </p>
                 </div>
               </div>
@@ -913,7 +913,7 @@ function StripeArchitectureFlowSection() {
                     PagerDuty
                   </h3>
                   <p className="text-[11px] sm:text-[11.5px] text-[#5B5F6B] leading-relaxed">
-                    Critical incident alerts and on-call escalation
+                    Critical alerts &amp; on-call escalation
                   </p>
                 </div>
               </div>
@@ -1547,7 +1547,7 @@ function StripeProductShowcaseSection() {
             </p>
 
             <p className="text-[13.5px] sm:text-[14px] text-[#5B5F6B] leading-relaxed mb-6 max-w-[480px]">
-              Track multi-engineer sprint deliverables in lockstep with automated production regression feeds. Critical runtime anomalies are mapped directly to git commits before impacting customers.
+              Map runtime anomalies to git commits and sprint deliverables before they impact users.
             </p>
 
             {/* 3 Circular Icon Feature Items */}
@@ -1557,7 +1557,7 @@ function StripeProductShowcaseSection() {
                   <GitPullRequest size={15} />
                 </div>
                 <div className="text-xs sm:text-[13px] text-[#101114] font-medium leading-relaxed pt-1">
-                  Live Kanban boards synchronized with GitHub and GitLab pull requests
+                  Live Kanban synced with GitHub and GitLab pull requests
                 </div>
               </div>
 
@@ -1566,7 +1566,7 @@ function StripeProductShowcaseSection() {
                   <Activity size={15} />
                 </div>
                 <div className="text-xs sm:text-[13px] text-[#101114] font-medium leading-relaxed pt-1">
-                  Real-time regression detection with automated issue severity tags
+                  Real-time regression detection with automated severity tags
                 </div>
               </div>
 
@@ -1575,7 +1575,7 @@ function StripeProductShowcaseSection() {
                   <GitCommit size={15} />
                 </div>
                 <div className="text-xs sm:text-[13px] text-[#101114] font-medium leading-relaxed pt-1">
-                  Automated commit correlation &amp; fast rollback recommendations
+                  Automated commit correlation &amp; fast rollback guidance
                 </div>
               </div>
             </div>
@@ -1629,7 +1629,7 @@ function StripeProductShowcaseSection() {
             </p>
 
             <p className="text-[13.5px] sm:text-[14px] text-white/60 leading-relaxed mb-6 max-w-[480px]">
-              Manage architectural ownership, RBAC permissions, and multi-tenant audit logs alongside live CPU, memory, NVMe disk, and network throughput across every cloud cluster.
+              Granular RBAC, audit trails, and live hardware telemetry across cloud clusters.
             </p>
 
             {/* 3 Circular Icon Feature Items */}
@@ -1639,7 +1639,7 @@ function StripeProductShowcaseSection() {
                   <ShieldCheck size={15} />
                 </div>
                 <div className="text-xs sm:text-[13px] text-white/90 font-medium leading-relaxed pt-1">
-                  Granular role-based access control (RBAC) with audit verification
+                  Role-based access control (RBAC) with audit verification
                 </div>
               </div>
 
@@ -1648,7 +1648,7 @@ function StripeProductShowcaseSection() {
                   <BarChart3 size={15} />
                 </div>
                 <div className="text-xs sm:text-[13px] text-white/90 font-medium leading-relaxed pt-1">
-                  High-resolution node metrics: 34.8% CPU, 58.2% RAM, 1.8 Gbps network
+                  Real-time node telemetry: CPU, memory, and network throughput
                 </div>
               </div>
 
@@ -1657,7 +1657,7 @@ function StripeProductShowcaseSection() {
                   <Database size={15} />
                 </div>
                 <div className="text-xs sm:text-[13px] text-white/90 font-medium leading-relaxed pt-1">
-                  Automated security audit log stream
+                  Automated security audit trail and compliance logs
                 </div>
               </div>
             </div>
@@ -1676,10 +1676,10 @@ function StripeProductShowcaseSection() {
    ═══════════════════════════════════════════════════════════════ */
 function StripeGlobalScaleSection() {
   const stats = [
-    { number: "250M+", label: "Telemetry Spans / Sec", desc: "Inspected at line-rate across production cloud regions." },
-    { number: "99.999%", label: "Platform Uptime SLA", desc: "Enterprise SLA backed by autonomous multi-region failover." },
-    { number: "< 0.8ms", label: "P99 Telemetry Overhead", desc: "Zero bytecode injection and zero garbage collection halts." },
-    { number: "140+", label: "Global Edge Locations", desc: "Synthesizing ingress signals closer to customer endpoints." },
+    { number: "250M+", label: "Telemetry Spans / Sec", desc: "Line-rate processing across cloud regions." },
+    { number: "99.999%", label: "Platform Uptime SLA", desc: "Autonomous multi-region failover." },
+    { number: "< 0.8ms", label: "P99 Telemetry Overhead", desc: "Zero bytecode injection or GC pauses." },
+    { number: "140+", label: "Global Edge Locations", desc: "Ingress signals synthesized at the edge." },
   ];
 
   return (
@@ -1695,7 +1695,7 @@ function StripeGlobalScaleSection() {
             The backbone for internet-scale infrastructure.
           </h2>
           <p className="text-sm sm:text-base text-[#5B5F6B] font-normal leading-relaxed">
-            High-growth startups and global enterprises rely on Bharti Nexus to ensure 24/7 service availability.
+            Trusted by engineering teams for continuous 24/7 reliability.
           </p>
         </div>
 
@@ -1728,7 +1728,7 @@ function StripePricingSection() {
       name: "Developer Sandbox",
       price: "$0",
       period: "forever free",
-      desc: "For individual developers, staging prototypes, and side projects.",
+      desc: "For individual developers and side projects.",
       features: ["Up to 3 microservices", "24-hour trace retention", "eBPF kernel metrics", "Community Discord support"],
       cta: "Start Free",
       highlight: false
@@ -1737,7 +1737,7 @@ function StripePricingSection() {
       name: "Scale Team",
       price: "$89",
       period: "per cluster / mo",
-      desc: "For fast-growing engineering teams managing production microservices.",
+      desc: "For engineering teams running production workloads.",
       features: ["Unlimited microservices", "30-day trace retention", "AI Root-Cause engine", "Automated Git commit correlation", "Slack & PagerDuty webhooks"],
       cta: "Start free trial",
       highlight: true
@@ -1746,7 +1746,7 @@ function StripePricingSection() {
       name: "Enterprise Cloud",
       price: "Custom",
       period: "annual contract",
-      desc: "Mission-critical infrastructure with dedicated SLAs and custom compliance.",
+      desc: "For enterprise scale with dedicated SLAs and compliance.",
       features: ["Custom data retention", "On-prem & hybrid cloud agents", "Dedicated SRE support engineer", "SOC-2 Type II audit reports", "99.999% uptime guarantee"],
       cta: "Contact Enterprise",
       highlight: false
@@ -1766,7 +1766,7 @@ function StripePricingSection() {
             Simple, predictable pricing. No surprise per-GB penalties.
           </h2>
           <p className="text-sm sm:text-base text-[#5B5F6B] font-normal leading-relaxed">
-            Scale your telemetry infrastructure without worrying about explosive log ingestion fees.
+            Scale telemetry without per-GB ingestion penalties.
           </p>
         </div>
 
@@ -1834,7 +1834,7 @@ function StripeFinalCtaSection() {
         </h2>
 
         <p className="text-sm sm:text-base text-[#5B5F6B] font-normal max-w-xl leading-relaxed mb-5 sm:mb-6">
-          Explore our live sandboxed console or talk with our solutions architects to instrument your clusters today.
+          Start in minutes with our sandboxed console or talk to our solutions team.
         </p>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3.5 mb-6 sm:mb-7 w-full sm:w-auto">
