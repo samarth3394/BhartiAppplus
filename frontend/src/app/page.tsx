@@ -214,125 +214,101 @@ function StripeNavbar() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   2. HERO SECTION — WARM MINIMALISM & EDITORIAL TYPOGRAPHY
-      (BESPOKE AI LAB ARTWORK — WARM CREAM, TERRACOTTA & PEBBLE)
+   2. HERO SECTION — WARM MINIMALISM & PRODUCT TELEMETRY MESH
+      (FULL-BLEED BACKGROUND: /hero-telemetry-warm.jpg)
    ═══════════════════════════════════════════════════════════════ */
 function StripeHeroSection() {
   return (
-    <section className="relative min-h-[88vh] sm:min-h-screen flex items-center pt-24 pb-14 sm:pt-32 sm:pb-20 lg:pt-36 lg:pb-24 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#FAF8F5]">
+    <section className="relative min-h-[90vh] sm:min-h-screen flex items-center pt-24 pb-14 sm:pt-32 sm:pb-20 lg:pt-38 lg:pb-26 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#FAF8F5]">
 
-      {/* ── ORGANIC AMBIENT BACKGROUND GLOW & CONTOURS ── */}
+      {/* ── FULL-BLEED CLOUD TELEMETRY & CLUSTER MESH BACKGROUND (hero-telemetry-warm.jpg) ── */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0">
-        <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#F5E6DC]/40 via-[#F7ECE1]/20 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-[480px] h-[480px] rounded-full bg-gradient-to-tr from-[#EBF2EC]/30 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#FAF8F5] via-[#FAF8F5]/80 to-transparent pointer-events-none" />
+        <img
+          src="/hero-telemetry-warm.jpg"
+          alt="BREXAL Cloud Telemetry and Infrastructure Mesh"
+          className="w-full h-full object-cover object-[right_center] sm:object-center pointer-events-none opacity-85"
+        />
+
+        {/* Desktop Left-to-Right Reading Contrast Gradient: ensures typography is razor-sharp */}
+        <div className="hidden md:block absolute inset-y-0 left-0 w-[62%] lg:w-[56%] bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5]/85 to-transparent pointer-events-none" />
+
+        {/* Mobile Contrast Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F5]/92 via-[#FAF8F5]/65 to-[#FAF8F5] pointer-events-none md:hidden" />
+
+        {/* Soft bottom dissolve for seamless flow into the marquee section */}
+        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#FAF8F5] via-[#FAF8F5]/85 to-transparent pointer-events-none" />
       </div>
 
       <div className="max-w-[1320px] mx-auto w-full relative z-10">
 
-        {/* 2-COLUMN EDITORIAL HERO GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-14 items-center">
+        {/* EDITORIAL HERO CONTENT */}
+        <div className="max-w-[820px] flex flex-col items-start text-left">
 
-          {/* LEFT COLUMN (7 cols): EDITORIAL CONTENT */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left">
-
-            {/* Eyebrow Pill — Anthropic Warm Style */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-[#FBF0EA] border border-[#F3DACD] shadow-3xs mb-4 sm:mb-6 max-w-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#CC5A2B] shrink-0" />
-              <span className="text-[10px] sm:text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-[#CC5A2B] truncate">
-                INTELLIGENT RELIABILITY &amp; DEV PLATFORM
-              </span>
-            </div>
-
-            {/* Display Headline — Serif & Sans Editorial Contrast */}
-            <h1 className="font-['Sora',sans-serif] text-[34px] xs:text-[42px] sm:text-[50px] md:text-[58px] lg:text-[62px] xl:text-[68px] font-bold tracking-[-0.035em] text-[#1F1E1D] leading-[1.08] mb-5 sm:mb-6 text-left">
-              Server monitoring, bug tracking &amp; AI. <br className="hidden sm:inline" />
-              <span className="font-editorial italic font-normal text-[#CC5A2B]">All in one place.</span>
-            </h1>
-
-            {/* Supporting Subhead */}
-            <p className="font-['Inter',sans-serif] text-[15px] sm:text-[16.5px] md:text-[17.5px] text-[#57534E] font-normal leading-relaxed mb-7 sm:mb-10 max-w-[580px] text-left">
-              Stop switching between five different tools. BREXAL unifies live server telemetry, sprint bug tracking, and AI-powered root-cause analysis in one calm, fast workspace.
-            </p>
-
-            {/* Action CTAs Row */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3.5 mb-8 sm:mb-10 w-full sm:w-auto">
-              <Link
-                href="/register"
-                className="px-7 py-3.5 rounded-full bg-[#1F1E1D] text-[#FAF8F5] hover:bg-[#CC5A2B] active:scale-[0.98] text-[14px] sm:text-[14.5px] font-semibold transition-all flex items-center justify-center gap-2 shadow-[0_4px_18px_rgba(31,30,29,0.18)]"
-              >
-                <span>Start free trial</span>
-                <ArrowRight size={15} />
-              </Link>
-              <Link
-                href="#how-it-works"
-                className="px-7 py-3.5 rounded-full bg-white border border-[#E8E2D9] text-[#1F1E1D] hover:bg-[#F5F1EB] active:scale-[0.98] text-[14px] sm:text-[14.5px] font-medium transition-all flex items-center justify-center gap-2 shadow-3xs"
-              >
-                <span>See how it works</span>
-              </Link>
-            </div>
-
-            {/* 3 Micro Feature Callouts */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-5 pt-5 sm:pt-7 border-t border-[#E8E2D9] w-full max-w-[580px]">
-              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-[#E8E2D9] sm:border-0">
-                <div className="w-7 h-7 sm:w-auto sm:h-auto rounded-lg bg-[#FBF0EA] sm:bg-transparent flex items-center justify-center shrink-0">
-                  <Zap size={16} className="text-[#CC5A2B]" />
-                </div>
-                <div className="text-left">
-                  <div className="text-[12px] sm:text-[13px] font-bold text-[#1F1E1D]">1. Connect in 60s</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#57534E]">Zero code changes</div>
-                </div>
-              </div>
-
-              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-[#E8E2D9] sm:border-0">
-                <div className="w-7 h-7 sm:w-auto sm:h-auto rounded-lg bg-[#FBF0EA] sm:bg-transparent flex items-center justify-center shrink-0">
-                  <Layers size={16} className="text-[#CC5A2B]" />
-                </div>
-                <div className="text-left">
-                  <div className="text-[12px] sm:text-[13px] font-bold text-[#1F1E1D]">2. Auto-detect</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#57534E]">CPU, RAM &amp; bugs</div>
-                </div>
-              </div>
-
-              <div className="flex items-center sm:items-start gap-2.5 p-2 sm:p-0 rounded-xl bg-white/60 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-[#E8E2D9] sm:border-0">
-                <div className="w-7 h-7 sm:w-auto sm:h-auto rounded-lg bg-[#FBF0EA] sm:bg-transparent flex items-center justify-center shrink-0">
-                  <ShieldCheck size={16} className="text-[#CC5A2B]" />
-                </div>
-                <div className="text-left">
-                  <div className="text-[12px] sm:text-[13px] font-bold text-[#1F1E1D]">3. Resolve with AI</div>
-                  <div className="text-[10.5px] sm:text-[11px] text-[#57534E]">Root cause in &lt; 90s</div>
-                </div>
-              </div>
-            </div>
-
+          {/* Eyebrow Pill — Anthropic Warm Style */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-[#FAF8F5]/95 backdrop-blur-md border border-[#E8E2D9] shadow-3xs mb-4 sm:mb-6 max-w-full">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#CC5A2B] shrink-0 animate-pulse" />
+            <span className="text-[10px] sm:text-[11px] font-mono font-medium tracking-[0.2em] uppercase text-[#CC5A2B] truncate">
+              INTELLIGENT RELIABILITY &amp; DEV PLATFORM
+            </span>
           </div>
 
-          {/* RIGHT COLUMN (5 cols): BESPOKE WARM MINIMALIST HERO ARTWORK */}
-          <div className="lg:col-span-5 flex items-center justify-center lg:justify-end w-full">
-            <div className="relative w-full max-w-[480px] lg:max-w-none group">
-              {/* Soft warm ambient shadow halo */}
-              <div className="absolute -inset-2 bg-gradient-to-tr from-[#CC5A2B]/15 via-[#D97706]/10 to-[#F5F1EB] rounded-3xl blur-2xl opacity-60 group-hover:opacity-80 transition-opacity pointer-events-none" />
+          {/* Display Headline — Serif & Sans Editorial Contrast */}
+          <h1 className="font-['Sora',sans-serif] text-[34px] xs:text-[42px] sm:text-[54px] md:text-[64px] lg:text-[72px] font-bold tracking-[-0.035em] text-[#1F1E1D] leading-[1.08] mb-5 sm:mb-6 text-left">
+            Server monitoring, bug tracking &amp; AI. <br className="hidden sm:inline" />
+            <span className="font-editorial italic font-normal text-[#CC5A2B]">All in one place.</span>
+          </h1>
 
-              {/* Editorial Framed Artwork Container */}
-              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E8E2D9] bg-[#FDFBF7] shadow-[0_16px_44px_rgba(31,30,29,0.08)]">
-                <img
-                  src="/hero-warm-minimalist.jpg"
-                  alt="BREXAL Warm Minimalist AI Lab Artwork"
-                  className="w-full h-auto object-cover max-h-[380px] sm:max-h-[460px] lg:max-h-[500px] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                />
+          {/* Supporting Subhead */}
+          <p className="font-['Inter',sans-serif] text-[15px] sm:text-[17px] md:text-[18.5px] text-[#57534E] font-normal leading-relaxed mb-7 sm:mb-10 max-w-[620px] text-left">
+            Stop switching between five different tools. BREXAL unifies live server telemetry, sprint bug tracking, and AI-powered root-cause analysis in one calm, fast workspace.
+          </p>
 
-                {/* Editorial Floating Badge at Bottom */}
-                <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 p-3 sm:p-3.5 rounded-xl bg-[#FAF8F5]/92 backdrop-blur-md border border-[#E8E2D9] shadow-3xs flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#CC5A2B] animate-pulse" />
-                    <span className="font-['Sora',sans-serif] text-[11px] sm:text-[12px] font-bold text-[#1F1E1D]">
-                      Autonomous Telemetry
-                    </span>
-                  </div>
-                  <span className="text-[10px] sm:text-[11px] font-mono text-[#57534E] font-medium">
-                    Kernel eBPF &bull; 0.8ms
-                  </span>
-                </div>
+          {/* Action CTAs Row */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3.5 mb-8 sm:mb-12 w-full sm:w-auto">
+            <Link
+              href="/register"
+              className="px-7 py-3.5 rounded-full bg-[#1F1E1D] text-[#FAF8F5] hover:bg-[#CC5A2B] active:scale-[0.98] text-[14px] sm:text-[14.5px] font-semibold transition-all flex items-center justify-center gap-2 shadow-[0_4px_18px_rgba(31,30,29,0.18)]"
+            >
+              <span>Start free trial</span>
+              <ArrowRight size={15} />
+            </Link>
+            <Link
+              href="#how-it-works"
+              className="px-7 py-3.5 rounded-full bg-white/95 backdrop-blur-md border border-[#E8E2D9] text-[#1F1E1D] hover:bg-[#F5F1EB] active:scale-[0.98] text-[14px] sm:text-[14.5px] font-medium transition-all flex items-center justify-center gap-2 shadow-3xs"
+            >
+              <span>See how it works</span>
+            </Link>
+          </div>
+
+          {/* 3 Micro Feature Callouts */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-6 pt-5 sm:pt-8 border-t border-[#E8E2D9] w-full max-w-[620px]">
+            <div className="flex items-center sm:items-start gap-2.5 p-2.5 sm:p-0 rounded-xl bg-white/80 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-[#E8E2D9] sm:border-0 shadow-3xs sm:shadow-none">
+              <div className="w-7 h-7 sm:w-auto sm:h-auto rounded-lg bg-[#FBF0EA] sm:bg-transparent flex items-center justify-center shrink-0">
+                <Zap size={16} className="text-[#CC5A2B]" />
+              </div>
+              <div className="text-left">
+                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#1F1E1D]">1. Connect in 60s</div>
+                <div className="text-[11px] sm:text-[11.5px] text-[#57534E]">Zero code changes</div>
+              </div>
+            </div>
+
+            <div className="flex items-center sm:items-start gap-2.5 p-2.5 sm:p-0 rounded-xl bg-white/80 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-[#E8E2D9] sm:border-0 shadow-3xs sm:shadow-none">
+              <div className="w-7 h-7 sm:w-auto sm:h-auto rounded-lg bg-[#FBF0EA] sm:bg-transparent flex items-center justify-center shrink-0">
+                <Layers size={16} className="text-[#CC5A2B]" />
+              </div>
+              <div className="text-left">
+                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#1F1E1D]">2. Auto-detect issues</div>
+                <div className="text-[11px] sm:text-[11.5px] text-[#57534E]">CPU, RAM &amp; bugs</div>
+              </div>
+            </div>
+
+            <div className="flex items-center sm:items-start gap-2.5 p-2.5 sm:p-0 rounded-xl bg-white/80 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none border border-[#E8E2D9] sm:border-0 shadow-3xs sm:shadow-none">
+              <div className="w-7 h-7 sm:w-auto sm:h-auto rounded-lg bg-[#FBF0EA] sm:bg-transparent flex items-center justify-center shrink-0">
+                <ShieldCheck size={16} className="text-[#CC5A2B]" />
+              </div>
+              <div className="text-left">
+                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#1F1E1D]">3. Resolve with AI</div>
+                <div className="text-[11px] sm:text-[11.5px] text-[#57534E]">Root cause in &lt; 90s</div>
               </div>
             </div>
           </div>
