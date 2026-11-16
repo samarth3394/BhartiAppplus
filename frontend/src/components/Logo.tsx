@@ -12,7 +12,7 @@ export function Logo({
   textColor,
 }: LogoProps) {
   const isWhite = className.includes("text-white");
-  const defaultSlash = isWhite ? "text-[#818CF8]" : "text-[#6366F1]";
+  const defaultSlash = isWhite ? "text-[#E89271]" : "text-[#CC5A2B]";
 
   return (
     <div className={`inline-flex items-center gap-1.5 font-bold tracking-[0.16em] select-none text-[15px] sm:text-[16px] leading-none ${className}`}>

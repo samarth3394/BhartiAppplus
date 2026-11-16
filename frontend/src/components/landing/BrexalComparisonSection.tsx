@@ -300,7 +300,7 @@ function StatusBadge({ status }: { status: CapabilityStatus }) {
   if (status === "implemented") {
     return (
       <span
-        className="w-5 h-5 rounded-full bg-[#2563EB] text-white flex items-center justify-center shrink-0 mt-0.5"
+        className="w-5 h-5 rounded-full bg-[#4D6B53] text-white flex items-center justify-center shrink-0 mt-0.5"
         title="Implemented in current platform"
       >
         <Check size={12} strokeWidth={2.75} />
@@ -310,7 +310,7 @@ function StatusBadge({ status }: { status: CapabilityStatus }) {
   if (status === "partial") {
     return (
       <span
-        className="w-5 h-5 rounded-full bg-blue-100 text-[#2563EB] border border-blue-200 flex items-center justify-center shrink-0 mt-0.5"
+        className="w-5 h-5 rounded-full bg-[#FEF3C7] text-[#D97706] border border-[#FDE68A] flex items-center justify-center shrink-0 mt-0.5"
         title="Partially supported"
       >
         <Info size={12} strokeWidth={2.5} />
@@ -319,7 +319,7 @@ function StatusBadge({ status }: { status: CapabilityStatus }) {
   }
   return (
     <span
-      className="w-5 h-5 rounded-full bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center shrink-0 mt-0.5"
+      className="w-5 h-5 rounded-full bg-slate-100 text-[#8C857E] border border-[#E8E2D9] flex items-center justify-center shrink-0 mt-0.5"
       title={status === "not_implemented" ? "Not currently implemented" : "Not independently verified"}
     >
       <Minus size={12} strokeWidth={2.5} />
@@ -333,21 +333,21 @@ export function BrexalComparisonSection() {
   return (
     <section
       id="comparison"
-      className="py-14 sm:py-20 px-4 sm:px-8 lg:px-10 bg-white border-b border-slate-200/80 relative font-sans"
+      className="py-14 sm:py-20 px-4 sm:px-8 lg:px-10 bg-[#FAF8F5] border-b border-[#E8E2D9] relative font-sans"
     >
       <div className="max-w-[1320px] mx-auto text-left">
         {/* Eyebrow & Messaging */}
         <div className="max-w-3xl mb-8 sm:mb-10">
           <div className="flex items-center gap-2 mb-2.5">
-            <span className="w-5 h-[2px] bg-[#7C3AED]" />
-            <span className="text-[11px] sm:text-xs font-mono font-bold text-[#7C3AED] uppercase tracking-widest">
+            <span className="w-5 h-[2px] bg-[#CC5A2B]" />
+            <span className="text-[11px] sm:text-xs font-mono font-bold text-[#CC5A2B] uppercase tracking-widest">
               WHY CHOOSE BREXAL
             </span>
           </div>
-          <h2 className="text-2xl sm:text-4xl md:text-[40px] font-extrabold tracking-[-0.03em] text-[#0A2540] leading-[1.15] mb-3">
-            A simpler, all-in-one alternative to legacy APM.
+          <h2 className="text-2xl sm:text-4xl md:text-[40px] font-extrabold tracking-[-0.03em] text-[#1F1E1D] leading-[1.15] mb-3">
+            A simpler, all-in-one alternative to <span className="font-editorial italic font-normal text-[#CC5A2B]">legacy APM.</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#425466] leading-relaxed max-w-2xl font-normal">
+          <p className="text-sm sm:text-base text-[#57534E] leading-relaxed max-w-2xl font-normal">
             Traditional APM tools are fragmented, heavy on server CPU, and unpredictably priced. BREXAL unifies live monitoring, sprint bug tracking, and AI in one lightweight workspace.
           </p>
         </div>
@@ -355,12 +355,12 @@ export function BrexalComparisonSection() {
         {/* ── HIGH-LEVEL COMPARISON SUMMARY CARDS (SUPER CLEAN & INTUITIVE) ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-8">
           {/* BREXAL CARD */}
-          <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-[#F5F3FF] via-white to-[#EEF2FF] border-2 border-[#7C3AED]/40 shadow-sm relative overflow-hidden">
+          <div className="p-6 sm:p-7 rounded-2xl bg-[#FDFBF7] border-2 border-[#CC5A2B]/40 shadow-sm relative overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <span className="font-['Sora',sans-serif] font-bold text-lg text-[#101114]">
                 BREXAL
               </span>
-              <span className="px-3 py-1 rounded-full bg-[#7C3AED] text-white text-xs font-semibold">
+              <span className="px-3 py-1 rounded-full bg-[#CC5A2B] text-white text-xs font-semibold">
                 Modern Unified Platform
               </span>
             </div>
@@ -385,16 +385,16 @@ export function BrexalComparisonSection() {
           </div>
 
           {/* LEGACY APM CARD */}
-          <div className="p-6 sm:p-7 rounded-2xl bg-slate-50 border border-slate-200 shadow-3xs">
+          <div className="p-6 sm:p-7 rounded-2xl bg-[#F5F1EB] border border-[#E8E2D9] shadow-3xs">
             <div className="flex items-center justify-between mb-4">
-              <span className="font-['Sora',sans-serif] font-bold text-lg text-slate-700">
+              <span className="font-['Sora',sans-serif] font-bold text-lg text-[#1F1E1D]">
                 Legacy APM (Datadog &amp; New Relic)
               </span>
-              <span className="px-3 py-1 rounded-full bg-slate-200 text-slate-700 text-xs font-medium">
+              <span className="px-3 py-1 rounded-full bg-[#E8E2D9] text-[#1F1E1D] text-xs font-medium">
                 Traditional Monitoring
               </span>
             </div>
-            <ul className="space-y-3 text-sm text-slate-600">
+            <ul className="space-y-3 text-sm text-[#57534E]">
               <li className="flex items-center gap-2.5">
                 <Minus className="text-slate-400 shrink-0" size={16} />
                 <span><strong>Fragmented:</strong> Monitoring only — no bug tracker, no sprint Kanban</span>
@@ -419,7 +419,7 @@ export function BrexalComparisonSection() {
         <div className="flex justify-center mb-6">
           <button
             onClick={() => setShowDetailedMatrix(!showDetailedMatrix)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-3xs"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#D5CDC0] bg-white hover:bg-[#F5F1EB] text-xs font-semibold text-[#1F1E1D] transition-all cursor-pointer shadow-3xs"
           >
             <span>{showDetailedMatrix ? "Hide Detailed 10-Point Technical Matrix" : "View Detailed 10-Point Technical Matrix"}</span>
           </button>
@@ -429,34 +429,34 @@ export function BrexalComparisonSection() {
         {showDetailedMatrix && (
           <div className="animate-fadeIn space-y-6 pt-2">
             {/* ── DESKTOP & TABLET COMPARISON TABLE ── */}
-            <div className="hidden md:block rounded-2xl border border-slate-200 shadow-xs overflow-hidden bg-white">
+            <div className="hidden md:block rounded-2xl border border-[#E8E2D9] shadow-xs overflow-hidden bg-white">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[820px]">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50/80">
-                  <th className="py-4 px-5 text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 w-[20%]">
+                <tr className="border-b border-[#E8E2D9] bg-[#F5F1EB]/80">
+                  <th className="py-4 px-5 text-[11px] font-mono font-bold uppercase tracking-wider text-[#8C857E] w-[20%]">
                     Category
                   </th>
 
                   {/* Highlighted BREXAL Column */}
-                  <th className="py-4 px-5 bg-[#EFF6FF]/90 border-x border-[#BFDBFE] w-[22%]">
+                  <th className="py-4 px-5 bg-[#FBF0EA]/70 border-x border-[#F3DACD] w-[22%]">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-base font-extrabold text-[#0A2540] tracking-tight">
+                      <span className="text-base font-extrabold text-[#1F1E1D] tracking-tight">
                         BREXAL
                       </span>
-                      <span className="px-2 py-0.5 rounded-full bg-[#2563EB]/10 text-[#2563EB] border border-[#2563EB]/20 text-[10px] font-mono font-semibold">
+                      <span className="px-2 py-0.5 rounded-full bg-[#4D6B53]/10 text-[#CC5A2B] border border-[#2563EB]/20 text-[10px] font-mono font-semibold">
                         Self-Hosted / Cloud
                       </span>
                     </div>
                   </th>
 
-                  <th className="py-4 px-5 text-sm font-bold text-[#0A2540] w-[19%]">
+                  <th className="py-4 px-5 text-sm font-bold text-[#1F1E1D] w-[19%]">
                     Datadog
                   </th>
-                  <th className="py-4 px-5 text-sm font-bold text-[#0A2540] w-[19%]">
+                  <th className="py-4 px-5 text-sm font-bold text-[#1F1E1D] w-[19%]">
                     New Relic
                   </th>
-                  <th className="py-4 px-5 text-sm font-bold text-[#0A2540] w-[20%]">
+                  <th className="py-4 px-5 text-sm font-bold text-[#1F1E1D] w-[20%]">
                     Dynatrace
                   </th>
                 </tr>
@@ -464,34 +464,34 @@ export function BrexalComparisonSection() {
 
               <tbody className="divide-y divide-slate-200/75 text-[13px] leading-relaxed">
                 {COMPARISON_ROWS.map((row) => (
-                  <tr key={row.category} className="hover:bg-slate-50/60 transition-colors">
+                  <tr key={row.category} className="hover:bg-[#F5F1EB]/60 transition-colors">
                     {/* Category & Context */}
                     <td className="py-4 px-5 align-top">
-                      <div className="font-bold text-[#0A2540]">{row.category}</div>
-                      <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+                      <div className="font-bold text-[#1F1E1D]">{row.category}</div>
+                      <div className="text-[11px] text-[#8C857E] mt-1 leading-snug">
                         {row.context}
                       </div>
                     </td>
 
                     {/* BREXAL Cell */}
-                    <td className="py-4 px-5 bg-[#F8FBFF] border-x border-[#DBEAFE] align-top">
+                    <td className="py-4 px-5 bg-[#FBF0EA]/40 border-x border-[#F3DACD] align-top">
                       <div className="flex items-start gap-2.5">
                         <StatusBadge status={row.brexal.status} />
-                        <span className="text-[#0A2540] font-medium leading-snug">
+                        <span className="text-[#1F1E1D] font-medium leading-snug">
                           {row.brexal.summary}
                         </span>
                       </div>
                     </td>
 
                     {/* Datadog Cell */}
-                    <td className="py-4 px-5 text-[#425466] align-top">
+                    <td className="py-4 px-5 text-[#57534E] align-top">
                       <p className="leading-snug mb-1.5">{row.datadog.summary}</p>
                       {row.datadog.docUrl && (
                         <a
                           href={row.datadog.docUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#2563EB] hover:underline"
+                          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#CC5A2B] hover:underline"
                         >
                           <span>{row.datadog.docLabel}</span>
                           <ExternalLink size={10} />
@@ -500,14 +500,14 @@ export function BrexalComparisonSection() {
                     </td>
 
                     {/* New Relic Cell */}
-                    <td className="py-4 px-5 text-[#425466] align-top">
+                    <td className="py-4 px-5 text-[#57534E] align-top">
                       <p className="leading-snug mb-1.5">{row.newrelic.summary}</p>
                       {row.newrelic.docUrl && (
                         <a
                           href={row.newrelic.docUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#2563EB] hover:underline"
+                          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#CC5A2B] hover:underline"
                         >
                           <span>{row.newrelic.docLabel}</span>
                           <ExternalLink size={10} />
@@ -516,14 +516,14 @@ export function BrexalComparisonSection() {
                     </td>
 
                     {/* Dynatrace Cell */}
-                    <td className="py-4 px-5 text-[#425466] align-top">
+                    <td className="py-4 px-5 text-[#57534E] align-top">
                       <p className="leading-snug mb-1.5">{row.dynatrace.summary}</p>
                       {row.dynatrace.docUrl && (
                         <a
                           href={row.dynatrace.docUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#2563EB] hover:underline"
+                          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#CC5A2B] hover:underline"
                         >
                           <span>{row.dynatrace.docLabel}</span>
                           <ExternalLink size={10} />
@@ -542,21 +542,21 @@ export function BrexalComparisonSection() {
           {COMPARISON_ROWS.map((row) => (
             <div
               key={row.category}
-              className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden"
+              className="rounded-xl border border-[#E8E2D9] bg-white shadow-2xs overflow-hidden"
             >
-              <div className="px-4 py-3 bg-slate-50 border-b border-slate-200/80">
-                <h3 className="text-sm font-bold text-[#0A2540]">{row.category}</h3>
-                <p className="text-[11px] text-slate-500 mt-0.5">{row.context}</p>
+              <div className="px-4 py-3 bg-[#F5F1EB] border-b border-[#E8E2D9]/80">
+                <h3 className="text-sm font-bold text-[#1F1E1D]">{row.category}</h3>
+                <p className="text-[11px] text-[#8C857E] mt-0.5">{row.context}</p>
               </div>
 
               {/* BREXAL Mobile Row */}
-              <div className="p-4 bg-[#F8FBFF] border-b border-[#DBEAFE]">
-                <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#2563EB] mb-1.5">
+              <div className="p-4 bg-[#FBF0EA]/40 border-b border-[#F3DACD]">
+                <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#CC5A2B] mb-1.5">
                   BREXAL
                 </div>
                 <div className="flex items-start gap-2">
                   <StatusBadge status={row.brexal.status} />
-                  <p className="text-xs text-[#0A2540] font-medium leading-relaxed">
+                  <p className="text-xs text-[#1F1E1D] font-medium leading-relaxed">
                     {row.brexal.summary}
                   </p>
                 </div>
@@ -571,20 +571,20 @@ export function BrexalComparisonSection() {
                 ].map(({ name, entry }) => (
                   <div key={name} className="p-4">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-[#0A2540]">{name}</span>
+                      <span className="font-bold text-[#1F1E1D]">{name}</span>
                       {entry.docUrl && (
                         <a
                           href={entry.docUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#2563EB] hover:underline"
+                          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#CC5A2B] hover:underline"
                         >
                           <span>Docs</span>
                           <ExternalLink size={10} />
                         </a>
                       )}
                     </div>
-                    <p className="text-[#425466] leading-relaxed">{entry.summary}</p>
+                    <p className="text-[#57534E] leading-relaxed">{entry.summary}</p>
                   </div>
                 ))}
               </div>
@@ -593,16 +593,16 @@ export function BrexalComparisonSection() {
         </div>
 
         {/* ── OFFICIAL DOCUMENTATION REFERENCES & TRADEMARK NOTICE ── */}
-        <div className="mt-6 pt-5 border-t border-slate-200/80 space-y-3">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-slate-500">
-            <span className="font-mono font-semibold uppercase tracking-wider text-slate-600">
+        <div className="mt-6 pt-5 border-t border-[#E8E2D9]/80 space-y-3">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-[#8C857E]">
+            <span className="font-mono font-semibold uppercase tracking-wider text-[#57534E]">
               Primary Documentation Sources:
             </span>
             <a
               href="https://docs.datadoghq.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#2563EB] hover:underline"
+              className="inline-flex items-center gap-1 text-[#CC5A2B] hover:underline"
             >
               Datadog Documentation <ExternalLink size={10} />
             </a>
@@ -610,7 +610,7 @@ export function BrexalComparisonSection() {
               href="https://docs.newrelic.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#2563EB] hover:underline"
+              className="inline-flex items-center gap-1 text-[#CC5A2B] hover:underline"
             >
               New Relic Documentation <ExternalLink size={10} />
             </a>
@@ -618,7 +618,7 @@ export function BrexalComparisonSection() {
               href="https://docs.dynatrace.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#2563EB] hover:underline"
+              className="inline-flex items-center gap-1 text-[#CC5A2B] hover:underline"
             >
               Dynatrace Documentation <ExternalLink size={10} />
             </a>
@@ -626,13 +626,13 @@ export function BrexalComparisonSection() {
               href="https://opentelemetry.io/docs/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#2563EB] hover:underline"
+              className="inline-flex items-center gap-1 text-[#CC5A2B] hover:underline"
             >
               OpenTelemetry Documentation <ExternalLink size={10} />
             </a>
           </div>
 
-          <p className="text-[11.5px] text-slate-500 leading-relaxed max-w-5xl">
+          <p className="text-[11.5px] text-[#8C857E] leading-relaxed max-w-5xl">
             Datadog, New Relic, and Dynatrace are trademarks of their respective owners. BREXAL is an independent observability platform and is not affiliated with, endorsed by, or sponsored by these companies. Product capabilities, pricing, and deployment options may vary by subscription plan, configuration, and region. Comparisons are based on publicly available documentation and BREXAL evaluations where applicable.
           </p>
         </div>

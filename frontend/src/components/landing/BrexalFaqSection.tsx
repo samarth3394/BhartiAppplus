@@ -71,22 +71,22 @@ export function BrexalFaqSection() {
   };
 
   return (
-    <section id="faq" className="py-16 sm:py-20 md:py-26 px-4 sm:px-10 bg-white border-b border-slate-200/80 relative overflow-hidden font-sans">
+    <section id="faq" className="py-16 sm:py-20 md:py-26 px-4 sm:px-10 bg-[#FAF8F5] border-b border-[#E8E2D9] relative overflow-hidden font-sans">
       
       <div className="max-w-[1100px] mx-auto text-left relative z-10">
         
         {/* Eyebrow & Headline */}
         <div className="max-w-3xl mb-10 sm:mb-14">
           <div className="flex items-center gap-2 mb-2.5">
-            <span className="w-6 h-[1.5px] bg-[#2563EB]" />
-            <span className="text-[11px] sm:text-[12px] font-mono font-bold text-[#2563EB] uppercase tracking-widest">
+            <span className="w-6 h-[1.5px] bg-[#CC5A2B]" />
+            <span className="text-[11px] sm:text-[12px] font-mono font-bold text-[#CC5A2B] uppercase tracking-widest">
               FREQUENTLY ASKED QUESTIONS
             </span>
           </div>
-          <h2 className="text-2xl sm:text-4xl md:text-[44px] font-extrabold tracking-[-0.035em] text-[#0A2540] leading-[1.15] mb-3">
+          <h2 className="text-2xl sm:text-4xl md:text-[44px] font-extrabold tracking-[-0.035em] text-[#1F1E1D] leading-[1.15] mb-3">
             Everything You Need to Know Before Switching.
           </h2>
-          <p className="text-sm sm:text-base text-[#425466] leading-relaxed max-w-2xl font-normal">
+          <p className="text-sm sm:text-base text-[#57534E] leading-relaxed max-w-2xl font-normal">
             Direct, transparent technical answers for enterprise CTOs, engineering leads, and platform teams evaluating BREXAL.
           </p>
         </div>
@@ -100,8 +100,8 @@ export function BrexalFaqSection() {
                 key={index}
                 className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
                   isOpen
-                    ? "border-[#2563EB] bg-[#F8FAFF] shadow-sm ring-1 ring-blue-500/20"
-                    : "border-slate-200/90 bg-white hover:border-slate-300"
+                    ? "border-[#CC5A2B] bg-[#FBF0EA]/50 shadow-sm ring-1 ring-[#CC5A2B]/20"
+                    : "border-[#E8E2D9]/90 bg-[#FAF8F5] hover:border-slate-300"
                 }`}
               >
                 {/* Accordion Header (Click to Toggle) */}
@@ -111,10 +111,10 @@ export function BrexalFaqSection() {
                   aria-expanded={isOpen}
                 >
                   <div className="flex flex-col gap-1 pr-2">
-                    <span className="text-[11px] font-mono font-bold text-[#2563EB] uppercase tracking-wider">
+                    <span className="text-[11px] font-mono font-bold text-[#CC5A2B] uppercase tracking-wider">
                       {faq.category}
                     </span>
-                    <h3 className="text-base sm:text-lg font-extrabold text-[#0A2540] leading-snug">
+                    <h3 className="text-base sm:text-lg font-extrabold text-[#1F1E1D] leading-snug">
                       {faq.questionMarathi}
                     </h3>
                     <div className="text-xs sm:text-[13px] text-slate-500 font-medium font-sans">
@@ -125,7 +125,7 @@ export function BrexalFaqSection() {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 ${
                       isOpen
-                        ? "bg-[#2563EB] text-white rotate-180"
+                        ? "bg-[#CC5A2B] text-white rotate-180"
                         : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                     }`}
                   >
@@ -136,11 +136,11 @@ export function BrexalFaqSection() {
                 {/* Accordion Body */}
                 {isOpen && (
                   <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-1 border-t border-blue-100/80 text-left animate-fadeIn">
-                    <p className="text-sm sm:text-[14.5px] text-[#425466] leading-relaxed mb-3.5 font-normal">
+                    <p className="text-sm sm:text-[14.5px] text-[#57534E] leading-relaxed mb-3.5 font-normal">
                       {faq.answer}
                     </p>
-                    <div className="p-3 rounded-xl bg-white border border-blue-200/70 text-xs font-mono text-[#1D4ED8] flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+                    <div className="p-3 rounded-xl bg-[#FAF8F5] border border-blue-200/70 text-xs font-mono text-[#1D4ED8] flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#CC5A2B]" />
                       <span>{faq.technicalBullet}</span>
                     </div>
                   </div>
@@ -151,16 +151,16 @@ export function BrexalFaqSection() {
         </div>
 
         {/* ── STILL HAVE QUESTIONS BANNER ── */}
-        <div className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 text-left">
+        <div className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border border-[#E8E2D9] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 text-left">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-[#0A2540] text-white flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-[#1F1E1D] text-white flex items-center justify-center shrink-0">
               <MessageSquare size={20} />
             </div>
             <div>
-              <h4 className="text-base font-extrabold text-[#0A2540]">
+              <h4 className="text-base font-extrabold text-[#1F1E1D]">
                 Have a specialized cluster architecture question?
               </h4>
-              <p className="text-xs sm:text-sm text-[#425466]">
+              <p className="text-xs sm:text-sm text-[#57534E]">
                 Chat directly with a Senior Solutions Architect on our team.
               </p>
             </div>
@@ -168,7 +168,7 @@ export function BrexalFaqSection() {
 
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0A2540] hover:bg-[#2563EB] text-white text-xs sm:text-sm font-bold transition-all shadow-xs shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1F1E1D] hover:bg-[#CC5A2B] text-white text-xs sm:text-sm font-bold transition-all shadow-xs shrink-0 cursor-pointer"
           >
             <span>Book a Technical Architecture Review</span>
             <ArrowRight size={14} />

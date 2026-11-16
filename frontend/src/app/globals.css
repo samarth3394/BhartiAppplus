@@ -7,37 +7,46 @@
   --font-mono: var(--font-jetbrains-mono), monospace;
   --font-space: var(--font-space-grotesk), system-ui, sans-serif;
 
-  /* 02. ELITE PREMIUM COLOR PALETTE */
-  --color-obsidian: #101114;
-  --color-midnight-navy: #101C35;
+  /* 01. WARM MINIMALISM & AI LAB PALETTE */
+  --color-warm-alabaster: #FAF8F5;
+  --color-warm-cream: #F5F1EB;
+  --color-warm-surface: #FDFBF7;
+  --color-warm-charcoal: #1F1E1D;
+  --color-warm-stone: #57534E;
+  --color-warm-muted: #8C857E;
+  --color-warm-border: #E8E2D9;
+  --color-warm-border-strong: #D5CDC0;
+
+  /* Earthy & Terracotta Accent Palette (Anthropic / AI Lab Aesthetic) */
+  --color-terracotta: #CC5A2B;
+  --color-terracotta-hover: #B44A1E;
+  --color-terracotta-soft: #FBF0EA;
+  --color-warm-amber: #D97706;
+  --color-warm-amber-soft: #FEF3C7;
+  --color-warm-sage: #4D6B53;
+  --color-warm-sage-soft: #EBF2EC;
+
+  /* Legacy aliases for backward compatibility */
+  --color-obsidian: #1F1E1D;
+  --color-midnight-navy: #1F1E1D;
   --color-pure-white: #FFFFFF;
-  --color-soft-ivory: #F7F6F2;
-  --color-graphite: #34363D;
-  --color-muted-silver: #BFC3CC;
+  --color-soft-ivory: #F5F1EB;
+  --color-graphite: #57534E;
+  --color-muted-silver: #D5CDC0;
 
-  /* Accent Palette */
-  --color-electric-cobalt: #425CF5;
-  --color-deep-violet: #7657E8;
-  --color-champagne-gold: #C8A96B;
-  --color-soft-lavender: #C7BDF7;
-
-  /* Surface & Semantic Tokens */
-  --color-bg-base: #FFFFFF;
-  --color-bg-subtle: #F7F6F2;
-  --color-bg-elevated: #FFFFFF;
-  --color-border-subtle: #E2E4E9;
-  --color-border-strong: #101114;
-  --color-text-primary: #101114;
-  --color-text-secondary: #5B5F6B;
-  --color-text-muted: #8B8F9A;
-  --color-status-green: #059669;
-  --color-status-amber: #D97706;
-  --color-status-red: #DC2626;
+  --color-bg-base: #FAF8F5;
+  --color-bg-subtle: #F5F1EB;
+  --color-bg-elevated: #FDFBF7;
+  --color-border-subtle: #E8E2D9;
+  --color-border-strong: #1F1E1D;
+  --color-text-primary: #1F1E1D;
+  --color-text-secondary: #57534E;
+  --color-text-muted: #8C857E;
 }
 
 :root {
-  --background: #FFFFFF;
-  --foreground: #101114;
+  --background: #FAF8F5;
+  --foreground: #1F1E1D;
   --font-sora: "Sora", system-ui, sans-serif;
   --font-inter: "Inter", system-ui, sans-serif;
   --font-manrope: "Manrope", system-ui, sans-serif;
@@ -56,65 +65,63 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #FFFFFF;
+  background-color: #FAF8F5;
 }
 
 body {
-  background-color: #FFFFFF;
-  color: #101114;
+  background-color: #FAF8F5;
+  color: #1F1E1D;
   font-family: var(--font-inter), var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 03. EDITORIAL TYPOGRAPHY RULES */
+/* 02. EDITORIAL TYPOGRAPHY RULES */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sora), sans-serif;
   color: inherit;
   text-wrap: balance;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
 }
 
 p {
   color: inherit;
   text-wrap: pretty;
-  line-height: 1.65;
+  line-height: 1.68;
 }
 
-/* Minimal Architectural Scrollbar */
+/* Minimal Warm Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F7F6F2;
+  background: #FAF8F5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #BFC3CC;
+  background: #D5CDC0;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8B8F9A;
+  background: #8C857E;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-/* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Elite Selection */
+/* Warm Terracotta Selection */
 ::selection {
-  background-color: rgba(66, 92, 245, 0.14);
-  color: #101114;
+  background-color: rgba(204, 90, 43, 0.16);
+  color: #1F1E1D;
 }
 
 .font-display {
@@ -130,14 +137,13 @@ p {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   07. PREMIUM MOTION DESIGN KEYFRAMES & UTILITIES
+   03. MOTION DESIGN KEYFRAMES & UTILITIES
    ═══════════════════════════════════════════════════════════════ */
 
-/* Editorial Upward Reveal */
 @keyframes editorialReveal {
   0% {
     opacity: 0;
-    transform: translate3d(0, 24px, 0);
+    transform: translate3d(0, 20px, 0);
   }
   100% {
     opacity: 1;
@@ -145,11 +151,10 @@ p {
   }
 }
 
-/* Node/Card Scale Reveal */
 @keyframes editorialScaleIn {
   0% {
     opacity: 0;
-    transform: scale(0.92) translate3d(0, 8px, 0);
+    transform: scale(0.95) translate3d(0, 6px, 0);
   }
   100% {
     opacity: 1;
@@ -157,50 +162,6 @@ p {
   }
 }
 
-/* Subtle Ambient Orb Breathe (24s cycle) */
-@keyframes ambientBreathe {
-  0%, 100% {
-    opacity: 0.45;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.08);
-  }
-}
-
-/* Architectural Grid Subtle Drift */
-@keyframes architecturalDrift {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(12px, -8px, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-/* Particle Signal Pulse along curve */
-@keyframes signalPulse {
-  0% {
-    offset-distance: 0%;
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  85% {
-    opacity: 1;
-  }
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
-  }
-}
-
-/* Marquee Infinite Track */
 @keyframes editorialMarquee {
   0% {
     transform: translate3d(0, 0, 0);
@@ -210,21 +171,12 @@ p {
   }
 }
 
-/* CSS Animation Classes */
 .brexal-pop-up {
   animation: editorialReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .brexal-node-pop {
   animation: editorialScaleIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.brexal-ambient-breathe {
-  animation: ambientBreathe 24s ease-in-out infinite;
-}
-
-.brexal-grid-drift {
-  animation: architecturalDrift 30s ease-in-out infinite;
 }
 
 .editorial-marquee {
@@ -236,68 +188,63 @@ p {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   08. PREMIUM COMPONENT UTILITIES (CARDS, BUTTONS, BENTO)
+   04. WARM MINIMALIST BUTTONS & CARDS (AI LAB AESTHETIC)
    ═══════════════════════════════════════════════════════════════ */
 
-/* Elite Card Elevation & Border Transition */
 .elite-card {
-  border: 1px solid #E2E4E9;
+  border: 1px solid #E8E2D9;
   border-radius: 16px;
-  background-color: #FFFFFF;
-  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.36s cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 0.28s ease;
+  background-color: #FDFBF7;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.24s ease;
 }
 
 .elite-card:hover {
-  transform: translateY(-3px);
-  border-color: #BFC3CC;
-  box-shadow: 0 16px 40px -10px rgba(16, 17, 20, 0.08);
+  transform: translateY(-2px);
+  border-color: #D5CDC0;
+  box-shadow: 0 14px 34px -10px rgba(31, 30, 29, 0.06);
 }
 
-/* Elite Action Button */
+/* Warm Charcoal Primary Button (Anthropic Style) */
 .elite-btn-primary {
-  background-color: #101C35;
-  color: #FFFFFF;
-  border-radius: 10px;
+  background-color: #1F1E1D;
+  color: #FAF8F5;
+  border-radius: 9999px;
   font-weight: 600;
-  transition: background-color 0.24s ease,
-              transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.24s ease;
+  transition: background-color 0.22s ease,
+              transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.22s ease;
 }
 
 .elite-btn-primary:hover {
-  background-color: #425CF5;
+  background-color: #CC5A2B;
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(66, 92, 245, 0.22);
+  box-shadow: 0 6px 20px rgba(204, 90, 43, 0.22);
 }
 
+/* Warm Alabaster Secondary Button */
 .elite-btn-secondary {
-  border: 1px solid #D6D8DE;
+  border: 1px solid #E8E2D9;
   background-color: #FFFFFF;
-  color: #101114;
-  border-radius: 10px;
-  font-weight: 600;
-  transition: border-color 0.24s ease,
-              color 0.24s ease,
-              transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-              background-color 0.24s ease;
+  color: #1F1E1D;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: border-color 0.22s ease,
+              background-color 0.22s ease,
+              transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .elite-btn-secondary:hover {
-  border-color: #101114;
-  background-color: #F7F6F2;
+  border-color: #1F1E1D;
+  background-color: #F5F1EB;
   transform: translateY(-1px);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   10. REDUCED MOTION ACCESSIBILITY
-   ═══════════════════════════════════════════════════════════════ */
+/* Reduced Motion Accessibility */
 @media (prefers-reduced-motion: reduce) {
   .brexal-pop-up,
   .brexal-node-pop,
-  .brexal-ambient-breathe,
-  .brexal-grid-drift,
   .editorial-marquee,
   .elite-card,
   .elite-btn-primary,
