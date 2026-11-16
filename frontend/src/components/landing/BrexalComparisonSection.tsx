@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Check, ExternalLink, Info, Minus } from "lucide-react";
 
 type CapabilityStatus = "implemented" | "partial" | "not_implemented" | "unverified";
@@ -328,33 +328,108 @@ function StatusBadge({ status }: { status: CapabilityStatus }) {
 }
 
 export function BrexalComparisonSection() {
+  const [showDetailedMatrix, setShowDetailedMatrix] = useState(false);
+
   return (
     <section
       id="comparison"
-      className="py-16 sm:py-20 md:py-24 px-4 sm:px-8 lg:px-10 bg-white border-b border-slate-200/80 relative font-sans"
+      className="py-14 sm:py-20 px-4 sm:px-8 lg:px-10 bg-white border-b border-slate-200/80 relative font-sans"
     >
       <div className="max-w-[1320px] mx-auto text-left">
         {/* Eyebrow & Messaging */}
-        <div className="max-w-3xl mb-10 sm:mb-12">
+        <div className="max-w-3xl mb-8 sm:mb-10">
           <div className="flex items-center gap-2 mb-2.5">
-            <span className="w-6 h-[1.5px] bg-[#2563EB]" />
-            <span className="text-[11px] sm:text-xs font-mono font-bold text-[#2563EB] uppercase tracking-widest">
-              PLATFORM ARCHITECTURE COMPARISON
+            <span className="w-5 h-[2px] bg-[#7C3AED]" />
+            <span className="text-[11px] sm:text-xs font-mono font-bold text-[#7C3AED] uppercase tracking-widest">
+              WHY CHOOSE BREXAL
             </span>
           </div>
-          <h2 className="text-2xl sm:text-4xl md:text-[42px] font-extrabold tracking-[-0.03em] text-[#0A2540] leading-[1.15] mb-3.5">
-            Why Modern Engineering Teams Choose BREXAL.
+          <h2 className="text-2xl sm:text-4xl md:text-[40px] font-extrabold tracking-[-0.03em] text-[#0A2540] leading-[1.15] mb-3">
+            A simpler, all-in-one alternative to legacy APM.
           </h2>
-          <p className="text-sm sm:text-base text-[#425466] leading-relaxed max-w-2xl mb-2.5 font-normal">
-            Modern cloud-native infrastructure demands more than traditional application monitoring. BREXAL combines lightweight host telemetry, automated synthetic uptime checks, and AI-powered incident intelligence to help engineering teams gain deeper infrastructure visibility with a more predictable operating model.
-          </p>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium">
-            Compare architecture, observability capabilities, deployment flexibility, and pricing models across leading platforms.
+          <p className="text-sm sm:text-base text-[#425466] leading-relaxed max-w-2xl font-normal">
+            Traditional APM tools are fragmented, heavy on server CPU, and unpredictably priced. BREXAL unifies live monitoring, sprint bug tracking, and AI in one lightweight workspace.
           </p>
         </div>
 
-        {/* ── DESKTOP & TABLET COMPARISON TABLE ── */}
-        <div className="hidden md:block rounded-2xl border border-slate-200 shadow-xs overflow-hidden bg-white">
+        {/* ── HIGH-LEVEL COMPARISON SUMMARY CARDS (SUPER CLEAN & INTUITIVE) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-8">
+          {/* BREXAL CARD */}
+          <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-[#F5F3FF] via-white to-[#EEF2FF] border-2 border-[#7C3AED]/40 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+              <span className="font-['Sora',sans-serif] font-bold text-lg text-[#101114]">
+                BREXAL
+              </span>
+              <span className="px-3 py-1 rounded-full bg-[#7C3AED] text-white text-xs font-semibold">
+                Modern Unified Platform
+              </span>
+            </div>
+            <ul className="space-y-3 text-sm text-[#101114]">
+              <li className="flex items-center gap-2.5">
+                <Check className="text-emerald-500 shrink-0" size={16} />
+                <span><strong>All-In-One:</strong> Server health + Sprint bug tracker + AI copilot</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Check className="text-emerald-500 shrink-0" size={16} />
+                <span><strong>Minimal Overhead:</strong> &lt; 0.8% CPU, zero garbage collection halts</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Check className="text-emerald-500 shrink-0" size={16} />
+                <span><strong>1-Minute Setup:</strong> Single helm or docker command, zero code changes</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Check className="text-emerald-500 shrink-0" size={16} />
+                <span><strong>Predictable Pricing:</strong> $0 to $89 flat cluster rate, zero per-GB penalties</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* LEGACY APM CARD */}
+          <div className="p-6 sm:p-7 rounded-2xl bg-slate-50 border border-slate-200 shadow-3xs">
+            <div className="flex items-center justify-between mb-4">
+              <span className="font-['Sora',sans-serif] font-bold text-lg text-slate-700">
+                Legacy APM (Datadog &amp; New Relic)
+              </span>
+              <span className="px-3 py-1 rounded-full bg-slate-200 text-slate-700 text-xs font-medium">
+                Traditional Monitoring
+              </span>
+            </div>
+            <ul className="space-y-3 text-sm text-slate-600">
+              <li className="flex items-center gap-2.5">
+                <Minus className="text-slate-400 shrink-0" size={16} />
+                <span><strong>Fragmented:</strong> Monitoring only — no bug tracker, no sprint Kanban</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Minus className="text-slate-400 shrink-0" size={16} />
+                <span><strong>Heavy Load:</strong> 4% to 8% CPU overhead and heavy memory footprints</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Minus className="text-slate-400 shrink-0" size={16} />
+                <span><strong>Complex Setup:</strong> Requires custom SDK imports and manual code hooks</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Minus className="text-slate-400 shrink-0" size={16} />
+                <span><strong>Expensive Ingestion:</strong> Unpredictable monthly bills with per-GB penalties</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Toggle Detailed Matrix Button */}
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => setShowDetailedMatrix(!showDetailedMatrix)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-3xs"
+          >
+            <span>{showDetailedMatrix ? "Hide Detailed 10-Point Technical Matrix" : "View Detailed 10-Point Technical Matrix"}</span>
+          </button>
+        </div>
+
+        {/* ── COLLAPSIBLE DETAILED TECHNICAL MATRIX ── */}
+        {showDetailedMatrix && (
+          <div className="animate-fadeIn space-y-6 pt-2">
+            {/* ── DESKTOP & TABLET COMPARISON TABLE ── */}
+            <div className="hidden md:block rounded-2xl border border-slate-200 shadow-xs overflow-hidden bg-white">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[820px]">
               <thead>
@@ -561,6 +636,8 @@ export function BrexalComparisonSection() {
             Datadog, New Relic, and Dynatrace are trademarks of their respective owners. BREXAL is an independent observability platform and is not affiliated with, endorsed by, or sponsored by these companies. Product capabilities, pricing, and deployment options may vary by subscription plan, configuration, and region. Comparisons are based on publicly available documentation and BREXAL evaluations where applicable.
           </p>
         </div>
+          </div>
+        )}
       </div>
     </section>
   );

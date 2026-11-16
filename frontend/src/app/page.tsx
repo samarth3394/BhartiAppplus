@@ -299,20 +299,19 @@ function StripeHeroSection() {
           <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-white/95 border border-[#C4B5FD] shadow-2xs mb-4 sm:mb-6 max-w-full">
             <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#7C3AED] shrink-0" />
             <span className="text-[9.5px] sm:text-[11px] font-mono font-bold tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#6B21A8] truncate">
-              AI MONITORING &amp; INCIDENT PLATFORM
+              ALL-IN-ONE RELIABILITY &amp; DEV PLATFORM
             </span>
           </div>
 
-          {/* Display Headline: "Intelligence for modern infrastructure." */}
-          <h1 className="font-['Sora',sans-serif] text-[32px] xs:text-[38px] sm:text-[50px] md:text-[62px] lg:text-[72px] font-bold tracking-[-0.035em] text-[#0F1017] leading-[1.12] sm:leading-[1.04] mb-4 sm:mb-6 text-left">
-            Intelligence for <br className="hidden sm:inline" />
-            <span>modern </span>
-            <span className="font-editorial italic font-normal text-[#7E22CE]">infrastructure.</span>
+          {/* Display Headline */}
+          <h1 className="font-['Sora',sans-serif] text-[32px] xs:text-[38px] sm:text-[50px] md:text-[60px] lg:text-[68px] font-bold tracking-[-0.035em] text-[#0F1017] leading-[1.12] sm:leading-[1.05] mb-4 sm:mb-6 text-left">
+            Server monitoring, bug tracking &amp; AI. <br className="hidden sm:inline" />
+            <span className="font-editorial italic font-normal text-[#7E22CE]">All in one place.</span>
           </h1>
 
           {/* Supporting Subhead */}
-          <p className="font-['Inter',sans-serif] text-[14.5px] sm:text-[17px] md:text-[18.5px] text-[#374151] font-normal leading-relaxed mb-6 sm:mb-10 max-w-[620px] text-left">
-            Real-time monitoring, AI-powered incident response, and proactive reliability for modern engineering teams.
+          <p className="font-['Inter',sans-serif] text-[14.5px] sm:text-[17px] md:text-[18px] text-[#374151] font-normal leading-relaxed mb-6 sm:mb-10 max-w-[620px] text-left">
+            Stop switching between 5 different tools. BREXAL unifies live server health, sprint bug tracking, and AI-powered root-cause analysis in a single fast dashboard.
           </p>
 
           {/* Action CTAs Row (Full width on mobile, inline on sm+) */}
@@ -325,10 +324,10 @@ function StripeHeroSection() {
               <ArrowRight size={15} />
             </Link>
             <Link
-              href="#platform"
+              href="#how-it-works"
               className="px-6 sm:px-8 py-3.5 rounded-full bg-white/90 border border-[#7C3AED]/40 text-[#1E1B4B] hover:bg-white active:scale-[0.98] text-[14px] sm:text-[14.5px] font-medium transition-all flex items-center justify-center gap-2 shadow-2xs"
             >
-              <span>Book a demo</span>
+              <span>See how it works</span>
             </Link>
           </div>
 
@@ -339,8 +338,8 @@ function StripeHeroSection() {
                 <Zap size={16} className="text-[#7C3AED]" />
               </div>
               <div className="text-left">
-                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#0F1017]">Detect faster</div>
-                <div className="text-[11px] sm:text-[11.5px] text-[#474A57]">AI-powered insights</div>
+                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#0F1017]">1. Connect in 60s</div>
+                <div className="text-[11px] sm:text-[11.5px] text-[#474A57]">Zero code changes</div>
               </div>
             </div>
 
@@ -349,8 +348,8 @@ function StripeHeroSection() {
                 <Layers size={16} className="text-[#7C3AED]" />
               </div>
               <div className="text-left">
-                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#0F1017]">Resolve smarter</div>
-                <div className="text-[11px] sm:text-[11.5px] text-[#474A57]">RCA in minutes</div>
+                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#0F1017]">2. Auto-detect issues</div>
+                <div className="text-[11px] sm:text-[11.5px] text-[#474A57]">CPU, RAM &amp; bugs</div>
               </div>
             </div>
 
@@ -359,8 +358,8 @@ function StripeHeroSection() {
                 <ShieldCheck size={16} className="text-[#7C3AED]" />
               </div>
               <div className="text-left">
-                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#0F1017]">Stay reliable</div>
-                <div className="text-[11px] sm:text-[11.5px] text-[#474A57]">High-uptime systems</div>
+                <div className="text-[12.5px] sm:text-[13.5px] font-bold text-[#0F1017]">3. Resolve with AI</div>
+                <div className="text-[11px] sm:text-[11.5px] text-[#474A57]">Root cause in &lt; 90s</div>
               </div>
             </div>
           </div>
@@ -404,6 +403,100 @@ function StripeClientMarquee() {
               <span className="font-['Sora',sans-serif] text-sm sm:text-[15px] font-semibold text-[#34363D] group-hover:text-[#101114] tracking-wide transition-colors">
                 {c.name}
               </span>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4.5. HOW BREXAL WORKS (3 SIMPLE STEPS)
+   ═══════════════════════════════════════════════════════════════ */
+function HowItWorksSection() {
+  const steps = [
+    {
+      num: "01",
+      badge: "STEP 1",
+      title: "Connect in 60 seconds",
+      desc: "Run a single command on your cluster or host. No SDK imports or complicated configuration.",
+      snippet: "$ helm install brexal-agent brexal/mesh",
+      color: "from-[#F5F3FF] via-white to-white",
+      borderColor: "border-[#DDD6FE]",
+      badgeColor: "bg-[#7C3AED] text-white",
+    },
+    {
+      num: "02",
+      badge: "STEP 2",
+      title: "Live metrics & bugs sync",
+      desc: "CPU, RAM, API latencies, and sprint bugs automatically stream into one real-time dashboard.",
+      snippet: "● Healthy 99.99% • 02 Bugs tracked",
+      color: "from-[#EFF6FF] via-white to-white",
+      borderColor: "border-[#BFDBFE]",
+      badgeColor: "bg-[#2563EB] text-white",
+    },
+    {
+      num: "03",
+      badge: "STEP 3",
+      title: "Resolve outages with AI",
+      desc: "When an anomaly occurs, AI isolates the exact failing git commit or query in < 90 seconds.",
+      snippet: "⚡ AI Root Cause: DB connection pool (#418)",
+      color: "from-[#FAF5FF] via-white to-white",
+      borderColor: "border-[#E9D5FF]",
+      badgeColor: "bg-[#6D28D9] text-white",
+    },
+  ];
+
+  return (
+    <section id="how-it-works" className="py-14 sm:py-20 px-4 sm:px-8 lg:px-12 bg-white border-b border-[#E2E4E9]">
+      <div className="max-w-[1320px] mx-auto text-left">
+        
+        {/* Header */}
+        <div className="flex flex-col items-start max-w-2xl mb-10 sm:mb-12">
+          <div className="flex items-center gap-2 mb-2.5">
+            <span className="w-5 h-[2px] bg-[#7C3AED]" />
+            <span className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-[#7C3AED]">
+              HOW IT WORKS
+            </span>
+          </div>
+          <h2 className="font-['Sora',sans-serif] text-[28px] sm:text-[38px] md:text-[42px] font-bold text-[#101114] tracking-[-0.03em] leading-tight mb-3">
+            Up and running in <span className="font-editorial italic font-normal text-[#7E22CE]">three simple steps.</span>
+          </h2>
+          <p className="text-[14px] sm:text-[15.5px] text-[#5B5F6B] font-normal leading-relaxed">
+            No complex setup or weeks of onboarding. Connect your infrastructure and get instant visibility.
+          </p>
+        </div>
+
+        {/* 3 Steps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+          {steps.map((st, i) => (
+            <div
+              key={i}
+              className={`rounded-2xl border ${st.borderColor} bg-gradient-to-b ${st.color} p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md transition-all relative overflow-hidden`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider ${st.badgeColor}`}>
+                    {st.badge}
+                  </span>
+                  <span className="text-2xl font-mono font-bold text-slate-300">
+                    {st.num}
+                  </span>
+                </div>
+                <h3 className="font-['Sora',sans-serif] text-[18px] sm:text-[19px] font-bold text-[#101114] mb-2 leading-snug">
+                  {st.title}
+                </h3>
+                <p className="text-[13px] sm:text-[13.5px] text-[#5B5F6B] leading-relaxed mb-5">
+                  {st.desc}
+                </p>
+              </div>
+
+              {/* Code / Visual snippet */}
+              <div className="pt-3 border-t border-slate-200/60 font-mono text-[11px] text-slate-700 bg-white/80 p-2.5 rounded-xl border border-slate-200 shadow-3xs truncate">
+                {st.snippet}
+              </div>
             </div>
           ))}
         </div>
@@ -1950,6 +2043,7 @@ export default function LandingPage() {
       <main>
         <StripeHeroSection />
         <StripeClientMarquee />
+        <HowItWorksSection />
         <PlatformOverviewSection />
         <StripeArchitectureFlowSection />
         <StripeProductShowcaseSection />
