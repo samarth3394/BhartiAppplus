@@ -413,42 +413,9 @@ function StripeClientMarquee() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   4.5. HOW BREXAL WORKS (3 SIMPLE STEPS)
+   4.5. HOW BREXAL WORKS (3 SIMPLE STEPS - REFINED BENTO CARDS)
    ═══════════════════════════════════════════════════════════════ */
 function HowItWorksSection() {
-  const steps = [
-    {
-      num: "01",
-      badge: "STEP 1",
-      title: "Connect in 60 seconds",
-      desc: "Run a single command on your cluster or host. No SDK imports or complicated configuration.",
-      snippet: "$ helm install brexal-agent brexal/mesh",
-      color: "from-[#F5F3FF] via-white to-white",
-      borderColor: "border-[#DDD6FE]",
-      badgeColor: "bg-[#7C3AED] text-white",
-    },
-    {
-      num: "02",
-      badge: "STEP 2",
-      title: "Live metrics & bugs sync",
-      desc: "CPU, RAM, API latencies, and sprint bugs automatically stream into one real-time dashboard.",
-      snippet: "● Healthy 99.99% • 02 Bugs tracked",
-      color: "from-[#EFF6FF] via-white to-white",
-      borderColor: "border-[#BFDBFE]",
-      badgeColor: "bg-[#2563EB] text-white",
-    },
-    {
-      num: "03",
-      badge: "STEP 3",
-      title: "Resolve outages with AI",
-      desc: "When an anomaly occurs, AI isolates the exact failing git commit or query in < 90 seconds.",
-      snippet: "⚡ AI Root Cause: DB connection pool (#418)",
-      color: "from-[#FAF5FF] via-white to-white",
-      borderColor: "border-[#E9D5FF]",
-      badgeColor: "bg-[#6D28D9] text-white",
-    },
-  ];
-
   return (
     <section id="how-it-works" className="py-14 sm:py-20 px-4 sm:px-8 lg:px-12 bg-white border-b border-[#E2E4E9]">
       <div className="max-w-[1320px] mx-auto text-left">
@@ -469,36 +436,136 @@ function HowItWorksSection() {
           </p>
         </div>
 
-        {/* 3 Steps Grid */}
+        {/* 3 Bento Cards Grid (Same design aesthetic as Platform section) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-          {steps.map((st, i) => (
-            <div
-              key={i}
-              className={`rounded-2xl border ${st.borderColor} bg-gradient-to-b ${st.color} p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md transition-all relative overflow-hidden`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider ${st.badgeColor}`}>
-                    {st.badge}
-                  </span>
-                  <span className="text-2xl font-mono font-bold text-slate-300">
-                    {st.num}
-                  </span>
-                </div>
-                <h3 className="font-['Sora',sans-serif] text-[18px] sm:text-[19px] font-bold text-[#101114] mb-2 leading-snug">
-                  {st.title}
-                </h3>
-                <p className="text-[13px] sm:text-[13.5px] text-[#5B5F6B] leading-relaxed mb-5">
-                  {st.desc}
-                </p>
-              </div>
 
-              {/* Code / Visual snippet */}
-              <div className="pt-3 border-t border-slate-200/60 font-mono text-[11px] text-slate-700 bg-white/80 p-2.5 rounded-xl border border-slate-200 shadow-3xs truncate">
-                {st.snippet}
-              </div>
+          {/* ── STEP 1: CONNECT IN 60 SECONDS ── */}
+          <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#818CF8]/50 transition-all">
+            {/* Abstract Wave Ribbon Graphic */}
+            <div className="absolute -right-4 -bottom-4 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+              <svg viewBox="0 0 200 200" className="w-full h-full">
+                <defs>
+                  <linearGradient id="howStepWave1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.85" />
+                    <stop offset="50%" stopColor="#818CF8" stopOpacity="0.65" />
+                    <stop offset="100%" stopColor="#4338CA" stopOpacity="0.9" />
+                  </linearGradient>
+                  <linearGradient id="howStepWave2" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#312E81" stopOpacity="0.85" />
+                  </linearGradient>
+                </defs>
+                <path d="M 40 180 C 60 120, 100 80, 180 60 C 200 120, 160 180, 40 180 Z" fill="url(#howStepWave1)" />
+                <path d="M 60 200 C 90 140, 130 100, 200 90 C 210 150, 170 200, 60 200 Z" fill="url(#howStepWave2)" opacity="0.75" />
+                <path d="M 30 160 Q 90 100 170 50" stroke="#FFFFFF" strokeWidth="1.5" fill="none" opacity="0.5" />
+                <path d="M 45 175 Q 105 115 185 65" stroke="#C7D2FE" strokeWidth="1.5" fill="none" opacity="0.4" />
+              </svg>
             </div>
-          ))}
+
+            <div className="relative z-10 text-left">
+              <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#6366F1] mb-3.5 shadow-2xs">
+                <Zap size={19} />
+              </div>
+              <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                Connect in 60 Seconds
+              </h3>
+              <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[210px]">
+                Run a single command on your cluster or host. Zero SDK imports or setup.
+              </p>
+            </div>
+
+            <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#425CF5] font-semibold text-sm transition-colors">
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* ── STEP 2: LIVE METRICS & BUGS SYNC ── */}
+          <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#FFFBEB]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#C8A96B]/50 transition-all">
+            {/* Golden Radial Architectural Fins Graphic */}
+            <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+              <svg viewBox="0 0 200 200" className="w-full h-full">
+                <defs>
+                  <linearGradient id="howStepGoldFin" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#E2C385" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#C8A96B" stopOpacity="0.75" />
+                    <stop offset="100%" stopColor="#85581A" stopOpacity="0.85" />
+                  </linearGradient>
+                </defs>
+                {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+                  <path
+                    key={i}
+                    d={`M ${60 + i * 14} 200 C ${80 + i * 12} ${130 - i * 6}, ${120 + i * 8} ${80 - i * 5}, 200 ${50 + i * 12} L 200 200 Z`}
+                    fill="url(#howStepGoldFin)"
+                    opacity={0.35 + i * 0.08}
+                  />
+                ))}
+              </svg>
+            </div>
+
+            <div className="relative z-10 text-left">
+              <div className="w-9 h-9 rounded-xl bg-[#FEF3C7]/60 flex items-center justify-center text-[#D97706] mb-3.5 shadow-2xs">
+                <Activity size={19} />
+              </div>
+              <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                Live Metrics &amp; Bug Sync
+              </h3>
+              <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[210px]">
+                CPU, RAM, API latencies, and sprint bugs stream into one real-time dashboard.
+              </p>
+            </div>
+
+            <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#C8A96B] font-semibold text-sm transition-colors">
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
+          {/* ── STEP 3: RESOLVE OUTAGES WITH AI ── */}
+          <div className="group relative rounded-2xl border border-[#E2E4E9] bg-gradient-to-br from-[#F7F6F2] via-white to-[#EEF2FF]/70 p-6 sm:p-7 min-h-[220px] flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md hover:border-[#4F46E5]/50 transition-all">
+            {/* Geometric Isometric 3D Steps Graphic */}
+            <div className="absolute -right-3 -bottom-3 w-40 h-40 sm:w-48 sm:h-48 pointer-events-none opacity-85 group-hover:scale-105 transition-transform">
+              <svg viewBox="0 0 200 200" className="w-full h-full">
+                <defs>
+                  <linearGradient id="howStep3DTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#C4B5FD" />
+                    <stop offset="100%" stopColor="#818CF8" />
+                  </linearGradient>
+                  <linearGradient id="howStep3DSide1" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#6366F1" />
+                    <stop offset="100%" stopColor="#3730A3" />
+                  </linearGradient>
+                  <linearGradient id="howStep3DSide2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#4F46E5" />
+                    <stop offset="100%" stopColor="#1E1B4B" />
+                  </linearGradient>
+                </defs>
+                <g transform="translate(45, 45)">
+                  <polygon points="100,40 140,60 100,80 60,60" fill="url(#howStep3DTop)" />
+                  <polygon points="60,60 100,80 100,120 60,100" fill="url(#howStep3DSide1)" />
+                  <polygon points="100,80 140,60 140,100 100,120" fill="url(#howStep3DSide2)" />
+                  <polygon points="60,80 100,100 60,120 20,100" fill="url(#howStep3DTop)" opacity="0.85" />
+                  <polygon points="20,100 60,120 60,160 20,140" fill="url(#howStep3DSide1)" opacity="0.85" />
+                  <polygon points="60,120 100,100 100,140 60,160" fill="url(#howStep3DSide2)" opacity="0.85" />
+                </g>
+              </svg>
+            </div>
+
+            <div className="relative z-10 text-left">
+              <div className="w-9 h-9 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-[#4F46E5] mb-3.5 shadow-2xs">
+                <Sparkles size={19} />
+              </div>
+              <h3 className="text-[17px] sm:text-[18px] font-bold text-[#101114] mb-2 leading-snug">
+                Resolve Outages with AI
+              </h3>
+              <p className="text-[12.5px] sm:text-[13px] text-[#5B5F6B] leading-relaxed max-w-[210px]">
+                When an anomaly occurs, AI isolates the exact failing commit or query in &lt; 90s.
+              </p>
+            </div>
+
+            <div className="relative z-10 pt-4 flex items-center text-[#101114] group-hover:text-[#4F46E5] font-semibold text-sm transition-colors">
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+
         </div>
 
       </div>
